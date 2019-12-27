@@ -1,4 +1,4 @@
-# Yet Another GRF Language
+# Yet Another GRF Language - test mod 
 
 **yagl** is a command line tool, and a script language (called YAGL for maximal ambiguity), for working with OpenTTD and TTDPatch GRF files, as described in the NewGRF specs (link). It is basically a codec which performs either of the following operations:
 
