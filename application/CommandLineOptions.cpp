@@ -115,11 +115,11 @@ void CommandLineOptions::parse(int argc, char* argv[])
         }
         else if (m_operation == Operation::Encode) 
         {
-            if (!fs::is_directory(m_yagl_dir)) 
-            {
-                std::cout << "ERROR: Directory '" << m_yagl_dir << "' does not exist\n";
-                exit(1);
-            }
+            //if (!fs::is_directory(m_yagl_dir)) 
+            //{
+            //    std::cout << "ERROR: Directory '" << m_yagl_dir << "' does not exist\n";
+            //    exit(1);
+            //}
         }
 
         switch (palette)

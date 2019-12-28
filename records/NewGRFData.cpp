@@ -613,7 +613,7 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
     // The simplest approach is to reject text files with different 
     // versions... 
     // NOTE using colons to avoid parsing the version as a number.
-    os << "yagl_version: " << str_version << ";\n\n";
+    os << "yagl_version: \"" << str_version << "\";\n\n";
 
     // Finally write out the YAGL script.
     for (auto record: m_records)
@@ -631,14 +631,20 @@ void NewGRFData::parse(TokenStream& is)
         throw ParserError("Expected YAGL version number", token);
     }
     is.match(TokenType::Colon);
+    
+    // Read the actual version number.
+    std::string version = is.match(TokenType::String);
+    is.match(TokenType::SemiColon);
 
-    // Having a floating point format would be a problem here, so just 
-    // have integers separated by colons.
-    uint16_t major = is.match_integer();
-    is.match(TokenType::Colon);
-    uint16_t minor = is.match_integer();
-    is.match(TokenType::Colon);
-    uint16_t build = is.match_integer();
+    if (version != str_version)
+    {
+        std::ostringstream os;
+        os << "YAGL version number does not match. ";
+        os << "Expected: " << str_version << "; found: " << version;
+        throw ParserError(os.str(), token);
+    }
+
+    return;
 
     // Top level parser. Every record has the format 'keyword [<...>] { ... }'. 
     // We create an object corresponding to the keyword, and then have that object

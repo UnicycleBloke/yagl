@@ -59,13 +59,20 @@ static void decode(const std::string& grf_file, const std::string& yagl_dir)
 
 static void encode(const std::string& grf_file, const std::string& yagl_dir)
 {
-    // std::ifstream is(text_file, std::ios::binary);
+    fs::path grf_path  = grf_file;
+    fs::path yagl_path = grf_path.parent_path().append(yagl_dir);
+    //fs::create_directory(yagl_path); // Confirm exists
 
-    // Lexer lexer;
-    // TokenStream token_stream(lexer.lex(is));
+    fs::path yagl_file = yagl_path;
+    yagl_file.append(grf_path.filename().string()).replace_extension(".yagl");
 
-    // NewGRFData grf_data;
-    // grf_data.parse(token_stream); 
+    std::ifstream is(yagl_file, std::ios::binary);
+
+    Lexer lexer;
+    TokenStream token_stream(lexer.lex(is));
+
+    NewGRFData grf_data;
+    grf_data.parse(token_stream); 
 
     // if (grf_file.size() > 0)
     // {

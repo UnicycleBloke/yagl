@@ -20,3 +20,4 @@ grfs/
 build/
 .vscode/
 TODO.ods
+version.h
