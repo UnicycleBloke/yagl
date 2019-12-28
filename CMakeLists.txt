@@ -110,6 +110,15 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     utility/Exceptions.cpp
 )
 
+# This appears to be the simplest way to create a pre-build step that
+# actually works. Create a fake target and make the real target depend on it.
+add_custom_target(
+    prebuild_commands
+    COMMAND echo Pre-build commands...
+    COMMAND python ${PROJECT_SOURCE_DIR}/version.py
+)
+add_dependencies(${NEWGRF_PROGRAM_NAME} prebuild_commands)
+
 target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC 
     .
     records

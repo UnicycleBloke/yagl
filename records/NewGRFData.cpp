@@ -49,6 +49,7 @@
 #include "StreamHelpers.h"
 #include "SpriteSheetGenerator.h"
 #include "CommandLineOptions.h"
+#include "version.h" // Generated in a pre-build step.
 #include <sstream>
 
 
@@ -612,7 +613,7 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
     // The simplest approach is to reject text files with different 
     // versions... 
     // NOTE using colons to avoid parsing the version as a number.
-    os << "yagl_version: 0:0:1\n\n";
+    os << "yagl_version: " << str_version << ";\n\n";
 
     // Finally write out the YAGL script.
     for (auto record: m_records)

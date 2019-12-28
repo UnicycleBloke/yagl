@@ -20,6 +20,7 @@
 #include <getopt.h>
 #include "Exceptions.h"
 #include "FileSystem.h"
+#include "version.h" // Generated in a pre-build step.
 #include <iostream>
 
 
@@ -70,7 +71,7 @@ void CommandLineOptions::parse(int argc, char* argv[])
         auto result = options.parse(argc, argv);
 
         // Print help about the command line options, and then exit.
-        if ((argc == 1) || result.count("help"))
+        if (result.count("help"))
         {
             std::cout << options.help({""}) << '\n';
             exit(0);
@@ -79,7 +80,7 @@ void CommandLineOptions::parse(int argc, char* argv[])
         // Print the version number of the yagl executable, and then exit.
         if (result.count("version"))
         {
-            std::cout << "yagl-0.0.1\n";
+            std::cout << str_version << "\n";
             exit(0);
         }
 
