@@ -37,6 +37,7 @@ class CommandLineOptions
         Operation          operation() const { return m_operation; }
         const std::string& grf_file()  const { return m_grf_file; }
         const std::string& yagl_dir()  const { return m_yagl_dir; }
+        const std::string& yagl_file() const { return m_yagl_file; }
 
         uint32_t           width()     const { return m_width; }
         uint32_t           height()    const { return m_height; }
@@ -59,6 +60,9 @@ class CommandLineOptions
         uint16_t    m_height   = 16'000;
         PaletteType m_palette  = PaletteType::Default; 
         GRFFormat   m_format   = GRFFormat::Container2;
+
+        // Calculated from m_grf_file and m_yagl_dir.
+        std::string m_yagl_file;
 
         // Used for debugging
         bool        m_debug    = false;

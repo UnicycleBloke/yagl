@@ -24,65 +24,71 @@
 #include "FileSystem.h"
 
 
-static void decode(const std::string& grf_file, const std::string& yagl_dir)
+static void decode()
 {
-    //try 
+    CommandLineOptions& options = CommandLineOptions::options();
+
+    try 
     {
+        if (options.debug()) 
+        {
+            std::cout << "Reading GRF: " << options.grf_file() << '\n';
+            std::cout << "Writing YAGL: " << options.yagl_file() << '\n';
+        }
+
         NewGRFData grf_data;
-        std::ifstream is(grf_file, std::ios::binary);    
+        // This file already checked for existence.
+        std::ifstream is(options.grf_file(), std::ios::binary);    
         grf_data.read(is);
 
-        // GRF is in '<some_path>/<some_file>.grf'. 
-        // We first create the directory '<some_path>/<yagl_dir>'
-        fs::path grf_path  = grf_file;
-        fs::path yagl_path = grf_path.parent_path().append(yagl_dir);
-        fs::create_directory(yagl_path);
+        // We first create the sub-directory for the output files.
+        fs::path yagl_file = options.yagl_file();
+        fs::path yagl_dir  = yagl_file.parent_path();
+        fs::create_directory(yagl_dir);
 
-        // The YAGL file path is '<some_path>/<yagl_dir>/<some_file>.yagl'
-        fs::path yagl_file = yagl_path;
-        yagl_file.append(grf_path.filename().string()).replace_extension(".yagl");
-
-        // The base file path for spritesheets is '<some_path>/<yagl_dir>/<some_file>'.
-        // The spritesheet generator appends various things to this.
+        // The spritesheet generator appends various things to this base.
         fs::path image_base = yagl_file;
         image_base.replace_extension();
         
-        std::ofstream os(yagl_file, std::ios::binary);
-        grf_data.print(os, yagl_path, image_base);
+        if (options.debug()) 
+        {
+            std::cout << "Output directory: " << yagl_dir.string() << '\n';
+            std::cout << "Image base: " << image_base.string() << '\n';
+        }
+
+        std::ofstream os(options.yagl_file(), std::ios::binary);
+        grf_data.print(os, yagl_dir, image_base);
     }
-    //catch (std::exception& e)
+    catch (std::exception& e)
     {
-        //std::cout << "ERROR: " << e.what() << '\n';
+        std::cout << e.what() << '\n';
     }
 }
 
 
-static void encode(const std::string& grf_file, const std::string& yagl_dir)
+static void encode()
 {
-    fs::path grf_path  = grf_file;
-    fs::path yagl_path = grf_path.parent_path().append(yagl_dir);
-    //fs::create_directory(yagl_path); // Confirm exists
+    CommandLineOptions& options = CommandLineOptions::options();
 
-    fs::path yagl_file = yagl_path;
-    yagl_file.append(grf_path.filename().string()).replace_extension(".yagl");
+    try
+    {
+        // This file already checked for existence.
+        // Will need to check for the sprite sheets as we go along.
+        std::ifstream is(options.yagl_file(), std::ios::binary);
 
-    std::ifstream is(yagl_file, std::ios::binary);
+        Lexer lexer;
+        TokenStream token_stream(lexer.lex(is));
 
-    Lexer lexer;
-    TokenStream token_stream(lexer.lex(is));
+        NewGRFData grf_data;
+        grf_data.parse(token_stream); 
 
-    NewGRFData grf_data;
-    grf_data.parse(token_stream); 
-
-    // if (grf_file.size() > 0)
-    // {
-    //     std::ofstream os(grf_file, std::ios::binary);
-    //     grf_data.write(os);
-    // }
-    // else
-    // {
-    //     grf_data.write(std::cout);
-    // }        
+        //std::ofstream os(options.grf_file(), std::ios::binary);
+        //grf_data.write(os);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 
@@ -94,11 +100,11 @@ int main (int argc, char* argv[])
     switch (options.operation())
     {
         case CommandLineOptions::Operation::Decode:
-            decode(options.grf_file(), options.yagl_dir());
+            decode();
             break;
 
         case CommandLineOptions::Operation::Encode:
-            encode(options.grf_file(), options.yagl_dir());
+            encode();
             break;
     }
 }

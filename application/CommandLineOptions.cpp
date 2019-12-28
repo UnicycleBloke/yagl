@@ -20,7 +20,7 @@
 #include <getopt.h>
 #include "Exceptions.h"
 #include "FileSystem.h"
-#include "version.h" // Generated in a pre-build step.
+#include "yagl_version.h" // Generated in a pre-build step.
 #include <iostream>
 
 
@@ -80,7 +80,7 @@ void CommandLineOptions::parse(int argc, char* argv[])
         // Print the version number of the yagl executable, and then exit.
         if (result.count("version"))
         {
-            std::cout << str_version << "\n";
+            std::cout << str_yagl_version << "\n";
             exit(0);
         }
 
@@ -105,6 +105,13 @@ void CommandLineOptions::parse(int argc, char* argv[])
                 
         m_operation = encode ? Operation::Encode : Operation::Decode;
 
+        // GRF is in '<some_path>/<some_file>.grf'. 
+        // YAGL is in '<some_path>/<yagl_dir>/<some_file>.yagl'. 
+        fs::path grf_file  = m_grf_file;
+        fs::path yagl_file = grf_file.parent_path().append(m_yagl_dir);
+        yagl_file.append(grf_file.filename().string()).replace_extension(".yagl");
+        m_yagl_file = yagl_file.string();
+
         if (m_operation == Operation::Decode) 
         {
             if (!fs::is_regular_file(m_grf_file)) 
@@ -115,11 +122,11 @@ void CommandLineOptions::parse(int argc, char* argv[])
         }
         else if (m_operation == Operation::Encode) 
         {
-            //if (!fs::is_directory(m_yagl_dir)) 
-            //{
-            //    std::cout << "ERROR: Directory '" << m_yagl_dir << "' does not exist\n";
-            //    exit(1);
-            //}
+            if (!fs::is_regular_file(m_yagl_file)) 
+            {
+                std::cout << "ERROR: File '" << m_yagl_file << "' does not exist\n";
+                exit(1);
+            }
         }
 
         switch (palette)

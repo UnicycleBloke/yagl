@@ -49,7 +49,7 @@
 #include "StreamHelpers.h"
 #include "SpriteSheetGenerator.h"
 #include "CommandLineOptions.h"
-#include "version.h" // Generated in a pre-build step.
+#include "yagl_version.h" // Generated in a pre-build step.
 #include <sstream>
 
 
@@ -613,7 +613,7 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
     // The simplest approach is to reject text files with different 
     // versions... 
     // NOTE using colons to avoid parsing the version as a number.
-    os << "yagl_version: \"" << str_version << "\";\n\n";
+    os << "yagl_version: \"" << str_yagl_version << "\";\n\n";
 
     // Finally write out the YAGL script.
     for (auto record: m_records)
@@ -633,18 +633,21 @@ void NewGRFData::parse(TokenStream& is)
     is.match(TokenType::Colon);
     
     // Read the actual version number.
-    std::string version = is.match(TokenType::String);
+    std::string yagl_version = is.match(TokenType::String);
     is.match(TokenType::SemiColon);
 
-    if (version != str_version)
+    // This might a bit strict, but the YAGL script may evolve over time.
+    // Rather than try to cope with all the variants at once, which could
+    // become a bit of a burden, have the YAGL file determine which version
+    // of yagl is needed to parse it (typically the same version that 
+    // created it). 
+    if (yagl_version != str_yagl_version)
     {
         std::ostringstream os;
         os << "YAGL version number does not match. ";
-        os << "Expected: " << str_version << "; found: " << version;
+        os << "Expected: " << str_yagl_version << "; found: " << yagl_version;
         throw ParserError(os.str(), token);
     }
-
-    return;
 
     // Top level parser. Every record has the format 'keyword [<...>] { ... }'. 
     // We create an object corresponding to the keyword, and then have that object

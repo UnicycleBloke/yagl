@@ -115,7 +115,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
 add_custom_target(
     prebuild_commands
     COMMAND echo Pre-build commands...
-    COMMAND python ${PROJECT_SOURCE_DIR}/version.py
+    COMMAND python ${PROJECT_SOURCE_DIR}/yagl_version.py
 )
 add_dependencies(${NEWGRF_PROGRAM_NAME} prebuild_commands)
 

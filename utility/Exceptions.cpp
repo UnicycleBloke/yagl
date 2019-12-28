@@ -31,7 +31,8 @@ LexerError::LexerError(const char* what_arg, uint32_t line, uint32_t column)
 : std::runtime_error{what_arg}
 {
     std::ostringstream os;
-    os << what_arg << " at line " << line << " column " << column;
+    os << "YAGL lexer error: ";
+    os << what_arg << " at line " << line << " column " << column << " in script file";
     m_what = os.str();
 }
 
@@ -46,7 +47,8 @@ ParserError::ParserError(const char* what_arg, const TokenValue& token)
 : std::runtime_error{what_arg}
 {
     std::ostringstream os;
-    os << what_arg << " at line " << token.line << " column " << token.column;
+    os << "YAGL parser error: ";
+    os << what_arg << " at line " << token.line << " column " << token.column << " in script file";
     m_what = os.str();
 }
 
@@ -61,7 +63,8 @@ RuntimeError::RuntimeError(const char* what_arg, const char* file, uint32_t line
 : std::runtime_error(what_arg)
 {
     std::ostringstream os;
-    os << what_arg << " at line " << line << " in file " << file;
+    os << "Runtime error: ";
+    os << what_arg << " at line " << line << " in source file " << file;
     m_what = os.str();
 }
 
