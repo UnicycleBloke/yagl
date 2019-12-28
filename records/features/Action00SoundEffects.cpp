@@ -71,6 +71,8 @@ bool Action00SoundEffects::write_property(std::ostream& os, uint8_t property) co
         case 0x0A: write_uint8(os, m_0A_override_old_sound); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
+
+    return true;
 }
 
 

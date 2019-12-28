@@ -220,6 +220,8 @@ bool Action00Houses::write_property(std::ostream& os, uint8_t property) const
         case 0x22: write_uint16(os, m_22_long_maximum_year); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
+
+    return true;
 }
 
 

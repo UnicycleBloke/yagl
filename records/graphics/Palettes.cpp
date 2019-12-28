@@ -313,6 +313,9 @@ const PaletteArray& get_palette_data(PaletteType type)
         case PaletteType::DOSToyland:     return dos_toyland_palette;
         case PaletteType::WindowsToyland: return windows_toyland_palette;
     }
+
+    // Should never get here.
+    return dos_palette;
 }
 
 

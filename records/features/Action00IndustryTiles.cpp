@@ -131,6 +131,8 @@ bool Action00IndustryTiles::write_property(std::ostream& os, uint8_t property) c
         case 0x12: write_uint8(os, m_12_special_flags); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
+
+    return true;
 }
 
 

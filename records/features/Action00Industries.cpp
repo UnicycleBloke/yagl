@@ -466,6 +466,8 @@ bool Action00Industries::write_property(std::ostream& os, uint8_t property) cons
         case 0x24: write_uint16(os, m_24_nearby_station_text_id); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
+
+    return true;
 }
 
 

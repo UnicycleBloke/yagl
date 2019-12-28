@@ -200,6 +200,9 @@ const char* Action00Airports::AirportLayout::rotation_name(Rotation rotation) co
         case Rotation::East:  return "East";
         case Rotation::West:  return "West";
     }
+
+    // Should never get here.
+    return "<unknown>";
 }
 
 

@@ -377,6 +377,8 @@ bool Action00Stations::write_property(std::ostream& os, uint8_t property) const
         case 0x18: write_uint16(os, m_18_animation_triggers); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
+
+    return true;
 }
 
 

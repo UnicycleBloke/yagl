@@ -206,6 +206,8 @@ bool Action00Vehicles::write_property(std::ostream& os, uint8_t property) const
         case 0x25: m_25_never_refittable_cargos.write(os); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
+    
+    return true;    
 }
 
 

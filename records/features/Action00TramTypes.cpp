@@ -145,6 +145,8 @@ bool Action00TramTypes::write_property(std::ostream& os, uint8_t property) const
         case 0x1D: m_1D_alternate_tramtypes.write(os); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
+
+    return true;
 }
 
 

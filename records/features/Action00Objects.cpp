@@ -146,6 +146,8 @@ bool Action00Objects::write_property(std::ostream& os, uint8_t property) const
         case 0x17: write_uint8(os, m_17_number_of_views); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
+
+    return true;
 }
 
 
