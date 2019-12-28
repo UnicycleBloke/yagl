@@ -1,15 +1,34 @@
 # Yet Another GRF Language 
 
-**yagl** is a command line tool, and a script language (called YAGL for maximal ambiguity), for working with OpenTTD and TTDPatch GRF files, as described in the NewGRF specs (link). It is basically a codec which performs either of the following operations:
+**yagl** is a command line tool, and a script language (called YAGL for maximal ambiguity), for working with OpenTTD and TTDPatch GRF files, as described in the [NewGRF specs](https://newgrf-specs.tt-wiki.net/wiki/Main_Page). It is basically a codec which performs either of the following operations:
 
-1. Read a GRF file into a memory data structure, and then write out a YAGL script containing a textual representation of its contents, together with one or more sprite sheets (PNG format)containing the images present in the GRF.
-2. Read a YAGL file and any associated sprite sheets into a memory data structure (the same one as above), and then write out a GRF file containing the a representation of the YAGL and the encoded sprites which conforms to the NewGRF specs.
+1. Read a GRF file into a memory data structure, and then write out a YAGL script containing a textual representation of its contents, together with one or more sprite sheets (PNG format) containing the images present in the GRF. Sound effects are also written to files.
+2. Read a YAGL file and any associated sprite sheets (and sound effects) into a memory data structure (the same one as above), and then write out a GRF file containing the a representation of the YAGL and the encoded sprites which conforms to the NewGRF specs.
 
-A GRF is basically just a long list of records of different types. A YAGL script is also just a long list of records of different types. Each record in the YAGL is semantically identical to the corresponding record in the GRF from which it was created. It's just that while the GRF record is binary data, the YAGL record is human-readable text. 
+If you perform Step 1, and then perform Step 2 without first making any changes to the YAGL or the sprite sheets, then the re-generated GRF should be identical to the original. There are a few valid reasons why there might be discrepancies, such as the elimination of duplicate properties in Action00, re-ordering properties (the order is not significant), variant string encodings, and so on. But they should certainly be *semantically* identical.
 
-If you perform Step 1, and then perform Step 2 without first making any changes to the YAGL or the sprite sheets, then the re-generated GRF should be identical to the original. There are some valid reasons why there might be discrepancies, such as the elimination of duplicate properties in Action00, re-ordering properties (the order is not significant), variant string encoding, and so on. But they should certainly be *semantically* identical.
+A GRF is basically just a long list of records of different types. A YAGL script is also just a long list of records of different types. Each record in the YAGL should be semantically identical to the corresponding record in the GRF from which it was created. It's just that while the GRF record is binary data, the YAGL record is human-readable text. For example, the following output is used to represent an Action08 record, extracted from FIRS:
+
+```bash
+grf // Action08
+{
+    grf_id: "\xF1%\x00\x07";
+    version: 8;
+    name: "FIRS Industry Replacement Set 3.0.12";
+    description: "{orange}FIRS Industry Replacement Set{new-line}{black}Brought
+        to you by andythenorth, FooBar, planetmaker, Terkhen and Yexo, with help 
+        from many others. {lt-gray}See readme for more information, including 
+        how to use FIRS. {black}License: GPL v2.";
+}
+```
+
+Though this looks superficially similar to NML, it is definitely *not* NML. For example, the NML `grf` block includes other items, such as GRF options, which are actually placed into Action14 records in the GRF file. And there is currently no attempt to pull out string translations into separate language files. Some features of NML do map quite simply onto the underlying pseudosprite records; others not so much. 
+
+The goal here is not to decompile NML, which is probably impossible to do well, but to create something which is hopefully  more readable than the equivalent NFO. 
 
 ## Current status
+
+Despite what the introduction says, **yagl** is not yet complete. The current focus is on being able to successfully read any GRF file and create a reasonable YAGL representation of every feature. 
 
 - The code for reading in binary GRFs is basically complete. There are sure to be errors and omissions but the code theoretically covers all of the NewGRF specs, including RoadTypes and TramTypes.
 
@@ -17,43 +36,47 @@ If you perform Step 1, and then perform Step 2 without first making any changes 
 
 - Tests are needed ensure that reading and then writing GRF records results in the same binary data, that the coverage is complete, and to highlight any regression.
 
-- The code for printing out the YAGL is basically complete. There are sure to be errors and omissions, and the text formatting could very likely stand some improvements.
+- The code for printing out the YAGL is basically complete. There are sure to be errors and omissions, and the text formatting could very likely stand some improvements. Action00 properties are mostly shown as hex numbers: the plan is to at least handle enumerations and bitfields better.
 
-- The code for parsing the YAGL script is still a work in progress. This is a mirror image of the code to print out the YAGL, and will suffer the same errors and omissions, if any.
+- The code for parsing the YAGL script is still a work in progress. The approach used seems to work just fine, but there is a lot to do. This procedure is a mirror image of the code to print out the YAGL, and will suffer the same errors and omissions, if any.
 
 - Tests are needed to ensure that the printed YAGL and written binary contain the same information - that is parsing the YAGL and reading the binary create an identical data structure in memory. 
 
+- Some GRF files fail to decode, and result in terminal exceptions. This is mostly likely due to errors in **yagl** which still need to be ironed out, but one or two GRFs appeared to be malformed, and the software was not forgiving.
+
 ## Building **yagl**
 
-**yagl** is a single executable built on Linux or Linux-like systems. The build system is created with **CMake**, and can perform the actual build with **make**, **ninja**, or some other tool for which a generator exists. Managing projects with **CMake** is a lot easier than fiddling with make files directly. 
+**yagl** is a single executable so far built only on Linux or Linux-like systems. The build system is created with **CMake**, and can perform the actual build with **make**, **ninja**, or some other tool for which a generator exists. I find managing projects with **CMake** is a lot simpler than fiddling with make files directly. 
 
 Starting in some folder on your machine, execute the following commands in a terminal window.
 
 ```bash
-sudo apt install libpng-dev
 git clone https://github.com/UnicycleBloke/yagl.git
 cd yagl
 mkdir build
 cd build
 cmake ..
 make -j
-./yagl
+./yagl -d <your_grf_file.grf> 
 ```
 
-`CMakeLists.txt` specifies at least **CMake** version 3.10. This is the lowest version for which a build was attempted, so earlier versions may also work.
+`CMakeLists.txt` specifies at least **CMake** version 3.10. This is the lowest version for which a build was attempted. Earlier versions may also work.
 
-Pretty much any reasonably recent Linux-like environment should be able to build and run **yagl**. The software is known to build and run on the following configurations:
+**yagl** is written in C++, and makes use of at least some C++17 features, notably `<filesystem>`. It has so far only been compiled with **g++**. Pretty much any reasonably recent Linux-like environment should be fine. The software has been built and run on the following configurations:
 - Ubuntu 16.04 LTS; CMake 3.15.0; g++ 9.2.1
 - Windows 10 Subsystem for Linux; Ubuntu 18.04 LTS; CMake 3.10; g++ 8.2.0
-- Window 10 MingW64; CMake xxxx; g++ xxxx
+
+It should also build with **g++ 7.4**, though this required a little conditional compilation around `<filesystem>`, which was not officially supported until **g++ 8.0**.
+
+Cygwin/MSYS2/MingW should all be fine, but remain to be tested.
 
 ### Build dependencies
 
 The only binary library dependency is **libpng**, which is used for reading and writing spritesheets.
 
 The following header only libraries are included in the source tree along with their licences:
-- **png++**: a C++ wrapper around the libpng API. https://www.nongnu.org/pngpp/.
-- **cxxopts**: a C++ command line option parser. https://github.com/jarro2783/cxxopts.
+- **png++**: a C++ wrapper around the libpng API: https://www.nongnu.org/pngpp/.
+- **cxxopts**: a C++ command line option parser: https://github.com/jarro2783/cxxopts.
 
 
 ## Licence
@@ -121,11 +144,11 @@ Both long and short version of each option are supported.
 
 The software architecture is closely modeled on the structure of a GRF file. The following sections give an overview of the GRF contents to help make sense of the code.
 
-The format of a GRF file is pretty simple: it is nothing more than a long list of variable length records. Some of the records are pseudo-sprites (Action01, Action02, ... in the NewGRF specs) containing information about how various features of the game should behave, which sprites to draw, and many other things. The rest of the records are binary blobs containing mostly images (RealSprites), but sometimes sound effects. The GRF file comes in two distinct formats: Container1 and Container2. 
+The format of a GRF file is pretty simple: it is nothing more than a long list of variable length records. Some of the records are pseudo-sprites (Action01, Action02, ... in the NewGRF specs) containing information about how various aspects of the game should behave, which sprites to draw, and many other things. The rest of the records are binary blobs containing mostly images (RealSprites), but sometimes sound effects. The GRF file comes in two distinct formats: Container1 and Container2. 
 
 ### Container1 format 
 
-Container1 files intersperse the RealSprites among the peudo-sprites. They directly follow the pseudo-sprite to which they "belong". For example, Action01 defines M sets of N sprites each. The Action01 record is followed by MxN RealSprite records. Action01 can be thought of as a notional container, owner or parent of those MxN sprites. The Action01 is a parent record, and the RealSprites are its children. Action05, Action0A and one or others follow the same pattern. Action11 is similar, but its child records are sound effects. We can represent this as a two-tier structure as follows: child records are indented under their parents:
+Container1 files intersperse the RealSprites among the pseudo-sprites. They directly follow the pseudo-sprite to which they "belong". For example, Action01 defines M sets of N sprites each. The Action01 record is followed by MxN RealSprite records. Action01 can be thought of as a notional container, owner or parent of those MxN sprites. The Action01 is a parent record, and the RealSprites are its children. Action05, Action0A and one or others follow the same pattern. Action11 is similar, but its child records are sound effects. We can represent this as a two-tier structure as follows: child records are indented under their parents:
 
 ```bash
 Action14
@@ -178,7 +201,7 @@ RealSprite 6 (8bpp x4)
 
 It seems that, at least in theory, this format would allow the same sprites to be used in multiple places in the GRF, by having two or more sprite index records wrapping the same sprite index. It is not known whether this feature is ever actually used.
 
-For full details, read `grf.txt` which can be found in the **grfcodec** repository.
+For full details, read `grf.txt` which can be found in the **grfcodec** [repository](https://github.com/OpenTTD/grfcodec).
 
 ### Software representation
 
@@ -191,22 +214,22 @@ NewGRFData
       - Action08Record
       - ... 
       - Action01Record - only the parent record is present in the vector
-          - SpriteIndexRecord
-          - SpriteIndexRecord
+          - SpriteIndexRecord (index = 1)
+          - SpriteIndexRecord (index = 2)
           - ...
       - Action02Record
       - ...
 		
-      - map<sprite_ID, vector<RealSpriteRecord>>		 
-        - 1 : vector<RealSpriteRecord>
-                RealSprite 1 zoom normal
-                RealSprite 1 zoom x2
-                ... 
-        - 2 : vector<RealSpriteRecord>
-                RealSprite 1 zoom normal
-                RealSprite 1 zoom x2
-                ... 
-        ...		
+  - map<sprite_ID, vector<RealSpriteRecord>>		 
+      - 1: vector<RealSpriteRecord>
+          - RealSprite 1 8bpp zoom normal
+          - RealSprite 1 32bpp zoom x2
+          - ... 
+      - 2: vector<RealSpriteRecord>
+          - RealSprite 2 8bpp zoom normal
+          - RealSprite 2 32bpp zoom x2
+          - ... 
+      - ...		
 ```
 
 Each type of record is represented by a distinct class which is derived from a common base class. Each type implements methods to read/write itself from/to a file stream. 
@@ -221,7 +244,7 @@ And that's pretty much the whole program in a nutshell.
 
 **Assorted details**
 
-- The map of RealSprites is walked to generated sprites sheets before writing out the YAGL, this is because the sprite's position in the sprite sheet needs to be calculated before the YAGL can be printed. 
+- The map of RealSprites is walked to generated sprites sheets before writing out the YAGL, this is because the sprite's position in the sprite sheet needs to be calculated before the YAGL can be printed. Some sprites include both RGBA and palette information (a mask). These result in two images in different files.
 
 - Some of the pseudo-sprites have very simple flat data structures, and are quite simple to read and write. Others such as, for example, Action14, are more complicated. In such cases there may be additional classes or structures intended to break down the task of reading and writing the data.
 
