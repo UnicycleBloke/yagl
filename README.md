@@ -48,7 +48,7 @@ Despite what the introduction says, **yagl** is not yet complete. The current fo
 
 **yagl** is a single executable so far built only on Linux or Linux-like systems. The build system is created with **CMake**, and can perform the actual build with **make**, **ninja**, or some other tool for which a generator exists. I find managing projects with **CMake** is a lot simpler than fiddling with make files directly. 
 
-Starting in some folder on your machine, execute the following commands in a terminal window.
+Starting in some folder on your machine, execute the following commands in a terminal window:
 
 ```bash
 git clone https://github.com/UnicycleBloke/yagl.git
@@ -57,6 +57,14 @@ mkdir build
 cd build
 cmake ..
 make -j
+./yagl -d <your_grf_file.grf> 
+```
+
+If you prefer **ninja** for building:
+
+```bash
+cmake -G"Ninja" ..
+ninja
 ./yagl -d <your_grf_file.grf> 
 ```
 

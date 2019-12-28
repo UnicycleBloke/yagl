@@ -68,7 +68,7 @@ public:
     : Record{RecordType::REAL_SPRITE}
     , m_sprite_id{sprite_id}
     , m_size{size}
-    , m_compression2{compression}
+    , m_compression{compression}
     {
     }
 
@@ -82,7 +82,7 @@ public:
     uint32_t    sprite_id() const   { return m_sprite_id; }
     ZoomLevel   zoom() const        { return m_zoom; }
     uint8_t     colour() const      { return m_colour; } 
-    uint8_t     compression2() const { return m_compression2; }
+    uint8_t     compression() const { return m_compression; }
 
     uint16_t  xdim() const { return m_xdim; }
     uint16_t  ydim() const { return m_ydim; }
@@ -125,7 +125,7 @@ private:
     // as is passed to the constructor.
     uint32_t  m_sprite_id   = 0;
     uint32_t  m_size        = 0; // Needed only for reading the GRF, I think.
-    uint8_t   m_compression2 = 0; // Contains colour depth/type information - depends on container format. 
+    uint8_t   m_compression = 0; // Contains colour depth/type information - depends on container format. 
     uint8_t   m_colour      = 0; // Derived from m_compression but does not depend on container format.
 
     ZoomLevel m_zoom        = ZoomLevel::Normal;

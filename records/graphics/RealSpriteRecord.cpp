@@ -41,7 +41,7 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
 
     // The uncompressed size is only given in certain cases. The transparency bit tells us how to decode the 
     // data after reading if from the file. It is the size of the data before chunk-compression (tiles). I think.
-    m_uncomp_size = ((info.format == GRFFormat::Container2) && (m_compression2 & CHUNKED_FORMAT)) ? read_uint32(is) : 0;
+    m_uncomp_size = ((info.format == GRFFormat::Container2) && (m_compression & CHUNKED_FORMAT)) ? read_uint32(is) : 0;
 
     // The compression byte is interpreted quite differently depending on the file format.
     // Format2 images may have more than one byte per pixel. Format1 images just have a palette byte.
@@ -51,7 +51,7 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
     {
         // (m_size - 8) here corresponds to the size of the record minus the compression and dimensions.
         pix_size = 1;
-        img_size = (m_compression2 & COMPRESSED_IN_MEMORY) ? (m_xdim * m_ydim) : (m_size - 8);
+        img_size = (m_compression & COMPRESSED_IN_MEMORY) ? (m_xdim * m_ydim) : (m_size - 8);
         m_colour = HAS_PALETTE;
     }
     else
@@ -59,11 +59,11 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
         // We have potentially several bytes of data for each pixel.
         // Presumably at least one of these bits must be set.
         // Expected configurations are RGB, RGBA and P.
-        pix_size  = (m_compression2 & HAS_RGB)     ? 3 : 0;
-        pix_size += (m_compression2 & HAS_ALPHA)   ? 1 : 0;
-        pix_size += (m_compression2 & HAS_PALETTE) ? 1 : 0;
+        pix_size  = (m_compression & HAS_RGB)     ? 3 : 0;
+        pix_size += (m_compression & HAS_ALPHA)   ? 1 : 0;
+        pix_size += (m_compression & HAS_PALETTE) ? 1 : 0;
         img_size  = (m_uncomp_size == 0) ? (m_xdim * m_ydim * pix_size) : m_uncomp_size;
-        m_colour  = m_compression2 & (HAS_RGB | HAS_ALPHA | HAS_PALETTE);
+        m_colour  = m_compression & (HAS_RGB | HAS_ALPHA | HAS_PALETTE);
     }   
 
     // Read the image data. This decompression is based on LZ77 in some way. I just followed 
@@ -118,9 +118,9 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
     // This bit in the compression indicates that the image contains transparent sections.
     // In this case, it has been stored in a 'chunked' format. We now decode this information
     // to obtain the actual pixel data.
-    if (m_compression2 & CHUNKED_FORMAT)
+    if (m_compression & CHUNKED_FORMAT)
     {
-        m_pixels = decode_tile(pixdata, m_xdim, m_ydim, m_compression2, info.format);
+        m_pixels = decode_tile(pixdata, m_xdim, m_ydim, m_compression, info.format);
     }
     else
     {
@@ -185,10 +185,10 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
     std::vector<uint8_t> output_data;
     uint32_t uncomp_size = 0;
     //if (has_transparency(m_compression, GRFFormat::Container1))
-    if (m_compression2 & CHUNKED_FORMAT)
+    if (m_compression & CHUNKED_FORMAT)
     {
         std::vector<uint8_t> chunked_data = encode_tile(m_pixels, m_xdim, m_ydim, 
-            m_compression2, GRFFormat::Container1);
+            m_compression, GRFFormat::Container1);
         output_data = encode_lz77(chunked_data);
     }
     else
@@ -199,7 +199,7 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
     // TODO this isn't quite right - a different size is written sometimes.
     write_uint16(os, output_data.size() + 8);
 
-    write_uint8(os,  m_compression2);
+    write_uint8(os,  m_compression);
     write_uint8(os,  m_ydim);
     write_uint16(os, m_xdim);
     write_uint16(os, m_xrel);
@@ -224,10 +224,10 @@ void RealSpriteRecord::write_format2(std::ostream& os) const
     std::vector<uint8_t> output_data;
     uint32_t uncomp_size = 0;
     //if (has_transparency(m_compression, GRFFormat::Container2))
-    if (m_compression2 & CHUNKED_FORMAT)
+    if (m_compression & CHUNKED_FORMAT)
     {
         std::vector<uint8_t> chunked_data = encode_tile(m_pixels, m_xdim, m_ydim, 
-            m_compression2, GRFFormat::Container2);
+            m_compression, GRFFormat::Container2);
         output_data = encode_lz77(chunked_data);
         uncomp_size = chunked_data.size();
     }
@@ -236,12 +236,12 @@ void RealSpriteRecord::write_format2(std::ostream& os) const
         output_data = encode_lz77(m_pixels);
     }
 
-    uint32_t output_size = output_data.size() + ((m_compression2 & CHUNKED_FORMAT) ? 14 : 10);
+    uint32_t output_size = output_data.size() + ((m_compression & CHUNKED_FORMAT) ? 14 : 10);
 
     // TODO this isn't quite right - a different size is written sometimes.
     write_uint32(os, m_sprite_id); // sprite id
     write_uint32(os, output_size); // TODO + 4 if trans
-    write_uint8(os,  m_compression2);
+    write_uint8(os,  m_compression);
 
     write_uint8(os,  static_cast<uint8_t>(m_zoom));
     write_uint16(os, m_ydim);
@@ -252,7 +252,7 @@ void RealSpriteRecord::write_format2(std::ostream& os) const
     // The uncompressed size is only given in certain cases. The transparency bit tells us how to decode the 
     // data after reading if from the file. It is the size of the data before chunk-compression (tiles). I think.
     //if (has_transparency(m_compression, GRFFormat::Container2))
-    if (m_compression2 & CHUNKED_FORMAT)
+    if (m_compression & CHUNKED_FORMAT)
     {
         write_uint32(os, uncomp_size);
     }
@@ -398,10 +398,10 @@ void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uin
     }
     
     // Tiles contain transparency and are stored in a chunked format to save space.
-    if (m_compression2 & RealSpriteRecord::CHUNKED_FORMAT) os << "|chunked";
+    if (m_compression & RealSpriteRecord::CHUNKED_FORMAT) os << "|chunked";
     // grfcodec likes to remove extraneous transparent borders.
     // TODO Is the sense here the right way?
-    //if (m_compression2 & RealSpriteRecord::CROP_TRANSARENT_BORDER) os << "|no_crop";
+    //if (m_compression & RealSpriteRecord::CROP_TRANSARENT_BORDER) os << "|no_crop";
 
     // If we create a sprite_sheet containing this sprite, print the details.
     os << ", \"" << m_filename << "\", [" << m_xoff << ", " << m_yoff << "]";
@@ -460,7 +460,7 @@ void RealSpriteRecord::parse(TokenStream& is)
     is.match(TokenType::CloseBracket);
 
     zoom_desc.parse(m_zoom, is);
-    colour_desc.parse(m_compression2, is);
+    colour_desc.parse(m_compression, is);
 
     std::string m_filename = is.match(TokenType::String);
 

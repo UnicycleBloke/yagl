@@ -70,7 +70,7 @@ void CommandLineOptions::parse(int argc, char* argv[])
         auto result = options.parse(argc, argv);
 
         // Print help about the command line options, and then exit.
-        if (result.count("help"))
+        if ((argc == 1) || result.count("help"))
         {
             std::cout << options.help({""}) << '\n';
             exit(0);

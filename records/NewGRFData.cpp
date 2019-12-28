@@ -120,8 +120,8 @@ void NewGRFData::read(std::istream& is)
                     // This has fallen over while reading from zbase. The reason seems to be that the sprites
                     // appear as top level items, so a recolour sprite is treated as Action00. This does not 
                     // go well.
-                    record = read_record(is, size, num_sprites == 0, m_info);
-                    //record = read_record(is, size, size != 257, m_info);
+                    //record = read_record(is, size, num_sprites == 0, m_info);
+                    record = read_record(is, size, size != 257, m_info);
                 }
                 break;
 
