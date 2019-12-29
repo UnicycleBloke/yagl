@@ -42,6 +42,7 @@ constexpr const char* str_removal_cost_factor  = "removal_cost_factor";
 constexpr const char* str_callback_flags       = "callback_flags";
 constexpr const char* str_building_height      = "building_height";
 constexpr const char* str_number_of_views      = "number_of_views";
+constexpr const char* str_number_on_creation   = "number_on_creation";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
@@ -67,6 +68,7 @@ const std::map<std::string, uint16_t> g_indices =
     { str_callback_flags,       0x15'00 },
     { str_building_height,      0x16'00 },
     { str_number_of_views,      0x17'00 },
+    { str_number_on_creation,   0x18'00 },
 };
 
 
@@ -88,6 +90,7 @@ constexpr IntegerDescriptorT<uint8_t>  desc_14  = { 0x14, str_removal_cost_facto
 constexpr IntegerDescriptorT<uint16_t> desc_15  = { 0x15, str_callback_flags,       PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_16  = { 0x16, str_building_height,      PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_17  = { 0x17, str_number_of_views,      PropFormat::Hex };
+constexpr IntegerDescriptorT<uint8_t>  desc_18  = { 0x18, str_number_on_creation,      PropFormat::Hex };
     
 
 } // namespace {
@@ -116,6 +119,7 @@ bool Action00Objects::read_property(std::istream& is, uint8_t property)
         case 0x15: m_15_callback_flags         = read_uint16(is); break;
         case 0x16: m_16_building_height        = read_uint8(is); break;
         case 0x17: m_17_number_of_views        = read_uint8(is); break;
+        case 0x18: m_18_number_on_creation     = read_uint8(is); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -144,6 +148,7 @@ bool Action00Objects::write_property(std::ostream& os, uint8_t property) const
         case 0x15: write_uint16(os, m_15_callback_flags); break;
         case 0x16: write_uint8(os, m_16_building_height); break;
         case 0x17: write_uint8(os, m_17_number_of_views); break;
+        case 0x18: write_uint8(os, m_18_number_on_creation); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -173,6 +178,7 @@ bool Action00Objects::print_property(std::ostream& os, uint8_t property, uint16_
         case 0x15: desc_15.print(m_15_callback_flags, os, indent); break;
         case 0x16: desc_16.print(m_16_building_height, os, indent); break;
         case 0x17: desc_17.print(m_17_number_of_views, os, indent); break;
+        case 0x18: desc_18.print(m_18_number_on_creation, os, indent); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -208,6 +214,7 @@ bool Action00Objects::parse_property(TokenStream& is, const std::string& name, u
             case 0x15'00: desc_15.parse(m_15_callback_flags, is); break;
             case 0x16'00: desc_16.parse(m_16_building_height, is); break;
             case 0x17'00: desc_17.parse(m_17_number_of_views, is); break;
+            case 0x18'00: desc_18.parse(m_18_number_on_creation, is); break;
             default:      throw RUNTIME_ERROR("Unknown property");
         }
 

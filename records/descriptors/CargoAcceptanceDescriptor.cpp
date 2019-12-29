@@ -16,15 +16,48 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once
-#include "DescriptorBase.h"
-#include "ArrayDescriptor.h"
-#include "BitfieldDescriptor.h"
-#include "BooleanDescriptor.h"
-#include "CargoListDescriptor.h"
-#include "EnumDescriptor.h"
-#include "GRFLabelListDescriptor.h"
-#include "IntegerDescriptor.h"
-#include "RangeDescriptor.h"
-#include "AirportLayoutDescriptor.h"
 #include "CargoAcceptanceDescriptor.h"
+#include "StreamHelpers.h"
+
+
+void CargoAcceptanceList::read(std::istream& is)
+{
+    uint8_t num_items = read_uint8(is);
+    for (uint8_t i = 0; i < num_items; ++i)
+    {
+        CargoAcceptance item;
+        item.cargo_type = read_uint8(is);
+        item.acceptance = read_uint8(is);
+        m_items.push_back(item);
+    }
+}
+
+
+void CargoAcceptanceList::write(std::ostream& os) const
+{
+    write_uint8(os, m_items.size());
+    for (const auto& item: m_items)
+    {
+        write_uint8(os, item.cargo_type);
+        write_uint8(os, item.acceptance);
+    }
+}
+
+
+void CargoAcceptanceList::print(std::ostream& os, uint16_t indent) const
+{
+    os << "[";
+    for (const auto& item: m_items)
+    {
+        os << " {" << to_hex(item.cargo_type, true) << ": " << to_hex(item.acceptance, true) << "}";
+    }
+    os << " ];";
+}
+
+
+void CargoAcceptanceList::parse(TokenStream& is)
+{
+
+}
+
+

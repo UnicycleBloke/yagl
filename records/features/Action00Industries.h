@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
+#include "Descriptors.h"
 #include <vector>
 
 
@@ -33,60 +34,34 @@ public:
     bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
-private:
-    struct IndustryTile
+public:
+    struct VectorU8
     {
-        int8_t   x_off;  // 0x00 is terminator part 1
-        int8_t   y_off;  // 0x80 is terminator part 2
-        uint8_t  type;
-        uint16_t tile;
+        std::vector<uint8_t> items;
 
         void read(std::istream& is);
         void write(std::ostream& os) const;
         void print(std::ostream& os, uint16_t indent) const;
         void parse(TokenStream& is);
-    };
-
-private:
-    struct IndustryLayout
-    {
-        bool    is_reference;
-        uint8_t industry;
-        uint8_t layout_index;
-        std::vector<IndustryTile> tiles;
-
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-    };
+    };    
 
 public:
-    struct IndustryLayouts
+    struct Multipliers
     {
-        std::vector<IndustryLayout> layouts;
+        uint8_t               num_inputs;
+        uint8_t               num_outputs;
+        std::vector<uint16_t> items;
 
         void read(std::istream& is);
         void write(std::ostream& os) const;
         void print(std::ostream& os, uint16_t indent) const;
         void parse(TokenStream& is);
-    };
-
-public:
-    struct IndustrySFXList
-    {
-        std::vector<uint8_t> effects;
-
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-    };
+    };    
 
 private:
     uint8_t                m_08_substitute_industry_id;
     uint8_t                m_09_industry_type_override;
-    IndustryLayouts        m_0A_industry_layout;
+    AirportLayouts         m_0A_industry_layout;
     uint8_t                m_0B_production_flags;
     uint16_t               m_0C_closure_msg_id;
     uint16_t               m_0D_production_up_id;
@@ -97,7 +72,7 @@ private:
     uint8_t                m_12_production_multipliers_1;
     uint8_t                m_13_production_multipliers_2;
     uint8_t                m_14_minimum_distributed;
-    IndustrySFXList        m_15_sound_effects;
+    VectorU8               m_15_sound_effects;
     std::array<uint8_t, 3> m_16_conflicting_industries;
     std::array<uint8_t, 3> m_16_conflicting_old_new;
     uint8_t                m_17_random_probability;
@@ -117,6 +92,10 @@ private:
     uint8_t                m_22_callback_flags_2;
     uint32_t               m_23_destruction_cost_multiplier;
     uint16_t               m_24_nearby_station_text_id;
+    VectorU8               m_25_production_cargo_list;
+    VectorU8               m_26_acceptance_cargo_list;
+    VectorU8               m_27_production_multipliers;
+    Multipliers            m_28_input_cargo_multipliers;
 };
 
 

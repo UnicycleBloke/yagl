@@ -24,21 +24,6 @@
 namespace {
 
 
-struct AirportLayoutsDescriptor : PropertyDescriptor
-{
-    void print(const Action00Airports::AirportLayouts& layouts, std::ostream& os, uint8_t indent) const
-    {
-        prefix(os, indent);
-        layouts.print(os, indent);
-    }
-
-    void parse(Action00Airports::AirportLayouts& layouts, TokenStream& is) const
-    {
-        layouts.parse(is);
-    }
-};
-
-
 constexpr const char* str_sprite_id               = "sprite_id";
 constexpr const char* str_airport_override_id     = "airport_override_id";
 constexpr const char* str_airport_layouts         = "airport_layouts";
@@ -82,186 +67,12 @@ constexpr IntegerDescriptorT<uint16_t>  desc_11  = { 0x11, str_maintenance_cost_
 } // namespace {
 
 
-// This is the same as an industry tile. I think.
-void Action00Airports::AirportTile::read(std::istream& is)
-{
-    x_off = read_uint8(is);
-    y_off = read_uint8(is);
- 
-    // List termination.
-    // Nasty! Sign extension of the signed int8 causes test against 0x80 to fail.
-    if (x_off == 0x00 && uint8_t(y_off) == 0x80)
-        return;
- 
-    tile = read_uint8(is); 
-    type = static_cast<Type>(tile);
-    // TODO assert in enum.
-    switch (type)
-    {
-        case Type::Clearance:
-            break;
-        case Type::NewTile:
-            tile = read_uint16(is);
-            break;
-        default:
-            type = Type::OldTile;
-    }
-}
-
-
-void Action00Airports::AirportTile::write(std::ostream& os) const
-{
-    write_uint8(os, x_off);
-    write_uint8(os, y_off);
- 
-    //if (x_off == 0x00 && uint8_t(y_off) == 0x80)
-    //    return;
- 
-    switch (type)
-    {
-        case Type::Clearance:
-            write_uint8(os, 0xFF);
-            break;
-        case Type::NewTile:
-            write_uint8(os, 0xFE);
-            write_uint16(os, tile);
-            break;
-        case Type::OldTile:
-            write_uint8(os, tile);
-    }
-}
-
-
-void Action00Airports::AirportTile::print(std::ostream& os, uint16_t indent) const
-{
-    switch (type)
-    {
-        case Type::Clearance: 
-            os << pad(indent) << "clearance(" << x_off << ", " << y_off << ");\n"; 
-            break; 
-        case Type::NewTile:   
-            os << pad(indent) << "new_tile(" << x_off << ", " << y_off << ", " << to_hex(tile, true) << ");\n"; 
-            break;
-        case Type::OldTile:
-            os << pad(indent) << "old_tile(" << x_off << ", " << y_off << ", " << to_hex(tile, true) << ");\n"; 
-            break;
-    }
-}
-
-
-void Action00Airports::AirportLayout::read(std::istream& is)
-{
-    rotation = static_cast<Rotation>(read_uint8(is));
-    // TODO assert in enumeration.
-    while (true)
-    {
-        AirportTile tile;
-        tile.read(is);
-        // This is the terminator.
-        if (tile.x_off == 0x00 && uint8_t(tile.y_off) == 0x80)
-            break;
-        tiles.push_back(tile);
-    }
-}
-
-
-void Action00Airports::AirportLayout::write(std::ostream& os) const
-{
-    write_uint8(os, static_cast<uint8_t>(rotation));
-    for (const auto& tile: tiles)
-    {
-        tile.write(os);
-    }
-    // Write the terminator.
-    write_uint8(os, 0x00);
-    write_uint8(os, 0x80);
-}
-
-
-void Action00Airports::AirportLayout::print(std::ostream& os, uint16_t indent) const
-{
-    os << pad(indent) << "layout<" << rotation_name(rotation) << ">\n"; 
-    os << pad(indent) << "{\n"; 
-    os << pad(indent) << "}\n"; 
-
-    for (const auto& tile: tiles)
-    {
-        tile.print(os, indent + 4);
-    }
-}
-
-
-const char* Action00Airports::AirportLayout::rotation_name(Rotation rotation) const
-{
-    switch (rotation)
-    {
-        case Rotation::North: return "North";
-        case Rotation::South: return "South";
-        case Rotation::East:  return "East";
-        case Rotation::West:  return "West";
-    }
-
-    // Should never get here.
-    return "<unknown>";
-}
-
-
-void Action00Airports::AirportLayouts::read(std::istream& is)
-{
-    uint8_t num_layouts = read_uint8(is);
-    // Size not used for anything.
-    read_uint32(is);
-    layouts.resize(num_layouts);
-    for (uint8_t i = 0; i < num_layouts; ++i)
-    {
-        layouts[i].read(is);
-    }
-}
-
-
-void Action00Airports::AirportLayouts::write(std::ostream& os) const
-{
-    write_uint8(os, layouts.size());
-
-    // Size needs to be calculated... 
-    std::ostringstream ss;
-    for (const auto& layout: layouts)
-    {
-        layout.write(ss);
-    }
-
-    write_uint32(os, ss.str().length());
-    for (const auto& layout: layouts)
-    {
-        layout.write(os);
-    }
-}
-
-
-void Action00Airports::AirportLayouts::print(std::ostream& os, uint16_t indent) const
-{
-    os << pad(indent) << "layouts\n"; 
-    os << pad(indent) << "{\n"; 
-    for (const auto& layout: layouts)
-    {
-        layout.print(os, indent + 4);
-    }
-    os << pad(indent) << "};\n"; 
-}
-
-
-void Action00Airports::AirportLayouts::parse(TokenStream& is)
-{
-    throw RUNTIME_ERROR("Action00Airports::AirportLayouts::parse not implemented");
-}
-
-
 bool Action00Airports::read_property(std::istream& is, uint8_t property)
 {
     switch (property)
     {
         case 0x08: m_08_airport_override_id     = read_uint8(is); break;
-        case 0x0A: m_0A_airport_layouts.read(is); break;
+        case 0x0A: m_0A_airport_layouts.read(is, AirportType::Airport); break;
         case 0x0C: m_0C_first_year_available    = read_uint16(is);
                    m_0C_last_year_available     = read_uint16(is); break;
         case 0x0D: m_0D_compatible_ttd_airport  = read_uint8(is); break;
@@ -281,7 +92,7 @@ bool Action00Airports::write_property(std::ostream& os, uint8_t property) const
     switch (property)
     {
         case 0x08: write_uint8(os,  m_08_airport_override_id); break;
-        case 0x0A: m_0A_airport_layouts.write(os); break;
+        case 0x0A: m_0A_airport_layouts.write(os, AirportType::Airport); break;
         case 0x0C: write_uint16(os, m_0C_first_year_available);
                    write_uint16(os, m_0C_last_year_available); break;
         case 0x0D: write_uint8(os,  m_0D_compatible_ttd_airport); break;
@@ -301,7 +112,7 @@ bool Action00Airports::print_property(std::ostream& os, uint8_t property, uint16
     switch (property)
     {
         case 0x08: desc_08.print(m_08_airport_override_id, os, indent); break;
-        case 0x0A: desc_0A.print(m_0A_airport_layouts, os, indent); break;
+        case 0x0A: desc_0A.print(m_0A_airport_layouts, os, indent, AirportType::Airport); break;
         case 0x0C: desc_0C0.print(m_0C_first_year_available, os, indent); os << "\n";
                    desc_0C1.print(m_0C_last_year_available, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_compatible_ttd_airport, os, indent); break;
@@ -327,7 +138,7 @@ bool Action00Airports::parse_property(TokenStream& is, const std::string& name, 
         switch (index)
         {
             case 0x08'00: desc_08.parse(m_08_airport_override_id, is); break;
-            case 0x0A'00: desc_0A.parse(m_0A_airport_layouts, is); break;
+            case 0x0A'00: desc_0A.parse(m_0A_airport_layouts, is, AirportType::Airport); break;
             case 0x0C'00: desc_0C0.parse(m_0C_first_year_available, is); break;
             case 0x0C'01: desc_0C1.parse(m_0C_last_year_available, is); break;
             case 0x0D'00: desc_0D.parse(m_0D_compatible_ttd_airport, is); break;

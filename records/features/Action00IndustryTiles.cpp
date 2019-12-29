@@ -39,6 +39,7 @@ constexpr const char* str_animation_type         = "animation_type";
 constexpr const char* str_animation_speed        = "animation_speed";
 constexpr const char* str_callback_25_triggers   = "callback_25_triggers";
 constexpr const char* str_special_flags          = "special_flags";
+constexpr const char* str_cargo_acceptance_list  = "cargo_acceptance_list";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
@@ -61,6 +62,7 @@ const std::map<std::string, uint16_t> g_indices =
     { str_animation_speed,        0x10'00 },
     { str_callback_25_triggers,   0x11'00 },
     { str_special_flags,          0x12'00 },
+    { str_cargo_acceptance_list,  0x13'00 },
 };
 
 
@@ -79,6 +81,7 @@ constexpr IntegerDescriptorT<uint8_t> desc_0F1 = { 0x0F, str_animation_type,    
 constexpr IntegerDescriptorT<uint8_t> desc_10  = { 0x10, str_animation_speed,        PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t> desc_11  = { 0x11, str_callback_25_triggers,   PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t> desc_12  = { 0x12, str_special_flags,          PropFormat::Hex };
+constexpr CargoAcceptanceDescriptor   desc_13  = { 0x13, str_cargo_acceptance_list };
 
 
 } // namespace {
@@ -103,6 +106,7 @@ bool Action00IndustryTiles::read_property(std::istream& is, uint8_t property)
         case 0x10: m_10_animation_speed        = read_uint8(is); break;
         case 0x11: m_11_callback_25_triggers   = read_uint8(is); break;
         case 0x12: m_12_special_flags          = read_uint8(is); break;
+        case 0x13: m_13_cargo_acceptance_list.read(is); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -129,6 +133,7 @@ bool Action00IndustryTiles::write_property(std::ostream& os, uint8_t property) c
         case 0x10: write_uint8(os, m_10_animation_speed); break;
         case 0x11: write_uint8(os, m_11_callback_25_triggers); break;
         case 0x12: write_uint8(os, m_12_special_flags); break;
+        case 0x13: m_13_cargo_acceptance_list.write(os); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -155,6 +160,7 @@ bool Action00IndustryTiles::print_property(std::ostream& os, uint8_t property, u
         case 0x10: desc_10.print(m_10_animation_speed, os, indent); break;
         case 0x11: desc_11.print(m_11_callback_25_triggers, os, indent); break;
         case 0x12: desc_12.print(m_12_special_flags, os, indent); break;
+        case 0x13: desc_13.print(m_13_cargo_acceptance_list, os, indent); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -187,6 +193,7 @@ bool Action00IndustryTiles::parse_property(TokenStream& is, const std::string& n
             case 0x10'00: desc_10.parse(m_10_animation_speed, is); break;
             case 0x11'00: desc_11.parse(m_11_callback_25_triggers, is); break;
             case 0x12'00: desc_12.parse(m_12_special_flags, is); break;
+            case 0x13'00: desc_13.parse(m_13_cargo_acceptance_list, is); break;
             default:      throw RUNTIME_ERROR("Unknown property");
         }
 

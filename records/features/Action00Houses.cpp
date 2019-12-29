@@ -54,6 +54,7 @@ constexpr const char* str_minimum_life_years =      "minimum_life_years";
 constexpr const char* str_accepted_cargo_list =     "accepted_cargo_list";
 constexpr const char* str_long_minimum_year =       "long_minimum_year";
 constexpr const char* str_long_maximum_year =       "long_maximum_year";
+constexpr const char* str_tile_acceptance_list =    "tile_acceptance_list";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
@@ -91,6 +92,7 @@ const std::map<std::string, uint16_t> g_indices =
     { str_accepted_cargo_list,     0x20'00 },
     { str_long_minimum_year,       0x21'00 },
     { str_long_maximum_year,       0x22'00 },
+    { str_tile_acceptance_list,    0x23'00 },
 };
 
 
@@ -124,6 +126,7 @@ constexpr IntegerDescriptorT<uint16_t> desc_1F  = { 0x1F, str_minimum_life_years
 constexpr CargoListDescriptor          desc_20  = { 0x20, str_accepted_cargo_list };
 constexpr IntegerDescriptorT<uint16_t> desc_21  = { 0x21, str_long_minimum_year,      PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_22  = { 0x22, str_long_maximum_year,      PropFormat::Hex };
+constexpr CargoAcceptanceDescriptor    desc_23  = { 0x22, str_tile_acceptance_list };
 
 
 } // namespace {
@@ -173,6 +176,7 @@ bool Action00Houses::read_property(std::istream& is, uint8_t property)
         case 0x20: m_20_accepted_cargo_list.read(is); break;
         case 0x21: m_21_long_minimum_year       = read_uint16(is); break;
         case 0x22: m_22_long_maximum_year       = read_uint16(is); break;
+        case 0x23: m_23_tile_acceptance_list.read(is); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -218,6 +222,7 @@ bool Action00Houses::write_property(std::ostream& os, uint8_t property) const
         case 0x20: m_20_accepted_cargo_list.write(os); break;
         case 0x21: write_uint16(os, m_21_long_minimum_year); break;
         case 0x22: write_uint16(os, m_22_long_maximum_year); break;
+        case 0x23: m_23_tile_acceptance_list.write(os); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -259,6 +264,7 @@ bool Action00Houses::print_property(std::ostream& os, uint8_t property, uint16_t
         case 0x20: desc_20.print(m_20_accepted_cargo_list, os, indent); break;
         case 0x21: desc_21.print(m_21_long_minimum_year, os, indent); break;
         case 0x22: desc_22.print(m_22_long_maximum_year, os, indent); break;
+        case 0x23: desc_23.print(m_23_tile_acceptance_list, os, indent); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -306,6 +312,7 @@ bool Action00Houses::parse_property(TokenStream& is, const std::string& name, ui
             case 0x20'00: desc_20.parse(m_20_accepted_cargo_list, is); break;
             case 0x21'00: desc_21.parse(m_21_long_minimum_year, is); break;
             case 0x22'00: desc_22.parse(m_22_long_maximum_year, is); break;
+            case 0x23'00: desc_23.parse(m_23_tile_acceptance_list, is); break;
             default:      throw RUNTIME_ERROR("Unknown property");
         }
 

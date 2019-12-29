@@ -17,33 +17,45 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Action00Feature.h"
-#include "Descriptors.h"
+#include "DescriptorBase.h"
 #include <vector>
 
 
-class Action00Airports : public Action00Feature
+struct CargoAcceptance
+{
+    uint8_t cargo_type; // Index into cargo translation table
+    uint8_t acceptance; // In 1/8 units.
+};
+
+
+class CargoAcceptanceList
 {
 public:
-    Action00Airports() : Action00Feature() {}
-
     // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
     // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
 
 private:
-    uint8_t        m_08_airport_override_id;
-    AirportLayouts m_0A_airport_layouts;
-    uint16_t       m_0C_first_year_available;
-    uint16_t       m_0C_last_year_available;
-    uint8_t        m_0D_compatible_ttd_airport;
-    uint8_t        m_0E_catchment_area;
-    uint8_t        m_0F_noise_level;
-    uint16_t       m_10_airport_name_id;
-    uint16_t       m_11_maintenance_cost_factor;
+    std::vector<CargoAcceptance> m_items;
 };
+
+
+struct CargoAcceptanceDescriptor : PropertyDescriptor
+{
+    void print(const CargoAcceptanceList& list, std::ostream& os, uint8_t indent) const
+    {
+        prefix(os, indent);
+        list.print(os, indent);
+    }
+
+    void parse(CargoAcceptanceList& list, TokenStream& is) const
+    {
+        list.parse(is);
+    }
+};
+
 
 

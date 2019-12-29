@@ -51,6 +51,7 @@ private:
     uint16_t m_15_callback_flags;
     uint8_t  m_16_building_height;
     uint8_t  m_17_number_of_views;
+    uint8_t  m_18_number_on_creation;
 };
 
 

@@ -24,32 +24,32 @@
 namespace {
 
 
-struct IndustryLayoutDescriptor : PropertyDescriptor
+struct VectorU8Descriptor : PropertyDescriptor
 {
-    void print(const Action00Industries::IndustryLayouts& layouts, std::ostream& os, uint8_t indent) const
+    void print(const Action00Industries::VectorU8& items, std::ostream& os, uint8_t indent) const
     {
         prefix(os, indent);
-        layouts.print(os, indent);
+        items.print(os, indent);
     }
 
-    void parse(Action00Industries::IndustryLayouts& layouts, TokenStream& is) const
+    void parse(Action00Industries::VectorU8& items, TokenStream& is) const
     {
-        layouts.parse(is);
+        items.parse(is);
     }
 };
 
 
-struct IndustrySFXListDescriptor : PropertyDescriptor
+struct MultipliersDescriptor : PropertyDescriptor
 {
-    void print(const Action00Industries::IndustrySFXList& layouts, std::ostream& os, uint8_t indent) const
+    void print(const Action00Industries::Multipliers& items, std::ostream& os, uint8_t indent) const
     {
         prefix(os, indent);
-        layouts.print(os, indent);
+        items.print(os, indent);
     }
 
-    void parse(Action00Industries::IndustrySFXList& layouts, TokenStream& is) const
+    void parse(Action00Industries::Multipliers& items, TokenStream& is) const
     {
-        layouts.parse(is);
+        items.parse(is);
     }
 };
 
@@ -87,6 +87,10 @@ constexpr const char* str_callback_flags_1            = "callback_flags_1";
 constexpr const char* str_callback_flags_2            = "callback_flags_2";
 constexpr const char* str_destruction_cost_multiplier = "destruction_cost_multiplier";
 constexpr const char* str_nearby_station_text_id      = "nearby_station_text_id";
+constexpr const char* str_production_cargo_list       = "production_cargo_list";
+constexpr const char* str_acceptance_cargo_list       = "acceptance_cargo_list";
+constexpr const char* str_production_multipliers      = "production_multipliers";
+constexpr const char* str_input_cargo_multipliers     = "input_cargo_multipliers";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
@@ -127,12 +131,16 @@ const std::map<std::string, uint16_t> g_indices =
     { str_callback_flags_2,            0x22'00 },
     { str_destruction_cost_multiplier, 0x23'00 },
     { str_nearby_station_text_id,      0x24'00 },
+    { str_production_cargo_list,       0x25'00 },
+    { str_acceptance_cargo_list,       0x26'00 },
+    { str_production_multipliers,      0x27'00 },
+    { str_input_cargo_multipliers,     0x28'00 },
 };
 
 
 constexpr IntegerDescriptorT<uint8_t>  desc_08  = { 0x08, str_substitute_industry_id,      PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_09  = { 0x09, str_industry_type_override,      PropFormat::Hex };
-constexpr IndustryLayoutDescriptor     desc_0A  = { 0x0A, str_industry_layout };
+constexpr AirportLayoutsDescriptor     desc_0A  = { 0x0A, str_industry_layout };
 constexpr IntegerDescriptorT<uint8_t>  desc_0B  = { 0x0B, str_production_flags,            PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_0C  = { 0x0C, str_closure_msg_id,              PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_0D  = { 0x0D, str_production_up_id,            PropFormat::Hex };
@@ -143,7 +151,7 @@ constexpr ArrayDescriptorT<uint8_t, 4> desc_11  = { 0x11, str_acceptance_cargo_t
 constexpr IntegerDescriptorT<uint8_t>  desc_12  = { 0x12, str_production_multipliers_1,    PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_13  = { 0x13, str_production_multipliers_2,    PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_14  = { 0x14, str_minimum_distributed,         PropFormat::Hex };
-constexpr IndustrySFXListDescriptor    desc_15  = { 0x15, str_sound_effects };
+constexpr VectorU8Descriptor           desc_15  = { 0x15, str_sound_effects };
 constexpr ArrayDescriptorT<uint8_t, 3> desc_160 = { 0x16, str_conflicting_industries,      PropFormat::Hex };
 constexpr ArrayDescriptorT<uint8_t, 3> desc_161 = { 0x16, str_conflicting_old_new,         PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_17  = { 0x17, str_random_probability,          PropFormat::Hex };
@@ -163,203 +171,93 @@ constexpr IntegerDescriptorT<uint8_t>  desc_21  = { 0x21, str_callback_flags_1, 
 constexpr IntegerDescriptorT<uint8_t>  desc_22  = { 0x22, str_callback_flags_2,            PropFormat::Hex };
 constexpr IntegerDescriptorT<uint32_t> desc_23  = { 0x23, str_destruction_cost_multiplier, PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_24  = { 0x24, str_nearby_station_text_id,      PropFormat::Hex };
+constexpr VectorU8Descriptor           desc_25  = { 0x25, str_production_cargo_list };
+constexpr VectorU8Descriptor           desc_26  = { 0x26, str_acceptance_cargo_list };
+constexpr VectorU8Descriptor           desc_27  = { 0x27, str_production_multipliers };
+constexpr MultipliersDescriptor        desc_28  = { 0x28, str_input_cargo_multipliers };
 
 
 } // namespace {
 
 
-void Action00Industries::IndustryTile::read(std::istream& is)
+void Action00Industries::VectorU8::read(std::istream& is)
 {
-    x_off = read_uint8(is);
-    y_off = read_uint8(is);
-
-    // Nasty! Sign extension of the signed int8 causes test against 0x80 to fail.
-    if (x_off == 0x00 && uint8_t(y_off) == 0x80)
-        return;
-
-    type = read_uint8(is);
-    switch (type)
+    uint8_t num_items = read_uint8(is);
+    for (uint8_t i = 0; i < num_items; ++i)
     {
-        case 0xFF:
-            break;
-        case 0xFE:
-            tile = read_uint16(is);
-            break;
-        default:
-            tile = type;
-            type = 0x00;
+        items.push_back(read_uint8(is));
     }
 }
 
 
-void Action00Industries::IndustryTile::write(std::ostream& os) const
+void Action00Industries::VectorU8::write(std::ostream& os) const
 {
-    write_uint8(os, x_off);
-    write_uint8(os, y_off);
- 
-    //if (x_off == 0x00 && uint8_t(y_off) == 0x80)
-    //    return;
- 
-    switch (type)
+    write_uint8(os, items.size());
+    for (uint8_t item: items)
     {
-        case 0xFF:
-            write_uint8(os, 0xFF);
-            break;
-        case 0xFE:
-            write_uint8(os, 0xFE);
-            write_uint16(os, tile);
-            break;
-        default:
-            write_uint8(os, tile);
+        write_uint8(os, item);
     }
 }
 
 
-void Action00Industries::IndustryTile::print(std::ostream& os, uint16_t indent) const
+void Action00Industries::VectorU8::print(std::ostream& os, uint16_t indent) const
 {
-
-}
-
-
-void Action00Industries::IndustryTile::parse(TokenStream& is)
-{
-
-}
-
-
-void Action00Industries::IndustryLayout::read(std::istream& is)
-{
-    // This could go wrong if the first tile is for clearance and has the x-value of -2.
-    is_reference = (is.peek() == 0xFE);
-    if (is_reference)
+    os << "[";
+    for (const auto& item: items)
     {
-        // Special case in which the layout is a reference to another industry
-        // Waste the 0xFE byte we just peeked.
-        read_uint8(is);
-        industry     = read_uint8(is);
-        layout_index = read_uint8(is);
+        os << " " << to_hex(item, true);
     }
-    else
+    os << " ];";
+}
+
+
+void Action00Industries::VectorU8::parse(TokenStream& is)
+{
+
+}
+
+
+void Action00Industries::Multipliers::read(std::istream& is)
+{
+    num_inputs  = read_uint8(is);
+    num_outputs = read_uint8(is);
+    uint16_t num_items = num_inputs * num_outputs;
+    for (uint16_t i = 0; i < num_items; ++i)
     {
-        while (true)
+        items.push_back(read_uint16(is));
+    }
+}
+
+
+void Action00Industries::Multipliers::write(std::ostream& os) const
+{
+    write_uint8(os, num_inputs);
+    write_uint8(os, num_outputs);
+    // TODO assert size of vector matches.
+    for (uint16_t item: items)
+    {
+        write_uint16(os, item);
+    }
+}
+
+
+void Action00Industries::Multipliers::print(std::ostream& os, uint16_t indent) const
+{
+    os << "[";
+    for (uint8_t i = 0; i < num_inputs; ++i)
+    {
+        os << " [";
+        for (uint8_t o = 0; o < num_outputs; ++o)
         {
-            IndustryTile tile;
-            tile.read(is);
-            // Nasty! Sign extension of the signed int8 causes test against 0x80 to fail.
-            if (tile.x_off == 0x00 && uint8_t(tile.y_off) == 0x80)
-                break;
-            tiles.push_back(tile);
+            os << " " << to_hex(items[i * num_outputs + o], true);
         }
+        os << " ]";
     }
+    os << " ];";
 }
 
 
-void Action00Industries::IndustryLayout::write(std::ostream& os) const
-{
-    if (is_reference)
-    {
-        // Special case in which the layout is a reference to another industry
-        write_uint8(os, 0xFE);
-        write_uint8(os, industry);
-        write_uint8(os, layout_index);
-    }
-    else
-    {
-        for (const auto& tile: tiles)
-        {
-            tile.write(os);
-        }
-        write_uint8(os, 0x00);
-        write_uint8(os, 0x80);
-    }
-}
-
-
-void Action00Industries::IndustryLayout::print(std::ostream& os, uint16_t indent) const
-{
-
-}
-
-
-void Action00Industries::IndustryLayout::parse(TokenStream& is)
-{
-
-}
-
-
-void Action00Industries::IndustryLayouts::read(std::istream& is)
-{
-    uint8_t num_layouts = read_uint8(is);
-
-    // Size not used for anything.
-    read_uint32(is);
-
-    layouts.resize(num_layouts);
-    for (uint8_t i = 0; i < num_layouts; ++i)
-    {
-        layouts[i].read(is);
-    }
-}
-
-
-void Action00Industries::IndustryLayouts::write(std::ostream& os) const
-{
-    write_uint8(os, layouts.size());
-
-    // Size needs to be calculated... 
-    std::ostringstream ss;
-    for (const auto& layout: layouts)
-    {
-        layout.write(ss);
-    }
-
-    write_uint32(os, ss.str().length());
-    for (const auto& layout: layouts)
-    {
-        layout.write(os);
-    }
-}
-
-
-void Action00Industries::IndustryLayouts::print(std::ostream& os, uint16_t indent) const
-{
-
-}
-
-
-void Action00Industries::IndustryLayouts::parse(TokenStream& is)
-{
-
-}
-
-
-void Action00Industries::IndustrySFXList::read(std::istream& is)
-{
-    uint8_t num_effects = read_uint8(is);
-    for (uint8_t i = 0; i < num_effects; ++i)
-    {
-        effects.push_back(read_uint8(is));
-    }
-}
-
-
-void Action00Industries::IndustrySFXList::write(std::ostream& os) const
-{
-    write_uint8(os, effects.size());
-    for (uint8_t effect: effects)
-    {
-        write_uint8(os, effect);
-    }
-}
-
-
-void Action00Industries::IndustrySFXList::print(std::ostream& os, uint16_t indent) const
-{
-
-}
-
-
-void Action00Industries::IndustrySFXList::parse(TokenStream& is)
+void Action00Industries::Multipliers::parse(TokenStream& is)
 {
 
 }
@@ -373,7 +271,7 @@ bool Action00Industries::read_property(std::istream& is, uint8_t property)
     {
         case 0x08: m_08_substitute_industry_id      = read_uint8(is); break;
         case 0x09: m_09_industry_type_override      = read_uint8(is); break;
-        case 0x0A: m_0A_industry_layout.read(is); break;
+        case 0x0A: m_0A_industry_layout.read(is, AirportType::Industry); break;
         case 0x0B: m_0B_production_flags            = read_uint8(is); break;
         case 0x0C: m_0C_closure_msg_id              = read_uint16(is); break;
         case 0x0D: m_0D_production_up_id            = read_uint16(is); break;
@@ -415,6 +313,10 @@ bool Action00Industries::read_property(std::istream& is, uint8_t property)
         case 0x22: m_22_callback_flags_2            = read_uint8(is); break;
         case 0x23: m_23_destruction_cost_multiplier = read_uint32(is); break;
         case 0x24: m_24_nearby_station_text_id      = read_uint16(is); break;
+        case 0x25: m_25_production_cargo_list.read(is); break;
+        case 0x26: m_26_acceptance_cargo_list.read(is); break;
+        case 0x27: m_27_production_multipliers.read(is); break;
+        case 0x28: m_28_input_cargo_multipliers.read(is); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -428,7 +330,7 @@ bool Action00Industries::write_property(std::ostream& os, uint8_t property) cons
     {
         case 0x08: write_uint8(os, m_08_substitute_industry_id); break;
         case 0x09: write_uint8(os, m_09_industry_type_override); break;
-        case 0x0A: m_0A_industry_layout.write(os); break;
+        case 0x0A: m_0A_industry_layout.write(os, AirportType::Industry); break;
         case 0x0B: write_uint8(os, m_0B_production_flags); break;
         case 0x0C: write_uint16(os, m_0C_closure_msg_id); break;
         case 0x0D: write_uint16(os, m_0D_production_up_id); break;
@@ -464,6 +366,10 @@ bool Action00Industries::write_property(std::ostream& os, uint8_t property) cons
         case 0x22: write_uint8(os, m_22_callback_flags_2); break;
         case 0x23: write_uint32(os, m_23_destruction_cost_multiplier); break;
         case 0x24: write_uint16(os, m_24_nearby_station_text_id); break;
+        case 0x25: m_25_production_cargo_list.write(os); break;
+        case 0x26: m_26_acceptance_cargo_list.write(os); break;
+        case 0x27: m_27_production_multipliers.write(os); break;
+        case 0x28: m_28_input_cargo_multipliers.write(os); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -477,7 +383,7 @@ bool Action00Industries::print_property(std::ostream& os, uint8_t property, uint
     {
         case 0x08: desc_08.print(m_08_substitute_industry_id, os, indent); break;
         case 0x09: desc_09.print(m_09_industry_type_override, os, indent); break;
-        case 0x0A: desc_0A.print(m_0A_industry_layout, os, indent); break;
+        case 0x0A: desc_0A.print(m_0A_industry_layout, os, indent, AirportType::Industry); break;
         case 0x0B: desc_0B.print(m_0B_production_flags, os, indent); break;
         case 0x0C: desc_0C.print(m_0C_closure_msg_id, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_production_up_id, os, indent); break;
@@ -508,7 +414,10 @@ bool Action00Industries::print_property(std::ostream& os, uint8_t property, uint
         case 0x22: desc_22.print(m_22_callback_flags_2, os, indent); break;
         case 0x23: desc_23.print(m_23_destruction_cost_multiplier, os, indent); break;
         case 0x24: desc_24.print(m_24_nearby_station_text_id, os, indent); break;
-
+        case 0x25: desc_25.print(m_25_production_cargo_list, os, indent); break;
+        case 0x26: desc_26.print(m_26_acceptance_cargo_list, os, indent); break;
+        case 0x27: desc_27.print(m_27_production_multipliers, os, indent); break;
+        case 0x28: desc_28.print(m_28_input_cargo_multipliers, os, indent); break;
         default:   throw RUNTIME_ERROR("Unknown property");
     }
 
@@ -528,7 +437,7 @@ bool Action00Industries::parse_property(TokenStream& is, const std::string& name
         {
             case 0x08'00: desc_08.parse(m_08_substitute_industry_id, is); break;
             case 0x09'00: desc_09.parse(m_09_industry_type_override, is); break;
-            case 0x0A'00: desc_0A.parse(m_0A_industry_layout, is); break;
+            case 0x0A'00: desc_0A.parse(m_0A_industry_layout, is, AirportType::Industry); break;
             case 0x0B'00: desc_0B.parse(m_0B_production_flags, is); break;
             case 0x0C'00: desc_0C.parse(m_0C_closure_msg_id, is); break;
             case 0x0D'00: desc_0D.parse(m_0D_production_up_id, is); break;
@@ -559,6 +468,10 @@ bool Action00Industries::parse_property(TokenStream& is, const std::string& name
             case 0x22'00: desc_22.parse(m_22_callback_flags_2, is); break;
             case 0x23'00: desc_23.parse(m_23_destruction_cost_multiplier, is); break;
             case 0x24'00: desc_24.parse(m_24_nearby_station_text_id, is); break;
+            case 0x25'00: desc_25.parse(m_25_production_cargo_list, is); break;
+            case 0x26'00: desc_26.parse(m_26_acceptance_cargo_list, is); break;
+            case 0x27'00: desc_27.parse(m_27_production_multipliers, is); break;
+            case 0x28'00: desc_28.parse(m_28_input_cargo_multipliers, is); break;
             default:      throw RUNTIME_ERROR("Unknown property");
         }
 
