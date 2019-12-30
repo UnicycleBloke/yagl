@@ -120,7 +120,7 @@ bool Action00Objects::read_property(std::istream& is, uint8_t property)
         case 0x16: m_16_building_height        = read_uint8(is); break;
         case 0x17: m_17_number_of_views        = read_uint8(is); break;
         case 0x18: m_18_number_on_creation     = read_uint8(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -149,7 +149,7 @@ bool Action00Objects::write_property(std::ostream& os, uint8_t property) const
         case 0x16: write_uint8(os, m_16_building_height); break;
         case 0x17: write_uint8(os, m_17_number_of_views); break;
         case 0x18: write_uint8(os, m_18_number_on_creation); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -179,7 +179,7 @@ bool Action00Objects::print_property(std::ostream& os, uint8_t property, uint16_
         case 0x16: desc_16.print(m_16_building_height, os, indent); break;
         case 0x17: desc_17.print(m_17_number_of_views, os, indent); break;
         case 0x18: desc_18.print(m_18_number_on_creation, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -215,11 +215,11 @@ bool Action00Objects::parse_property(TokenStream& is, const std::string& name, u
             case 0x16'00: desc_16.parse(m_16_building_height, is); break;
             case 0x17'00: desc_17.parse(m_17_number_of_views, is); break;
             case 0x18'00: desc_18.parse(m_18_number_on_creation, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }

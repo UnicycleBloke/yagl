@@ -51,7 +51,7 @@ bool Action00Canals::read_property(std::istream& is, uint8_t property)
     {
         case 0x08: m_08_callback_flags = read_uint8(is); break;
         case 0x09: m_09_graphics_flags = read_uint8(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -64,7 +64,7 @@ bool Action00Canals::write_property(std::ostream& os, uint8_t property) const
     {
         case 0x08: write_uint8(os, m_08_callback_flags); break;
         case 0x09: write_uint8(os, m_09_graphics_flags); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -77,7 +77,7 @@ bool Action00Canals::print_property(std::ostream& os, uint8_t property, uint16_t
     {
         case 0x08: desc_08.print(m_08_callback_flags, os, indent); break;
         case 0x09: desc_09.print(m_09_graphics_flags, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -96,11 +96,11 @@ bool Action00Canals::parse_property(TokenStream& is, const std::string& name, ui
         {
             case 0x08'00: desc_08.parse(m_08_callback_flags, is); break;
             case 0x09'00: desc_09.parse(m_09_graphics_flags, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }

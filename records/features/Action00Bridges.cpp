@@ -204,7 +204,7 @@ bool Action00Bridges::read_property(std::istream& is, uint8_t property)
         case 0x11: m_11_description_rail    = read_uint16(is); break;
         case 0x12: m_12_description_road    = read_uint16(is); break;
         case 0x13: m_13_cost_factor_word    = read_uint16(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -228,7 +228,7 @@ bool Action00Bridges::write_property(std::ostream& os, uint8_t property) const
         case 0x11: write_uint16(os, m_11_description_rail); break;
         case 0x12: write_uint16(os, m_12_description_road); break;
         case 0x13: write_uint16(os, m_13_cost_factor_word); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -252,7 +252,7 @@ bool Action00Bridges::print_property(std::ostream& os, uint8_t property, uint16_
         case 0x11: desc_11.print(m_11_description_rail, os, indent); break;
         case 0x12: desc_12.print(m_12_description_road, os, indent); break;
         case 0x13: desc_13.print(m_13_cost_factor_word, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -282,12 +282,12 @@ bool Action00Bridges::parse_property(TokenStream& is, const std::string& name, u
             case 0x11'00: desc_11.parse(m_11_description_rail, is); break;
             case 0x12'00: desc_12.parse(m_12_description_road, is); break;
             case 0x13'00: desc_13.parse(m_13_cost_factor_word, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }
 

@@ -256,7 +256,7 @@ bool Action00GlobalSettings::read_property(std::istream& is, uint8_t property)
         case 0x13: m_13_gender_translation_table.read(is);            break;
         case 0x14: m_14_case_translation_table.read(is);              break;
         case 0x15: m_15_plural_form                = read_uint8(is);  break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -283,7 +283,7 @@ bool Action00GlobalSettings::write_property(std::ostream& os, uint8_t property) 
         case 0x13: m_13_gender_translation_table.write(os); break;
         case 0x14: m_14_case_translation_table.write(os); break;
         case 0x15: write_uint8(os, m_15_plural_form); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -310,7 +310,7 @@ bool Action00GlobalSettings::print_property(std::ostream& os, uint8_t property, 
         case 0x13: desc_13.print(m_13_gender_translation_table, os, indent); break;
         case 0x14: desc_14.print(m_14_case_translation_table, os, indent); break;
         case 0x15: desc_15.print(m_15_plural_form, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -343,12 +343,12 @@ bool Action00GlobalSettings::parse_property(TokenStream& is, const std::string& 
             case 0x13'00: desc_13.parse(m_13_gender_translation_table, is); break;
             case 0x14'00: desc_14.parse(m_14_case_translation_table, is); break;
             case 0x15'00: desc_15.parse(m_15_plural_form, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }
 

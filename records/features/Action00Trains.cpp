@@ -197,7 +197,7 @@ bool Action00Trains::read_property(std::istream& is, uint8_t property)
         case 0x2B: m_2B_custom_cargo_aging_period    = read_uint16(is); break;
         case 0x2C: m_2C_always_refittable_cargos.read(is); break;
         case 0x2D: m_2D_never_refittable_cargos.read(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -249,6 +249,7 @@ bool Action00Trains::write_property(std::ostream& os, uint8_t property) const
         case 0x2B: write_uint16(os, m_2B_custom_cargo_aging_period); break;        
         case 0x2C: m_2C_always_refittable_cargos.write(os); break;
         case 0x2D: m_2D_never_refittable_cargos.write(os); break;
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -300,6 +301,7 @@ bool Action00Trains::print_property(std::ostream& os, uint8_t property, uint16_t
         case 0x2B: desc_2B.print(m_2B_custom_cargo_aging_period, os, indent); break;
         case 0x2C: desc_2C.print(m_2C_always_refittable_cargos, os, indent); break;
         case 0x2D: desc_2D.print(m_2D_never_refittable_cargos, os, indent); break;
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -357,11 +359,11 @@ bool Action00Trains::parse_property(TokenStream& is, const std::string& name, ui
             case 0x2B'00: desc_2B.parse(m_2B_custom_cargo_aging_period, is); break;
             case 0x2C'00: desc_2C.parse(m_2C_always_refittable_cargos, is); break;
             case 0x2D'00: desc_2D.parse(m_2D_never_refittable_cargos, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }

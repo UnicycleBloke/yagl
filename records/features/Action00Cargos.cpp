@@ -131,7 +131,7 @@ bool Action00Cargos::read_property(std::istream& is, uint8_t property)
         case 0x1B: m_1B_cargo_units_id         = read_uint16(is); break;
         case 0x1C: m_1C_cargo_amount_id        = read_uint16(is); break;
         case 0x1D: m_1D_capacity_multiplier    = read_uint16(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -164,7 +164,7 @@ bool Action00Cargos::write_property(std::ostream& os, uint8_t property) const
         case 0x1B: write_uint16(os, m_1B_cargo_units_id); break;
         case 0x1C: write_uint16(os, m_1C_cargo_amount_id); break;
         case 0x1D: write_uint16(os, m_1D_capacity_multiplier); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -197,7 +197,7 @@ bool Action00Cargos::print_property(std::ostream& os, uint8_t property, uint16_t
         case 0x1B: desc_1B.print(m_1B_cargo_units_id, os, indent); break;
         case 0x1C: desc_1C.print(m_1C_cargo_amount_id, os, indent); break;
         case 0x1D: desc_1D.print(m_1D_capacity_multiplier, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -236,11 +236,11 @@ bool Action00Cargos::parse_property(TokenStream& is, const std::string& name, ui
             case 0x1B'00: desc_1B.parse(m_1B_cargo_units_id, is); break;
             case 0x1C'00: desc_1C.parse(m_1C_cargo_amount_id, is); break;
             case 0x1D'00: desc_1D.parse(m_1D_capacity_multiplier, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }

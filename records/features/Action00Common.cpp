@@ -124,7 +124,7 @@ bool Action00Common::parse_property(TokenStream& is, const std::string& name, ui
             case 0x04'00: desc_04.parse(m_04_model_life_years, is); break;
             case 0x06'00: desc_06.parse(m_06_climate_availability, is); break;
             case 0x07'00: desc_07.parse(m_07_loading_speed, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
     
         return true;

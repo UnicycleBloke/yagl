@@ -130,7 +130,7 @@ bool Action00RailTypes::read_property(std::istream& is, uint8_t property)
         case 0x1B: m_1B_rail_type_name_id       = read_uint16(is); break;
         case 0x1C: m_1C_maintenance_cost_factor = read_uint16(is); break;
         case 0x1D: m_1D_alternate_railtypes.read(is);              break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -163,7 +163,7 @@ bool Action00RailTypes::write_property(std::ostream& os, uint8_t property) const
         case 0x1B: write_uint16(os, m_1B_rail_type_name_id); break;
         case 0x1C: write_uint16(os, m_1C_maintenance_cost_factor); break;
         case 0x1D: m_1D_alternate_railtypes.write(os); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -174,29 +174,29 @@ bool Action00RailTypes::print_property(std::ostream& os, uint8_t property, uint1
 {
     switch (property)
     {
-        case 0x08: desc_08.print(m_08_railtype_label, os, indent);
-        case 0x09: desc_09.print(m_09_toolbar_caption_id, os, indent);
-        case 0x0A: desc_0A.print(m_0A_dropdown_text_id, os, indent);
-        case 0x0B: desc_0B.print(m_0B_window_caption_id, os, indent);
-        case 0x0C: desc_0C.print(m_0C_autoreplace_text_id, os, indent);
-        case 0x0D: desc_0D.print(m_0D_new_engine_text_id, os, indent);
-        case 0x0E: desc_0E.print(m_0E_compatible_railtypes, os, indent);
-        case 0x0F: desc_0F.print(m_0F_powered_railtypes, os, indent);
-        case 0x10: desc_10.print(m_10_railtype_flags, os, indent);
-        case 0x11: desc_11.print(m_11_curve_speed_multiplier, os, indent);
-        case 0x12: desc_12.print(m_12_station_graphics, os, indent);
-        case 0x13: desc_13.print(m_13_construction_costs, os, indent);
-        case 0x14: desc_14.print(m_14_speed_limit, os, indent);
-        case 0x15: desc_15.print(m_15_acceleration_model, os, indent);
-        case 0x16: desc_16.print(m_16_minimap_colour, os, indent);
-        case 0x17: desc_17.print(m_17_introduction_date, os, indent);
-        case 0x18: desc_18.print(m_18_required_railtypes, os, indent);
-        case 0x19: desc_19.print(m_19_introduced_railtypes, os, indent);
-        case 0x1A: desc_1A.print(m_1A_sort_order, os, indent);
-        case 0x1B: desc_1B.print(m_1B_rail_type_name_id, os, indent);
-        case 0x1C: desc_1C.print(m_1C_maintenance_cost_factor, os, indent);
-        case 0x1D: desc_1D.print(m_1D_alternate_railtypes, os, indent);
-        default:   throw RUNTIME_ERROR("Unknown property");
+        case 0x08: desc_08.print(m_08_railtype_label, os, indent); break;
+        case 0x09: desc_09.print(m_09_toolbar_caption_id, os, indent); break;
+        case 0x0A: desc_0A.print(m_0A_dropdown_text_id, os, indent); break;
+        case 0x0B: desc_0B.print(m_0B_window_caption_id, os, indent); break;
+        case 0x0C: desc_0C.print(m_0C_autoreplace_text_id, os, indent); break;
+        case 0x0D: desc_0D.print(m_0D_new_engine_text_id, os, indent); break;
+        case 0x0E: desc_0E.print(m_0E_compatible_railtypes, os, indent); break;
+        case 0x0F: desc_0F.print(m_0F_powered_railtypes, os, indent); break;
+        case 0x10: desc_10.print(m_10_railtype_flags, os, indent); break;
+        case 0x11: desc_11.print(m_11_curve_speed_multiplier, os, indent); break;
+        case 0x12: desc_12.print(m_12_station_graphics, os, indent); break;
+        case 0x13: desc_13.print(m_13_construction_costs, os, indent); break;
+        case 0x14: desc_14.print(m_14_speed_limit, os, indent); break;
+        case 0x15: desc_15.print(m_15_acceleration_model, os, indent); break;
+        case 0x16: desc_16.print(m_16_minimap_colour, os, indent); break;
+        case 0x17: desc_17.print(m_17_introduction_date, os, indent); break;
+        case 0x18: desc_18.print(m_18_required_railtypes, os, indent); break;
+        case 0x19: desc_19.print(m_19_introduced_railtypes, os, indent); break;
+        case 0x1A: desc_1A.print(m_1A_sort_order, os, indent); break;
+        case 0x1B: desc_1B.print(m_1B_rail_type_name_id, os, indent); break;
+        case 0x1C: desc_1C.print(m_1C_maintenance_cost_factor, os, indent); break;
+        case 0x1D: desc_1D.print(m_1D_alternate_railtypes, os, indent); break;
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -213,34 +213,34 @@ bool Action00RailTypes::parse_property(TokenStream& is, const std::string& name,
         property = (index >> 8); // The property index is in the high byte.
         switch (index)
         {
-            case 0x08'00: desc_08.parse(m_08_railtype_label, is);
-            case 0x09'00: desc_09.parse(m_09_toolbar_caption_id, is);
-            case 0x0A'00: desc_0A.parse(m_0A_dropdown_text_id, is);
-            case 0x0B'00: desc_0B.parse(m_0B_window_caption_id, is);
-            case 0x0C'00: desc_0C.parse(m_0C_autoreplace_text_id, is);
-            case 0x0D'00: desc_0D.parse(m_0D_new_engine_text_id, is);
-            case 0x0E'00: desc_0E.parse(m_0E_compatible_railtypes, is);
-            case 0x0F'00: desc_0F.parse(m_0F_powered_railtypes, is);
-            case 0x10'00: desc_10.parse(m_10_railtype_flags, is);
-            case 0x11'00: desc_11.parse(m_11_curve_speed_multiplier, is);
-            case 0x12'00: desc_12.parse(m_12_station_graphics, is);
-            case 0x13'00: desc_13.parse(m_13_construction_costs, is);
-            case 0x14'00: desc_14.parse(m_14_speed_limit, is);
-            case 0x15'00: desc_15.parse(m_15_acceleration_model, is);
-            case 0x16'00: desc_16.parse(m_16_minimap_colour, is);
-            case 0x17'00: desc_17.parse(m_17_introduction_date, is);
-            case 0x18'00: desc_18.parse(m_18_required_railtypes, is);
-            case 0x19'00: desc_19.parse(m_19_introduced_railtypes, is);
-            case 0x1A'00: desc_1A.parse(m_1A_sort_order, is);
-            case 0x1B'00: desc_1B.parse(m_1B_rail_type_name_id, is);
-            case 0x1C'00: desc_1C.parse(m_1C_maintenance_cost_factor, is);
-            case 0x1D'00: desc_1D.parse(m_1D_alternate_railtypes, is);
-            default:      throw RUNTIME_ERROR("Unknown property");
+            case 0x08'00: desc_08.parse(m_08_railtype_label, is); break;
+            case 0x09'00: desc_09.parse(m_09_toolbar_caption_id, is); break;
+            case 0x0A'00: desc_0A.parse(m_0A_dropdown_text_id, is); break;
+            case 0x0B'00: desc_0B.parse(m_0B_window_caption_id, is); break;
+            case 0x0C'00: desc_0C.parse(m_0C_autoreplace_text_id, is); break;
+            case 0x0D'00: desc_0D.parse(m_0D_new_engine_text_id, is); break;
+            case 0x0E'00: desc_0E.parse(m_0E_compatible_railtypes, is); break;
+            case 0x0F'00: desc_0F.parse(m_0F_powered_railtypes, is); break;
+            case 0x10'00: desc_10.parse(m_10_railtype_flags, is); break;
+            case 0x11'00: desc_11.parse(m_11_curve_speed_multiplier, is); break;
+            case 0x12'00: desc_12.parse(m_12_station_graphics, is); break;
+            case 0x13'00: desc_13.parse(m_13_construction_costs, is); break;
+            case 0x14'00: desc_14.parse(m_14_speed_limit, is); break;
+            case 0x15'00: desc_15.parse(m_15_acceleration_model, is); break;
+            case 0x16'00: desc_16.parse(m_16_minimap_colour, is); break;
+            case 0x17'00: desc_17.parse(m_17_introduction_date, is); break;
+            case 0x18'00: desc_18.parse(m_18_required_railtypes, is); break;
+            case 0x19'00: desc_19.parse(m_19_introduced_railtypes, is); break;
+            case 0x1A'00: desc_1A.parse(m_1A_sort_order, is); break;
+            case 0x1B'00: desc_1B.parse(m_1B_rail_type_name_id, is); break;
+            case 0x1C'00: desc_1C.parse(m_1C_maintenance_cost_factor, is); break;
+            case 0x1D'00: desc_1D.parse(m_1D_alternate_railtypes, is); break;
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }
 

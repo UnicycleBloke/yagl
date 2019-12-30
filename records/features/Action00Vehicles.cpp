@@ -160,7 +160,7 @@ bool Action00Vehicles::read_property(std::istream& is, uint8_t property)
         case 0x23: m_23_shorten_vehicle              = read_uint8(is);  break;
         case 0x24: m_24_always_refittable_cargos.read(is);              break;
         case 0x25: m_25_never_refittable_cargos.read(is);               break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -204,7 +204,7 @@ bool Action00Vehicles::write_property(std::ostream& os, uint8_t property) const
         case 0x23: write_uint8(os, m_23_shorten_vehicle); break;
         case 0x24: m_24_always_refittable_cargos.write(os); break;
         case 0x25: m_25_never_refittable_cargos.write(os); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
     
     return true;    
@@ -248,7 +248,7 @@ bool Action00Vehicles::print_property(std::ostream& os, uint8_t property, uint16
         case 0x23: desc_23.print(m_23_shorten_vehicle, os, indent); break;
         case 0x24: desc_24.print(m_24_always_refittable_cargos, os, indent); break;
         case 0x25: desc_25.print(m_25_never_refittable_cargos, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -298,11 +298,11 @@ bool Action00Vehicles::parse_property(TokenStream& is, const std::string& name, 
             case 0x23'00: desc_23.parse(m_23_shorten_vehicle, is); break;
             case 0x24'00: desc_24.parse(m_24_always_refittable_cargos, is); break;
             case 0x25'00: desc_25.parse(m_25_never_refittable_cargos, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }

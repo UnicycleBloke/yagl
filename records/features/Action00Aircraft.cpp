@@ -140,7 +140,7 @@ bool Action00Aircraft::read_property(std::istream& is, uint8_t property)
         case 0x1D: m_1D_always_refittable_cargos.read(is); break;
         case 0x1E: m_1E_never_refittable_cargos.read(is); break;
         case 0x1F: m_1F_aircraft_range               = read_uint16(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -179,7 +179,7 @@ bool Action00Aircraft::write_property(std::ostream& os, uint8_t property) const
         case 0x1D: m_1D_always_refittable_cargos.write(os); break;
         case 0x1E: m_1E_never_refittable_cargos.write(os); break;
         case 0x1F: write_uint16(os, m_1F_aircraft_range); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -218,7 +218,7 @@ bool Action00Aircraft::print_property(std::ostream& os, uint8_t property, uint16
         case 0x1D: desc_1D.print(m_1D_always_refittable_cargos, os, indent); break;
         case 0x1E: desc_1E.print(m_1E_never_refittable_cargos, os, indent); break;
         case 0x1F: desc_1F.print(m_1F_aircraft_range, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -263,13 +263,13 @@ bool Action00Aircraft::parse_property(TokenStream& is, const std::string& name, 
             case 0x1D: desc_1D.parse(m_1D_always_refittable_cargos, is); break;
             case 0x1E: desc_1E.parse(m_1E_never_refittable_cargos, is); break;
             case 0x1F: desc_1F.parse(m_1F_aircraft_range, is); break;
-            default:   throw RUNTIME_ERROR("Unknown property");
+            default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }
 
 

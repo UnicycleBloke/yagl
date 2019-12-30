@@ -65,3 +65,17 @@ private:
 #define RUNTIME_ERROR(what) RuntimeError(what, __FILE__, __LINE__)
 
 
+class PropertyError : public std::runtime_error 
+{
+public:
+    explicit PropertyError(const std::string& what_arg, uint8_t property, const char* file, uint32_t line);
+    explicit PropertyError(const char* what_arg, uint8_t property, const char* file, uint32_t line);
+
+    const char* what() const noexcept { return m_what.c_str(); }
+
+private:    
+    std::string m_what;
+};
+#define PROPERTY_ERROR(what, property) PropertyError(what, property, __FILE__, __LINE__)
+
+

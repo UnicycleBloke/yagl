@@ -163,14 +163,14 @@ void Action00Stations::SpriteTileData::print(std::ostream& os, uint16_t indent) 
 {
     if (new_bb)
     {
-        os << pad(indent) << "tile(" << to_hex(sprite, true);
-        os << to_hex(x_off, true) << ", " << to_hex(y_off, true) << ", " << to_hex(z_off, true); 
+        os << pad(indent) << "tile(" << to_hex(sprite, true) << ", ";
+        os << to_hex(x_off, true) << ", " << to_hex(y_off, true) << ", " << to_hex(z_off, true) << ", "; 
         os << to_hex(x_ext, true) << ", " << to_hex(y_ext, true) << ", " << to_hex(z_ext, true); 
         os << ");\n"; 
     }
     else
     {
-        os << pad(indent) << "tile(" << to_hex(sprite, true);
+        os << pad(indent) << "tile(" << to_hex(sprite, true) << ", ";
         os << to_hex(x_off, true) << ", " << to_hex(y_off, true); 
         os << ");\n"; 
     }
@@ -406,7 +406,7 @@ bool Action00Stations::read_property(std::istream& is, uint8_t property)
                    m_16_animation_type            = read_uint8(is);  break;
         case 0x17: m_17_animation_speed           = read_uint8(is);  break;
         case 0x18: m_18_animation_triggers        = read_uint16(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -435,7 +435,7 @@ bool Action00Stations::write_property(std::ostream& os, uint8_t property) const
                    write_uint8(os, m_16_animation_type); break;
         case 0x17: write_uint8(os, m_17_animation_speed); break;
         case 0x18: write_uint16(os, m_18_animation_triggers); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -464,7 +464,7 @@ bool Action00Stations::print_property(std::ostream& os, uint8_t property, uint16
                    desc_161.print(m_16_animation_type, os, indent); break;
         case 0x17: desc_17.print(m_17_animation_speed, os, indent); break;
         case 0x18: desc_18.print(m_18_animation_triggers, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -499,11 +499,11 @@ bool Action00Stations::parse_property(TokenStream& is, const std::string& name, 
             case 0x16'01: desc_161.parse(m_16_animation_type, is); break;
             case 0x17'00: desc_17.parse(m_17_animation_speed, is); break;
             case 0x18'00: desc_18.parse(m_18_animation_triggers, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }

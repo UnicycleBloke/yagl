@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Exceptions.h"
 #include "Lexer.h"
+#include "StreamHelpers.h"
 #include <sstream>
 
 
@@ -65,6 +66,22 @@ RuntimeError::RuntimeError(const char* what_arg, const char* file, uint32_t line
     std::ostringstream os;
     os << "Runtime error: ";
     os << what_arg << " at line " << line << " in source file " << file;
+    m_what = os.str();
+}
+
+
+PropertyError::PropertyError(const std::string& what_arg, uint8_t property, const char* file, uint32_t line)
+: PropertyError(what_arg.c_str(), property, file, line)
+{
+}
+
+
+PropertyError::PropertyError(const char* what_arg, uint8_t property, const char* file, uint32_t line)
+: std::runtime_error(what_arg)
+{
+    std::ostringstream os;
+    os << "Property error: ";
+    os << what_arg << ": property=" << to_hex(property, true) << " at line " << line << " in source file " << file;
     m_what = os.str();
 }
 

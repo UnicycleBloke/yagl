@@ -77,7 +77,7 @@ bool Action00AirportTiles::read_property(std::istream& is, uint8_t property)
                    m_0F_animation_type        = read_uint8(is); break;
         case 0x10: m_10_animation_speed       = read_uint8(is); break;
         case 0x11: m_11_animation_triggers    = read_uint8(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -96,7 +96,7 @@ bool Action00AirportTiles::write_property(std::ostream& os, uint8_t property) co
                    write_uint8(os, m_0F_animation_type); break;
         case 0x10: write_uint8(os, m_10_animation_speed); break;
         case 0x11: write_uint8(os, m_11_animation_triggers); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -114,7 +114,7 @@ bool Action00AirportTiles::print_property(std::ostream& os, uint8_t property, ui
                    desc_0F1.print(m_0F_animation_type, os, indent); break;
         case 0x10: desc_10.print(m_10_animation_speed, os, indent); break;
         case 0x11: desc_11.print(m_11_animation_triggers, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -138,12 +138,12 @@ bool Action00AirportTiles::parse_property(TokenStream& is, const std::string& na
             case 0x0F'01: desc_0F1.parse(m_0F_animation_type, is); break;
             case 0x10'00: desc_10.parse(m_10_animation_speed, is); break;
             case 0x11'00: desc_11.parse(m_11_animation_triggers, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }
 

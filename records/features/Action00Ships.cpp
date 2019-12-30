@@ -144,7 +144,7 @@ bool Action00Ships::read_property(std::istream& is, uint8_t property)
         case 0x1D: m_1D_custom_cargo_aging_period    = read_uint16(is); break;
         case 0x1E: m_1E_always_refittable_cargos.read(is); break;
         case 0x1F: m_1F_never_refittable_cargos.read(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -184,7 +184,7 @@ bool Action00Ships::write_property(std::ostream& os, uint8_t property) const
         case 0x1D: write_uint16(os, m_1D_custom_cargo_aging_period); break;
         case 0x1E: m_1E_always_refittable_cargos.write(os); break;
         case 0x1F: m_1F_never_refittable_cargos.write(os); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -224,7 +224,7 @@ bool Action00Ships::print_property(std::ostream& os, uint8_t property, uint16_t 
         case 0x1D: desc_1D.print(m_1D_custom_cargo_aging_period, os, indent); break;
         case 0x1E: desc_1E.print(m_1E_always_refittable_cargos, os, indent); break;
         case 0x1F: desc_1F.print(m_1F_never_refittable_cargos, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -270,11 +270,11 @@ bool Action00Ships::parse_property(TokenStream& is, const std::string& name, uin
             case 0x1D'00: desc_1D.parse(m_1D_custom_cargo_aging_period, is); break;
             case 0x1E'00: desc_1E.parse(m_1E_always_refittable_cargos, is); break;
             case 0x1F'00: desc_1F.parse(m_1F_never_refittable_cargos, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }

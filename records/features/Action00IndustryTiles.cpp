@@ -107,7 +107,7 @@ bool Action00IndustryTiles::read_property(std::istream& is, uint8_t property)
         case 0x11: m_11_callback_25_triggers   = read_uint8(is); break;
         case 0x12: m_12_special_flags          = read_uint8(is); break;
         case 0x13: m_13_cargo_acceptance_list.read(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -134,7 +134,7 @@ bool Action00IndustryTiles::write_property(std::ostream& os, uint8_t property) c
         case 0x11: write_uint8(os, m_11_callback_25_triggers); break;
         case 0x12: write_uint8(os, m_12_special_flags); break;
         case 0x13: m_13_cargo_acceptance_list.write(os); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -161,7 +161,7 @@ bool Action00IndustryTiles::print_property(std::ostream& os, uint8_t property, u
         case 0x11: desc_11.print(m_11_callback_25_triggers, os, indent); break;
         case 0x12: desc_12.print(m_12_special_flags, os, indent); break;
         case 0x13: desc_13.print(m_13_cargo_acceptance_list, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -194,11 +194,11 @@ bool Action00IndustryTiles::parse_property(TokenStream& is, const std::string& n
             case 0x11'00: desc_11.parse(m_11_callback_25_triggers, is); break;
             case 0x12'00: desc_12.parse(m_12_special_flags, is); break;
             case 0x13'00: desc_13.parse(m_13_cargo_acceptance_list, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }

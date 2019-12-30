@@ -80,7 +80,7 @@ bool Action00Airports::read_property(std::istream& is, uint8_t property)
         case 0x0F: m_0F_noise_level             = read_uint8(is); break;
         case 0x10: m_10_airport_name_id         = read_uint16(is); break;
         case 0x11: m_11_maintenance_cost_factor = read_uint16(is); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -100,7 +100,7 @@ bool Action00Airports::write_property(std::ostream& os, uint8_t property) const
         case 0x0F: write_uint8(os,  m_0F_noise_level); break;
         case 0x10: write_uint16(os, m_10_airport_name_id); break;
         case 0x11: write_uint16(os, m_11_maintenance_cost_factor); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -120,7 +120,7 @@ bool Action00Airports::print_property(std::ostream& os, uint8_t property, uint16
         case 0x0F: desc_0F.print(m_0F_noise_level, os, indent); break;
         case 0x10: desc_10.print(m_10_airport_name_id, os, indent); break;
         case 0x11: desc_11.print(m_11_maintenance_cost_factor, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -146,11 +146,11 @@ bool Action00Airports::parse_property(TokenStream& is, const std::string& name, 
             case 0x0F'00: desc_0F.parse(m_0F_noise_level, is); break;
             case 0x10'00: desc_10.parse(m_10_airport_name_id, is); break;
             case 0x11'00: desc_11.parse(m_11_maintenance_cost_factor, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }

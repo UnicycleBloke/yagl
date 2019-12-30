@@ -114,7 +114,7 @@ bool Action00TramTypes::read_property(std::istream& is, uint8_t property)
         case 0x1B: m_1B_tram_type_name_id       = read_uint16(is); break;
         case 0x1C: m_1C_maintenance_cost_factor = read_uint16(is); break;
         case 0x1D: m_1D_alternate_tramtypes.read(is);              break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -143,7 +143,7 @@ bool Action00TramTypes::write_property(std::ostream& os, uint8_t property) const
         case 0x1B: write_uint16(os, m_1B_tram_type_name_id); break;
         case 0x1C: write_uint16(os, m_1C_maintenance_cost_factor); break;
         case 0x1D: m_1D_alternate_tramtypes.write(os); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     return true;
@@ -172,7 +172,7 @@ bool Action00TramTypes::print_property(std::ostream& os, uint8_t property, uint1
         case 0x1B: desc_1B.print(m_1B_tram_type_name_id, os, indent); break;
         case 0x1C: desc_1C.print(m_1C_maintenance_cost_factor, os, indent); break;
         case 0x1D: desc_1D.print(m_1D_alternate_tramtypes, os, indent); break;
-        default:   throw RUNTIME_ERROR("Unknown property");
+        default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
     os << "\n";
@@ -207,11 +207,11 @@ bool Action00TramTypes::parse_property(TokenStream& is, const std::string& name,
             case 0x1B'00: desc_1B.parse(m_1B_tram_type_name_id, is); break;
             case 0x1C'00: desc_1C.parse(m_1C_maintenance_cost_factor, is); break;
             case 0x1D'00: desc_1D.parse(m_1D_alternate_tramtypes, is); break;
-            default:      throw RUNTIME_ERROR("Unknown property");
+            default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
     }
 
-    throw RUNTIME_ERROR("Unknown property");
+    throw PROPERTY_ERROR("Unknown property", property);
 }
