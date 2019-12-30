@@ -239,8 +239,8 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action02 variable" << '\n';
     os << pad(indent) << "{" << '\n';
-    os << pad(indent + 4) << "this_set_id: " << to_hex(m_set_id, true) << ";\n";
-    //os << pad(indent + 4) << "var_type: " << to_hex(m_var_type, true) << '\n';
+    os << pad(indent + 4) << "this_set_id: " << to_hex(m_set_id) << ";\n";
+    //os << pad(indent + 4) << "var_type: " << to_hex(m_var_type) << '\n';
 
     // Access general variable or variable of the primary object 81 85 89 (all odd)
     // Access variable of "related" object 82 86 8A (all even)
@@ -267,12 +267,12 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
         // TODO replace the variable with the proper name for the feature.
         // Need a few maps basically. Give some thought to how we can simplify the output
         // to make it clearer. Or maybe there is no need...
-        os << "(variable[" << to_hex(va.variable, true) << "]";
+        os << "(variable[" << to_hex(va.variable) << "]";
 
         // Some variables take an additional argument
         if (va.variable >= 0x60 && va.variable < 0x80)
         {
-            os << "(" << to_hex(va.parameter, true) << ")";
+            os << "(" << to_hex(va.parameter) << ")";
         }
 
         // No point showing the shift if it does nothing.
@@ -281,21 +281,21 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
             os << " >> " << uint16_t(va.shift_num); 
         }
 
-        os << " & " << to_hex(va.and_mask, true) << ")";
+        os << " & " << to_hex(va.and_mask) << ")";
         if ((va.action & 0xC0) != 0x00)
         {
             if (va.add_value > 0)
             {
-                os << " + " << to_hex(va.add_value, true);  
+                os << " + " << to_hex(va.add_value);  
             }
             
             if ((va.action & 0x80) == 0x00)
             {
-                os << " / " << to_hex(va.div_mod_value, true);  
+                os << " / " << to_hex(va.div_mod_value);  
             }
             else
             {
-                os << " % " << to_hex(va.div_mod_value, true);  
+                os << " % " << to_hex(va.div_mod_value);  
             }         
         }
 
@@ -314,13 +314,13 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
         os << pad(indent + 8);
         if (r.low_range == r.high_range)
         {
-            os << to_hex(r.low_range, true) << ": ";
+            os << to_hex(r.low_range) << ": ";
         }
         else    
         {
-            os << to_hex(r.low_range, true) << ".." << to_hex(r.high_range, true) << ": ";
+            os << to_hex(r.low_range) << ".." << to_hex(r.high_range) << ": ";
         }
-        os << to_hex(r.set_id, true) << "; ";
+        os << to_hex(r.set_id) << "; ";
         if (r.set_id & 0x8000)
         {
             os << "// Callback result";
@@ -328,7 +328,7 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
         os << "\n";
     }
 
-    os << pad(indent + 8) << "default: " << to_hex(m_default, true) << ";" ;
+    os << pad(indent + 8) << "default: " << to_hex(m_default) << ";" ;
     if (m_default & 0x8000)
     {
         os << "// Callback result";

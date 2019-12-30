@@ -231,10 +231,10 @@ void SpriteSheetGenerator::create_sprite_sheet(Category category, SpriteVector s
     os << index << ".png";
     const std::string image_path = os.str();
 
-    if (CommandLineOptions::options().debug()) 
-    {
-        std::cout << "Creating sprite sheet: " << image_path << '\n';
-    }
+    //if (CommandLineOptions::options().debug()) 
+    //{
+        std::cout << "Writing sprite sheet: " << image_path << "...\n";
+    //}
 
     // Deal with different colour depths.
     switch (category.colour)

@@ -75,7 +75,7 @@ void Action01Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t index = 0;    
     for (uint16_t set = 0; set < m_num_sets; ++set)
     {
-        os << pad(indent + 4) << "set_id: " << to_hex(m_first_set + set, true) << "\n";
+        os << pad(indent + 4) << "set_id: " << to_hex(m_first_set + set) << "\n";
         os << pad(indent + 4) << "{" << '\n';
         
         for (uint16_t i = 0; i < m_num_sprites; ++i)

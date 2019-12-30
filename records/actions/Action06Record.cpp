@@ -60,7 +60,7 @@ void Action06Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
     for (const auto& mod: m_modifications)
     {
-        os << pad(indent + 4) << "value: parameter[" << to_hex(mod.param_num, true) << "]; ";
+        os << pad(indent + 4) << "value: parameter[" << to_hex(mod.param_num) << "]; ";
         os << "size: " << static_cast<uint16_t>(mod.param_size) << "; ";
         os << "offset: " << mod.offset << "; ";
         os << "add: " << (mod.add_bytes ? "true" : "false") << ";\n";

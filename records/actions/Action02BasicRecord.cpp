@@ -64,19 +64,19 @@ void Action02BasicRecord::print(std::ostream& os, const SpriteZoomMap& sprites, 
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action02 basic" << '\n';
     os << pad(indent) << "{" << '\n';
-    os << pad(indent + 4) << "this_set_id: " << to_hex(m_act02_set_id, true) << ";\n";
+    os << pad(indent + 4) << "this_set_id: " << to_hex(m_act02_set_id) << ";\n";
 
     os << pad(indent + 4) << "primary_spritesets: [ ";
     for (uint8_t i = 0; i < m_act01_set_ids_1.size(); ++i)
     {
-        os << to_hex(m_act01_set_ids_1[i], true) << " ";
+        os << to_hex(m_act01_set_ids_1[i]) << " ";
     }
     os << "];\n";
 
     os << pad(indent + 4) << "secondary_spritesets: [ ";
     for (uint8_t i = 0; i < m_act01_set_ids_2.size(); ++i)
     {
-        os << to_hex(m_act01_set_ids_2[i], true) << " ";
+        os << to_hex(m_act01_set_ids_2[i]) << " ";
     }
     os << "];\n";
 

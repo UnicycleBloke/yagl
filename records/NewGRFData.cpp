@@ -85,6 +85,19 @@ void NewGRFData::read(std::istream& is)
     // Read data records from the data section.
     while (true)
     {
+        if (CommandLineOptions::options().debug())
+        {
+            std::cout << "Reading record: " << record_index << "...\n"; 
+        }
+
+        // Just a handle to pause a read just before it fails. If a GRF read fails,
+        // Run it again with the -g option to dump records to the console as we go. This 
+        // will tell us where we fell over.
+        if (record_index == 4155)
+        {
+            int x = 0; // Breakpoint here.
+        }
+
         // This section is terminated with a zero length record. The size of the length of the record
         // depends on the file format version.
         uint32_t size = (m_info.format == GRFFormat::Container1) ? read_uint16(is) : read_uint32(is);
@@ -168,7 +181,6 @@ void NewGRFData::read(std::istream& is)
 
         if (CommandLineOptions::options().debug())
         {
-            std::cout << record_index << '\n'; 
             record->print(std::cout, m_sprites, 0); // Indent = 0     
         }
 
@@ -611,6 +623,7 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
     os << "yagl_version: \"" << str_yagl_version << "\";\n\n";
 
     // Finally write out the YAGL script.
+    std::cout << "Writing YAGL script...\n";
     for (auto record: m_records)
     {
         record->print(os, m_sprites, 0);

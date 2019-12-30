@@ -49,7 +49,7 @@ void CargoAcceptanceList::print(std::ostream& os, uint16_t indent) const
     os << "[";
     for (const auto& item: m_items)
     {
-        os << " {" << to_hex(item.cargo_type, true) << ": " << to_hex(item.acceptance, true) << "}";
+        os << " {" << to_hex(item.cargo_type) << ": " << to_hex(item.acceptance) << "}";
     }
     os << " ];";
 }

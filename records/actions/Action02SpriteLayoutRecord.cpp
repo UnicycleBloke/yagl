@@ -75,25 +75,25 @@ void Action02SpriteLayoutRecord::SpriteRegisters::print(std::ostream& os, bool i
         os << pad(indent) << "registers: \n";
         os << pad(indent) << "{\n";
 
-        if (flags & HIDE_SPRITE)    os << pad(indent + 4) << "hide_sprite: "    << to_hex(hide_sprite, true) << ";\n";
-        if (flags & SPRITE_OFFSET)  os << pad(indent + 4) << "sprite_offset: "  << to_hex(sprite_offset, true) << ";\n";
-        if (flags & PALETTE_OFFSET) os << pad(indent + 4) << "palette_offset: " << to_hex(palette_offset, true) << ";\n";
-        if (flags & PALETTE_ACT01)  os << pad(indent + 4) << "palette_act01: "  << to_hex(palette_act01, true) << ";\n";
+        if (flags & HIDE_SPRITE)    os << pad(indent + 4) << "hide_sprite: "    << to_hex(hide_sprite) << ";\n";
+        if (flags & SPRITE_OFFSET)  os << pad(indent + 4) << "sprite_offset: "  << to_hex(sprite_offset) << ";\n";
+        if (flags & PALETTE_OFFSET) os << pad(indent + 4) << "palette_offset: " << to_hex(palette_offset) << ";\n";
+        if (flags & PALETTE_ACT01)  os << pad(indent + 4) << "palette_act01: "  << to_hex(palette_act01) << ";\n";
         
         if (is_parent)
         {
-            if (flags & BB_XY_OFFSET) os << pad(indent + 4) << "offset_x: " << to_hex(offset_x, true) << ";\n";
-            if (flags & BB_XY_OFFSET) os << pad(indent + 4) << "offset_y: " << to_hex(offset_y, true) << ";\n";
-            if (flags & BB_Z_OFFSET)  os << pad(indent + 4) << "offset_z: " << to_hex(offset_z, true) << ";\n";
+            if (flags & BB_XY_OFFSET) os << pad(indent + 4) << "offset_x: " << to_hex(offset_x) << ";\n";
+            if (flags & BB_XY_OFFSET) os << pad(indent + 4) << "offset_y: " << to_hex(offset_y) << ";\n";
+            if (flags & BB_Z_OFFSET)  os << pad(indent + 4) << "offset_z: " << to_hex(offset_z) << ";\n";
         }
         else
         {
-            if (flags & CHILD_X_OFFSET) os << pad(indent + 4) << "offset_x: " << to_hex(offset_x, true) << ";\n";
-            if (flags & CHILD_Y_OFFSET) os << pad(indent + 4) << "offset_y: " << to_hex(offset_y, true) << ";\n";
+            if (flags & CHILD_X_OFFSET) os << pad(indent + 4) << "offset_x: " << to_hex(offset_x) << ";\n";
+            if (flags & CHILD_Y_OFFSET) os << pad(indent + 4) << "offset_y: " << to_hex(offset_y) << ";\n";
         }
 
-        if (flags & SPRITE_VAR10)  os << pad(indent + 4) << "sprite_var10: "  << to_hex(sprite_var10, true) << ";\n";
-        if (flags & PALETTE_VAR10) os << pad(indent + 4) << "palette_var10: " << to_hex(palette_var10, true) << ";\n";
+        if (flags & SPRITE_VAR10)  os << pad(indent + 4) << "sprite_var10: "  << to_hex(sprite_var10) << ";\n";
+        if (flags & PALETTE_VAR10) os << pad(indent + 4) << "palette_var10: " << to_hex(palette_var10) << ";\n";
 
         os << pad(indent) << "}\n";
     }
@@ -297,7 +297,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action02 basic" << '\n';
     os << pad(indent) << "{" << '\n';
-    os << pad(indent + 4) << "this_set_id: " << to_hex(m_set_id, true) << ";\n";
+    os << pad(indent + 4) << "this_set_id: " << to_hex(m_set_id) << ";\n";
 
     os << pad(indent + 4) << "ground_sprite: " << to_hex(m_ground_sprite) << ";\n";
     os << pad(indent + 4) << "{" << '\n';
@@ -310,8 +310,8 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
         {
             os << pad(indent + 4) << "building_sprite: " << to_hex(sprite.sprite) << '\n';
             os << pad(indent + 4) << "{\n";
-            os << pad(indent + 8) << "offset: " << sprite.xofs << ", " << sprite.yofs << ", " << sprite.zofs << ";\n";
-            os << pad(indent + 8) << "extent: " << sprite.xext << ", " << sprite.yext << ", " << sprite.zext << ";\n";
+            os << pad(indent + 8) << "offset: " << to_hex(sprite.xofs) << ", " << to_hex(sprite.yofs) << ", " << to_hex(sprite.zofs) << ";\n";
+            os << pad(indent + 8) << "extent: " << to_hex(sprite.xext) << ", " << to_hex(sprite.yext) << ", " << to_hex(sprite.zext) << ";\n";
             sprite.regs.print(os, true, indent + 8);
             os << pad(indent + 4) << "}\n";
         }
@@ -319,7 +319,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
         {
             os << pad(indent + 4) << "child_sprite: " << to_hex(sprite.sprite) << '\n';
             os << pad(indent + 4) << "{\n";
-            os << pad(indent + 8) << "offset: " << sprite.xofs << ", " << sprite.yofs << ";\n";
+            os << pad(indent + 8) << "offset: " << to_hex(sprite.xofs) << ", " << to_hex(sprite.yofs) << ";\n";
             sprite.regs.print(os, true, indent + 8);
             os << pad(indent + 4) << "}\n";
         }

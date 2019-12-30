@@ -16,12 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#include "AirportLayoutDescriptor.h"
+#include "IndustryLayoutDescriptor.h"
 #include "StreamHelpers.h"
 
 
 // This is the same as an industry tile. I think.
-void AirportTile::read(std::istream& is)
+void IndustryTile::read(std::istream& is)
 {
     x_off = read_uint8(is);
     y_off = read_uint8(is);
@@ -40,6 +40,7 @@ void AirportTile::read(std::istream& is)
         case 0xFE:
             type = Type::NewTile;
             tile = read_uint16(is);
+            // TODO offset adjustment required depending on GRF version.
             break;
         default:
             type = Type::OldTile;
@@ -47,7 +48,7 @@ void AirportTile::read(std::istream& is)
 }
 
 
-void AirportTile::write(std::ostream& os) const
+void IndustryTile::write(std::ostream& os) const
 {
     write_uint8(os, x_off);
     write_uint8(os, y_off);
@@ -70,52 +71,52 @@ void AirportTile::write(std::ostream& os) const
 }
 
 
-void AirportTile::print(std::ostream& os, uint16_t indent) const
+void IndustryTile::print(std::ostream& os, uint16_t indent) const
 {
     switch (type)
     {
         case Type::Clearance: 
             os << pad(indent) << "clearance("; 
-            os << to_hex(x_off) << ", " << to_hex(y_off) << ");\n"; 
+            os << int16_t(x_off) << ", " << int16_t(y_off) << ");\n"; 
             break; 
         case Type::NewTile:   
             os << pad(indent) << "new_tile(";
-            os << to_hex(x_off) << ", " << to_hex(y_off) << ", " << to_hex(tile) << ");\n"; 
+            os << int16_t(x_off) << ", " << int16_t(y_off) << ", " << to_hex(tile) << ");\n"; 
             break;
         case Type::OldTile:          
             os << pad(indent) << "old_tile(";
-            os << to_hex(x_off) << ", " << to_hex(y_off) << ", " << to_hex(tile) << ");\n"; 
+            os << int16_t(x_off) << ", " << int16_t(y_off) << ", " << to_hex(tile) << ");\n"; 
             break;
     }
 }
 
 
-void AirportLayout::read(std::istream& is, AirportType type)
+void IndustryLayout::read(std::istream& is)
 {
-    if (type == AirportType::Airport)
+    is_reference = (is.peek() == 0xFE);
+    if (is_reference)
     {
-        rotation = static_cast<Rotation>(read_uint8(is));
+        read_uint8(is);
+        uint8_t industry_num = read_uint8(is);
+        uint8_t layout_num   = read_uint8(is);
     }
-    
-    while (true)
+    else
     {
-        AirportTile tile;
-        tile.read(is);
-        // This is the terminator.
-        if (tile.x_off == 0x00 && uint8_t(tile.y_off) == 0x80)
-            break;
-        tiles.push_back(tile);
+        while (true)
+        {
+            IndustryTile tile;
+            tile.read(is);
+            // This is the terminator.
+            if (tile.x_off == 0x00 && uint8_t(tile.y_off) == 0x80)
+                break;
+            tiles.push_back(tile);
+        }
     }
 }
 
 
-void AirportLayout::write(std::ostream& os, AirportType type) const
+void IndustryLayout::write(std::ostream& os) const
 {
-    if (type == AirportType::Airport)
-    {
-        write_uint8(os, static_cast<uint8_t>(rotation));
-    }
-
     for (const auto& tile: tiles)
     {
         tile.write(os);
@@ -126,17 +127,9 @@ void AirportLayout::write(std::ostream& os, AirportType type) const
 }
 
 
-void AirportLayout::print(std::ostream& os, uint16_t indent, AirportType type) const
+void IndustryLayout::print(std::ostream& os, uint16_t indent) const
 {
-    if (type == AirportType::Airport)
-    {
-        os << pad(indent) << "layout<" << rotation_name(rotation) << ">\n"; 
-    }
-    else
-    {
-        os << pad(indent) << "layout\n"; 
-    }
-    
+    os << pad(indent) << "layout\n"; 
     os << pad(indent) << "{\n"; 
 
     for (const auto& tile: tiles)
@@ -148,22 +141,7 @@ void AirportLayout::print(std::ostream& os, uint16_t indent, AirportType type) c
 }
 
 
-const char* AirportLayout::rotation_name(Rotation rotation) const
-{
-    switch (rotation)
-    {
-        case Rotation::North: return "North";
-        case Rotation::South: return "South";
-        case Rotation::East:  return "East";
-        case Rotation::West:  return "West";
-    }
-
-    // Should never get here.
-    return "<unknown>";
-}
-
-
-void AirportLayouts::read(std::istream& is, AirportType type)
+void IndustryLayouts::read(std::istream& is)
 {
     uint8_t num_layouts = read_uint8(is);
     // Size not used for anything.
@@ -171,12 +149,12 @@ void AirportLayouts::read(std::istream& is, AirportType type)
     layouts.resize(num_layouts);
     for (uint8_t i = 0; i < num_layouts; ++i)
     {
-        layouts[i].read(is, type);
+        layouts[i].read(is);
     }
 }
 
 
-void AirportLayouts::write(std::ostream& os, AirportType type) const
+void IndustryLayouts::write(std::ostream& os) const
 {
     write_uint8(os, layouts.size());
 
@@ -184,32 +162,32 @@ void AirportLayouts::write(std::ostream& os, AirportType type) const
     std::ostringstream ss;
     for (const auto& layout: layouts)
     {
-        layout.write(ss, type);
+        layout.write(ss);
     }
 
     write_uint32(os, ss.str().length());
     for (const auto& layout: layouts)
     {
-        layout.write(os, type);
+        layout.write(os);
     }
 }
 
 
-void AirportLayouts::print(std::ostream& os, uint16_t indent, AirportType type) const
+void IndustryLayouts::print(std::ostream& os, uint16_t indent) const
 {
     //os << pad(indent) << "layouts\n"; 
     os << "\n" << pad(indent) << "{\n"; 
     for (const auto& layout: layouts)
     {
-        layout.print(os, indent + 4, type);
+        layout.print(os, indent + 4);
     }
     os << pad(indent) << "};\n"; 
 }
 
 
-void AirportLayouts::parse(TokenStream& is, AirportType type)
+void IndustryLayouts::parse(TokenStream& is)
 {
-    throw RUNTIME_ERROR("AirportLayouts::parse not implemented");
+    throw RUNTIME_ERROR("IndustryLayouts::parse not implemented");
 }
 
 

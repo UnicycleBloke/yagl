@@ -163,15 +163,15 @@ void Action00Stations::SpriteTileData::print(std::ostream& os, uint16_t indent) 
 {
     if (new_bb)
     {
-        os << pad(indent) << "tile(" << to_hex(sprite, true) << ", ";
-        os << to_hex(x_off, true) << ", " << to_hex(y_off, true) << ", " << to_hex(z_off, true) << ", "; 
-        os << to_hex(x_ext, true) << ", " << to_hex(y_ext, true) << ", " << to_hex(z_ext, true); 
+        os << pad(indent) << "tile(" << to_hex(sprite) << ", ";
+        os << to_hex(x_off) << ", " << to_hex(y_off) << ", " << to_hex(z_off) << ", "; 
+        os << to_hex(x_ext) << ", " << to_hex(y_ext) << ", " << to_hex(z_ext); 
         os << ");\n"; 
     }
     else
     {
-        os << pad(indent) << "tile(" << to_hex(sprite, true) << ", ";
-        os << to_hex(x_off, true) << ", " << to_hex(y_off, true); 
+        os << pad(indent) << "tile(" << to_hex(sprite) << ", ";
+        os << to_hex(x_off) << ", " << to_hex(y_off); 
         os << ");\n"; 
     }
 }
@@ -222,7 +222,7 @@ void Action00Stations::SpriteTile::print(std::ostream& os, uint16_t indent) cons
     os << pad(indent) << "layout\n"; 
     os << pad(indent) << "{\n"; 
 
-    os << pad(indent + 4) << "ground_sprite: " << to_hex(ground_sprite, true) << "\n"; 
+    os << pad(indent + 4) << "ground_sprite: " << to_hex(ground_sprite) << "\n"; 
 
     if (ground_sprite != 0x00000000)
     {
@@ -316,6 +316,7 @@ void Action00Stations::CustomLayout::print(std::ostream& os, uint16_t indent) co
 {
     os << pad(indent) << "layout\n"; 
     os << pad(indent) << "{\n"; 
+    os << pad(indent + 4) << "// Platform: B=Building, P=Plain, L=RoofLeft, R=RoofRight \n"; 
 
     for (uint8_t c = 0; c < platform_count; ++c)
     {
@@ -324,7 +325,18 @@ void Action00Stations::CustomLayout::print(std::ostream& os, uint16_t indent) co
         {
             // Assert that the vector has the correct length?
             const auto tile = platform_tiles[c * platform_length + l];
-            os << " " << to_hex(static_cast<uint8_t>(tile), true);
+            os << " "; // << to_hex(static_cast<uint8_t>(tile));
+            switch (tile)
+            {
+                // case Platform::Building:  os << "Building"; break;
+                // case Platform::Plain:     os << "Plain"; break;
+                // case Platform::RoofLeft:  os << "RoofLeft"; break;
+                // case Platform::RoofRight: os << "RoofRight"; break;
+                case Platform::Building:  os << "B"; break;
+                case Platform::Plain:     os << "P"; break;
+                case Platform::RoofLeft:  os << "L"; break;
+                case Platform::RoofRight: os << "R"; break;
+            }
         }
         os << "\n"; 
     }

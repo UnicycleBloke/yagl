@@ -73,13 +73,13 @@ void RecolourRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
                 {
                     if (start != (i-1))
                     {
-                        os << pad(indent + 4) << to_hex(uint8_t(start), true) << ".." << to_hex(uint8_t(i-1), true) << ": ";
-                        os << to_hex(m_colour_map[start], true) << ".." << to_hex(m_colour_map[i-1], true) << ";" << "\n";
+                        os << pad(indent + 4) << to_hex(uint8_t(start)) << ".." << to_hex(uint8_t(i-1)) << ": ";
+                        os << to_hex(m_colour_map[start]) << ".." << to_hex(m_colour_map[i-1]) << ";" << "\n";
                     }                   
                     else
                     {
-                        os << pad(indent + 4) << to_hex(uint8_t(start), true) << ": ";
-                        os << to_hex(m_colour_map[start], true) << ";" << "\n";
+                        os << pad(indent + 4) << to_hex(uint8_t(start)) << ": ";
+                        os << to_hex(m_colour_map[start]) << ";" << "\n";
                     }                     
                     state = 0;
                     if (diffs[i] != 0)

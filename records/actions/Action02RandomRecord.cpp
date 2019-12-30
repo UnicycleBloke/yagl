@@ -83,7 +83,7 @@ void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites,
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action02 random" << '\n';
     os << pad(indent) << "{" << '\n';
 
-    os << pad(indent + 4) << "this_set_id: " << to_hex(m_set_id, true) << ";\n";
+    os << pad(indent + 4) << "this_set_id: " << to_hex(m_set_id) << ";\n";
 
     os << pad(indent + 4) << "random_type: ";
     switch (m_type)
@@ -91,7 +91,7 @@ void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites,
         case RandomType::Object:  os << "Object";  break;
         case RandomType::Related: os << "Related"; break;
         case RandomType::Consist: 
-            os << "Consist[" << to_hex(m_count, true) << ", ";
+            os << "Consist[" << to_hex(m_count) << ", ";
             switch (m_method)
             {
                 case ConsistType::BackwardFromVehicle: os << "BackwardFromVehicle"; break;
@@ -104,8 +104,8 @@ void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites,
     }
     os << ";\n";
 
-    os << pad(indent + 4) << "triggers: " << to_hex(m_triggers, true) << ";\n";
-    os << pad(indent + 4) << "rand_bit: " << to_hex(m_randbit, true) << ";\n";
+    os << pad(indent + 4) << "triggers: " << to_hex(m_triggers) << ";\n";
+    os << pad(indent + 4) << "rand_bit: " << to_hex(m_randbit) << ";\n";
 
     uint16_t size = m_set_ids.size();
     if (size > 8)
@@ -118,7 +118,7 @@ void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites,
             {
                 os << "\n" << pad(indent + 8);
             }
-            os << to_hex(m_set_ids[i], true) << " ";
+            os << to_hex(m_set_ids[i]) << " ";
         }
         os << "\n" << pad(indent + 4) << "];\n";
     }
@@ -127,7 +127,7 @@ void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites,
         os << pad(indent + 4) << "set_ids: [ ";
         for (uint16_t i = 0; i < size; ++i)
         {
-            os << to_hex(m_set_ids[i], true) << " ";
+            os << to_hex(m_set_ids[i]) << " ";
         }
         os << "];\n";
     }

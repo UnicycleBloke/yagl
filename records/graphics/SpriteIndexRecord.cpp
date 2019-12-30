@@ -37,7 +37,7 @@ void SpriteIndexRecord::write(std::ostream& os, const GRFInfo& info) const
 
 void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << "sprite_id: " << to_hex(m_sprite_id, true) << "\n";
+    os << pad(indent) << "sprite_id: " << to_hex(m_sprite_id) << "\n";
     os << pad(indent) << "{" << '\n';
 
     if (sprites.find(m_sprite_id) != sprites.end())

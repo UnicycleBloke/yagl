@@ -140,7 +140,7 @@ const std::map<std::string, uint16_t> g_indices =
 
 constexpr IntegerDescriptorT<uint8_t>  desc_08  = { 0x08, str_substitute_industry_id,      PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_09  = { 0x09, str_industry_type_override,      PropFormat::Hex };
-constexpr AirportLayoutsDescriptor     desc_0A  = { 0x0A, str_industry_layout };
+constexpr IndustryLayoutsDescriptor    desc_0A  = { 0x0A, str_industry_layout };
 constexpr IntegerDescriptorT<uint8_t>  desc_0B  = { 0x0B, str_production_flags,            PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_0C  = { 0x0C, str_closure_msg_id,              PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_0D  = { 0x0D, str_production_up_id,            PropFormat::Hex };
@@ -205,7 +205,7 @@ void Action00Industries::VectorU8::print(std::ostream& os, uint16_t indent) cons
     os << "[";
     for (const auto& item: items)
     {
-        os << " " << to_hex(item, true);
+        os << " " << to_hex(item);
     }
     os << " ];";
 }
@@ -249,7 +249,7 @@ void Action00Industries::Multipliers::print(std::ostream& os, uint16_t indent) c
         os << " [";
         for (uint8_t o = 0; o < num_outputs; ++o)
         {
-            os << " " << to_hex(items[i * num_outputs + o], true);
+            os << " " << to_hex(items[i * num_outputs + o]);
         }
         os << " ]";
     }
@@ -271,7 +271,7 @@ bool Action00Industries::read_property(std::istream& is, uint8_t property)
     {
         case 0x08: m_08_substitute_industry_id      = read_uint8(is); break;
         case 0x09: m_09_industry_type_override      = read_uint8(is); break;
-        case 0x0A: m_0A_industry_layout.read(is, AirportType::Industry); break;
+        case 0x0A: m_0A_industry_layout.read(is); break;
         case 0x0B: m_0B_production_flags            = read_uint8(is); break;
         case 0x0C: m_0C_closure_msg_id              = read_uint16(is); break;
         case 0x0D: m_0D_production_up_id            = read_uint16(is); break;
@@ -330,7 +330,7 @@ bool Action00Industries::write_property(std::ostream& os, uint8_t property) cons
     {
         case 0x08: write_uint8(os, m_08_substitute_industry_id); break;
         case 0x09: write_uint8(os, m_09_industry_type_override); break;
-        case 0x0A: m_0A_industry_layout.write(os, AirportType::Industry); break;
+        case 0x0A: m_0A_industry_layout.write(os); break;
         case 0x0B: write_uint8(os, m_0B_production_flags); break;
         case 0x0C: write_uint16(os, m_0C_closure_msg_id); break;
         case 0x0D: write_uint16(os, m_0D_production_up_id); break;
@@ -383,7 +383,7 @@ bool Action00Industries::print_property(std::ostream& os, uint8_t property, uint
     {
         case 0x08: desc_08.print(m_08_substitute_industry_id, os, indent); break;
         case 0x09: desc_09.print(m_09_industry_type_override, os, indent); break;
-        case 0x0A: desc_0A.print(m_0A_industry_layout, os, indent, AirportType::Industry); break;
+        case 0x0A: desc_0A.print(m_0A_industry_layout, os, indent); break;
         case 0x0B: desc_0B.print(m_0B_production_flags, os, indent); break;
         case 0x0C: desc_0C.print(m_0C_closure_msg_id, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_production_up_id, os, indent); break;
@@ -437,7 +437,7 @@ bool Action00Industries::parse_property(TokenStream& is, const std::string& name
         {
             case 0x08'00: desc_08.parse(m_08_substitute_industry_id, is); break;
             case 0x09'00: desc_09.parse(m_09_industry_type_override, is); break;
-            case 0x0A'00: desc_0A.parse(m_0A_industry_layout, is, AirportType::Industry); break;
+            case 0x0A'00: desc_0A.parse(m_0A_industry_layout, is); break;
             case 0x0B'00: desc_0B.parse(m_0B_production_flags, is); break;
             case 0x0C'00: desc_0C.parse(m_0C_closure_msg_id, is); break;
             case 0x0D'00: desc_0D.parse(m_0D_production_up_id, is); break;

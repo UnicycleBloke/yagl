@@ -101,12 +101,12 @@ void Action03Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
     os << pad(indent + 4) << LIVERY_OVERRIDE << ": " << std::boolalpha << m_livery_override << ";\n";
     os << pad(indent + 4);
-    os << DEFAULT_SET_ID << ": " << to_hex(m_default_act02_set_id, true) << ";\n";
+    os << DEFAULT_SET_ID << ": " << to_hex(m_default_act02_set_id) << ";\n";
 
     os << pad(indent + 4) << FEATURE_IDS << ": [ ";
     for (const auto& id: m_feature_ids)
     {
-        os << to_hex(id, true);
+        os << to_hex(id);
     }
     os << " ]; // i.e. instances of '" << FeatureName(m_feature) << "'\n";
 
@@ -116,8 +116,8 @@ void Action03Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     for (const auto& c: m_cargo_types)
     {
         os << pad(indent + 8);
-        os << "{ " << CARGO_TYPE << ": " << to_hex(c.cargo_type, true) << "; "; 
-        os << SET_ID << ": " << to_hex(c.act02_set_id, true) << "; }\n";
+        os << "{ " << CARGO_TYPE << ": " << to_hex(c.cargo_type) << "; "; 
+        os << SET_ID << ": " << to_hex(c.act02_set_id) << "; }\n";
     }
     os << pad(indent + 4) << "];\n";
 

@@ -61,7 +61,7 @@ public:
 private:
     uint8_t                m_08_substitute_industry_id;
     uint8_t                m_09_industry_type_override;
-    AirportLayouts         m_0A_industry_layout;
+    IndustryLayouts        m_0A_industry_layout;
     uint8_t                m_0B_production_flags;
     uint16_t               m_0C_closure_msg_id;
     uint16_t               m_0D_production_up_id;

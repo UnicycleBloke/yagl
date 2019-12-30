@@ -74,27 +74,27 @@ void Action0DRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << pad(indent) << "{" << '\n';
 
     std::ostringstream sst;
-    sst << "parameter[" << to_hex(m_target, true) << "]";
+    sst << "parameter[" << to_hex(m_target) << "]";
     std::string target = sst.str();
 
     if (m_source2 != 0xFE)
     {
         std::ostringstream ss1;
         if (m_source1 == 0xFF)
-            ss1 << to_hex(m_data, true);
+            ss1 << to_hex(m_data);
         else if (m_source1 & 0x80)
-            ss1 << "global_var[" << to_hex(m_source1, true) << "]";
+            ss1 << "global_var[" << to_hex(m_source1) << "]";
         else
-            ss1 << "parameter[" << to_hex(m_source1, true) << "]";
+            ss1 << "parameter[" << to_hex(m_source1) << "]";
         std::string source1 = ss1.str();
 
         std::ostringstream ss2;
         if (m_source2 == 0xFF)
-            ss2 << to_hex(m_data, true);
+            ss2 << to_hex(m_data);
         else if (m_source2 & 0x80)
-            ss2 << "global_var[" << to_hex(m_source2, true) << "]";
+            ss2 << "global_var[" << to_hex(m_source2) << "]";
         else
-            ss2 << "parameter[" << to_hex(m_source2, true) << "]";
+            ss2 << "parameter[" << to_hex(m_source2) << "]";
         std::string source2 = ss2.str();
 
         os << pad(indent + 4) << target << ": " <<  source1;
@@ -121,7 +121,7 @@ void Action0DRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
         if (m_data == 0xFFFF)
         {
             os << pad(indent + 4) << target << ": ";
-            os << "patch_parameter[" << to_hex(m_source1, true) << "];\n";
+            os << "patch_parameter[" << to_hex(m_source1) << "];\n";
         }
         else if ((m_data & 0xFF) == 0xFF)
         {
@@ -151,7 +151,7 @@ void Action0DRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
             os << pad(indent + 4) << target << ": ";
             os << "parameter<";
             os << label.to_string();
-            os << ">[" << to_hex(m_source1, true) << "];\n";
+            os << ">[" << to_hex(m_source1) << "];\n";
         }        
     }
 

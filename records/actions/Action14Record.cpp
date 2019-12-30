@@ -135,7 +135,7 @@ void Action14Record::print_chunks(std::ostream& os, const std::vector<Chunk>& ch
                 os << "[ ";
                 for (const auto& d: chunk.data)
                 {
-                    os << to_hex(d, true) << ' ';
+                    os << to_hex(d) << ' ';
                 }
                 os << "];\n";
                 break;

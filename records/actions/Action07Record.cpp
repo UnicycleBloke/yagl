@@ -72,9 +72,9 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << pad(indent) << RecordName(record_type()) << " (";
 
     // Variable type:
-    if      (m_variable < 0x80) os << "param[" << to_hex(m_variable, true) << "] ";
-    else if (m_variable < 0xC0) os << "global_var[" << to_hex(m_variable, true) << "] "; 
-    else                        os << "<error?>reserved[" << to_hex(m_variable, true) << "] ";
+    if      (m_variable < 0x80) os << "param[" << to_hex(m_variable) << "] ";
+    else if (m_variable < 0xC0) os << "global_var[" << to_hex(m_variable) << "] "; 
+    else                        os << "<error?>reserved[" << to_hex(m_variable) << "] ";
 
     // Operation/condition
     switch (m_condition)
@@ -104,10 +104,10 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     // Value to compare or operate with
     switch (m_varsize)
     {
-        case 8:  os << to_hex(m_value, true) << ", " << to_hex(m_mask, true); break;
-        case 4:  os << to_hex(m_value, true); break;
-        case 2:  os << to_hex(m_value, true); break;
-        case 1:  os << to_hex(m_value, true); break;
+        case 8:  os << to_hex(m_value) << ", " << to_hex(m_mask); break;
+        case 4:  os << to_hex(m_value); break;
+        case 2:  os << to_hex(m_value); break;
+        case 1:  os << to_hex(m_value); break;
         default: os << "<error>"; 
     }
 
@@ -117,7 +117,7 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     else
         os << " // Action09";
     os << pad(indent) << "\n{\n";
-    os << pad(indent + 4) <<  "skip " << to_hex(m_sprites, true) << " sprite(s)";
+    os << pad(indent + 4) <<  "skip " << to_hex(m_sprites) << " sprite(s)";
     os << pad(indent) << "\n}\n";
 }    
 

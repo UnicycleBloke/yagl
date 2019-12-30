@@ -45,9 +45,9 @@ void Action0CRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << RecordName(record_type()) << " // Action0C\n";
     os << "{\n";
 
-    // This is probably not a valid thing to do. Should more likely
-    // print nothing, or convert to hex.
-    os << pad(indent) << m_comment;
+    // TODO This is probably not a valid thing to do. Should more likely
+    // print nothing, or convert to hex. 
+    os << pad(indent + 4) << "\"" << m_comment << "\"\n";
     
     os << "}\n";
 }

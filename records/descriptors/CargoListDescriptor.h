@@ -60,7 +60,7 @@ inline void CargoList::print(std::ostream& os) const
     os << "[";
     for (auto cargo_id: m_cargo_ids)
     {
-        os << ' ' << to_hex(cargo_id, true); 
+        os << ' ' << to_hex(cargo_id); 
     }
     os << " ];";
 }

@@ -70,6 +70,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     records/descriptors/BitfieldDescriptor.cpp
     records/descriptors/EnumDescriptor.cpp
     records/descriptors/AirportLayoutDescriptor.cpp
+    records/descriptors/IndustryLayoutDescriptor.cpp
     records/descriptors/CargoAcceptanceDescriptor.cpp
 
     # Handle properties for each different kind of feature (Action00).

@@ -436,7 +436,7 @@ std::u16string grf_string_utf16_to_readable_utf16(const std::u16string& str)
                 os << u"{" << code.name;
                 for (uint8_t d = 0; d < code.data_size; ++d)
                 {
-                    os << u" 0x" << converter.from_bytes(to_hex(str[++pos]));
+                    os << u" 0x" << converter.from_bytes(to_hex(str[++pos], false));
                 }
 
                 if ((c & 0xFF) == 0x9A)
@@ -450,7 +450,7 @@ std::u16string grf_string_utf16_to_readable_utf16(const std::u16string& str)
                         os << u" " << code.name;
                         for (uint8_t d = 0; d < code.data_size; ++d)
                         {
-                            os << u" 0x" << converter.from_bytes(to_hex(str[++pos]));
+                            os << u" 0x" << converter.from_bytes(to_hex(str[++pos], false));
                         }
                     }
                     else
@@ -465,7 +465,7 @@ std::u16string grf_string_utf16_to_readable_utf16(const std::u16string& str)
             {
                 // Shouldn't get here. It means the string contains a control code we don't know about. 
                 // But the string was processed with the list that we do know about already...
-                os <<  u"{<unknown> 0x" << converter.from_bytes(to_hex(str[++pos])) << u"}";
+                os <<  u"{<unknown> 0x" << converter.from_bytes(to_hex(str[++pos], false)) << u"}";
             }
         }
         else if (c == '"')

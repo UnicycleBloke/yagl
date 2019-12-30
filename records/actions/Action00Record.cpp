@@ -39,6 +39,7 @@
 #include "Action00RoadTypes.h"
 #include "Action00TramTypes.h"
 #include "Action00OriginalStrings.h" 
+#include "CommandLineOptions.h"
 
 
 void Action00Record::read(std::istream& is, const GRFInfo& info)
@@ -54,7 +55,7 @@ void Action00Record::read(std::istream& is, const GRFInfo& info)
 
     // Create the feature instances first, due to the interesting read order.
     // The data is stored by property, with the values for all feature instances together.
-    // Seems a littel odd, but not a problem.
+    // Seems a little odd, but not a problem.
     for (uint8_t i = 0; i < num_info; ++i)
     {
         m_instances.push_back(make_feature(m_feature));
@@ -75,6 +76,13 @@ void Action00Record::read(std::istream& is, const GRFInfo& info)
 
         for (uint8_t i = 0; i < num_info; ++i)
         {
+            if (CommandLineOptions::options().debug())
+            {
+                std::cout << "Feature=" << FeatureName(m_feature);
+                std::cout << ", index=" << to_hex(i);
+                std::cout << ", property=" << to_hex(property);
+                std::cout << "\n";
+            }
             m_instances[i]->read_property(is, property);
         }
     }
@@ -125,7 +133,7 @@ void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t id = m_first_id;
     for (auto instance: m_instances)
     {
-        os << pad(indent + 4) << "instance_id: " << to_hex(id++, true) << "\n";  
+        os << pad(indent + 4) << "instance_id: " << to_hex(id++) << "\n";  
         os << pad(indent + 4) << "{\n";  
 
         for (auto [property, used]: m_properties_used) 

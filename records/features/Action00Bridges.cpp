@@ -120,7 +120,7 @@ void Action00Bridges::BridgeTable::print(std::ostream& os, uint16_t indent) cons
             os << pad(indent);
         }
         
-        os << to_hex(sprite, true) << " ";
+        os << to_hex(sprite) << " ";
         
         ++index;
         if ((index % 8) == 0) 
@@ -170,7 +170,7 @@ void Action00Bridges::BridgeLayout::print(std::ostream& os, uint16_t indent) con
     os << pad(indent) << "{\n"; 
     for (const auto& table: m_tables)
     {
-        os << pad(indent + 4) << "table<" << to_hex(table_id++, true) << ">\n"; 
+        os << pad(indent + 4) << "table<" << to_hex(table_id++) << ">\n"; 
         os << pad(indent + 4) << "{\n"; 
 
         table.print(os, indent + 8);

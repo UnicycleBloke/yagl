@@ -77,6 +77,7 @@ void ActionFFRecord::write_binary_file(const std::string& binary_dir)
     fs::path binary_path(binary_dir);
     binary_path.append(m_filename);
 
+    std::cout << "Writing binary file: " << binary_path.string() << "...\n";
     std::ofstream os(binary_path, std::ios::binary);
     os.write((char*)&m_binary[0], m_binary.size());
 }

@@ -42,7 +42,7 @@ void ActionFERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 {
     // This need only distinguish itself from an ActionFF record.
     os << pad(indent) << "import(\"" << m_grf_id.to_string() << "\", ";
-    os << to_hex(m_sound_index, true) <<  ");\n";
+    os << to_hex(m_sound_index) <<  ");\n";
 }
 
 

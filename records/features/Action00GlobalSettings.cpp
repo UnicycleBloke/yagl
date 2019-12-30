@@ -150,7 +150,7 @@ void Action00GlobalSettings::SnowLine::print(std::ostream& os, uint16_t indent) 
         os << pad(indent + 4);
         for (uint8_t day = 0; day < 32; ++day)
         {
-            os << to_hex(m_snow_heights[month*32 + day], true) << " ";
+            os << to_hex(m_snow_heights[month*32 + day]) << " ";
         }
         os << "\n";
     }
@@ -208,7 +208,7 @@ void Action00GlobalSettings::GenderCase::print(std::ostream& os, uint16_t indent
 
     for (const auto& item: m_items)
     {
-        os << "{" << to_hex(item.id, true) << ": \"" << item.name << "\"} ";
+        os << "{" << to_hex(item.id) << ": \"" << item.name << "\"} ";
     }
 
     os << " ];";

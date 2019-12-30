@@ -50,7 +50,7 @@ template <> struct HexFormat<char16_t> { static constexpr uint8_t index = 1; };
 template <> struct HexFormat<uint32_t> { static constexpr uint8_t index = 2; };
 
 template <typename T>
-std::string to_hex(T value, bool prefix = false)
+std::string to_hex(T value, bool prefix = true)
 {
     std::ostringstream os;
     if (prefix)

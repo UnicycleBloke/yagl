@@ -47,17 +47,17 @@ void Action0ERecord::write(std::ostream& os, const GRFInfo& info) const
 
 void Action0ERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << RecordName(record_type()) << " // Action0E\n";
-    os << "{\n";
+    os << pad(indent) << RecordName(record_type()) << " // Action0E\n";
+    os << pad(indent) << "{\n";
 
-    os << pad(indent) << "[ ";
+    os << pad(indent + 4) << "[";
     for (const auto& grf_id: m_grf_ids)
     {
-        os << grf_id.to_string() << " ";
+        os << " " << grf_id.to_string();
     }
-    os << pad(indent) << " ]\n";
+    os << " ]\n";
     
-    os << "}\n";
+    os << pad(indent) << "}\n";
 }
 
 

@@ -93,7 +93,7 @@ void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     {
         os << pad(indent + 4) << "range<";
         font_desc.print_value(range.font, os);
-        os << ", " << to_hex(range.base_char, true) << ">:\n";
+        os << ", " << to_hex(range.base_char) << ">:\n";
         os << pad(indent + 4) << "{" << '\n';
         
         for (uint16_t i = 0; i < range.num_chars; ++i)

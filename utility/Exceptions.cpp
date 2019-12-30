@@ -81,7 +81,7 @@ PropertyError::PropertyError(const char* what_arg, uint8_t property, const char*
 {
     std::ostringstream os;
     os << "Property error: ";
-    os << what_arg << ": property=" << to_hex(property, true) << " at line " << line << " in source file " << file;
+    os << what_arg << ": property=" << to_hex(property) << " at line " << line << " in source file " << file;
     m_what = os.str();
 }
 

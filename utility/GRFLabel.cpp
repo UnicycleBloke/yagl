@@ -110,7 +110,7 @@ std::string GRFLabel::to_string() const
         }
         else
         {
-            os << "\\x" << ::to_hex(c);
+            os << "\\x" << ::to_hex(c, false);
         }
     }
     return os.str();
@@ -119,7 +119,7 @@ std::string GRFLabel::to_string() const
 
 std::string GRFLabel::to_hex() const
 {
-    return ::to_hex(m_label, true);
+    return ::to_hex(m_label);
 }
 
 

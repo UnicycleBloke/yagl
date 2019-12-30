@@ -27,4 +27,5 @@
 #include "IntegerDescriptor.h"
 #include "RangeDescriptor.h"
 #include "AirportLayoutDescriptor.h"
+#include "IndustryLayoutDescriptor.h"
 #include "CargoAcceptanceDescriptor.h"

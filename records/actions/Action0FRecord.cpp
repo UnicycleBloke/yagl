@@ -134,7 +134,7 @@ void Action0FRecord::write(std::ostream& os, const GRFInfo& info) const
 
 void Action0FRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << RecordName(record_type()) << "<" << to_hex(m_id, true) << "> // Action0F\n";
+    os << RecordName(record_type()) << "<" << to_hex(m_id) << "> // Action0F\n";
     os << "{\n";
 
     // Names in various languages for this town names style.
@@ -167,7 +167,7 @@ void Action0FRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
             } 
             else
             {
-                os << pad(indent + 8) << "town_names(" << to_hex(text.action_0F_id, true);
+                os << pad(indent + 8) << "town_names(" << to_hex(text.action_0F_id);
             }
             os << ", " << uint16_t(text.probability) << ");\n";
         }

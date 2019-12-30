@@ -166,7 +166,7 @@ void Action02IndustryRecord::print(std::ostream& os, const SpriteZoomMap& sprite
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << ", "; 
     os << g_format_names.name_of(m_format) << "> // Action02 basic" << '\n';
     os << pad(indent) << "{" << '\n';
-    os << pad(indent + 4) << "this_set_id: " << to_hex(m_act02_set_id, true) << ";\n";
+    os << pad(indent + 4) << "this_set_id: " << to_hex(m_act02_set_id) << ";\n";
 
     if (m_format == Format::Version0)
     {
@@ -189,14 +189,14 @@ void Action02IndustryRecord::print_version0(std::ostream& os, uint16_t indent) c
 {
     // Subtract amounts
     os << pad(indent) << "sub_in_amounts: [ ";
-    os << to_hex(m_version0.sub_in_amounts[0], true) << " ";
-    os << to_hex(m_version0.sub_in_amounts[1], true) << " ";
-    os << to_hex(m_version0.sub_in_amounts[2], true) << " ];\n";
+    os << to_hex(m_version0.sub_in_amounts[0]) << " ";
+    os << to_hex(m_version0.sub_in_amounts[1]) << " ";
+    os << to_hex(m_version0.sub_in_amounts[2]) << " ];\n";
 
     // Add amounts
     os << pad(indent) << "add_out_amounts: [ ";
-    os << to_hex(m_version0.add_out_amounts[0], true) << " ";
-    os << to_hex(m_version0.add_out_amounts[1], true) << " ];\n";
+    os << to_hex(m_version0.add_out_amounts[0]) << " ";
+    os << to_hex(m_version0.add_out_amounts[1]) << " ];\n";
 
     // Repeat flag
     os << pad(indent) << "repeat_flag: " << to_bool(m_version0.repeat_flag);
@@ -207,17 +207,17 @@ void Action02IndustryRecord::print_version1(std::ostream& os, uint16_t indent) c
 {
     // Subtract amounts
     os << pad(indent) << "sub_in_registers: [ ";
-    os << to_hex(m_version1.sub_in_regs[0], true) << " ";
-    os << to_hex(m_version1.sub_in_regs[1], true) << " ";
-    os << to_hex(m_version1.sub_in_regs[2], true) << " ];\n";
+    os << to_hex(m_version1.sub_in_regs[0]) << " ";
+    os << to_hex(m_version1.sub_in_regs[1]) << " ";
+    os << to_hex(m_version1.sub_in_regs[2]) << " ];\n";
 
     // Add amounts
     os << pad(indent) << "add_out_registers: [ ";
-    os << to_hex(m_version1.add_out_regs[0], true) << " ";
-    os << to_hex(m_version1.add_out_regs[1], true) << " ];\n";
+    os << to_hex(m_version1.add_out_regs[0]) << " ";
+    os << to_hex(m_version1.add_out_regs[1]) << " ];\n";
 
     // Repeat flag
-    os << pad(indent) << "repeat_register: " << to_hex(m_version1.repeat_reg, true);
+    os << pad(indent) << "repeat_register: " << to_hex(m_version1.repeat_reg);
 }   
 
 
@@ -227,7 +227,7 @@ void Action02IndustryRecord::print_version2(std::ostream& os, uint16_t indent) c
     os << pad(indent) << "sub_in_cargos: [ ";
     for (const auto& c: m_version2.sub_in_cargos)
     {
-        os << "(" << to_hex(c.cargo, true) << ", " << to_hex(c.reg, true) << ") ";
+        os << "(" << to_hex(c.cargo) << ", " << to_hex(c.reg) << ") ";
     }
     os << " ];\n";
     
@@ -235,12 +235,12 @@ void Action02IndustryRecord::print_version2(std::ostream& os, uint16_t indent) c
     os << pad(indent) << "add_out_cargos: [ ";
     for (const auto& c: m_version2.add_out_cargos)
     {
-        os << "(" << to_hex(c.cargo, true) << ", " << to_hex(c.reg, true) << ") ";
+        os << "(" << to_hex(c.cargo) << ", " << to_hex(c.reg) << ") ";
     }
     os << " ];\n";
 
     // Repeat flag
-    os << pad(indent) << "repeat_register: " << to_hex(m_version1.repeat_reg, true);
+    os << pad(indent) << "repeat_register: " << to_hex(m_version1.repeat_reg);
 }   
 
 
