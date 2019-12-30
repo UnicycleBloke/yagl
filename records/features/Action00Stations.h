@@ -77,9 +77,18 @@ public:
 private:
     struct CustomLayout
     {
+        enum class Platform 
+        {
+            Plain     = 0x00, 
+            Building  = 0x02, 
+            RoofLeft  = 0x04, 
+            RoofRight = 0x06
+        }; 
+
         uint8_t platform_length;
         uint8_t platform_count;
-        std::vector<uint8_t> platform_tiles; // length * count, All bytes 00, 02, 04 or 06
+        // length * count, All bytes 00, 02, 04 or 06
+        std::vector<Platform> platform_tiles; 
 
         void read(std::istream& is);
         void write(std::ostream& os) const;
@@ -90,7 +99,7 @@ private:
 public:
     struct CustomStation
     {
-        std::vector<CustomLayout> m_layouts;
+        std::vector<CustomLayout> layouts;
 
         void read(std::istream& is);
         void write(std::ostream& os) const;

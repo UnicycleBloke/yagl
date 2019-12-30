@@ -75,13 +75,16 @@ void AirportTile::print(std::ostream& os, uint16_t indent) const
     switch (type)
     {
         case Type::Clearance: 
-            os << pad(indent) << "clearance(" << x_off << ", " << y_off << ");\n"; 
+            os << pad(indent) << "clearance("; 
+            os << to_hex(x_off, true) << ", " << to_hex(y_off, true) << ");\n"; 
             break; 
         case Type::NewTile:   
-            os << pad(indent) << "new_tile(" << x_off << ", " << y_off << ", " << to_hex(tile, true) << ");\n"; 
+            os << pad(indent) << "new_tile(";
+            os << to_hex(x_off, true) << ", " << to_hex(y_off, true) << ", " << to_hex(tile, true) << ");\n"; 
             break;
-        case Type::OldTile:
-            os << pad(indent) << "old_tile(" << x_off << ", " << y_off << ", " << to_hex(tile, true) << ");\n"; 
+        case Type::OldTile:          
+            os << pad(indent) << "old_tile(";
+            os << to_hex(x_off, true) << ", " << to_hex(y_off, true) << ", " << to_hex(tile, true) << ");\n"; 
             break;
     }
 }
