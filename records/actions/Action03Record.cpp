@@ -59,9 +59,6 @@ void Action03Record::read(std::istream& is, const GRFInfo& info)
     m_default_act02_set_id = read_uint16(is);
 }
 
-// TODO maybe special case the RailTypes. Are Road and Tram type similar.
-// TODO For printing we should create names for the pre-defined instance IDs for all features.
-
 
 void Action03Record::write(std::ostream& os, const GRFInfo& info) const
 {

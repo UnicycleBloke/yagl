@@ -1,4 +1,4 @@
-# TODO possibly replace this file with bash script or something to remove
+# Possibly replace this file with bash script or something to remove
 # build dependency on Python.
 
 import os

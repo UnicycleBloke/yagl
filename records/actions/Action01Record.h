@@ -52,9 +52,7 @@ private:
 
     // Extended format lets us specify the ID of the first sprite set defined
     // in this record. This could permit overwriting only some sprite sets in later 
-    // records. TODO not entirely sure how this numbering works or how this is 
-    // then used in Action02 records. Do the Action01 records have to come immediately
-    // before Action02? Are the sprite set IDs numbered from zero for each Action02?
+    // records. 
     bool m_has_first_id = 0;
 
     // The number given to the first sprite set defined by this Action00. The others
@@ -67,5 +65,6 @@ private:
     // The number of sprites contained in each sprite set. These are all the same.
     uint16_t m_num_sprites = 0;
 
-    //std::vector<std::vector<std::shared_ptr<Record>>> m_sprite_sets;
+    // NOTE: The number of sprites needs to match the number of records in 
+    // this ContainerRecord. ASSERT?
 };

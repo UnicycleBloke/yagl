@@ -62,7 +62,7 @@ void Action08Record::parse(TokenStream& is)
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenBrace);
 
-    // TODO Could theoretically set the same members multiple times, but only the last will count.
+    // Could theoretically set the same members multiple times, but only the last will count.
     // Could maintain a bit field to check for this happening.
     while (is.peek().type == TokenType::Ident)
     {
@@ -70,8 +70,7 @@ void Action08Record::parse(TokenStream& is)
         is.match(TokenType::Ident);
         is.match(TokenType::Colon);
         
-        // TODO maybe convert this to a map or use lambdas or something to make a little more 
-        // data driven than procedural.
+        // Convert this to a map as with features.
         if (ident.value == "grf_id")
         {
             m_grf_id.parse(is);

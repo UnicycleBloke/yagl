@@ -42,8 +42,10 @@ void Action05Record::write(std::ostream& os, const GRFInfo& info) const
 
     bool has_offset = (m_offset != 0);
     write_uint8(os, static_cast<uint8_t>(m_sprite_type) | (has_offset ? 0x80 : 0x00));
-    // TODO get the number of sprites from the contained records.
-    write_uint8_ext(os, m_num_sprites);
+    
+    // Get the number of sprites from the contained records.
+    //write_uint8_ext(os, m_num_sprites);
+    write_uint8_ext(os, num_sprites_to_write());
 
     if (has_offset)
     {

@@ -40,7 +40,6 @@ void Action0ARecord::write(std::ostream& os, const GRFInfo& info) const
     uint8_t num_sets = m_sets.size();
     write_uint8(os, num_sets);
 
-    // TODO get the number of sprites from the contained records.
     for (const auto& set: m_sets)
     {
         write_uint8(os, set.num_sprites);

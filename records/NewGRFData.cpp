@@ -134,8 +134,6 @@ void NewGRFData::read(std::istream& is)
                 record->read(is, m_info);
                 break;
 
-            // TODO recolour sprites.
-
             // This is a real-sprite (Format1 only), or a recolour-sprite. The size might be misleading so we 
             // have to decompress the image to find out. Pass record index as the (fake) sprite ID. The 
             // info byte we read is in this context interpreted as the sprite's compression byte. Create an
@@ -378,12 +376,10 @@ std::shared_ptr<Record> NewGRFData::read_record(std::istream& is, uint32_t size,
     // previously read from the file.
     std::shared_ptr<Record> record = make_record(record_type);
     std::istringstream iss(data);
-    record->m_data = data;
     record->read(iss, m_info); 
 
     // We need to know the GRF version so we can pass it to the other records, some 
     // of which are interpreted differently depending on the version. 
-    // TODO move this inside Action08 - would need a reinterpret cast.
     if (record_type == RecordType::ACTION_08)
     {
         auto action08  = std::dynamic_pointer_cast<Action08Record>(record);
@@ -609,10 +605,9 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
         }
     }
 
-    // TODO We need to be able to cope with changes in the text format.
+    // We need to be able to cope with changes in the text format.
     // The simplest approach is to reject text files with different 
     // versions... 
-    // NOTE using colons to avoid parsing the version as a number.
     os << "yagl_version: \"" << str_yagl_version << "\";\n\n";
 
     // Finally write out the YAGL script.

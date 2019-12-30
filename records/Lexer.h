@@ -31,15 +31,11 @@ enum class TokenType
     Colon,                     // Property assignment/setting
     SemiColon,                 // Statement termination
     Comma,                     // Function arguments
-    Hash,                      // TODO Remove?
     OpenParen,   CloseParen,   // Function arguments
     OpenBracket, CloseBracket, // Lists
     OpenBrace,   CloseBrace,   // Blocks
     OpenAngle,   CloseAngle,   // Arguments?
 
-    // TODO operators for expressions. We probably don't want expressions all over the place, but they 
-    // are useful for some things.
-    // TODO digraphs such as == and >=
     Equals,    // = 
     NotEqual,  // !=
     Ampersand, // &
@@ -49,7 +45,7 @@ enum class TokenType
 
     // Tokens with values attached
     Number, // Any decimal, binary (0bXXX), octal (0XXX), hexadecimal (0xXXX), or (decimal) floating point number 
-    Ident,  // Any name or keyword - TODO can it begin with underscore? Can't begin with a digit.
+    Ident,  // Any name or keyword
     String, // Any string literal - this is a unicode string endoded as UTF-8.
 
     // Indicates the end of input for parsing.
@@ -144,7 +140,6 @@ private:
 class TokenStream
 {
 public:
-    // TODO does this move the vector?
     TokenStream(const std::vector<TokenValue> tokens)
     : m_tokens(tokens)
     {

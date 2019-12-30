@@ -66,6 +66,5 @@ void IntegerDescriptorT<T>::print(T value, std::ostream& os, uint8_t indent) con
 template <typename T>
 void IntegerDescriptorT<T>::parse(T& value, TokenStream& is) const
 {
-    // TODO assert that the integer read has a value in range.
     value = is.match_integer();
 }

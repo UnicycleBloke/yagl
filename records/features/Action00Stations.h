@@ -127,6 +127,7 @@ private:
     uint8_t        m_17_animation_speed;
     uint16_t       m_18_animation_triggers;
 
+    // TODO 
     //Action00StationRouting  m_19_station_routing;
     //Action00StationAdvanced m_1A_station_advanced; - like Action02SpriteLayout?
 

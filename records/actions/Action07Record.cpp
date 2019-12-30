@@ -73,7 +73,7 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
     // Variable type:
     if      (m_variable < 0x80) os << "param[" << to_hex(m_variable, true) << "] ";
-    else if (m_variable < 0xC0) os << "global_var[" << to_hex(m_variable, true) << "] "; // TODO convert to a name
+    else if (m_variable < 0xC0) os << "global_var[" << to_hex(m_variable, true) << "] "; 
     else                        os << "<error?>reserved[" << to_hex(m_variable, true) << "] ";
 
     // Operation/condition

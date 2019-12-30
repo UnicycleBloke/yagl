@@ -37,10 +37,6 @@ void SpriteIndexRecord::write(std::ostream& os, const GRFInfo& info) const
 
 void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    // TODO this needs to be changed to split the indices as used in 
-    // sprite sets and so on, from the actual list of sprites for each 
-    // index (different zoom-levels and 'compression').
-
     os << pad(indent) << "sprite_id: " << to_hex(m_sprite_id, true) << "\n";
     os << pad(indent) << "{" << '\n';
 
@@ -67,15 +63,6 @@ void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, ui
 
 void SpriteIndexRecord::parse(TokenStream& is)
 {
-    // sprite_id: 0x00000679
-    // {
-    //     // Different zoom levels and colour depths.    
-    //     [8, 21, -3, -9] normal M "base_name.normal.0.png" [168, 778];
-    //     [8, 21, -3, -9] normal M "base_name.normal.0.png" [168, 778];
-    //     [8, 21, -3, -9] normal M "base_name.normal.0.png" [168, 778];
-    //     Could be recolour sprites, too.
-    // }
-
     is.match_ident("sprite_id");
     is.match(TokenType::Colon);
 

@@ -68,7 +68,9 @@ void Action00Record::read(std::istream& is, const GRFInfo& info)
         uint8_t property = read_uint8(is);
         m_properties_used[property] = true;
 
-        // TODO remove - Test code 
+        // This keeps the order (and duplicates) of properties in the GRF. 
+        // Added only to assist with testing that the write() method results in
+        // the same binary output. Probably ought to remove.
         m_properties.push_back(property);
 
         for (uint8_t i = 0; i < num_info; ++i)
@@ -133,7 +135,7 @@ void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
                 bool result = instance->print_property(os, property, indent + 8);
                 if (!result)
                 {
-                    os << pad(indent + 8) << "TODO <unknown> property #" << to_hex(property, true) << '\n';
+                    throw RUNTIME_ERROR("Unknown property");
                 }
             }
         }
@@ -202,7 +204,7 @@ void Action00Record::parse(TokenStream& is)
         is.match(TokenType::Ident);
         is.match(TokenType::Colon);
         m_first_id = is.match_integer();
-        // TODO ignore second and subsequent items.
+        // Ignore second and subsequent IDs.
 
         is.match(TokenType::OpenBrace);
 

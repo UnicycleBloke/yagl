@@ -203,7 +203,6 @@ void Action02VariableRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
-// TODO convert to a map
 static std::string operation_name(uint8_t operation)
 {
     switch (operation)
@@ -234,52 +233,6 @@ static std::string operation_name(uint8_t operation)
     }
     return "<unknown>"; 
 }
-
-
-
-
-static const std::map<uint8_t, std::string> g_train_vars =
-{
-    // Global vars
-    // TODO this list is incomplete.
-    //{ 0x02, "current_month" },        
-    //{ 0x02, "current_day_of_month" }, 
-    //{ 0x02, "is_leapyear" },          
-    //{ 0x02, "current_day_of_year" },  
-    { 0x03, "current_climate" },         
-    { 0x06, "traffic_side" },         
-    { 0x09, "date_fraction" },         
-    { 0x0A, "animation_counter" },    
-    { 0x0B, "ttd_patch_version" },    
-    { 0x0C, "current_callback" },     
-    { 0x0D, "ttd_os_version" },    
-    { 0x10, "extra_callback_info1" }, 
-    { 0x12, "game_mode" },            
-    { 0x18, "extra_callback_info2" }, 
-    { 0x1B, "display_options" },      
-    { 0x1C, "last_computed_result" }, 
-    { 0x20, "snowline_height" },      
-    { 0x22, "difficulty_level" },     
-    { 0x23, "current_date" },         
-    { 0x24, "current_year" },         
-
-    // TODO this list is incomplete
-    { 0x40,	"position_length_in_consist" },
-    { 0x41,	"position_in_consecutive_chain" },
-    { 0x42,	"cargo_types" },
-    { 0x43,	"player_info" },
-    { 0x44,	"aircraft_info" },
-    { 0x45,	"curvature_info" },
-    { 0x46,	"motion_counter" },
-    { 0x47,	"vehicle_cargo_info" },
-    { 0x48,	"vehicle_type_info" },
-    { 0x49,	"year_of_construction" },
-    { 0x4A,	"current_rail_type_info" },
-    { 0x4B,	"long_date_of_last_service" },
-    { 0x4C,	"current_max_speed" },
-    { 0x4D,	"position_in_articulated_vehicle" },
-    { 0xF2,	"refit_cycle" },
-};
 
 
 void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
@@ -314,16 +267,7 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
         // TODO replace the variable with the proper name for the feature.
         // Need a few maps basically. Give some thought to how we can simplify the output
         // to make it clearer. Or maybe there is no need...
-        os << "(";
-        const auto& it = g_train_vars.find(va.variable);
-        if (it != g_train_vars.end())
-        {
-            os << it->second;
-        }
-        else
-        {
-            os << "variable[" << to_hex(va.variable, true) << "]";
-        }
+        os << "(variable[" << to_hex(va.variable, true) << "]";
 
         // Some variables take an additional argument
         if (va.variable >= 0x60 && va.variable < 0x80)

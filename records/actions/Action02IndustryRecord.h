@@ -77,7 +77,6 @@ private:
     // Negative add-out values don't make sense and are ignored. The results are 
     // clamped to the allowed range (0..65535 for both incoming and outgoing cargo 
     // amounts).     
-    // TODO what are registers?
     struct Version1
     {
         // Numbers of registers that contain the amounts to be subtracted

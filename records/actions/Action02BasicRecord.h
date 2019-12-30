@@ -24,10 +24,6 @@
 //
 // Action2 is used to group sets of sprites from the previous Action1 together, and 
 // make them accessible by a variational or random action 2 (chain) or an Action3.
-//
-// TODO Not entirely sure how to interpret this. Is there a single Action01 which is 
-// followed by one or more Action02s? This would make some sense of the fact that the 
-// Action01 IDs are not really numbered.
 class Action02BasicRecord : public ActionRecord
 {
 public:

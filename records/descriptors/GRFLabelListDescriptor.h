@@ -39,7 +39,6 @@ struct GRFLabelDescriptor : PropertyDescriptor
 {
     void print(GRFLabel label, std::ostream& os, uint8_t indent) const
     {
-        // TODO pass a format ?
         prefix(os, indent);
         os << " \"" << label.to_string() << "\";"; 
     }

@@ -152,8 +152,6 @@ void SpriteSheetGenerator::layout_sprites(Category category, SpriteVector sprite
             row_height   = 0;
             image_height = std::max(image_height, yoffset);
 
-            // TODO at least some sprite indices. First in row to start?
-
             // This will result in image a little taller than image_height because the
             // sprites in the final row are laid out before making the decision. Is it 
             // problem? Nah.
@@ -169,7 +167,8 @@ void SpriteSheetGenerator::layout_sprites(Category category, SpriteVector sprite
             }
         }
 
-        // TODO distinguish mask from regular file offsets.
+        // Distinguish mask from regular file offsets. This is only relevant for 
+        // RGB[A]P sprites.
         if (category.colour == ColourType::Mask)
         {
             sprite->set_mask_xoff(xoffset);
@@ -237,7 +236,7 @@ void SpriteSheetGenerator::create_sprite_sheet(Category category, SpriteVector s
         std::cout << "Creating sprite sheet: " << image_path << '\n';
     }
 
-    // TODO we need to deal with different colour depths.
+    // Deal with different colour depths.
     switch (category.colour)
     {
         case ColourType::Palette: 
@@ -256,7 +255,7 @@ void SpriteSheetGenerator::create_sprite_sheet(Category category, SpriteVector s
 }
 
 
-// TODO The functions below are horribly repetitive. png++ sort of forced
+// The functions below are horribly repetitive. png++ sort of forced
 // this on us. Until we think of something neater. 
 
 
@@ -298,7 +297,6 @@ void SpriteSheetGenerator::create_sprite_sheet_8bpp(const std::string& image_pat
     {
         // Each sprite needs to know the file name of its sprite sheet so that we 
         // can put this into the YAGL and read back the pixels later.
-        // TODO distinguish mask from regular file names.
         sprite->set_filename(relative);
 
         const uint32_t xdim = sprite->xdim(); 
@@ -490,7 +488,6 @@ void SpriteSheetGenerator::create_sprite_sheet_mask(const std::string& image_pat
     {
         // Each sprite needs to know the file name of its sprite sheet so that we 
         // can put this into the YAGL and read back the pixels later.
-        // TODO distinguish mask from regular file names.
         sprite->set_mask_filename(relative);
 
         const uint32_t xdim = sprite->xdim(); 

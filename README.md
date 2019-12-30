@@ -80,7 +80,16 @@ Cygwin/MSYS2/MingW should all be fine, but remain to be tested.
 
 ### Build dependencies
 
-The only binary library dependency is **libpng**, which is used for reading and writing spritesheets.
+The only binary library dependency is **libpng**, which is used for reading and writing spritesheets. You may need to install the headers for this, as follows:
+
+```bash
+sudo apt-get install libpng-dev
+```
+`libpng` apparently depends on `zlib`. I did not have a problem, but you may need to install this, too:
+
+```bash
+sudo apt-get install zlib1g-dev
+```
 
 The following header only libraries are included in the source tree along with their licences:
 - **png++**: a C++ wrapper around the libpng API: https://www.nongnu.org/pngpp/.

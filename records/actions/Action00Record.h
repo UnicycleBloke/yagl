@@ -50,6 +50,7 @@ private:
     // This vector holds objects representing the one or more feature instances.
     std::vector<std::shared_ptr<Action00Feature>> m_instances;
 
-    // TODO remove - Used to keep track of the order in which properties are read from the source
+    // Used to keep track of the order in which properties are read from the source.
+    // Only added for testing the binary output. Probably ought to remove.
     std::vector<uint8_t> m_properties;    
 };

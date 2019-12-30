@@ -85,7 +85,7 @@ void ContainerRecord::print_sprite(uint16_t index, std::ostream& os,
 }
 
 
-// TODO Does it make sense to use NML-ish names - or just action01 etc?
+// Does it make sense to use NML-ish names - or just action01 etc?
 const std::map<RecordType, std::string> g_record_names =
 {
     { RecordType::RECORD_COUNT,            "record_count" },

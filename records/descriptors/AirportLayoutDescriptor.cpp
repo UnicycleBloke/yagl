@@ -33,7 +33,6 @@ void AirportTile::read(std::istream& is)
  
     tile = read_uint8(is); 
     type = static_cast<Type>(tile);
-    // TODO assert in enum.
     switch (type)
     {
         case Type::Clearance:

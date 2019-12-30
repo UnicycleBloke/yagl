@@ -51,7 +51,6 @@ void Action01Record::write(std::ostream& os, const GRFInfo& info) const
 {
     ContainerRecord::write(os, info);
 
-    // TODO get the number of sprites from the contained records.
     write_uint8(os, static_cast<uint8_t>(m_feature));
     if (m_has_first_id)
     {
@@ -70,10 +69,6 @@ void Action01Record::write(std::ostream& os, const GRFInfo& info) const
 
 void Action01Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    // TODO reorganise the sprites into blocks with the same zoom level.
-    // TODO what about missing sprites in that case? What is a null sprite
-    //      in NML? What does it output?
-
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action01" << '\n';
     os << pad(indent) << "{" << '\n';
 

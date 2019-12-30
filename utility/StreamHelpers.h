@@ -99,7 +99,6 @@ inline Padding pad(uint16_t len)
 }
 
 
-// TODO use this more widely for enum name maps.
 template <typename Enum>
 struct EnumNames
 {

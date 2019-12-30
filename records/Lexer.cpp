@@ -190,7 +190,6 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
         case ':' : emit(TokenType::Colon,        ":"); return true;
         case ';' : emit(TokenType::SemiColon,    ";"); return true;
         case ',' : emit(TokenType::Comma,        ","); return true;
-        case '#' : emit(TokenType::Hash,         "#"); return true;
         case '=' : emit(TokenType::Equals,       "="); return true;
         case '&' : emit(TokenType::Ampersand,    "&"); return true;
         case '%' : emit(TokenType::Percent,      "%"); return true;
@@ -250,8 +249,7 @@ bool Lexer::handle_ident(uint8_t c)
 
 bool Lexer::handle_string(uint8_t c)
 {
-    // TODO deal with escape codes.
-    // Convert all strings to UTF8 - need to deal with control codes for TTD
+    // All strings in YAGL are expected to be well-formed UTF8. 
     if (c != '"')
     {
         m_value += c;

@@ -197,6 +197,7 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
     }
 
     // TODO this isn't quite right - a different size is written sometimes.
+    // We need to know this value for reading chunked sprites.
     write_uint16(os, output_data.size() + 8);
 
     write_uint8(os,  m_compression);
@@ -239,6 +240,7 @@ void RealSpriteRecord::write_format2(std::ostream& os) const
     uint32_t output_size = output_data.size() + ((m_compression & CHUNKED_FORMAT) ? 14 : 10);
 
     // TODO this isn't quite right - a different size is written sometimes.
+    // We need to know this value for reading chunked sprites.
     write_uint32(os, m_sprite_id); // sprite id
     write_uint32(os, output_size); // TODO + 4 if trans
     write_uint8(os,  m_compression);
@@ -399,8 +401,9 @@ void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uin
     
     // Tiles contain transparency and are stored in a chunked format to save space.
     if (m_compression & RealSpriteRecord::CHUNKED_FORMAT) os << "|chunked";
+    
     // grfcodec likes to remove extraneous transparent borders.
-    // TODO Is the sense here the right way?
+    // Is the sense here the right way?
     //if (m_compression & RealSpriteRecord::CROP_TRANSARENT_BORDER) os << "|no_crop";
 
     // If we create a sprite_sheet containing this sprite, print the details.
@@ -430,7 +433,6 @@ const EnumDescriptorT<RealSpriteRecord::ZoomLevel> zoom_desc =
 };
 
 
-// TODO this probably isn't right yet.
 const BitfieldDescriptorT<uint8_t> colour_desc = 
 { 
     0x00, "",                   

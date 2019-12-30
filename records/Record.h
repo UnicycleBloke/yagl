@@ -167,10 +167,6 @@ private:
     RecordType m_record_type;
 
 public:
-    // TODO remove - used to compare read and write data for discrepancies.
-    std::string m_data;
-
-public:
     Record(RecordType record_type = RecordType::NONE)
     : m_record_type{record_type}
     {

@@ -20,7 +20,8 @@
 #include "Action00Feature.h"
 
 
-// TODO anything?
+// TODO Only created because there is a feature index for original strings.
+// Probably redundant.
 class Action00OriginalStrings : public Action00Feature
 {
 public:

@@ -163,7 +163,7 @@ void Action00GlobalSettings::SnowLine::parse(TokenStream& is)
 {
     is.match(TokenType::OpenBracket);
 
-    // TODO This is a bit crude - assumes that we have the correct 
+    // This is a bit crude - assumes that we have the correct 
     // number of values. Throws exception if we don't.
     for (uint8_t month = 0; month < 12; ++month)
     {
