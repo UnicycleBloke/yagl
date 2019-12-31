@@ -39,22 +39,23 @@ public:
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
     void parse(TokenStream& is) override;
 
-private:
-    // enum class Severity
-    // {
-    //     Notice  = 0,
-    //     Warning = 1,
-    //     Error   = 2,
-    //     Fatal   = 3
-    // };
+public:
+    enum class Severity
+    {
+        Notice  = 0,
+        Warning = 1,
+        Error   = 2,
+        Fatal   = 3
+    };
 
-    uint8_t     m_severity;
-    bool        m_apply_during_init;
-    uint8_t     m_language_id;    // Same as Action04
-    uint8_t     m_message_id;     // Some built-in, 0xFF for custom
-    std::string m_custom_message; // Only present if 0xFF ID.
-    std::string m_message_data;   // Inserted at second 0x80 in the string.
-    uint8_t     m_num_params;
+private:
+    Severity    m_severity;
+    bool        m_apply_during_init; // High bit in severity byte
+    uint8_t     m_language_id;       // Same as Action04
+    uint8_t     m_message_id;        // Some built-in, 0xFF for custom
+    std::string m_custom_message;    // Only present if 0xFF ID.
+    std::string m_message_data;      // Inserted at second 0x80 in the string.
+    uint8_t     m_num_params;        // Optional up to two.
     uint8_t     m_param1;
     uint8_t     m_param2;
 };

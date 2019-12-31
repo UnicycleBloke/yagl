@@ -19,16 +19,17 @@
 #include "Action0BRecord.h"
 #include "StreamHelpers.h"
 #include "GRFStrings.h"
+#include "Descriptors.h"
 
 
 void Action0BRecord::read(std::istream& is, const GRFInfo& info)
 {
-    m_severity    = read_uint8(is);
-    m_language_id = read_uint8(is);
-    m_message_id  = read_uint8(is);
+    uint8_t severity = read_uint8(is);
+    m_language_id    = read_uint8(is);
+    m_message_id     = read_uint8(is);
 
-    m_apply_during_init = (m_severity & 0x80) == 0x80;
-    m_severity = m_severity & ~0x80;
+    m_apply_during_init = (severity & 0x80) == 0x80;
+    m_severity = static_cast<Severity>(severity & ~0x80);
 
     if (m_message_id == 0xFF)
     {
@@ -68,7 +69,7 @@ void Action0BRecord::write(std::ostream& os, const GRFInfo& info) const
 {
     ActionRecord::write(os, info);
 
-    write_uint8(os, m_severity | (m_apply_during_init ? 0x80 : 0x00));
+    write_uint8(os, static_cast<uint8_t>(m_severity) | (m_apply_during_init ? 0x80 : 0x00));
     write_uint8(os, m_language_id);
     write_uint8(os, m_message_id);
 
@@ -88,27 +89,69 @@ void Action0BRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+static const EnumDescriptorT<Action0BRecord::Severity> severity_desc = 
+{ 
+    0x00, "severity",                   
+    {
+        { 0, "Notice" },  // Severity::Notice },    
+        { 1, "Warning" }, // Severity::Warning }, 
+        { 2, "Error" },   // Severity::Error }, 
+        { 3, "Fatal" },   // Severity::Fatal }, 
+    }
+};
+
+
+// From the NewGRF specs:
+constexpr const char* str_message_00 = "\x80 requires at least TTDPatch version \x80";
+constexpr const char* str_message_01 = "\x80 is for the \x80 version of TTD."; // <data> should be "DOS" or "Windows"
+constexpr const char* str_message_02 = "\x80 is designed to be used with \x80"; // <data> should be a switchname + value, e.g. "multihead 0"
+constexpr const char* str_message_03 = "Invalid parameter for \x80: parameter \x80 ( \x7B )"; // <data> should be the switch number written out ("5")
+constexpr const char* str_message_04 = "\x80 must be loaded before \x80.";
+constexpr const char* str_message_05 = "\x80 must be loaded after \x80.";
+constexpr const char* str_message_06 = "\x80 equires OpenTTD version \x80 or better."; 
+
+
 void Action0BRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << " // Action0B" << '\n';
-    os << pad(indent) << "{" << '\n';
+    os << pad(indent) << RecordName(record_type()) << " // Action0B\n";
+    os << pad(indent) << "{\n";
 
-    os << pad(indent + 4) << "severity: " << to_hex(m_severity) << '\n';
-    os << pad(indent + 4) << "language: " << to_hex(m_language_id) << " // " << language_name(m_language_id) << '\n';
-    os << pad(indent + 4) << "message_id: " << to_hex(m_message_id) << '\n';
+    severity_desc.print(m_severity, os, indent + 4);
+    os << pad(indent + 4) << "language: " << to_hex(m_language_id) << "; // " << language_name(m_language_id) << "\n";
+    os << pad(indent + 4) << "message_id: " << to_hex(m_message_id) << ";\n";
 
     if (m_message_id == 0xFF)
     {
-        os << pad(indent + 4) << "custom_message: \"" << grf_string_to_readable_utf8(m_custom_message) << "\"\n";
+        os << pad(indent + 4) << "custom_message: \"" << grf_string_to_readable_utf8(m_custom_message) << "\";\n";
+    }
+    else
+    {
+        os << pad(indent + 4) << "// standard_message: \"";
+        switch (m_message_id)
+        {
+            case 0x00: os << grf_string_to_readable_utf8(str_message_00); break;
+            case 0x01: os << grf_string_to_readable_utf8(str_message_01); break;
+            case 0x02: os << grf_string_to_readable_utf8(str_message_02); break;
+            case 0x03: os << grf_string_to_readable_utf8(str_message_03); break;
+            case 0x04: os << grf_string_to_readable_utf8(str_message_04); break;
+            case 0x05: os << grf_string_to_readable_utf8(str_message_05); break;
+            case 0x06: os << grf_string_to_readable_utf8(str_message_06); break;
+            default:   os << "<unknown>"; break;
+        }
+        os << "\";\n";
     }
 
-    os << pad(indent + 4) << "message_data: \"" << grf_string_to_readable_utf8(m_message_data) << "\"\n";
+    os << pad(indent + 4) << "message_data: \"" << grf_string_to_readable_utf8(m_message_data) << "\";\n";
     if (m_num_params > 0)
-        os << pad(indent + 4) << "param1: " << to_hex(m_param1) << '\n';
+    {
+        os << pad(indent + 4) << "param1: " << to_hex(m_param1) << ";\n";
+    }
     if (m_num_params > 1)
-        os << pad(indent + 4) << "param2: " << to_hex(m_param2) << '\n';
+    {
+        os << pad(indent + 4) << "param2: " << to_hex(m_param2) << ";\n";
+    }
 
-    os << pad(indent) << "}" << '\n';
+    os << pad(indent) << "}\n";
 }
 
 
