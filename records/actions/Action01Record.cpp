@@ -159,7 +159,7 @@ void Action01Record::parse(TokenStream& is)
 
             // The sprite itself contains one or more different version of the 
             // image, in different zooms and/or colour depths. 
-            auto sprite = std::make_shared<SpriteIndexRecord>();
+            auto sprite = std::make_shared<SpriteIndexRecord>(record_type());
             append_sprite(sprite);
             sprite->parse(is);
         }
