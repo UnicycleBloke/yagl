@@ -46,12 +46,13 @@ public:
     void parse(TokenStream& is) override;
 
 private:
-    uint8_t  m_variable;  // This sets the variable to base the decision on. 
-    uint8_t  m_varsize;   // For GRF parameters, this is the same as <param-size> 
-                          // in action 6. For built-in variables, it depends on 
-                          // the variable, see the above table. 
-    uint8_t  m_condition; // There are several conditions you can choose from to test against. 
-    uint32_t m_value;     // This term is what the variable is compared to. Its size is given by <varsize>. 
-    uint32_t m_mask;      // This is a function of the variable size.  
-    uint8_t  m_sprites;   // This element sets how many sprites will be skipped if the condition is true.
+    uint8_t  m_variable;    // This sets the variable to base the decision on. 
+    uint8_t  m_varsize;     // For GRF parameters, this is the same as <param-size> 
+                            // in action 6. For built-in variables, it depends on 
+                            // the variable, see the above table. 
+    uint8_t  m_condition;   // There are several conditions you can choose from to test against. 
+    uint32_t m_value;       // This term is what the variable is compared to. Its size is given by <varsize>. 
+    uint32_t m_mask;        // This is a function of the variable size.  
+    uint8_t  m_num_sprites; // This element sets how many sprites will be skipped if the condition is true.
+                            // Doubles as the index of a label: Action10 to jump to if one exists.
 };

@@ -41,7 +41,7 @@ void Action07Record::read(std::istream& is, const GRFInfo& info)
         default: break;
     }
 
-    m_sprites = read_uint8(is);
+    m_num_sprites = read_uint8(is);
 }
 
 
@@ -63,8 +63,16 @@ void Action07Record::write(std::ostream& os, const GRFInfo& info) const
         default: break;
     }
 
-    write_uint8(os, m_sprites);
+    write_uint8(os, m_num_sprites);
 }  
+
+// Example output:
+// if2 (global_var[0x9D] != 0x00000000) // Action09
+// {
+//     skip_sprites: 0x02;
+//     // Or skip to the next label (Action10) with this value - search wraps at end of GRF.
+//     // 0x00 means skip to end of GRF file - may disable the GRF.
+// }
 
 
 void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
@@ -117,8 +125,12 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     else
         os << " // Action09";
     os << pad(indent) << "\n{\n";
-    os << pad(indent + 4) <<  "skip " << to_hex(m_sprites) << " sprite(s)";
-    os << pad(indent) << "\n}\n";
+
+    os << pad(indent + 4) << "skip_sprites: " << to_hex(m_num_sprites) << ";\n";
+    os << pad(indent + 4) << "// Or skip to the next label (Action10) with this value - search wraps at end of GRF.\n";
+    os << pad(indent + 4) << "// 0x00 means skip to end of GRF file - may disable the GRF.\n";  
+     
+    os << pad(indent) << "}\n";
 }    
 
 
