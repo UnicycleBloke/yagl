@@ -43,7 +43,7 @@ public:
 
     // This is called to write out binary files for the sound effects. Equivalent to sprite
     // sheets for images, but a lot simpler.
-    void write_binary_files(const std::string& binary_dir) const;
+    void write_binary_files(const std::map<uint32_t, SpriteZoomVector>& sprites, const std::string& binary_dir) const;
 
 private:
     uint16_t m_num_binaries;

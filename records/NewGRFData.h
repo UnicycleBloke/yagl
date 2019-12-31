@@ -41,6 +41,8 @@ private:
     void                    read_sprite(std::istream& is, uint32_t sprite_id, uint32_t size, uint8_t compression, const GRFInfo& info);
     std::shared_ptr<Record> make_record(RecordType record_type);
 
+    void append_sprite(uint32_t sprite_id, std::shared_ptr<Record>);
+
     // Helpers for writing a GRF binary file
     void write_format(std::ostream& os) const;
     void write_counter(std::ostream& os) const;

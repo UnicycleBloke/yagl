@@ -81,6 +81,8 @@ void NewGRFData::read(std::istream& is)
     // most recent top level container record (Actions 01, 05, 0A, 11 and 12).
     // The sprites always immediately follow the container definition.
     uint16_t num_sprites = 0;
+    // This is the type of the current container pseudo-sprite.
+    RecordType container = RecordType::ACTION_01; 
 
     // Read data records from the data section.
     while (true)
@@ -142,8 +144,11 @@ void NewGRFData::read(std::istream& is)
             // This is a sprite reference (Format2 only). It's just the index of a sprite in the 
             // later sprite section of the file. It seems that these occur in the places where real-sprites
             // would occur in Format1 files (following container records such as Action01).
+            //
+            // It appears that this can also be used for sound effects. RUKTS.grf does this. 
+            // Need to take account of parent type...
             case 0xFD:
-                record = std::make_shared<SpriteIndexRecord>();
+                record = std::make_shared<SpriteIndexRecord>(container);
                 record->read(is, m_info);
                 break;
 
@@ -155,7 +160,7 @@ void NewGRFData::read(std::istream& is)
                 // In this case info = compression for a real sprite, and we use the record index
                 // as the sprite id.
                 read_sprite(is, record_index, size, info, m_info);
-                record = std::make_shared<SpriteIndexRecord>(record_index);
+                record = std::make_shared<SpriteIndexRecord>(container, record_index);
                 break;
         } 
 
@@ -177,6 +182,7 @@ void NewGRFData::read(std::istream& is)
             // sprites.
             m_records.push_back(record);
             num_sprites = record->num_sprites_to_read();
+            container   = record->record_type();
         }  
 
         if (CommandLineOptions::options().debug())
@@ -202,8 +208,23 @@ void NewGRFData::read(std::istream& is)
             // Read the size and compression to match what we did above. 
             uint32_t size        = read_uint32(is);
             uint8_t  compression = read_uint8(is);
-            
-            read_sprite(is, sprite_id, size, compression, m_info);
+
+            // Error decoding RUKTS.grf caused a fault. It appears that sound
+            // files are stored among the images in this section of the file. 
+            // Pretty sure that wasn't in the spec... Need to look again in 
+            // grf.txt.
+            if (compression == 0xFF)
+            {
+                // Is this always a sound effect? What records followed the 
+                // Action11 in the data section? Sprite references. Size needs to be 
+                // reduced by one for some reason.
+                std::shared_ptr<Record> effect = read_record(is, size - 1, true, m_info);
+                append_sprite(sprite_id, effect);
+            }
+            else
+            {
+                read_sprite(is, sprite_id, size, compression, m_info);
+            }   
         }
     }
 }
@@ -250,11 +271,8 @@ GRFFormat NewGRFData::read_format(std::istream& is)
 }
 
 
-void NewGRFData::read_sprite(std::istream& is, uint32_t sprite_id, uint32_t size, uint8_t compression, const GRFInfo& info)
+void NewGRFData::append_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite)
 {
-    std::shared_ptr<RealSpriteRecord> sprite = std::make_shared<RealSpriteRecord>(sprite_id, size, compression);
-    sprite->read(is, m_info);
-
     // Sprites with the same ID are stored in map indexed by zoom level. 
     // These maps are stored in a map index by the sprite ID.
     if (m_sprites.find(sprite_id) == m_sprites.end())
@@ -267,6 +285,14 @@ void NewGRFData::read_sprite(std::istream& is, uint32_t sprite_id, uint32_t size
     {
         sprite->print(std::cout, m_sprites, 0);
     }
+}
+
+
+void NewGRFData::read_sprite(std::istream& is, uint32_t sprite_id, uint32_t size, uint8_t compression, const GRFInfo& info)
+{
+    std::shared_ptr<RealSpriteRecord> sprite = std::make_shared<RealSpriteRecord>(sprite_id, size, compression);
+    sprite->read(is, m_info);
+    append_sprite(sprite_id, sprite);
 }
 
 
@@ -439,7 +465,7 @@ std::shared_ptr<Record> NewGRFData::make_record(RecordType record_type)
 
         // These are graphics.
         case RecordType::RECOLOUR:                return std::make_shared<RecolourRecord>(); 
-        case RecordType::SPRITE_INDEX:            return std::make_shared<SpriteIndexRecord>();
+        //case RecordType::SPRITE_INDEX:            return std::make_shared<SpriteIndexRecord>();
 
         // Special case of an empty sprite used for absent image.
         //case RecordType::FAKE_SPRITE:             return std::make_shared<FakeSpriteRecord>();
@@ -613,7 +639,7 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
         if (record->record_type() == RecordType::ACTION_11)
         {
             const auto action11 = std::dynamic_pointer_cast<Action11Record>(record);
-            action11->write_binary_files(output_dir);
+            action11->write_binary_files(m_sprites, output_dir);
         }
     }
 

@@ -82,11 +82,17 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
             uint16_t offset = ((static_cast<uint16_t>(code) & 0x07) << 8) | read_uint8(is);
             if (offset > index)
             {
-                throw RUNTIME_ERROR("");
+                std::ostringstream os;
+                os << "LZ77 decoding error: sprite=" << to_hex(m_sprite_id);
+                os << " offset (=" << to_hex(offset) << ") greater than current byte index (=" << to_hex(index) << ")";
+                throw RUNTIME_ERROR(os.str());
             }
             if (img_size < length)
             {
-                throw RUNTIME_ERROR("");
+                std::ostringstream os;
+                os << "LZ77 decoding error: sprite=" << to_hex(m_sprite_id);
+                os << " length (=" << length << ") greater than remaining image bytes (=" << img_size << ")";
+                throw RUNTIME_ERROR(os.str());
             }
 
             img_size -= length;

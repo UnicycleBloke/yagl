@@ -26,9 +26,10 @@
 class SpriteIndexRecord : public Record
 {
 public:
-    SpriteIndexRecord(uint32_t sprite_id = 0)
+    SpriteIndexRecord(RecordType container, uint32_t sprite_id = 0)
     : Record{RecordType::SPRITE_INDEX}
     , m_sprite_id{sprite_id}
+    , m_container{container}
     {
     }
 
@@ -43,6 +44,9 @@ public:
 
 private:
     uint32_t m_sprite_id = 0;
+
+    // It is useful to know what type of pseudo-sprite our parent is.
+    RecordType m_container = RecordType::ACTION_01;
 };
 
 
