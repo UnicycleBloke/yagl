@@ -95,10 +95,11 @@ void NewGRFData::read(std::istream& is)
         // Just a handle to pause a read just before it fails. If a GRF read fails,
         // Run it again with the -g option to dump records to the console as we go. This 
         // will tell us where we fell over.
-        if (record_index == 4155)
-        {
-            int x = 0; // Breakpoint here.
-        }
+        // if (record_index == 7394)
+        // {
+        //     int x = 0; // Breakpoint here.
+        //     dump_hex(is, 32);
+        // }
 
         // This section is terminated with a zero length record. The size of the length of the record
         // depends on the file format version.
@@ -650,9 +651,12 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
 
     // Finally write out the YAGL script.
     std::cout << "Writing YAGL script...\n";
+    uint32_t index = 1;
     for (auto record: m_records)
     {
+        os << "// Record #" << index << '\n';
         record->print(os, m_sprites, 0);
+        index = index + record->num_sprites_to_write() + 1;
     }
 }
 

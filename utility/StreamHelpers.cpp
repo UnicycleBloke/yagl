@@ -129,3 +129,27 @@ void write_string(std::ostream& os, const std::string& value, StringTerm term)
     // Optionally write without a 0 terminator - one or two strings in the GRF are terminated by end of record or whatever.
     os.write(value.c_str(), value.length() + ((term == StringTerm::None) ? 0 : 1));
 }
+
+
+// Used for debugging to see what bytes are in the stream as sort of NFO. 
+void dump_hex(std::istream& is, uint16_t length)
+{ 
+    std::streamoff done = 0;
+    try
+    {
+        for (uint16_t i = 0; i < length; ++i)
+        {
+            uint8_t byte = read_uint8(is);
+            std::cout << to_hex(byte, false) << " ";
+            --done;
+        }
+        std::cout << '\n';        
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << '\n';
+        std::cout << e.what() << '\n';
+    }    
+
+    is.seekg(done, std::istream::cur);
+}

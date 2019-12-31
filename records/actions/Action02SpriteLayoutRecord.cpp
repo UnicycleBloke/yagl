@@ -22,49 +22,47 @@
 
 void Action02SpriteLayoutRecord::SpriteRegisters::read(std::istream& is, bool is_parent)
 {
-    if (flags & HIDE_SPRITE)    hide_sprite    = read_uint8(is);
-    if (flags & SPRITE_OFFSET)  sprite_offset  = read_uint8(is);
-    if (flags & PALETTE_OFFSET) palette_offset = read_uint8(is);
-    if (flags & PALETTE_ACT01)  palette_act01  = read_uint8(is);
+    if (flags & BIT0_SKIP_SPRITE)     skip_sprite     = read_uint8(is);
+    if (flags & BIT1_SPRITE_OFFSET)   sprite_offset   = read_uint8(is);
+    if (flags & BIT2_RECOLOUR_OFFSET) recolour_offset = read_uint8(is);
     
     if (is_parent)
     {
-        if (flags & BB_XY_OFFSET) offset_x = read_uint8(is);
-        if (flags & BB_XY_OFFSET) offset_y = read_uint8(is);
-        if (flags & BB_Z_OFFSET)  offset_z = read_uint8(is);
+        if (flags & BIT4_BB_XY_OFFSET) offset_x = read_uint8(is);
+        if (flags & BIT4_BB_XY_OFFSET) offset_y = read_uint8(is);
+        if (flags & BIT5_BB_Z_OFFSET)  offset_z = read_uint8(is);
     }
     else
     {
-        if (flags & CHILD_X_OFFSET) offset_x = read_uint8(is);
-        if (flags & CHILD_Y_OFFSET) offset_y = read_uint8(is);
+        if (flags & BIT4_CHILD_X_OFFSET) offset_x = read_uint8(is);
+        if (flags & BIT5_CHILD_Y_OFFSET) offset_y = read_uint8(is);
     }
 
-    if (flags & SPRITE_VAR10) sprite_var10   = read_uint8(is);
-    if (flags & PALETTE_VAR10) palette_var10 = read_uint8(is);
+    if (flags & BIT6_SPRITE_VAR10)   sprite_var10   = read_uint8(is);
+    if (flags & BIT7_RECOLOUR_VAR10) recolour_var10 = read_uint8(is);
 }
 
 
 void Action02SpriteLayoutRecord::SpriteRegisters::write(std::ostream& os, bool is_parent) const
 {
-    if (flags & HIDE_SPRITE)    write_uint8(os, hide_sprite);
-    if (flags & SPRITE_OFFSET)  write_uint8(os, sprite_offset);
-    if (flags & PALETTE_OFFSET) write_uint8(os, palette_offset);
-    if (flags & PALETTE_ACT01)  write_uint8(os, palette_act01);
+    if (flags & BIT0_SKIP_SPRITE)       write_uint8(os, skip_sprite);
+    if (flags & BIT1_SPRITE_OFFSET)     write_uint8(os, sprite_offset);
+    if (flags & BIT2_RECOLOUR_OFFSET)   write_uint8(os, recolour_offset);
     
     if (is_parent)
     {
-        if (flags & BB_XY_OFFSET) write_uint8(os, offset_x);
-        if (flags & BB_XY_OFFSET) write_uint8(os, offset_y);
-        if (flags & BB_Z_OFFSET)  write_uint8(os, offset_z);
+        if (flags & BIT4_BB_XY_OFFSET) write_uint8(os, offset_x);
+        if (flags & BIT4_BB_XY_OFFSET) write_uint8(os, offset_y);
+        if (flags & BIT5_BB_Z_OFFSET)  write_uint8(os, offset_z);
     }
     else
     {
-        if (flags & CHILD_X_OFFSET) write_uint8(os, offset_x);
-        if (flags & CHILD_Y_OFFSET) write_uint8(os, offset_y);
+        if (flags & BIT4_CHILD_X_OFFSET) write_uint8(os, offset_x);
+        if (flags & BIT5_CHILD_Y_OFFSET) write_uint8(os, offset_y);
     }
 
-    if (flags & SPRITE_VAR10)  write_uint8(os, sprite_var10);
-    if (flags & PALETTE_VAR10) write_uint8(os, palette_var10);
+    if (flags & BIT6_SPRITE_VAR10)   write_uint8(os, sprite_var10);
+    if (flags & BIT7_RECOLOUR_VAR10) write_uint8(os, recolour_var10);
 }
 
 
@@ -75,25 +73,24 @@ void Action02SpriteLayoutRecord::SpriteRegisters::print(std::ostream& os, bool i
         os << pad(indent) << "registers: \n";
         os << pad(indent) << "{\n";
 
-        if (flags & HIDE_SPRITE)    os << pad(indent + 4) << "hide_sprite: "    << to_hex(hide_sprite) << ";\n";
-        if (flags & SPRITE_OFFSET)  os << pad(indent + 4) << "sprite_offset: "  << to_hex(sprite_offset) << ";\n";
-        if (flags & PALETTE_OFFSET) os << pad(indent + 4) << "palette_offset: " << to_hex(palette_offset) << ";\n";
-        if (flags & PALETTE_ACT01)  os << pad(indent + 4) << "palette_act01: "  << to_hex(palette_act01) << ";\n";
+        if (flags & BIT0_SKIP_SPRITE)     os << pad(indent + 4) << "hide_sprite: "    << to_hex(skip_sprite) << ";\n";
+        if (flags & BIT1_SPRITE_OFFSET)   os << pad(indent + 4) << "sprite_offset: "  << to_hex(sprite_offset) << ";\n";
+        if (flags & BIT2_RECOLOUR_OFFSET) os << pad(indent + 4) << "palette_offset: " << to_hex(recolour_offset) << ";\n";
         
         if (is_parent)
         {
-            if (flags & BB_XY_OFFSET) os << pad(indent + 4) << "offset_x: " << to_hex(offset_x) << ";\n";
-            if (flags & BB_XY_OFFSET) os << pad(indent + 4) << "offset_y: " << to_hex(offset_y) << ";\n";
-            if (flags & BB_Z_OFFSET)  os << pad(indent + 4) << "offset_z: " << to_hex(offset_z) << ";\n";
+            if (flags & BIT4_BB_XY_OFFSET) os << pad(indent + 4) << "offset_x: " << to_hex(offset_x) << ";\n";
+            if (flags & BIT4_BB_XY_OFFSET) os << pad(indent + 4) << "offset_y: " << to_hex(offset_y) << ";\n";
+            if (flags & BIT5_BB_Z_OFFSET)  os << pad(indent + 4) << "offset_z: " << to_hex(offset_z) << ";\n";
         }
         else
         {
-            if (flags & CHILD_X_OFFSET) os << pad(indent + 4) << "offset_x: " << to_hex(offset_x) << ";\n";
-            if (flags & CHILD_Y_OFFSET) os << pad(indent + 4) << "offset_y: " << to_hex(offset_y) << ";\n";
+            if (flags & BIT4_CHILD_X_OFFSET) os << pad(indent + 4) << "offset_x: " << to_hex(offset_x) << ";\n";
+            if (flags & BIT5_CHILD_Y_OFFSET) os << pad(indent + 4) << "offset_y: " << to_hex(offset_y) << ";\n";
         }
 
-        if (flags & SPRITE_VAR10)  os << pad(indent + 4) << "sprite_var10: "  << to_hex(sprite_var10) << ";\n";
-        if (flags & PALETTE_VAR10) os << pad(indent + 4) << "palette_var10: " << to_hex(palette_var10) << ";\n";
+        if (flags & BIT6_SPRITE_VAR10)   os << pad(indent + 4) << "sprite_var10: "  << to_hex(sprite_var10) << ";\n";
+        if (flags & BIT7_RECOLOUR_VAR10) os << pad(indent + 4) << "palette_var10: " << to_hex(recolour_var10) << ";\n";
 
         os << pad(indent) << "}\n";
     }
@@ -110,24 +107,25 @@ void Action02SpriteLayoutRecord::read(std::istream& is, const GRFInfo& info)
     // extended format. Presumably byte read will be 0x41 rather 0x40 for a single 
     // building sprite.
     uint8_t num_sprites = read_uint8(is);
-    m_advanced    = (num_sprites & 0x40) == 0x40;
-    num_sprites   =  num_sprites & 0x3F;
-    bool extended = (num_sprites > 0) | m_advanced;
-    
-    m_ground_sprite = read_uint32(is);
-    if (m_advanced)
+    Format  format = Format::Basic;
+    if (num_sprites > 0)
     {
-        m_ground_regs.flags = read_uint16(is);
-        m_ground_regs.read(is, false);
+        format = Format::Extended;
     }
-
-    if (!extended)
+    if (num_sprites & 0x40)
     {
+        format = Format::Advanced;
+    }
+    num_sprites &= 0x3F;
+
+    if (format == Format::Basic)
+    {
+        m_ground_sprite = read_uint32(is);
+
         BuildingSprite sprite;
         sprite.sprite = read_uint32(is);
         sprite.xofs   = read_uint8(is);
         sprite.yofs   = read_uint8(is);
-        // We don't have these for the simple format, but keep them consistent for later.
         sprite.zofs   = 0;
         sprite.new_bb = true;
         sprite.xext   = read_uint8(is);
@@ -135,16 +133,24 @@ void Action02SpriteLayoutRecord::read(std::istream& is, const GRFInfo& info)
         sprite.zext   = read_uint8(is);
         m_building_sprites.push_back(sprite);
     }
-    else
+    else // Both Extended and Advanced handled here.
     {
+        m_ground_sprite = read_uint32(is);
+        if (format == Format::Advanced)
+        {
+            m_ground_regs.flags = read_uint16(is);
+            m_ground_regs.read(is, true);
+        }
+
         for (uint8_t i = 0; i < num_sprites; ++i)
         {
             BuildingSprite sprite;
             sprite.sprite = read_uint32(is);
-            if (m_advanced)
+            if (format == Format::Advanced)
             {
                 sprite.regs.flags = read_uint16(is);
             }
+
             sprite.xofs   = read_uint8(is);
             sprite.yofs   = read_uint8(is);
             sprite.zofs   = read_uint8(is);
@@ -158,7 +164,7 @@ void Action02SpriteLayoutRecord::read(std::istream& is, const GRFInfo& info)
                 sprite.zext   = read_uint8(is);
             }
 
-            if (m_advanced)
+            if (format == Format::Advanced)
             {
                 // bool parameter indicates whether this is a parent bounding box
                 sprite.regs.read(is, sprite.new_bb);
@@ -181,13 +187,13 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
     // you can only have advanced (registers) in extended format. Presumably
     // byte written will be 0x41 rather 0x40 for a single building sprite.
     uint8_t num_sprites     = m_building_sprites.size();
-    bool    extended_format = m_advanced ||
+    bool    extended_format = (m_format != Format::Basic) ||
                               (num_sprites != 1) ||
                               (m_building_sprites[0].new_bb == false) ||
                               (m_building_sprites[0].zofs != 0);
     if (extended_format)
     {
-        write_uint8(os, num_sprites | (m_advanced ? 0x40 : 0x00));
+        write_uint8(os, num_sprites | ((m_format == Format::Advanced) ? 0x40 : 0x00));
     }
     else
     {
@@ -195,7 +201,7 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
     }
     write_uint32(os, m_ground_sprite);
 
-    if (m_advanced)
+    if (m_format == Format::Advanced)
     {
         write_uint16(os, m_ground_regs.flags);
         m_ground_regs.write(os, false);
@@ -217,7 +223,7 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
         {
             const BuildingSprite& sprite = m_building_sprites[i];
             write_uint32(os, sprite.sprite);
-            if (m_advanced)
+            if (m_format == Format::Advanced)
             {
                 write_uint16(os, sprite.regs.flags);
             }
@@ -232,7 +238,7 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
                 write_uint8(os, sprite.zext);
             }
 
-            if (m_advanced)
+            if (m_format == Format::Advanced)
             {
                 // bool parameter indicates whether this is a parent bounding box
                 sprite.regs.write(os, sprite.new_bb);

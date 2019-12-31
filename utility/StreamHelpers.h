@@ -130,4 +130,6 @@ struct EnumNames
 };
 
 
+// Used for debugging to see what bytes are in the stream as sort of NFO. 
+void dump_hex(std::istream& is, uint16_t length);
 
