@@ -184,7 +184,7 @@ Action02
 
 ### Container2 format
 
-Container2 files introduce a new type of record which contains the index of a real sprite. This is used in containers such as Action01 in place of RealSprites (sound effects are unchanged), and the RealSprites are moved to the end of the GRF. This indirection makes it possible to provide two or more distinct images for a given sprite index, being rendered at different zoom levels and/or with different colour depths. For each sprite index, there is a contiguous array of RealSprites in the GRF file rather than just one. 
+Container2 files introduce a new type of record which contains the index of a real sprite. This is used in containers such as Action01 in place of RealSprites, and the RealSprites are moved to the end of the GRF. [Sound effects can also be moved to this section.] This indirection makes it possible to provide two or more distinct images for a given sprite index, being rendered at different zoom levels and/or with different colour depths. For each sprite index, there is a contiguous array of RealSprites in the GRF file rather than just one. 
 
 Container1 does not support this feature, having a single palette-based sprite per sprite index (in fact it doesn't even really have sprite indices in the GRF).
 
@@ -261,7 +261,7 @@ And that's pretty much the whole program in a nutshell.
 
 **Assorted details**
 
-- The map of RealSprites is walked to generated sprites sheets before writing out the YAGL, this is because the sprite's position in the sprite sheet needs to be calculated before the YAGL can be printed. Some sprites include both RGBA and palette information (a mask). These result in two images in different files.
+- The map of RealSprites is walked to generate spritesheets before writing out the YAGL, this is because each sprite's position in the spritesheet needs to be calculated before the YAGL can be printed. Some sprites include both RGBA and palette information (a mask). These result in two images in different spritesheets.
 
 - Some of the pseudo-sprites have very simple flat data structures, and are quite simple to read and write. Others such as, for example, Action14, are more complicated. In such cases there may be additional classes or structures intended to break down the task of reading and writing the data.
 
