@@ -51,6 +51,20 @@ void EnumDescriptor::print_value_impl(uint32_t value, std::ostream& os) const
 }
 
 
+const char* EnumDescriptor::value_impl(uint32_t value) const
+{
+    for (const auto& item: items)
+    { 
+        if (value == item.value)
+        {
+            return item.name;
+        }
+    }
+
+    throw RUNTIME_ERROR("EnumDescriptor::value");
+}
+
+
 void EnumDescriptor::parse_impl(uint32_t& value, TokenStream& is) const
 {
     std::string name = is.match(TokenType::Ident);

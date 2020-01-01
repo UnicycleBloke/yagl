@@ -87,27 +87,44 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// strings<Stations, en_US> // Action04, English (US)
+// {
+//     // Only the first ID is meaningful - others included as an aid.     
+//     0xC504: "Roofs";
+//     0xC505: "Platform";
+//     0xC506: "Benches";
+//     0xC507: "Parking lot (front)";
+//     0xC508: "Parking lot (back)";
+//     0xC509: "Flat roofs";
+//     0xC50A: "Glass roofs";
+//     0xC50B: "Overpass";
+//     0xC50C: "Station Hall (small)";
+//     0xC50D: "Station Hall (large)";
+//     0xC50E: "Underpass";
+//     0xC50F: "empty";
+//     0xC510: "void";
+// }
+
+
 void Action04Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << ", ";
-    os << language_iso(m_language) << "> // Action04, " << language_name(m_language) <<  '\n';
-    os << pad(indent) << "{" << '\n';
+    os << language_iso(m_language) << "> // Action04, " << language_name(m_language) << "\n";
+    os << pad(indent) << "{\n";
+
+    if (m_strings.size() > 1)
+    {
+        os << pad(indent + 4) << "// Only the first ID is meaningful - others included as an aid.\n";     
+    }
 
     uint16_t string_id = m_first_string_id;
     for (const auto& s: m_strings)
     {
-        os << pad(indent + 4) << "0x" << to_hex(string_id++) << ": \"" << grf_string_to_readable_utf8(s) << "\";\n";
+        os << pad(indent + 4) << to_hex(string_id++) << ": \"" << grf_string_to_readable_utf8(s) << "\";\n";
     }
 
-    os << pad(indent) << "}" << '\n';
+    os << pad(indent) << "}\n";
 }
-
-
-// strings<Trains, Spanish> // Action04
-// {
-//     0xD0FF: "Librea Benelux (cabina de mando)";
-//     0xD100: "Librea NS Hispeed";
-//     0xD101: "Librea NS Hispeed (cabina de mando)";
 
 
 void Action04Record::parse(TokenStream& is)

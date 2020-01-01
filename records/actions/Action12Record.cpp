@@ -83,6 +83,33 @@ const EnumDescriptorT<Action12Record::Font> font_desc =
 };
 
 
+// unicode_glyphs // Action12
+// {
+//     range<NormalProp, 0x0E3F>:
+//     {
+//         sprite_id: 0x00000008
+//         {
+//             [8, 11, 0, -1], normal, 8bpp, "sprites/currency-8bpp-normal-0.png", [69, 10];
+//         }
+//         ... More sprites/glyphs 
+//     }
+//     range<SmallProp, 0x0E3F>:
+//     {
+//         sprite_id: 0x00000009
+//         {
+//             [5, 6, 0, 0], normal, 8bpp, "sprites/currency-8bpp-normal-0.png", [87, 10];
+//         }
+//     }
+//     range<LargeProp, 0x0E3F>:
+//     {
+//         sprite_id: 0x0000000A
+//         {
+//             [15, 16, 0, 0], normal, 8bpp, "sprites/currency-8bpp-normal-0.png", [102, 10];
+//         }
+//     }
+// }
+
+
 void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action12" << '\n';
@@ -92,8 +119,8 @@ void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     for (const auto& range: m_ranges)
     {
         os << pad(indent + 4) << "range<";
-        font_desc.print_value(range.font, os);
-        os << ", " << to_hex(range.base_char) << ">:\n";
+        os << font_desc.value(range.font);
+        os << ", " << to_hex(range.base_char) << ">: <font, base_char>\n";
         os << pad(indent + 4) << "{" << '\n';
         
         for (uint16_t i = 0; i < range.num_chars; ++i)

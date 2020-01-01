@@ -38,6 +38,24 @@ void Action11Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// sound_effects // Action11
+// {
+//     // Binaries are in the graphics section and referenced indirectly
+//     sprite_id: 0x00004A72
+//     {
+//         binary("yagl/modern_electric_slow.wav");
+//     }
+//     sprite_id: 0x00004A73
+//     {
+//         binary("yagl/modern_electric_fast.wav");
+//     }
+//
+//     // Binaries are in the data section directly following this record.
+//     binary("yagl/modern_electric_slow.wav");
+//     binary("yagl/modern_electric_fast.wav");
+// }
+
+
 void Action11Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action11" << '\n';

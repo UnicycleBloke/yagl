@@ -40,12 +40,25 @@ void Action10Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// label<0x10> // Action10
+// {
+//     "Optional comment goes here";
+// }
+
+
 void Action10Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << to_hex(m_label) << "> // Action10\n";
-    os << pad(indent) << "{\n";
-    os << pad(indent + 4) << "// " << m_comment;
-    os << pad(indent) << "}\n";
+    os << RecordName(record_type()) << "<" << to_hex(m_label) << "> // Action10 - target for Action07 or Action09\n";
+    os << "{\n";
+
+    // TODO This is probably not a valid thing to do. Should more likely
+    // print nothing, or convert to hex. 
+    if (m_comment.length() > 1)
+    {
+        os << pad(indent + 4) << "\"" << m_comment << "\";\n";
+    }
+    
+    os << "}\n";
 }
 
 

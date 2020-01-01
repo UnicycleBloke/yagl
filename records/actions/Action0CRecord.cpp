@@ -40,6 +40,12 @@ void Action0CRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// ignore // Action0C
+// {
+//     "m4nfo header r119 31.05.2019";
+// }
+
+
 void Action0CRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << RecordName(record_type()) << " // Action0C\n";
@@ -47,7 +53,7 @@ void Action0CRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
     // TODO This is probably not a valid thing to do. Should more likely
     // print nothing, or convert to hex. 
-    os << pad(indent + 4) << "\"" << m_comment << "\"\n";
+    os << pad(indent + 4) << "\"" << m_comment << "\";\n";
     
     os << "}\n";
 }

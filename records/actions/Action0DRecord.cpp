@@ -64,6 +64,28 @@ bool Action0DRecord::has_data() const
 }
 
 
+// set_parameter // Action0D
+// {
+//     parameter[0x75]: global_var[0x9D];
+//     only_undefined: false;
+// }
+// set_parameter // Action0D
+// {
+//     parameter[0x76]: parameter[0x75] - 0x00000001;
+//     only_undefined: false;
+// }
+// set_parameter // Action0D
+// {
+//     parameter[0x76]: parameter[0x76] / parameter[0x76], signed;
+//     only_undefined: false;
+// }
+// set_parameter // Action0D
+// {
+//     parameter[0x74]: global_var[0xA1];
+//     only_undefined: false;
+// }
+
+
 void Action0DRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     // This is sooooo complicated. Action0D is a bit complicated, with the various values interpreted

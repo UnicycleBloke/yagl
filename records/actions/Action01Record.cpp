@@ -67,6 +67,35 @@ void Action01Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// sprite_sets<Stations> // Action01
+// {
+//     set_id: 0x00000000
+//     {
+//         sprite_id: 0x000001A6
+//         {
+//             // The following line is the output for a real sprite image.     
+//             [64, 31, -31, 0], normal, 8bpp|chunked, "yagl/newstats-8bpp-normal-0.png", [657, 402];
+//             ... // More zoom levels
+//         }
+//         sprite_id: 0x000001A7
+//         {
+//             [64, 31, -31, 0], normal, 8bpp|chunked, "yagl/newstats-8bpp-normal-0.png", [10, 455];
+//             ... 
+//         }
+//         ... // More sprites
+//     }
+//     set_id: 0x00000001
+//     {
+//         ...
+//     }
+//     set_id: 0x00000002
+//     {
+//         ...
+//     }
+//     ... // More sprite sets.
+// }
+
+
 void Action01Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action01" << '\n';
@@ -90,33 +119,6 @@ void Action01Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
     os << pad(indent) << "}" << '\n';
 }
-
-
-// sprite_sets<Trains> // Action01
-// {
-//     set_id: 0x00000000
-//     {
-//         sprite_id: 0x00003D3D
-//         {
-//             [8, 24, -3, -12] normal palette "base_name.normal.1.png" [299, 2490];
-//         }
-//         sprite_id: 0x00003D3E
-//         {
-//             [22, 18, -14, -10] normal palette "base_name.normal.1.png" [317, 2490];
-//         }
-//     }
-//     set_id: 0x00000001
-//     {
-//         sprite_id: 0x00003D3D
-//         {
-//             [8, 24, -3, -12] normal palette "base_name.normal.1.png" [299, 2490];
-//         }
-//         sprite_id: 0x00003D3E
-//         {
-//             [22, 18, -14, -10] normal palette "base_name.normal.1.png" [317, 2490];
-//         }
-//     }
-// }
 
 
 void Action01Record::parse(TokenStream& is)

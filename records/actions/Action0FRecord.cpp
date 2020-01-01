@@ -111,26 +111,40 @@ void Action0FRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
-// town_names<id>
+// town_names<0x00> // Action0F
 // {
-//     styles:
+//     styles: // lang_id: style_name;
 //     {
-//         en_GB: "name";
-//         fr_FR: "nom";
+//         default: "UnicycleBloke's town names";
 //     }
-    
-//     part<first, num>:
+//     part<0, 3>: // <first_bit, num_bits>
 //     {
-//         text("afadfaf", prob);
-//         town_names(0x23, prob);
+//         text("Hemp", 1);
+//         text("Thet", 1);
+//         text("Fram", 1);
+//         text("Gold", 1);
+//         text("Hadden", 1);
+//         text("Bolt", 1);
+//         text("Wish", 1);
+//         text("Grant", 1);
+//         town_names(0x00, 1);
+//         town_names(0x01, 1);
+//         town_names(0x02, 1);
 //     }
-    
-//     part<first, num>:
+//     part<3, 3>: // <first_bit, num_bits>
 //     {
-//         text("afadfaf", prob);
-//         town_names(0x23, prob);
+//         text("ing", 1);
+//         text("ham", 1);
+//         ...
+//     }
+//     part<6, 2>: // <first_bit, num_bits>
+//     {
+//         text("ford", 1);
+//         text("ton", 1);
+//         ....
 //     }
 // }
+
 
 void Action0FRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
@@ -140,8 +154,9 @@ void Action0FRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     // Names in various languages for this town names style.
     if (m_style_names.size() > 0)
     {
-        os << pad(indent + 4) << "styles: // lang_id: style_name;\n";
+        os << pad(indent + 4) << "styles:\n";
         os << pad(indent + 4) << "{\n";
+        os << pad(indent + 8) << "// lang_id: style_name;\n";
 
         for (const auto& style: m_style_names)
         {

@@ -45,17 +45,23 @@ void Action0ERecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// disable_grfs
+// {
+//     grf_ids: [ "XXXX" "YYYY" ];
+// }
+
+
 void Action0ERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action0E\n";
     os << pad(indent) << "{\n";
 
-    os << pad(indent + 4) << "[";
+    os << pad(indent + 4) << "grf_ids: [";
     for (const auto& grf_id: m_grf_ids)
     {
-        os << " " << grf_id.to_string();
+        os << " \"" << grf_id.to_string() << "\"";
     }
-    os << " ]\n";
+    os << " ];\n";
     
     os << pad(indent) << "}\n";
 }

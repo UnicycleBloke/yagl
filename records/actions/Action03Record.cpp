@@ -87,21 +87,29 @@ void Action03Record::write(std::ostream& os, const GRFInfo& info) const
 
 
 static const char* LIVERY_OVERRIDE  = "livery_override";
-static const char* DEFAULT_SET_ID   = "default_act02_set_id";
+static const char* DEFAULT_SET_ID   = "default_set_id";
 static const char* FEATURE_IDS      = "feature_ids";
 static const char* CARGO_TYPES      = "cargo_types";
 static const char* CARGO_TYPE       = "cargo_type";
-static const char* SET_ID           = "act02_set_id";
+static const char* SET_ID           = "set_id";
+
+
+// feature_graphics<Stations> // Action03
+// {
+//     feature_ids: [ 0x0000 ]; // i.e. instances of 'Stations'
+//     cargo_types:
+//     [
+//         { cargo_type: 0xFF; set_id: 0x0006; }
+//     ];
+//     default_set_id: 0x0006;
+//     livery_override: false;
+// }
 
 
 void Action03Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action03" << '\n';
     os << pad(indent) << "{" << '\n';
-
-    os << pad(indent + 4) << LIVERY_OVERRIDE << ": " << std::boolalpha << m_livery_override << ";\n";
-    os << pad(indent + 4);
-    os << DEFAULT_SET_ID << ": " << to_hex(m_default_act02_set_id) << ";\n";
 
     os << pad(indent + 4) << FEATURE_IDS << ": [ ";
     for (const auto& id: m_feature_ids)
@@ -121,6 +129,9 @@ void Action03Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     }
     os << pad(indent + 4) << "];\n";
 
+    os << pad(indent + 4) << DEFAULT_SET_ID << ": " << to_hex(m_default_act02_set_id) << ";\n";
+    os << pad(indent + 4) << LIVERY_OVERRIDE << ": " << std::boolalpha << m_livery_override << ";\n";
+
     os << pad(indent) << "}" << '\n';
 }
 
@@ -134,18 +145,6 @@ const std::map<std::string, uint8_t> g_indices =
     { CARGO_TYPES,     0x03 },
 };
 } // namespace {
-
-
-// feature_graphics<Trains> // Action03
-// {
-//     livery_override: false;
-//     default_act02_set_id: 0x00FA;
-//     feature_ids: [ 0x0094 ]; // i.e. instances of 'Trains'
-//     cargo_types:
-//     [
-//         { cargo_type: 0xFF; act02_set_id: 0x00F4; }
-//     ];
-// }
 
 
 Action03Record::CargoType Action03Record::parse_cargo_type(TokenStream& is)

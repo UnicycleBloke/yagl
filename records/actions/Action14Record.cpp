@@ -144,6 +144,37 @@ void Action14Record::print_chunks(std::ostream& os, const std::vector<Chunk>& ch
 }
 
 
+// optional_info // Action14
+// {
+//     INFO: 
+//     {
+//         NPAR: [ 0x01 ];
+//         NAME: default, "NewStations v0.6 14.08.2014"; // Default
+//         DESC: default, "{new-line}{lt-gray}©2004 .. 2014 Michael Blunck. All rights reserved.{new-line}Visit www.ttdpatch.de"; // Default
+//         URL_: default, "http://www.ttdpatch.de"; // Default
+//         PALS: [ 0x44 ];
+//         VRSN: [ 0x03 0x00 0x00 0x00 ];
+//         MINV: [ 0x00 0x00 0x00 0x00 ];
+//         PARA: 
+//         {
+//             0x00000000: // Index instead of GRF label
+//             {
+//                 TYPE: [ 0x01 ];
+//                 MASK: [ 0x00 0x00 0x01 ];
+//                 NAME: default, "No green glass"; // Default
+//                 NAME: de_DE, "ÞKein grünes Glas"; // German
+//                 NAME: fr_FR, "ÞPas de verre teinté vert"; // French
+//                 ... // More languages 
+//                 DESC: default, "{lt-gray}Disables the tinted green glass for modern roofed platforms."; // Default
+//                 DESC: de_DE, "Þ{lt-gray}Grünes Glas für die modernen überdachten Bahnsteige wird deaktiviert."; // German
+//                 DESC: fr_FR, "Þ{lt-gray}Désactive le verre teinté vert pour les quais modernes couvertes."; // French
+//                 ... // More languages 
+//             }
+//         }
+//     }
+// }
+
+
 void Action14Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << RecordName(record_type()) << " // Action14\n";

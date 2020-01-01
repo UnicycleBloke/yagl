@@ -53,20 +53,31 @@ void Action06Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// modify_next // Action06
+// {
+//     // modification(value, num_bytes, offset, add?);
+//     modification(parameter[0x7E], 1, 8, false);
+//     modification(parameter[0x7E], 1, 9, false);
+//     modification(parameter[0x7E], 1, 10, false);
+// }
+
+
 void Action06Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << " // Action06" << '\n';
-    os << pad(indent) << "{" << '\n';
+    os << pad(indent) << RecordName(record_type()) << " // Action06\n";
+    os << pad(indent) << "{\n";
+    os << pad(indent + 4) << "// modification(value, num_bytes, offset, add?);\n"; 
 
     for (const auto& mod: m_modifications)
     {
-        os << pad(indent + 4) << "value: parameter[" << to_hex(mod.param_num) << "]; ";
-        os << "size: " << static_cast<uint16_t>(mod.param_size) << "; ";
-        os << "offset: " << mod.offset << "; ";
-        os << "add: " << (mod.add_bytes ? "true" : "false") << ";\n";
+        os << pad(indent + 4) << "modification("; 
+        os << "parameter[" << to_hex(mod.param_num) << "], ";
+        os << static_cast<uint16_t>(mod.param_size) << ", ";
+        os << mod.offset << ", ";
+        os << (mod.add_bytes ? "true" : "false") << ");\n";
     }
 
-    os << pad(indent) << "}" << '\n';
+    os << pad(indent) << "}\n";
 }
 
 

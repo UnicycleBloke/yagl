@@ -60,11 +60,18 @@ void Action02BasicRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// sprite_groups<Stations, 0xFF> // Action02 basic
+// {
+//     primary_spritesets: [ 0x0000 ];
+//     secondary_spritesets: [ 0x0000 ];
+// }
+
+
 void Action02BasicRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action02 basic" << '\n';
+    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
+    os << ", " << to_hex(m_act02_set_id) << "> // Action02 basic" << '\n';
     os << pad(indent) << "{" << '\n';
-    os << pad(indent + 4) << "this_set_id: " << to_hex(m_act02_set_id) << ";\n";
 
     os << pad(indent + 4) << "primary_spritesets: [ ";
     for (uint8_t i = 0; i < m_act01_set_ids_1.size(); ++i)
@@ -84,29 +91,19 @@ void Action02BasicRecord::print(std::ostream& os, const SpriteZoomMap& sprites, 
 }
 
 
-// spritegroup<Trains> // Action02 basic
-// {
-//     this_set_id: 0xF4;
-//     primary_spritesets: [ 0x0000 ];
-//     secondary_spritesets: [ 0x0000 ];
-// }
-
-
+// TODO convert this to using Descriptors...
 void Action02BasicRecord::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));    
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
+    is.match(TokenType::Comma);
+    m_act02_set_id = is.match_integer();
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
 
-    is.match_ident("this_set_id");
-    is.match(TokenType::Colon);
-    m_act02_set_id = is.match_integer();
-    is.match(TokenType::SemiColon);
-
-    is.match_ident("this_set_id");
+    is.match_ident("primary_spritesets");
     is.match(TokenType::Colon);
     is.match(TokenType::OpenBracket);
     while (is.peek().type == TokenType::Number)
@@ -116,7 +113,7 @@ void Action02BasicRecord::parse(TokenStream& is)
     is.match(TokenType::CloseBracket);
     is.match(TokenType::SemiColon);
 
-    is.match_ident("this_set_id");
+    is.match_ident("secondary_spritesets");
     is.match(TokenType::Colon);
     is.match(TokenType::OpenBracket);
     while (is.peek().type == TokenType::Number)

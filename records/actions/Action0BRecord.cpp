@@ -111,37 +111,40 @@ constexpr const char* str_message_05 = "\x80 must be loaded after \x80.";
 constexpr const char* str_message_06 = "\x80 equires OpenTTD version \x80 or better."; 
 
 
+// error_message<Warning, default> // Action0B <severity, language>
+// {
+//     message_id: 0x05; // {substring1} must be loaded after {substring1}.
+//     message_data: "NuTracks"; // Second substring
+// }
+
+
 void Action0BRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << " // Action0B\n";
+    os << pad(indent) << RecordName(record_type()) << "<";
+    os << severity_desc.value(m_severity) << ", ";
+    os << language_iso(m_language_id) << "> // Action0B <severity, language>\n";
     os << pad(indent) << "{\n";
 
-    severity_desc.print(m_severity, os, indent + 4);
-    os << pad(indent + 4) << "language: " << to_hex(m_language_id) << "; // " << language_name(m_language_id) << "\n";
-    os << pad(indent + 4) << "message_id: " << to_hex(m_message_id) << ";\n";
+    os << pad(indent + 4) << "message_id: " << to_hex(m_message_id) << ";";
+    // Indicate the standard message, if this is one.
+    switch (m_message_id)
+    {
+        case 0x00: os << " // " << grf_string_to_readable_utf8(str_message_00); break;
+        case 0x01: os << " // " <<  grf_string_to_readable_utf8(str_message_01); break;
+        case 0x02: os << " // " <<  grf_string_to_readable_utf8(str_message_02); break;
+        case 0x03: os << " // " <<  grf_string_to_readable_utf8(str_message_03); break;
+        case 0x04: os << " // " <<  grf_string_to_readable_utf8(str_message_04); break;
+        case 0x05: os << " // " <<  grf_string_to_readable_utf8(str_message_05); break;
+        case 0x06: os << " // " <<  grf_string_to_readable_utf8(str_message_06); break;
+    }
+    os << "\n";
 
     if (m_message_id == 0xFF)
     {
         os << pad(indent + 4) << "custom_message: \"" << grf_string_to_readable_utf8(m_custom_message) << "\";\n";
     }
-    else
-    {
-        os << pad(indent + 4) << "// standard_message: \"";
-        switch (m_message_id)
-        {
-            case 0x00: os << grf_string_to_readable_utf8(str_message_00); break;
-            case 0x01: os << grf_string_to_readable_utf8(str_message_01); break;
-            case 0x02: os << grf_string_to_readable_utf8(str_message_02); break;
-            case 0x03: os << grf_string_to_readable_utf8(str_message_03); break;
-            case 0x04: os << grf_string_to_readable_utf8(str_message_04); break;
-            case 0x05: os << grf_string_to_readable_utf8(str_message_05); break;
-            case 0x06: os << grf_string_to_readable_utf8(str_message_06); break;
-            default:   os << "<unknown>"; break;
-        }
-        os << "\";\n";
-    }
 
-    os << pad(indent + 4) << "message_data: \"" << grf_string_to_readable_utf8(m_message_data) << "\";\n";
+    os << pad(indent + 4) << "message_data: \"" << grf_string_to_readable_utf8(m_message_data) << "\"; // Second substring\n";
     if (m_num_params > 0)
     {
         os << pad(indent + 4) << "param1: " << to_hex(m_param1) << ";\n";
