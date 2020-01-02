@@ -301,9 +301,10 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
 
 void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action02 basic" << '\n';
-    os << pad(indent) << "{" << '\n';
-    os << pad(indent + 4) << "this_set_id: " << to_hex(m_set_id) << ";\n";
+    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
+    os << ", " << to_hex(m_set_id);
+    os << "> // Action02 random\n";
+    os << pad(indent) << "{\n";
 
     os << pad(indent + 4) << "ground_sprite: " << to_hex(m_ground_sprite) << ";\n";
     os << pad(indent + 4) << "{" << '\n';

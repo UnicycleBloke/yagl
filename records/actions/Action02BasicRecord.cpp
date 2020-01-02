@@ -85,19 +85,18 @@ const IntegerListDescriptorT<uint16_t> secondary_desc{0x00, str_secondary_sprite
 void Action02BasicRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
-    os << ", " << to_hex(m_act02_set_id) << "> // Action02 basic\n";
+    os << ", " << to_hex(m_act02_set_id);
+    os << "> // Action02 basic\n";
     os << pad(indent) << "{\n";
 
     if (m_act01_set_ids_1.size() > 0)
     {
         primary_desc.print(m_act01_set_ids_1, os, indent + 4);
-        os << "\n";
     }
 
     if (m_act01_set_ids_2.size() > 0)
     {
         secondary_desc.print(m_act01_set_ids_2, os, indent + 4);
-        os << "\n";
     }
 
     os << pad(indent) << "}\n";

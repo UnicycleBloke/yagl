@@ -236,13 +236,13 @@ bool Action00Houses::print_property(std::ostream& os, uint8_t property, uint16_t
     {
         case 0x08: desc_08.print(m_08_substitute_building_id, os, indent); break;
         case 0x09: desc_09.print(m_09_building_flags, os, indent); break;
-        case 0x0A: desc_0A0.print(m_0A_first_year_available, os, indent); os << "\n";
+        case 0x0A: desc_0A0.print(m_0A_first_year_available, os, indent); 
                    desc_0A1.print(m_0A_last_year_available, os, indent); break;
         case 0x0B: desc_0B.print(m_0B_population, os, indent); break;
         case 0x0C: desc_0C.print(m_0C_mail_multiplier, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_passenger_acceptance, os, indent); break;
         case 0x0E: desc_0E.print(m_0E_mail_acceptance, os, indent); break;
-        case 0x0F: desc_0F0.print(m_0F_accepts_goods, os, indent); break; os << "\n";
+        case 0x0F: desc_0F0.print(m_0F_accepts_goods, os, indent); break; 
                    desc_0F1.print(m_0F_goods_etc_acceptance, os, indent); break;
         case 0x10: desc_10.print(m_10_la_rating_decrease, os, indent); break;
         case 0x11: desc_11.print(m_11_removal_cost_multiplier, os, indent); break;
@@ -254,7 +254,7 @@ bool Action00Houses::print_property(std::ostream& os, uint8_t property, uint16_t
         case 0x17: desc_17.print(m_17_four_random_colours, os, indent); break;
         case 0x18: desc_18.print(m_18_appearance_probability, os, indent); break;
         case 0x19: desc_19.print(m_19_extra_flags, os, indent); break;
-        case 0x1A: desc_1A0.print(m_1A_animation_frames, os, indent); os << "\n";
+        case 0x1A: desc_1A0.print(m_1A_animation_frames, os, indent); 
                    desc_1A1.print(m_1A_animation_loops, os, indent); break;
         case 0x1B: desc_1B.print(m_1B_animation_speed, os, indent); break;
         case 0x1C: desc_1C.print(m_1C_building_class, os, indent); break;
@@ -268,7 +268,6 @@ bool Action00Houses::print_property(std::ostream& os, uint8_t property, uint16_t
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

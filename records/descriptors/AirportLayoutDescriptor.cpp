@@ -197,7 +197,6 @@ void AirportLayouts::write(std::ostream& os, AirportType type) const
 
 void AirportLayouts::print(std::ostream& os, uint16_t indent, AirportType type) const
 {
-    //os << pad(indent) << "layouts\n"; 
     os << "\n" << pad(indent) << "{\n"; 
     for (const auto& layout: layouts)
     {

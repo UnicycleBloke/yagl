@@ -147,15 +147,15 @@ bool Action00IndustryTiles::print_property(std::ostream& os, uint8_t property, u
     {
         case 0x08: desc_08.print(m_08_substitute_building_id, os, indent); break;
         case 0x09: desc_09.print(m_09_industry_tile_override, os, indent); break;
-        case 0x0A: desc_0A0.print(m_0A_acceptance_cargo1, os, indent); os << "\n";
+        case 0x0A: desc_0A0.print(m_0A_acceptance_cargo1, os, indent); 
                    desc_0A1.print(m_0A_acceptance_degree1, os, indent); break;
-        case 0x0B: desc_0B0.print(m_0B_acceptance_cargo2, os, indent); os << "\n";
+        case 0x0B: desc_0B0.print(m_0B_acceptance_cargo2, os, indent); 
                    desc_0B1.print(m_0B_acceptance_degree2, os, indent); break;
-        case 0x0C: desc_0C0.print(m_0C_acceptance_cargo3, os, indent); os << "\n";
+        case 0x0C: desc_0C0.print(m_0C_acceptance_cargo3, os, indent); 
                    desc_0C1.print(m_0C_acceptance_degree3, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_land_shape_flags, os, indent); break;
         case 0x0E: desc_0E.print(m_0E_callback_flags, os, indent); break;
-        case 0x0F: desc_0F0.print(m_0F_animation_frames, os, indent); os << "\n";
+        case 0x0F: desc_0F0.print(m_0F_animation_frames, os, indent); 
                    desc_0F1.print(m_0F_animation_type, os, indent); break;
         case 0x10: desc_10.print(m_10_animation_speed, os, indent); break;
         case 0x11: desc_11.print(m_11_callback_25_triggers, os, indent); break;
@@ -164,7 +164,6 @@ bool Action00IndustryTiles::print_property(std::ostream& os, uint8_t property, u
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

@@ -110,14 +110,13 @@ bool Action00AirportTiles::print_property(std::ostream& os, uint8_t property, ui
         case 0x08: desc_08.print(m_08_substitute_tile_id, os, indent); break;
         case 0x09: desc_09.print(m_09_aiport_tile_override, os, indent); break;
         case 0x0E: desc_0E.print(m_0E_callback_flags, os, indent); break;
-        case 0x0F: desc_0F0.print(m_0F_animation_frames, os, indent); os << "\n";
+        case 0x0F: desc_0F0.print(m_0F_animation_frames, os, indent);
                    desc_0F1.print(m_0F_animation_type, os, indent); break;
         case 0x10: desc_10.print(m_10_animation_speed, os, indent); break;
         case 0x11: desc_11.print(m_11_animation_triggers, os, indent); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

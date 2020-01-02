@@ -29,7 +29,7 @@ struct IntegerDescriptorT : PropertyDescriptor
     {
         // This is the name of the property.
         prefix(os, indent);
-        os << to_string(value) << ";";
+        os << to_string(value) << ";\n";
     }
 
     void parse(T& value, TokenStream& is) const
@@ -50,7 +50,7 @@ struct IntegerListDescriptorT : PropertyDescriptor
     {
         // This is the name of the property.
         prefix(os, indent);
-        os << to_string(values) << ";";
+        os << to_string(values) << ";\n";
     }
 
     void parse(std::vector<T>& values, TokenStream& is) const;

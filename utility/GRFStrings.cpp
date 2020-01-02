@@ -336,7 +336,9 @@ std::u16string grf_string_utf8_to_utf16(const std::string& str)
     std::basic_ostringstream<char16_t> os;
 
     uint16_t length = str.size();
-    for (uint16_t pos = 0; pos < length; ++pos)
+    //for (uint16_t pos = 0; pos < length; ++pos)
+    // Skip the leading thorn character - we don't actually need this.
+    for (uint16_t pos = 2; pos < length; ++pos)
     {  
         // Extract the next character from the UTF8 string. This is either a valid 
         // multibyte sequence, or we take the first byte.

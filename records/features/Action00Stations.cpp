@@ -472,14 +472,13 @@ bool Action00Stations::print_property(std::ostream& os, uint8_t property, uint16
         case 0x13: desc_13.print(m_13_general_flags, os, indent); break;
         case 0x14: desc_14.print(m_14_overhead_wire_placement, os, indent); break;
         case 0x15: desc_15.print(m_15_can_train_enter_tile, os, indent); break;
-        case 0x16: desc_160.print(m_16_animation_frames, os, indent); os << "\n";
+        case 0x16: desc_160.print(m_16_animation_frames, os, indent); 
                    desc_161.print(m_16_animation_type, os, indent); break;
         case 0x17: desc_17.print(m_17_animation_speed, os, indent); break;
         case 0x18: desc_18.print(m_18_animation_triggers, os, indent); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

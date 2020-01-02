@@ -51,7 +51,7 @@ void CargoAcceptanceList::print(std::ostream& os, uint16_t indent) const
     {
         os << " {" << to_hex(item.cargo_type) << ": " << to_hex(item.acceptance) << "}";
     }
-    os << " ];";
+    os << " ];\n";
 }
 
 

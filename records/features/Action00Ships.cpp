@@ -219,7 +219,7 @@ bool Action00Ships::print_property(std::ostream& os, uint8_t property, uint16_t 
         case 0x19: desc_19.print(m_19_non_refittable_cargo_classes, os, indent); break;
         case 0x1A: desc_1A.print(m_1A_long_introduction_date, os, indent); break;
         case 0x1B: desc_1B.print(m_1B_sort_purchase_list, os, indent); break;
-        case 0x1C: desc_1C0.print(m_1C_visual_effect_position, os, indent); os << "\n";
+        case 0x1C: desc_1C0.print(m_1C_visual_effect_position, os, indent); 
                    desc_1C1.print(m_1C_visual_effect_enum, os, indent); break;
         case 0x1D: desc_1D.print(m_1D_custom_cargo_aging_period, os, indent); break;
         case 0x1E: desc_1E.print(m_1E_always_refittable_cargos, os, indent); break;
@@ -227,7 +227,6 @@ bool Action00Ships::print_property(std::ostream& os, uint8_t property, uint16_t 
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

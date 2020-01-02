@@ -237,10 +237,10 @@ static std::string operation_name(uint8_t operation)
 
 void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action02 variable" << '\n';
+    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
+    os << ", " << to_hex(m_set_id);
+    os << "> // Action02 variable" << '\n';
     os << pad(indent) << "{" << '\n';
-    os << pad(indent + 4) << "this_set_id: " << to_hex(m_set_id) << ";\n";
-    //os << pad(indent + 4) << "var_type: " << to_hex(m_var_type) << '\n';
 
     // Access general variable or variable of the primary object 81 85 89 (all odd)
     // Access variable of "related" object 82 86 8A (all even)

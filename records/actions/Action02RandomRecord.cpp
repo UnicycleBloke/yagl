@@ -94,7 +94,8 @@ void Action02RandomRecord::write(std::ostream& os, const GRFInfo& info) const
 void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
-    os << ", " << to_hex(m_set_id) << "> // Action02 random\n";
+    os << ", " << to_hex(m_set_id);
+    os << "> // Action02 random\n";
     os << pad(indent) << "{\n";
 
     os << pad(indent + 4) << "random_type: ";

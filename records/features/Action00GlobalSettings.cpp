@@ -155,7 +155,7 @@ void Action00GlobalSettings::SnowLine::print(std::ostream& os, uint16_t indent) 
         os << "\n";
     }
 
-    os << pad(indent) << "];";
+    os << pad(indent) << "];\n";
 }
 
 
@@ -211,7 +211,7 @@ void Action00GlobalSettings::GenderCase::print(std::ostream& os, uint16_t indent
         os << "{" << to_hex(item.id) << ": \"" << item.name << "\"} ";
     }
 
-    os << " ];";
+    os << " ];\n";
 }
 
 
@@ -298,13 +298,13 @@ bool Action00GlobalSettings::print_property(std::ostream& os, uint8_t property, 
         case 0x09: desc_09.print(m_09_cargo_translation_table, os, indent); break;
         case 0x0A: desc_0A.print(m_0A_currency_display_names, os, indent); break;
         case 0x0B: desc_0B.print(m_0B_currency_multipliers, os, indent); break;
-        case 0x0C: desc_0C0.print(m_0C_currency_separator, os, indent); os << "\n";
+        case 0x0C: desc_0C0.print(m_0C_currency_separator, os, indent); 
                    desc_0C1.print(m_0C_currency_is_postfix, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_currency_symbols_prefix, os, indent); break;
         case 0x0E: desc_0E.print(m_0E_currency_symbols_suffix, os, indent); break;
         case 0x0F: desc_0F.print(m_0F_euro_introduction_dates, os, indent); break;
         case 0x10: desc_10.print(m_10_snow_line_table, os, indent); break;
-        case 0x11: desc_110.print(m_11_grf_overrides_source, os, indent); os << "\n";
+        case 0x11: desc_110.print(m_11_grf_overrides_source, os, indent); 
                    desc_111.print(m_11_grf_overrides_source, os, indent); break;
         case 0x12: desc_12.print(m_12_railtype_translation_table, os, indent); break;
         case 0x13: desc_13.print(m_13_gender_translation_table, os, indent); break;
@@ -313,7 +313,6 @@ bool Action00GlobalSettings::print_property(std::ostream& os, uint8_t property, 
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }   
 

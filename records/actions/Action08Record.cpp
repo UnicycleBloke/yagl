@@ -19,6 +19,7 @@
 #include "Action08Record.h"
 #include "StreamHelpers.h"
 #include "GRFStrings.h"
+#include "Descriptors.h"
 
 
 void Action08Record::read(std::istream& is, const GRFInfo& info)
@@ -45,14 +46,54 @@ void Action08Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// grf // Action08
+// {
+//     grf_id: "\xFB\xFB\x06\x01";
+//     version: 8;
+//     name: "Dutch Trainset 2.1.0";
+//     description: "{lt-gray}Dutch Trains for OpenTTD {new-line}{black}First vehicle: 1839.{new-line}{new-line}(c)Dutch Trainset Team {new-line}License: GPLv2 or higher. {new-line}See readme for details.";
+// }
+
+
+namespace {
+
+
+constexpr const char* str_grf_id      = "grf_id";
+constexpr const char* str_version     = "version";
+constexpr const char* str_name        = "name";
+constexpr const char* str_description = "description";
+
+
+// Fake property numbers to facilitate out of order parsing.
+const std::map<std::string, uint8_t> g_indices =
+{
+    { str_grf_id,      0x00 },
+    { str_version,     0x01 },
+    { str_name,        0x02 },
+    { str_description, 0x03 },
+};
+
+
+constexpr GRFLabelDescriptor          desc_grf_id      = { 0x00, str_grf_id };
+const     EnumDescriptorT<GRFVersion> desc_version     = { 0x01, str_version,
+    { { 6, "GRF6" }, { 7, "GRF7" }, { 8, "GRF8" } } };
+constexpr StringDescriptor            desc_name        = { 0x02, str_name };
+constexpr StringDescriptor            desc_description = { 0x03, str_description };
+
+
+} // namespace {
+
+
 void Action08Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action08\n";
     os << pad(indent) << "{\n";
-    os << pad(indent + 4) << "grf_id: \"" << m_grf_id.to_string() << "\";\n";
-    os << pad(indent + 4) << "version: "<< (uint16_t)m_grf_version << ";\n";
-    os << pad(indent + 4) << "name: \""<< grf_string_to_readable_utf8(m_name) << "\";\n";
-    os << pad(indent + 4) << "description: \"" << grf_string_to_readable_utf8(m_info) << "\";\n";
+
+    desc_grf_id.print(m_grf_id, os, indent + 4); 
+    desc_version.print(m_grf_version, os, indent + 4);
+    desc_name.print(m_name, os, indent + 4);
+    desc_description.print(m_info, os, indent + 4);
+
     os << pad(indent) << "}\n";
 }
 
@@ -66,31 +107,22 @@ void Action08Record::parse(TokenStream& is)
     // Could maintain a bit field to check for this happening.
     while (is.peek().type == TokenType::Ident)
     {
-        const TokenValue& ident = is.peek();
-        is.match(TokenType::Ident);
-        is.match(TokenType::Colon);
-        
-        // Convert this to a map as with features.
-        if (ident.value == "grf_id")
+        TokenValue token = is.peek();
+        const auto& it = g_indices.find(token.value);
+        if (it != g_indices.end())
         {
-            m_grf_id.parse(is);
-        }
-        else if (ident.value == "version")
-        {
-            m_grf_version = static_cast<GRFVersion>(is.match_integer());
-        }
-        else if (ident.value == "name")
-        {
-            m_name = is.match(TokenType::String);
-        }
-        else if (ident.value == "description")
-        {
-            m_info = is.match(TokenType::String);
+            switch (it->second)
+            {
+                case 0x00: desc_grf_id.parse(m_grf_id, is); break;
+                case 0x01: desc_version.parse(m_grf_version, is); break;
+                case 0x02: desc_name.parse(m_name, is); break;
+                case 0x03: desc_description.parse(m_info, is); break;
+            }
         }
         else
         {
-            throw ParserError("Unexpected identifier: " + ident.value, ident);
-        }        
+            throw ParserError("Unexpected identifier: " + token.value, token);
+        }
     }
 
     is.match(TokenType::CloseBrace);

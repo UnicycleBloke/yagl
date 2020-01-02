@@ -200,7 +200,6 @@ bool Action00Cargos::print_property(std::ostream& os, uint8_t property, uint16_t
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

@@ -207,7 +207,7 @@ void Action00Industries::VectorU8::print(std::ostream& os, uint16_t indent) cons
     {
         os << " " << to_hex(item);
     }
-    os << " ];";
+    os << " ];\n";
 }
 
 
@@ -253,7 +253,7 @@ void Action00Industries::Multipliers::print(std::ostream& os, uint16_t indent) c
         }
         os << " ]";
     }
-    os << " ];";
+    os << " ];\n";
 }
 
 
@@ -395,18 +395,18 @@ bool Action00Industries::print_property(std::ostream& os, uint8_t property, uint
         case 0x13: desc_13.print(m_13_production_multipliers_2, os, indent); break;
         case 0x14: desc_14.print(m_14_minimum_distributed, os, indent); break;
         case 0x15: desc_15.print(m_15_sound_effects, os, indent); break;
-        case 0x16: desc_160.print(m_16_conflicting_industries, os, indent); os << "\n";
+        case 0x16: desc_160.print(m_16_conflicting_industries, os, indent); 
                    desc_161.print(m_16_conflicting_old_new, os, indent); break;
         case 0x17: desc_17.print(m_17_random_probability, os, indent); break;
         case 0x18: desc_18.print(m_18_gameplay_probability, os, indent); break;
         case 0x19: desc_19.print(m_19_map_colour, os, indent); break;
         case 0x1A: desc_1A.print(m_1A_special_flags, os, indent); break;
         case 0x1B: desc_1B.print(m_1B_new_industry_text_id, os, indent); break;
-        case 0x1C: desc_1C0.print(m_1C_input_multipliers_A1, os, indent); os << "\n";
+        case 0x1C: desc_1C0.print(m_1C_input_multipliers_A1, os, indent); 
                    desc_1C1.print(m_1C_input_multipliers_B1, os, indent); break;
-        case 0x1D: desc_1D0.print(m_1D_input_multipliers_A2, os, indent); os << "\n";
+        case 0x1D: desc_1D0.print(m_1D_input_multipliers_A2, os, indent); 
                    desc_1D1.print(m_1D_input_multipliers_B2, os, indent); break;
-        case 0x1E: desc_1E0.print(m_1E_input_multipliers_A3, os, indent); os << "\n";
+        case 0x1E: desc_1E0.print(m_1E_input_multipliers_A3, os, indent); 
                    desc_1E1.print(m_1E_input_multipliers_B3, os, indent); break;
         case 0x1F: desc_1F.print(m_1F_industry_name_id, os, indent); break;
         case 0x20: desc_20.print(m_20_prospecting_probability, os, indent); break;
@@ -421,7 +421,6 @@ bool Action00Industries::print_property(std::ostream& os, uint8_t property, uint
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

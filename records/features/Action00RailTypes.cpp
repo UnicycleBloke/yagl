@@ -199,7 +199,6 @@ bool Action00RailTypes::print_property(std::ostream& os, uint8_t property, uint1
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

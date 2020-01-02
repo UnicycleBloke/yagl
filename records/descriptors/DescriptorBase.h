@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Lexer.h"
+#include "GRFStrings.h"
 #include <cstdint>
 #include <iostream>
 
@@ -34,3 +35,22 @@ struct PropertyDescriptor
 
     void prefix(std::ostream& os, uint8_t indent) const;
 };
+
+
+struct StringDescriptor : PropertyDescriptor
+{
+    void print(const std::string& value, std::ostream& os, uint8_t indent) const
+    {
+        prefix(os, indent);
+        // Do we always want readable strings here?
+        os << "\"" << grf_string_to_readable_utf8(value) << "\";\n"; 
+    }
+
+    void parse(std::string& value, TokenStream& is) const
+    {
+        // TODO convert string *from* readable format.
+        value = is.match(TokenType::String);
+    }
+};
+
+

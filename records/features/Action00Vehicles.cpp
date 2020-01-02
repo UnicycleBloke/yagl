@@ -242,7 +242,7 @@ bool Action00Vehicles::print_property(std::ostream& os, uint8_t property, uint16
         case 0x1E: desc_1E.print(m_1E_non_refittable_cargo_classes, os, indent); break;
         case 0x1F: desc_1F.print(m_1F_long_introduction_date, os, indent); break;
         case 0x20: desc_20.print(m_20_sort_purchase_list, os, indent); break;
-        case 0x21: desc_210.print(m_21_visual_effect_position, os, indent); os << "\n";
+        case 0x21: desc_210.print(m_21_visual_effect_position, os, indent); 
                    desc_211.print(m_21_visual_effect_enum, os, indent); break;
         case 0x22: desc_22.print(m_22_custom_cargo_aging_period, os, indent); break;
         case 0x23: desc_23.print(m_23_shorten_vehicle, os, indent); break;
@@ -251,7 +251,6 @@ bool Action00Vehicles::print_property(std::ostream& os, uint8_t property, uint16
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

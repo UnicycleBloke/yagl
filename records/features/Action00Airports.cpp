@@ -113,7 +113,7 @@ bool Action00Airports::print_property(std::ostream& os, uint8_t property, uint16
     {
         case 0x08: desc_08.print(m_08_airport_override_id, os, indent); break;
         case 0x0A: desc_0A.print(m_0A_airport_layouts, os, indent, AirportType::Airport); break;
-        case 0x0C: desc_0C0.print(m_0C_first_year_available, os, indent); os << "\n";
+        case 0x0C: desc_0C0.print(m_0C_first_year_available, os, indent); 
                    desc_0C1.print(m_0C_last_year_available, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_compatible_ttd_airport, os, indent); break;
         case 0x0E: desc_0E.print(m_0E_catchment_area, os, indent); break;
@@ -123,7 +123,6 @@ bool Action00Airports::print_property(std::ostream& os, uint8_t property, uint16
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

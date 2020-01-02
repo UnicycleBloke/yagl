@@ -104,7 +104,6 @@ bool Action00Common::print_property(std::ostream& os, uint8_t property, uint16_t
         default:   return false;
     }    
 
-    os << "\n";
     return true;
 }
 

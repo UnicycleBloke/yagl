@@ -40,7 +40,7 @@ void BitfieldDescriptor::print_impl(uint32_t bits, std::ostream& os, uint8_t ind
             }     
         }
     }
-    os << ";";
+    os << ";\n";
 }
 
 

@@ -287,8 +287,8 @@ bool Action00Trains::print_property(std::ostream& os, uint8_t property, uint16_t
         case 0x1F: desc_1F.print(m_1F_coeff_of_tractive_effort, os, indent); break;
         case 0x20: desc_20.print(m_20_coeff_of_air_drag, os, indent); break;
         case 0x21: desc_21.print(m_21_shorten_vehicle, os, indent); break;
-        case 0x22: desc_220.print(m_22_visual_effect_position, os, indent); os << "\n"; 
-                   desc_221.print(m_22_visual_effect_enum, os, indent); os << "\n";
+        case 0x22: desc_220.print(m_22_visual_effect_position, os, indent);
+                   desc_221.print(m_22_visual_effect_enum, os, indent); 
                    desc_222.print(m_22_visual_effect_disable_wagons, os, indent); break;
         case 0x23: desc_23.print(m_23_weight_from_wagons, os, indent); break;
         case 0x24: desc_24.print(m_24_weight_high_byte, os, indent); break;
@@ -304,7 +304,6 @@ bool Action00Trains::print_property(std::ostream& os, uint8_t property, uint16_t
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }   
 

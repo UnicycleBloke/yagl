@@ -136,15 +136,15 @@ enum class GRFFormat
 // Need to account for binary differences.
 enum class GRFVersion 
 { 
-    //GRF0,
-    //GRF1,
-    //GRF2,
-    //GRF3,
-    //GRF4,
-    //GRF5,
-    //GRF6,
-    //GRF7,
-    GRF8,
+    //GRF0 = 0,
+    //GRF1 = 1,
+    //GRF2 = 2,
+    //GRF3 = 3,
+    //GRF4 = 4,
+    //GRF5 = 5,
+    //GRF6 = 6,
+    //GRF7 = 7,
+    GRF8 = 8,
 };
 
 

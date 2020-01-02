@@ -40,7 +40,7 @@ struct GRFLabelDescriptor : PropertyDescriptor
     void print(GRFLabel label, std::ostream& os, uint8_t indent) const
     {
         prefix(os, indent);
-        os << " \"" << label.to_string() << "\";"; 
+        os << "\"" << label.to_string() << "\";\n"; 
     }
 
     void parse(GRFLabel& label, TokenStream& is) const

@@ -66,7 +66,7 @@ void ArrayDescriptorT<T, N>::print(const std::array<T, N>& values, std::ostream&
         }
         os << buffer << " ";
     }
-    os << "];";
+    os << "];\n";
 }
 
 

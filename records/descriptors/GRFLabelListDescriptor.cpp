@@ -49,7 +49,7 @@ void GRFLabelList::print(std::ostream& os) const
     {
         os << " \"" << label.to_string() << "\""; 
     }
-    os << " ];";
+    os << " ];\n";
 }
 
 

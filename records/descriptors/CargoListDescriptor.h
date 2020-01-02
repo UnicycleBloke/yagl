@@ -62,7 +62,7 @@ inline void CargoList::print(std::ostream& os) const
     {
         os << ' ' << to_hex(cargo_id); 
     }
-    os << " ];";
+    os << " ];\n";
 }
 
 

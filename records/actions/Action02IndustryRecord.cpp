@@ -161,12 +161,22 @@ const EnumNames<Format> g_format_names =
 }};
 
 
+// Three different versions of this.
+// industry<Industries, 0xEF, Version1> // Action02 industry
+// {
+//     sub_in_registers: [ 0x80 0x81 0x82 ];
+//     add_out_registers: [ 0x8B 0x94 ];
+//     repeat_register: 0x9B;
+// }
+
+
 void Action02IndustryRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << ", "; 
-    os << g_format_names.name_of(m_format) << "> // Action02 basic" << '\n';
+    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature); 
+    os << ", " << to_hex(m_act02_set_id);
+    os << ", " << g_format_names.name_of(m_format);
+    os << "> // Action02 industry" << '\n';
     os << pad(indent) << "{" << '\n';
-    os << pad(indent + 4) << "this_set_id: " << to_hex(m_act02_set_id) << ";\n";
 
     if (m_format == Format::Version0)
     {
@@ -199,7 +209,7 @@ void Action02IndustryRecord::print_version0(std::ostream& os, uint16_t indent) c
     os << to_hex(m_version0.add_out_amounts[1]) << " ];\n";
 
     // Repeat flag
-    os << pad(indent) << "repeat_flag: " << to_bool(m_version0.repeat_flag);
+    os << pad(indent) << "repeat_flag: " << to_bool(m_version0.repeat_flag) << ";\n";
 }   
 
 
@@ -217,7 +227,7 @@ void Action02IndustryRecord::print_version1(std::ostream& os, uint16_t indent) c
     os << to_hex(m_version1.add_out_regs[1]) << " ];\n";
 
     // Repeat flag
-    os << pad(indent) << "repeat_register: " << to_hex(m_version1.repeat_reg);
+    os << pad(indent) << "repeat_register: " << to_hex(m_version1.repeat_reg) << ";\n";
 }   
 
 
@@ -240,7 +250,7 @@ void Action02IndustryRecord::print_version2(std::ostream& os, uint16_t indent) c
     os << " ];\n";
 
     // Repeat flag
-    os << pad(indent) << "repeat_register: " << to_hex(m_version1.repeat_reg);
+    os << pad(indent) << "repeat_register: " << to_hex(m_version1.repeat_reg) << ";\n";
 }   
 
 

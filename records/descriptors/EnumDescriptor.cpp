@@ -27,7 +27,7 @@ void EnumDescriptor::print_impl(uint32_t value, std::ostream& os, uint8_t indent
     { 
         if (value == item.value)
         {
-            os << item.name << ";";
+            os << item.name << ";\n";
             return;
         }
     }

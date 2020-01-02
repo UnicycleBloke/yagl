@@ -221,7 +221,6 @@ bool Action00Aircraft::print_property(std::ostream& os, uint8_t property, uint16
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

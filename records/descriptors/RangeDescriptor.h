@@ -44,7 +44,7 @@ inline void RangeDescriptor::print(uint32_t value, std::ostream& os, uint8_t ind
     { 
         if ((value >= item.begin) && (value <= item.end))
         {
-            os << item.name << ";";
+            os << item.name << ";\n";
             return;
         }
     }

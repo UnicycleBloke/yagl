@@ -30,7 +30,7 @@ struct BooleanDescriptor : PropertyDescriptor
 inline void BooleanDescriptor::print(bool value, std::ostream& os, uint8_t indent) const
 {
     prefix(os, indent);
-    os << std::boolalpha << value << ";"; 
+    os << std::boolalpha << value << ";\n"; 
 }
 
 

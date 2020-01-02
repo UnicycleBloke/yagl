@@ -86,7 +86,6 @@ bool Action00SoundEffects::print_property(std::ostream& os, uint8_t property, ui
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 

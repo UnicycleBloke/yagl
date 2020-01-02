@@ -164,13 +164,13 @@ bool Action00Objects::print_property(std::ostream& os, uint8_t property, uint16_
         case 0x09: desc_09.print(m_09_class_text_id, os, indent); break;
         case 0x0A: desc_0A.print(m_0A_object_text_id, os, indent); break;
         case 0x0B: desc_0B.print(m_0B_climate_availability, os, indent); break;
-        case 0x0C: desc_0C0.print(m_0C_size_x, os, indent); os << "\n";
+        case 0x0C: desc_0C0.print(m_0C_size_x, os, indent); 
                    desc_0C1.print(m_0C_size_y, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_cost_factor, os, indent); break;
         case 0x0E: desc_0E.print(m_0E_introduction_date, os, indent); break;
         case 0x0F: desc_0F.print(m_0F_end_of_life_date, os, indent); break;
         case 0x10: desc_10.print(m_10_object_flags, os, indent); break;
-        case 0x11: desc_110.print(m_11_animation_frames, os, indent); os << "\n";
+        case 0x11: desc_110.print(m_11_animation_frames, os, indent); 
                    desc_111.print(m_11_animation_type, os, indent); break; 
         case 0x12: desc_12.print(m_12_animation_speed, os, indent); break;
         case 0x13: desc_13.print(m_13_animation_triggers, os, indent); break;
@@ -182,7 +182,6 @@ bool Action00Objects::print_property(std::ostream& os, uint8_t property, uint16_
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
-    os << "\n";
     return true;
 }
 
