@@ -54,10 +54,48 @@ void Action05Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// replace_sprites<Aqueducts> // Action05
+// {
+//     sprite_id: 0x00000113
+//     {
+//         [62, 39, -30, -14], normal, 8bpp, "sprites/zbase_extra-8bpp-normal-0.png", [10, 10];
+//         [64, 45, -32, -13], normal, 32bpp|chunked, "sprites/zbase_extra-32bpp-normal-0.png", [10, 10];
+//         [256, 179, -128, -51], zin4, 32bpp|chunked, "sprites/zbase_extra-32bpp-zin4-0.png", [10, 10];
+//         [128, 90, -64, -26], zin2, 32bpp|chunked, "sprites/zbase_extra-32bpp-zin2-0.png", [10, 10];
+//     }
+//     sprite_id: 0x00000114
+//     {
+//         [62, 39, -30, -14], normal, 8bpp, "sprites/zbase_extra-8bpp-normal-0.png", [82, 10];
+//         [64, 45, -32, -13], normal, 32bpp|chunked, "sprites/zbase_extra-32bpp-normal-0.png", [84, 10];
+//         [256, 179, -128, -51], zin4, 32bpp|chunked, "sprites/zbase_extra-32bpp-zin4-0.png", [276, 10];
+//         [128, 90, -64, -26], zin2, 32bpp|chunked, "sprites/zbase_extra-32bpp-zin2-0.png", [148, 10];
+//     }
+//     ... 
+
+// replace_sprites<TwoCompanyColour> // Action05
+// {
+//     recolour_sprite
+//     {
+//         0x50..0x57: 0xC6..0xCD;
+//     }
+//     recolour_sprite
+//     {
+//         0x50..0x57: 0xC6..0xCD;
+//         0xC6..0xCD: 0x60..0x67;
+//     }
+//     recolour_sprite
+//     {
+//         0x50..0x57: 0xC6..0xCD;
+//         0xC6..0xCD: 0x2A..0x31;
+//     }
+//     ... 
+
+
 void Action05Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << NewFeatureName(m_sprite_type) << "> // Action05" << '\n';
-    os << pad(indent) << "{" << '\n';
+    os << pad(indent) << RecordName(record_type()) << "<";
+    os << NewFeatureName(m_sprite_type) << "> // Action05\n";
+    os << pad(indent) << "{\n";
 
     uint16_t num_sprites = num_sprites_to_write();
     for (uint16_t index = 0; index < num_sprites; ++index)
@@ -65,7 +103,7 @@ void Action05Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
         print_sprite(index, os, sprites, indent + 4);
     }
 
-    os << pad(indent) << "}" << '\n';
+    os << pad(indent) << "}\n";
 }
 
 

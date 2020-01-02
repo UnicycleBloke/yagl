@@ -24,7 +24,7 @@ class Action02RandomRecord : public ActionRecord
 {
 public:
     Action02RandomRecord()
-    : ActionRecord{RecordType::ACTION_02_BASIC}
+    : ActionRecord{RecordType::ACTION_02_RANDOM}
     {
     }
 

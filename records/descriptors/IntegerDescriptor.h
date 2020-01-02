@@ -25,17 +25,42 @@ struct IntegerDescriptorT : PropertyDescriptor
 {
     PropFormat format;
 
-    void print(T value, std::ostream& os, uint8_t indent) const;
-    void parse(T& value, TokenStream& is) const;
+    void print(T value, std::ostream& os, uint8_t indent) const
+    {
+        // This is the name of the property.
+        prefix(os, indent);
+        os << to_string(value) << ";";
+    }
+
+    void parse(T& value, TokenStream& is) const
+    {
+        value = is.match_integer();
+    }
+
+    std::string to_string(T value) const;
 };
 
 
 template <typename T>
-void IntegerDescriptorT<T>::print(T value, std::ostream& os, uint8_t indent) const
+struct IntegerListDescriptorT : PropertyDescriptor
 {
-    // This is the name of the property.
-    prefix(os, indent);
+    PropFormat format;
 
+    void print(const std::vector<T>& values, std::ostream& os, uint8_t indent) const
+    {
+        // This is the name of the property.
+        prefix(os, indent);
+        os << to_string(values) << ";";
+    }
+
+    void parse(std::vector<T>& values, TokenStream& is) const;
+    std::string to_string(const std::vector<T>& values) const;
+};
+
+
+template <typename T>
+std::string IntegerDescriptorT<T>::to_string(T value) const
+{
     char buffer[16];
     switch (format)
     {
@@ -59,12 +84,34 @@ void IntegerDescriptorT<T>::print(T value, std::ostream& os, uint8_t indent) con
         default:
             std::snprintf(buffer, 16, "<error>");
     }
-    os << buffer << ";";
+
+    return std::string{buffer};
 }
 
 
 template <typename T>
-void IntegerDescriptorT<T>::parse(T& value, TokenStream& is) const
+std::string IntegerListDescriptorT<T>::to_string(const std::vector<T>& values) const
 {
-    value = is.match_integer();
+    const IntegerDescriptorT<T> desc{index, name, format};
+    std::ostringstream os;
+    os << "[";
+    for (const T value: values)
+    {
+        os << " " << desc.to_string(value);
+    }
+    os << " ]";
+    return os.str();
+}
+
+
+template <typename T>
+void IntegerListDescriptorT<T>::parse(std::vector<T>& values, TokenStream& is) const
+{
+    is.match(TokenType::OpenBracket);
+    while (is.peek().type != TokenType::CloseBracket)
+    {
+        T value = is.match_integer();
+        values.push_back(value);
+    }
+    is.match(TokenType::CloseBracket);
 }

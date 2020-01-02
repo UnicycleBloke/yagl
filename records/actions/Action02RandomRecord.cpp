@@ -78,12 +78,24 @@ void Action02RandomRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+// random_switch<Trains, 0xFD> // Action02 random
+// {
+//     random_type: Object;
+//     triggers: 0x00;
+//     rand_bit: 0x00;
+//     set_ids:
+//     [
+//         0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 
+//         0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 0x00FA 0x00FA 
+//     ];
+// }
+
+
 void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action02 random" << '\n';
-    os << pad(indent) << "{" << '\n';
-
-    os << pad(indent + 4) << "this_set_id: " << to_hex(m_set_id) << ";\n";
+    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
+    os << ", " << to_hex(m_set_id) << "> // Action02 random\n";
+    os << pad(indent) << "{\n";
 
     os << pad(indent + 4) << "random_type: ";
     switch (m_type)
@@ -107,30 +119,27 @@ void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites,
     os << pad(indent + 4) << "triggers: " << to_hex(m_triggers) << ";\n";
     os << pad(indent + 4) << "rand_bit: " << to_hex(m_randbit) << ";\n";
 
-    uint16_t size = m_set_ids.size();
-    if (size > 8)
+    std::map<uint16_t, uint16_t> values;
+    // Assert size of m_set_ids is a power of two.
+    for (auto id: m_set_ids)
     {
-        os << pad(indent + 4) << "set_ids:\n";
-        os << pad(indent + 4) << "[";
-        for (uint16_t i = 0; i < size; ++i)
+        if (values.find(id) == values.end())
         {
-            if (i % 8 == 0)
-            {
-                os << "\n" << pad(indent + 8);
-            }
-            os << to_hex(m_set_ids[i]) << " ";
+            values[id] = 1;
         }
-        os << "\n" << pad(indent + 4) << "];\n";
+        else
+        {
+            values[id] = values[id] + 1;
+        }        
     }
-    else
+
+    os << pad(indent + 4) << "set_ids: // set_id: probability;\n";
+    os << pad(indent + 4) << "{\n";
+    for (const auto& it: values)
     {
-        os << pad(indent + 4) << "set_ids: [ ";
-        for (uint16_t i = 0; i < size; ++i)
-        {
-            os << to_hex(m_set_ids[i]) << " ";
-        }
-        os << "];\n";
+        os << pad(indent + 8) << to_hex(it.first) << ": " << it.second << ";\n";
     }
+    os << pad(indent + 4) << "};\n";
 
     os << pad(indent) << "}" << '\n';
 }

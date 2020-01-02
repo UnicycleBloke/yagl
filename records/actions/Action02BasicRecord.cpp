@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action02BasicRecord.h"
 #include "StreamHelpers.h"
+#include "Descriptors.h"
 
 
 void Action02BasicRecord::read(std::istream& is, const GRFInfo& info)
@@ -67,27 +68,39 @@ void Action02BasicRecord::write(std::ostream& os, const GRFInfo& info) const
 // }
 
 
+namespace {
+
+
+constexpr const char* str_primary_spritesets = "primary_spritesets"; 
+constexpr const char* str_secondary_spritesets = "secondary_spritesets"; 
+
+
+const IntegerListDescriptorT<uint16_t> primary_desc  {0x00, str_primary_spritesets,   PropFormat::Hex };
+const IntegerListDescriptorT<uint16_t> secondary_desc{0x00, str_secondary_spritesets, PropFormat::Hex };
+
+
+} // namespace {
+
+
 void Action02BasicRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
-    os << ", " << to_hex(m_act02_set_id) << "> // Action02 basic" << '\n';
-    os << pad(indent) << "{" << '\n';
+    os << ", " << to_hex(m_act02_set_id) << "> // Action02 basic\n";
+    os << pad(indent) << "{\n";
 
-    os << pad(indent + 4) << "primary_spritesets: [ ";
-    for (uint8_t i = 0; i < m_act01_set_ids_1.size(); ++i)
+    if (m_act01_set_ids_1.size() > 0)
     {
-        os << to_hex(m_act01_set_ids_1[i]) << " ";
+        primary_desc.print(m_act01_set_ids_1, os, indent + 4);
+        os << "\n";
     }
-    os << "];\n";
 
-    os << pad(indent + 4) << "secondary_spritesets: [ ";
-    for (uint8_t i = 0; i < m_act01_set_ids_2.size(); ++i)
+    if (m_act01_set_ids_2.size() > 0)
     {
-        os << to_hex(m_act01_set_ids_2[i]) << " ";
+        secondary_desc.print(m_act01_set_ids_2, os, indent + 4);
+        os << "\n";
     }
-    os << "];\n";
 
-    os << pad(indent) << "}" << '\n';
+    os << pad(indent) << "}\n";
 }
 
 
@@ -102,26 +115,19 @@ void Action02BasicRecord::parse(TokenStream& is)
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
-
-    is.match_ident("primary_spritesets");
-    is.match(TokenType::Colon);
-    is.match(TokenType::OpenBracket);
-    while (is.peek().type == TokenType::Number)
+    
+    while (is.peek().type != TokenType::CloseBrace)
     {
-        m_act01_set_ids_1.push_back(is.match_integer());
+        std::string name = is.match(TokenType::String);
+        if (name == str_primary_spritesets)
+        {
+            primary_desc.parse(m_act01_set_ids_1, is);
+        }
+        if (name == str_primary_spritesets)
+        {
+            secondary_desc.parse(m_act01_set_ids_2, is);
+        }
     }
-    is.match(TokenType::CloseBracket);
-    is.match(TokenType::SemiColon);
-
-    is.match_ident("secondary_spritesets");
-    is.match(TokenType::Colon);
-    is.match(TokenType::OpenBracket);
-    while (is.peek().type == TokenType::Number)
-    {
-        m_act01_set_ids_2.push_back(is.match_integer());
-    }
-    is.match(TokenType::CloseBracket);
-    is.match(TokenType::SemiColon);
 
     is.match(TokenType::CloseBrace);
 }
