@@ -69,7 +69,7 @@ std::string RecordName(RecordType type);
 RecordType RecordFromName(const std::string& name);
 
 
-enum class FeatureType
+enum class FeatureType : uint8_t
 {
     Trains          = 0x00,
     Vehicles        = 0x01,
@@ -97,7 +97,7 @@ std::string FeatureName(FeatureType type);
 FeatureType FeatureFromName(const std::string& name);
 
 
-enum class NewFeatureType
+enum class NewFeatureType : uint8_t
 {
     PreSignal        = 0x04,
     Catenary         = 0x05,

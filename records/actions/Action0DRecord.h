@@ -100,9 +100,9 @@ private:
         uint32_t m_data = 0;  // Value to use as source if not parameter
         struct 
         {
-            uint8_t  m_ff;
-            uint8_t  m_feature;
-            uint16_t m_number;
+            uint8_t     m_ff;
+            FeatureType m_feature;
+            uint16_t    m_number;
         };
     };
 };

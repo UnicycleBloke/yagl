@@ -151,19 +151,19 @@ void Action0DRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
             switch (m_source1)
             {
                 // Find available resource ID and mark as in use 
-                case 00: os << "grfop_reserve(" << m_feature << ", " << m_number << ")"; break;
+                case 00: os << "grfop_reserve(" << FeatureName(m_feature) << ", " << m_number << ")"; break;
                 // Find available resource ID but do not mark
-                case 01: os << "grfop_find(" << m_feature << ", " << m_number << ")"; break;
+                case 01: os << "grfop_find(" << FeatureName(m_feature) << ", " << m_number << ")"; break;
                 // Check whether given resources (ID stored in the <target> variable) are available 
-                case 02: os << "grfop_check(" << m_feature << ", " << m_number << ", " << target << ")"; break;
+                case 02: os << "grfop_check(" << FeatureName(m_feature) << ", " << m_number << ", " << target << ")"; break;
                 // Check that the given resources are available, and if so mark as in use 
-                case 03: os << "grfop_mark(" << m_feature << ", " << m_number << ", " << target << ")"; break;
+                case 03: os << "grfop_mark(" << FeatureName(m_feature) << ", " << m_number << ", " << target << ")"; break;
                 // Like "Find", but does not deactive the grf if no IDs found 
-                case 04: os << "grfop_find_no_fail(" << m_feature << ", " << m_number << ")"; break;
+                case 04: os << "grfop_find_no_fail(" << FeatureName(m_feature) << ", " << m_number << ")"; break;
                 // Like "Check", but does not deactive the grf if there is a conflict 
-                case 05: os << "grfop_check_no_fail(" << m_feature << ", " << m_number << ", " << target << ")"; break;
+                case 05: os << "grfop_check_no_fail(" << FeatureName(m_feature) << ", " << m_number << ", " << target << ")"; break;
                 // Retrieve GRFID that has reserved the given ID (or 0 if not reserved)  
-                case 06: os << "grfop_get_owner(" << m_feature << ", " << m_number << ", " << target <<")"; break;
+                case 06: os << "grfop_get_owner(" << FeatureName(m_feature) << ", " << m_number << ", " << target <<")"; break;
             }
             os << ";\n";
         }

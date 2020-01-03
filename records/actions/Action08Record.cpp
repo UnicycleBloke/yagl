@@ -46,15 +46,6 @@ void Action08Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
-// grf // Action08
-// {
-//     grf_id: "\xFB\xFB\x06\x01";
-//     version: 8;
-//     name: "Dutch Trainset 2.1.0";
-//     description: "{lt-gray}Dutch Trains for OpenTTD {new-line}{black}First vehicle: 1839.{new-line}{new-line}(c)Dutch Trainset Team {new-line}License: GPLv2 or higher. {new-line}See readme for details.";
-// }
-
-
 namespace {
 
 
@@ -84,6 +75,15 @@ constexpr StringDescriptor            desc_description = { 0x03, str_description
 } // namespace {
 
 
+// grf // Action08
+// {
+//     grf_id: "\xFB\xFB\x06\x01";
+//     version: 8;
+//     name: "Dutch Trainset 2.1.0";
+//     description: "{lt-gray}Dutch Trains for OpenTTD {new-line}{black}First vehicle: 1839.{new-line}{new-line}(c)Dutch Trainset Team {new-line}License: GPLv2 or higher. {new-line}See readme for details.";
+// }
+
+
 void Action08Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action08\n";
@@ -100,7 +100,8 @@ void Action08Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
 void Action08Record::parse(TokenStream& is)
 {
-    is.match_ident(RecordName(record_type()));
+    const std::string ident = RecordName(record_type());
+    is.match_ident(ident);
     is.match(TokenType::OpenBrace);
 
     // Could theoretically set the same members multiple times, but only the last will count.
@@ -111,6 +112,9 @@ void Action08Record::parse(TokenStream& is)
         const auto& it = g_indices.find(token.value);
         if (it != g_indices.end())
         {
+            is.match(TokenType::Ident);
+            is.match(TokenType::Colon);
+
             switch (it->second)
             {
                 case 0x00: desc_grf_id.parse(m_grf_id, is); break;
@@ -118,6 +122,8 @@ void Action08Record::parse(TokenStream& is)
                 case 0x02: desc_name.parse(m_name, is); break;
                 case 0x03: desc_description.parse(m_info, is); break;
             }
+
+            is.match(TokenType::SemiColon);
         }
         else
         {

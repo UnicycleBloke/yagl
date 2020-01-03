@@ -93,8 +93,18 @@ bool Lexer::handle_byte(uint8_t c, uint8_t p)
             // Possibly the first character of a comment.
             else if (c == '/')
             {
-                m_state = LexerState::Slash;
-                return true; 
+                switch (p)
+                {
+                    case '/':
+                    case '*':
+                        // This is the start of a comment
+                        m_state = LexerState::Slash;
+                        return true; 
+                    default:
+                        // This is a division operator
+                        handle_symbol(c, p);
+                        return true;   
+                }
             }
 
             // All the other tokens are single character symbols.
@@ -193,6 +203,12 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
         case '=' : emit(TokenType::Equals,       "="); return true;
         case '&' : emit(TokenType::Ampersand,    "&"); return true;
         case '%' : emit(TokenType::Percent,      "%"); return true;
+
+        case '+' : emit(TokenType::OpPlus,       "+"); return true;
+        case '-' : emit(TokenType::OpMinus,      "-"); return true;
+        case '*' : emit(TokenType::OpMultiply,   "*"); return true;
+        case '/' : emit(TokenType::OpMultiply,   "/"); return true;
+
         case '.' : 
             if (p == '.')
             {
@@ -405,6 +421,9 @@ void Lexer::emit(TokenType type, NumberType num_type, std::string value)
 {
     m_tokens.push_back({type, num_type, value, m_line, m_column});
     m_state = LexerState::None;
+
+    // Helps for debugging the lexer...
+    //std::cout << m_line << ": " << value << "\n";
 }
 
 

@@ -175,15 +175,6 @@ void Action14Record::print_chunks(std::ostream& os, const std::vector<Chunk>& ch
 // }
 
 
-void Action14Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
-{
-    os << RecordName(record_type()) << " // Action14\n";
-    os << "{\n";
-    print_chunks(os, m_chunks, indent + 4);
-    os << "}\n";
-}
-
-
 void Action14Record::parse_chunks(TokenStream& is, std::vector<Chunk>& chunks)
 {
     is.match(TokenType::OpenBrace);
@@ -234,8 +225,19 @@ void Action14Record::parse_chunks(TokenStream& is, std::vector<Chunk>& chunks)
 }
 
 
+void Action14Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+{
+    os << RecordName(record_type()) << " // Action14\n";
+    os << "{\n";
+    print_chunks(os, m_chunks, indent + 4);
+    os << "}\n";
+}
+
+
 void Action14Record::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
+    //is.match(TokenType::OpenBrace);
     parse_chunks(is, m_chunks);
+    //is.match(TokenType::CloseBrace);
 }

@@ -75,7 +75,7 @@ static void encode()
         // This file already checked for existence.
         // Will need to check for the sprite sheets as we go along.
         std::ifstream is(options.yagl_file(), std::ios::binary);
-
+        
         Lexer lexer;
         TokenStream token_stream(lexer.lex(is));
 

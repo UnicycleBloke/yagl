@@ -43,6 +43,11 @@ enum class TokenType
     SingleDot, // . Remove - only for file name in current output.
     DoubleDot, // ..
 
+    OpPlus,     // +
+    OpMinus,    // -
+    OpMultiply, // *
+    OpDivide,   // / - single slash
+
     // Tokens with values attached
     Number, // Any decimal, binary (0bXXX), octal (0XXX), hexadecimal (0xXXX), or (decimal) floating point number 
     Ident,  // Any name or keyword
@@ -151,6 +156,8 @@ public:
 
         if ((m_index + lookahead) >= m_tokens.size())
             return terminator;
+
+        //const TokenValue value = m_tokens[m_index + lookahead];    
         return m_tokens[m_index + lookahead]; 
     }
 
@@ -168,7 +175,7 @@ public:
     bool match_ident(const std::string& value) 
     {
         const TokenValue& token = peek();
-        if ((TokenType::Ident != token.type) && (token.value == value))
+        if ((TokenType::Ident != token.type) || (token.value != value))
         {
             throw ParserError("Unexpected token: " + token.value, token);
         }
