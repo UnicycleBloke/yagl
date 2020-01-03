@@ -380,37 +380,80 @@ std::vector<uint8_t> RealSpriteRecord::encode_lz77(const std::vector<uint8_t>& i
 }
 
 
+namespace {
+
+
+constexpr const char* str_normal  = "normal";
+constexpr const char* str_zin2    = "zin2";
+constexpr const char* str_zin4    = "zin4";
+constexpr const char* str_zout2   = "zout2";
+constexpr const char* str_zout4   = "zout4";
+constexpr const char* str_zout8   = "zout8";
+
+// Identifiers cannot begin with digits.
+constexpr const char* str_8bpp    = "c8bpp";
+constexpr const char* str_24bpp   = "c24bpp";
+constexpr const char* str_32bpp   = "c32bpp";
+constexpr const char* str_mask    = "mask";
+constexpr const char* str_chunked = "chunked";
+constexpr const char* str_no_crop = "no_crop";
+
+
+const EnumDescriptorT<RealSpriteRecord::ZoomLevel> zoom_desc = 
+{ 
+    0x00, "",                   
+    {
+        { 0x00, str_normal }, // ZoomLevel::Normal },    
+        { 0x01, str_zin4   }, // ZoomLevel::ZoomInX4 }, 
+        { 0x02, str_zin2   }, // ZoomLevel::ZoomInX2 }, 
+        { 0x03, str_zout2  }, // ZoomLevel::ZoomOutX2 }, 
+        { 0x04, str_zout4  }, // ZoomLevel::ZoomOutX4 }, 
+        { 0x05, str_zout8  }, // ZoomLevel::ZoomOutX8 }, 
+    }
+};
+
+
+const BitfieldDescriptorT<uint8_t> colour_desc = 
+{ 
+    0x00, "",                   
+    {
+        { 0x04, str_8bpp    }, // HAS_PALETTE
+        { 0x01, str_24bpp   }, // HAS_RGB
+        { 0x03, str_32bpp   }, // HAS_RGB | HAS_ALPHA
+        { 0x04, str_mask    }, // HAS_PALETTE
+        { 0x08, str_chunked }, // RealSpriteRecord::CHUNKED_FORMAT
+        { 0x40, str_no_crop }, // RealSpriteRecord::CROP_TRANSARENT_BORDER
+    }
+};
+
+
+} // namespace {
+
+
 void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << "[" << m_xdim << ", " << m_ydim << ", " <<  m_xrel << ", " << m_yrel << "], ";
-    switch (m_zoom)
-    { 
-        case ZoomLevel::Normal:    os << "normal, "; break;
-        case ZoomLevel::ZoomInX2:  os << "zin2, ";   break;
-        case ZoomLevel::ZoomInX4:  os << "zin4, ";   break;
-        case ZoomLevel::ZoomOutX2: os << "zout2, ";  break;
-        case ZoomLevel::ZoomOutX4: os << "zout4, ";  break;
-        case ZoomLevel::ZoomOutX8: os << "zout8, ";  break;
-    }
+    os << zoom_desc.value(m_zoom) << ", ";
 
     // We expect one of the following colour depths. 
+    // This isn't a simple bitfield as the different bit combinations have particular meanings.
     switch (m_colour)
     {
-        case HAS_PALETTE:                       os << "8bpp"; break;
-        case HAS_RGB | HAS_ALPHA:               os << "32bpp"; break;
-        case HAS_RGB | HAS_ALPHA | HAS_PALETTE: os << "32bpp|mask"; break;
-        // Do these ever occur?
-        //case HAS_RGB:                           os << "24bpp"; break;
-        //case HAS_RGB | HAS_PALETTE:             os << "24bpp|mask"; break;
+        case HAS_PALETTE:                       os << str_8bpp; break;
+        case HAS_RGB | HAS_ALPHA:               os << str_32bpp; break;
+        case HAS_RGB | HAS_ALPHA | HAS_PALETTE: os << str_32bpp << " | " << str_mask; break;
+        // Do these ever occur? It appears not. Would treat internally as RGBA with A = FF.
+        //case HAS_RGB:                           os << str_24bpp; break;
+        //case HAS_RGB | HAS_PALETTE:             os << str_24bpp << " | " << str_mask; break;
         default:  throw RUNTIME_ERROR("Invalid colour depth");   
     }
     
     // Tiles contain transparency and are stored in a chunked format to save space.
-    if (m_compression & RealSpriteRecord::CHUNKED_FORMAT) os << "|chunked";
+    if (m_compression & RealSpriteRecord::CHUNKED_FORMAT) os << " | " << str_chunked;
     
     // grfcodec likes to remove extraneous transparent borders.
     // Is the sense here the right way?
-    //if (m_compression & RealSpriteRecord::CROP_TRANSARENT_BORDER) os << "|no_crop";
+    //if (m_compression & RealSpriteRecord::CROP_TRANSARENT_BORDER) os << " | " << str_no_crop;
 
     // If we create a sprite_sheet containing this sprite, print the details.
     os << ", \"" << m_filename << "\", [" << m_xoff << ", " << m_yoff << "]";
@@ -425,37 +468,13 @@ void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uin
 }
 
  
-const EnumDescriptorT<RealSpriteRecord::ZoomLevel> zoom_desc = 
-{ 
-    0x00, "",                   
-    {
-        { 0x00, "normal" }, // ZoomLevel::Normal },    
-        { 0x01, "zin4"   }, // ZoomLevel::ZoomInX4 }, 
-        { 0x02, "zin2"   }, // ZoomLevel::ZoomInX2 }, 
-        { 0x03, "zout2"  }, // ZoomLevel::ZoomOutX2 }, 
-        { 0x04, "zout4"  }, // ZoomLevel::ZoomOutX4 }, 
-        { 0x05, "zout8"  }, // ZoomLevel::ZoomOutX8 }, 
-    }
-};
-
-
-const BitfieldDescriptorT<uint8_t> colour_desc = 
-{ 
-    0x00, "",                   
-    {
-        { 0x04, "8bpp"    }, 
-        { 0x01, "24bpp"   }, 
-        { 0x03, "32bpp"   }, 
-        { 0x04, "mask"    }, 
-        { 0x08, "chunked" },
-        { 0x40, "no_crop" },
-    }
-};
-
-
 void RealSpriteRecord::parse(TokenStream& is) 
 {
-    // [8, 21, -3, -9] normal M "base_name.normal.0.png" [168, 778];
+    // [8, 21, -3, -11], normal, 8bpp, 
+    //         "sprites/zbase_extra-8bpp-normal-0.png", [641, 7372];
+    // [32, 34, -16, -23], normal, 32bpp|mask|chunked, 
+    //         "sprites/zbase_extra-32bpp-normal-0.png", [149, 6763], 
+    //         "sprites/zbase_extra-mask-normal-0.png", [372, 293];
 
     is.match(TokenType::OpenBracket);
     m_xdim = is.match_integer();
@@ -466,17 +485,40 @@ void RealSpriteRecord::parse(TokenStream& is)
     is.match(TokenType::Comma);
     m_yrel = is.match_integer();
     is.match(TokenType::CloseBracket);
+    is.match(TokenType::Comma);
 
     zoom_desc.parse(m_zoom, is);
-    colour_desc.parse(m_compression, is);
+    is.match(TokenType::Comma);
+    colour_desc.parse(m_colour, is);
+    m_compression  = m_colour & (RealSpriteRecord::CHUNKED_FORMAT); // | RealSpriteRecord::CROP_TRANSARENT_BORDER);
+    m_colour      &= (HAS_RGB | HAS_ALPHA | HAS_PALETTE);
+    is.match(TokenType::Comma);
 
     std::string m_filename = is.match(TokenType::String);
+    is.match(TokenType::Comma);
 
     is.match(TokenType::OpenBracket);
     m_xoff = is.match_integer();
     is.match(TokenType::Comma);
     m_yoff = is.match_integer();
     is.match(TokenType::CloseBracket);
+
+    // This section is used for sprites with masks.
+    if (is.peek().type != TokenType::SemiColon)
+    {
+        is.match(TokenType::Comma);
+
+        std::string m_mask_filename = is.match(TokenType::String);
+        is.match(TokenType::Comma);
+
+        is.match(TokenType::OpenBracket);
+        m_mask_xoff = is.match_integer();
+        is.match(TokenType::Comma);
+        m_mask_yoff = is.match_integer();
+        is.match(TokenType::CloseBracket);
+
+        // TODO verify that the mask bit is set.
+    }
 
     is.match(TokenType::SemiColon);
 }

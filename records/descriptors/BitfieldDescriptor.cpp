@@ -47,7 +47,7 @@ void BitfieldDescriptor::print_impl(uint32_t bits, std::ostream& os, uint8_t ind
 void BitfieldDescriptor::parse_impl(uint32_t& bits, TokenStream& is) const
 {
     bits = 0;
-    do
+    while (true)
     {
         std::string name = is.match(TokenType::Ident);
         for (const auto& item: items)
@@ -57,11 +57,15 @@ void BitfieldDescriptor::parse_impl(uint32_t& bits, TokenStream& is) const
                 bits |= item.bit;
                 break;
             }
-        
-            throw RUNTIME_ERROR("BitfieldDescriptor::parse");
         }
+
+        if (is.peek().type != TokenType::Pipe)
+        {
+            break;
+        }
+
+        is.match(TokenType::Pipe);
     }
-    while (is.peek().type == TokenType::Pipe);
 }
 
 

@@ -43,9 +43,12 @@ void RecolourRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+static constexpr const char* str_recolour_sprite = "recolour_sprite";
+
+
 void RecolourRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << "recolour_sprite" << '\n';
+    os << pad(indent) << str_recolour_sprite << '\n';
     os << pad(indent) << "{" << '\n';
 
     std::array<uint8_t, 256> diffs;
@@ -111,7 +114,7 @@ void RecolourRecord::parse(TokenStream& is)
         m_colour_map[i] = i;
     }
 
-    is.match_ident("recolour_sprite");
+    is.match_ident(str_recolour_sprite);
     is.match(TokenType::OpenBrace);
 
     while (is.peek().type != TokenType::CloseBrace)
@@ -122,15 +125,15 @@ void RecolourRecord::parse(TokenStream& is)
         if (is.peek().type == TokenType::Colon)
         {
             is.match(TokenType::Colon);
-            uint8_t value = is.match_integer();
+            value = is.match_integer();
         }
         else
         {
             is.match(TokenType::DoubleDot);
-            uint16_t index2 = is.match_integer();
+            end = is.match_integer();
 
             is.match(TokenType::Colon);
-            uint8_t value = is.match_integer();
+            value = is.match_integer();
 
             is.match(TokenType::DoubleDot);
             is.match_integer();

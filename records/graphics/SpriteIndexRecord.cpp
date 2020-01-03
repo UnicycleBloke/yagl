@@ -35,9 +35,12 @@ void SpriteIndexRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+static constexpr const char* str_sprite_id = "sprite_id";
+
+
 void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << "sprite_id: " << to_hex(m_sprite_id) << "\n";
+    os << pad(indent) << str_sprite_id << ": " << to_hex(m_sprite_id) << "\n";
     os << pad(indent) << "{" << '\n';
 
     if (sprites.find(m_sprite_id) != sprites.end())
@@ -55,7 +58,6 @@ void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, ui
             std::cout << pad(indent + 4) << "Missing sprites.\n";
         }
     }
-    
 
     os << pad(indent) << "}" << '\n';
 }
@@ -63,7 +65,7 @@ void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, ui
 
 void SpriteIndexRecord::parse(TokenStream& is)
 {
-    is.match_ident("sprite_id");
+    is.match_ident(str_sprite_id);
     is.match(TokenType::Colon);
 
     m_sprite_id = is.match_integer();
@@ -73,20 +75,11 @@ void SpriteIndexRecord::parse(TokenStream& is)
     std::vector<std::shared_ptr<Record>> sprite_list;
     while (is.peek().type != TokenType::CloseBrace)
     {
-        if (is.peek().type == TokenType::OpenBracket)
-        {
-            // Need to create RealSpriteRecord     
-            // Size and compression are place holder values to be read from the token stream.
-            auto sprite = std::make_shared<RealSpriteRecord>(m_sprite_id, 0, 0);
-            sprite_list.push_back(sprite);
-            sprite->parse(is);
-        }
-        else
-        {
-            auto sprite = std::make_shared<RecolourRecord>();
-            sprite_list.push_back(sprite);
-            sprite->parse(is);
-        }
+        // Need to create RealSpriteRecord     
+        // Size and compression are place holder values to be read from the token stream.
+        auto sprite = std::make_shared<RealSpriteRecord>(m_sprite_id, 0, 0);
+        sprite_list.push_back(sprite);
+        sprite->parse(is);
     }
 
     is.match(TokenType::CloseBrace);

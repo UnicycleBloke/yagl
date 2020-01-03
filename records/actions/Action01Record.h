@@ -50,11 +50,6 @@ private:
     // The type of feature for which we are defining sprites sets.
     FeatureType m_feature = FeatureType::Trains;
 
-    // Extended format lets us specify the ID of the first sprite set defined
-    // in this record. This could permit overwriting only some sprite sets in later 
-    // records. 
-    bool m_has_first_id = 0;
-
     // The number given to the first sprite set defined by this Action00. The others
     // are just incrementing values.
     uint16_t m_first_set = 0;

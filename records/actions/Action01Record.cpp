@@ -29,9 +29,9 @@ void Action01Record::read(std::istream& is, const GRFInfo& info)
     // The record has a basic and an extended format. This is distinguished
     // by whether the number of sets in the basic format is zero. 
     m_num_sets = read_uint8(is);
-    m_has_first_id = (m_num_sets == 0);
+    bool has_first_id = (m_num_sets == 0);
 
-    if (m_has_first_id)
+    if (has_first_id)
     {
         // Extended format
         m_first_set    = read_uint8_ext(is);
@@ -52,7 +52,9 @@ void Action01Record::write(std::ostream& os, const GRFInfo& info) const
     ContainerRecord::write(os, info);
 
     write_uint8(os, static_cast<uint8_t>(m_feature));
-    if (m_has_first_id)
+
+    bool has_first_id = (m_first_set > 0) || (m_num_sets > 255);
+    if (has_first_id)
     {
         write_uint8(os, 0x00);
         write_uint8_ext(os, m_first_set);
@@ -67,44 +69,20 @@ void Action01Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
-// sprite_sets<Stations> // Action01
-// {
-//     set_id: 0x00000000
-//     {
-//         sprite_id: 0x000001A6
-//         {
-//             // The following line is the output for a real sprite image.     
-//             [64, 31, -31, 0], normal, 8bpp|chunked, "yagl/newstats-8bpp-normal-0.png", [657, 402];
-//             ... // More zoom levels
-//         }
-//         sprite_id: 0x000001A7
-//         {
-//             [64, 31, -31, 0], normal, 8bpp|chunked, "yagl/newstats-8bpp-normal-0.png", [10, 455];
-//             ... 
-//         }
-//         ... // More sprites
-//     }
-//     set_id: 0x00000001
-//     {
-//         ...
-//     }
-//     set_id: 0x00000002
-//     {
-//         ...
-//     }
-//     ... // More sprite sets.
-// }
+static constexpr const char* str_sprite_set = "sprite_set";
 
 
 void Action01Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action01" << '\n';
+    os << pad(indent) << RecordName(record_type()) << "<";
+    os << FeatureName(m_feature) << ", ";
+    os << to_hex(m_first_set) << "> // <feature, first_set> Action01" << '\n';
     os << pad(indent) << "{" << '\n';
 
     uint16_t index = 0;    
     for (uint16_t set = 0; set < m_num_sets; ++set)
     {
-        os << pad(indent + 4) << "set_id: " << to_hex(m_first_set + set) << "\n";
+        os << pad(indent + 4) << str_sprite_set << " // " << to_hex<uint16_t>(m_first_set + set) << "\n";
         os << pad(indent + 4) << "{" << '\n';
         
         for (uint16_t i = 0; i < m_num_sprites; ++i)
@@ -126,38 +104,21 @@ void Action01Record::parse(TokenStream& is)
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
+    is.match(TokenType::Comma);
+    m_first_set = is.match_integer();
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
-    while (is.peek().type == TokenType::Ident)
+    while (is.peek().type != TokenType::CloseBrace)
     {
-        // The record represents one or more sets of sprites.
-        ++m_num_sets;
-        is.match_ident("set_id");
-        is.match(TokenType::Colon);
+        // Count the sprites in this sprite set.
+        uint16_t num_sprites = 0;
 
-        if (m_num_sets == 1)
-        {
-            // We don't care about this value. It was added to be helpful 
-            // in the output.
-            is.match_integer();
-        }
-        else
-        {
-            m_first_set    = is.match_integer();
-            m_has_first_id = (m_first_set > 0); 
-        }
-
+        is.match_ident(str_sprite_set);
         is.match(TokenType::OpenBrace);
-        while (is.peek().type == TokenType::Ident)
+        while (is.peek().type != TokenType::CloseBrace)
         {
-            // Each set of sprites contains one or more sprites.
-            // All the sets are the same size, so we only count
-            // for the first one.
-            if (m_num_sets == 1)
-            {
-                ++m_num_sprites;
-            }
+            ++num_sprites;
 
             // The sprite itself contains one or more different version of the 
             // image, in different zooms and/or colour depths. 
@@ -167,6 +128,20 @@ void Action01Record::parse(TokenStream& is)
         }
 
         is.match(TokenType::CloseBrace);
+
+        // Each set of sprites contains one or more sprites.
+        // All the sets are the same size, so we only count
+        // for the first one.
+        ++m_num_sets;
+        if (m_num_sets == 1)
+        {
+            ++m_num_sprites;
+        }
+        else
+        {
+            // Each set needs to be the same size.
+            // Assert that num_sprites == m_num_sprites
+        }
     }
 
     is.match(TokenType::CloseBrace);

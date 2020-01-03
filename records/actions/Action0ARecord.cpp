@@ -18,6 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action0ARecord.h"
 #include "StreamHelpers.h"
+#include "SpriteIndexRecord.h"
+#include "RecolourRecord.h"
 
 
 void Action0ARecord::read(std::istream& is, const GRFInfo& info)
@@ -86,33 +88,79 @@ uint16_t Action0ARecord::num_sprites_to_read() const
 //     ... 
 
 
+static constexpr const char* str_replacement_sprite_set = "replacement_sprite_set";
+
+
 void Action0ARecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << " // Action0A " << '\n';
-    os << pad(indent) << "{" << '\n';
+    os << pad(indent) << RecordName(record_type()) << " // Action0A\n";
+    os << pad(indent) << "{\n";
 
     uint16_t index = 0;
     for (const auto& set: m_sets)
     {
-        os << pad(indent + 4) << "replacement_sprite_set" << '\n';
-        os << pad(indent + 4) << "{" << '\n';
+        os << pad(indent + 4) << str_replacement_sprite_set;
+        os << "<" << to_hex<uint16_t>(set.first_sprite) << "> // <first_sprite>\n";
+        os << pad(indent + 4) << "{\n";
 
         for (uint16_t i = 0; i < set.num_sprites; ++i)
         {
-            os << pad(indent + 8) << to_hex<uint16_t>(set.first_sprite + i) << ":\n";
+            os << pad(indent + 8) << "// Replace sprite " << to_hex<uint16_t>(set.first_sprite + i) << ":\n";
             print_sprite(index, os, sprites, indent + 8);
             ++index;
         }
 
-        os << pad(indent + 4) << "}" << '\n';
+        os << pad(indent + 4) << "}\n";
     }
 
-    os << pad(indent) << "}" << '\n';
+    os << pad(indent) << "}\n";
 }
 
 
 void Action0ARecord::parse(TokenStream& is)
 {
-    is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action0ARecord::parse not implemented");
+    const std::string ident = RecordName(record_type());
+    is.match_ident(ident);
+    is.match(TokenType::OpenBrace);
+
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        SpriteSet set{};
+        is.match_ident(str_replacement_sprite_set); 
+        is.match(TokenType::OpenAngle);
+        set.first_sprite = is.match_integer();
+        is.match(TokenType::CloseAngle);
+        is.match(TokenType::OpenBrace);
+    
+        while (is.peek().type != TokenType::CloseBrace)
+        {
+            TokenValue token = is.peek();
+            if (token.type == TokenType::Ident)
+            {
+                std::shared_ptr<Record> record;
+                if (token.value == "sprite_id")
+                {
+                    record = std::make_shared<SpriteIndexRecord>(record_type());
+                }
+                else
+                {
+                    record = std::make_shared<RecolourRecord>();
+                }
+                
+                append_sprite(record);
+                record->parse(is);
+                ++set.num_sprites;
+            }
+            else
+            {
+                throw ParserError("Expected SpriteIndexRecord or RecolourRecord identifier here", token);
+            }
+            
+        }
+    
+        is.match(TokenType::CloseBrace);
+        m_sets.push_back(set);
+    }
+
+    is.match(TokenType::CloseBrace);
 }
