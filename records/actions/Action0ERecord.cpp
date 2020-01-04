@@ -18,30 +18,19 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action0ERecord.h"
 #include "StreamHelpers.h"
+#include "Descriptors.h"
 
 
 void Action0ERecord::read(std::istream& is, const GRFInfo& info)
 {
-    uint8_t count = read_uint8(is);
-    for (uint8_t i = 0; i < count; ++i)
-    {
-        GRFLabel grf_id;
-        grf_id.read(is);
-        m_grf_ids.push_back(grf_id);
-    }
+    m_grf_ids.read(is);
 }
 
 
 void Action0ERecord::write(std::ostream& os, const GRFInfo& info) const
 {
     ActionRecord::write(os, info);
-
-    uint8_t count = m_grf_ids.size();
-    write_uint8(os, count);
-    for (const GRFLabel& grf_id: m_grf_ids)
-    {
-        grf_id.write(os);
-    }
+    m_grf_ids.write(os);
 }  
 
 
@@ -51,17 +40,24 @@ void Action0ERecord::write(std::ostream& os, const GRFInfo& info) const
 // }
 
 
+namespace {
+
+
+constexpr const char* str_grf_id = "grf_id";
+
+
+constexpr GRFLabelListDescriptor grf_desc = { 0x00, str_grf_id };
+
+
+} // namespace {
+
+
 void Action0ERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action0E\n";
     os << pad(indent) << "{\n";
 
-    os << pad(indent + 4) << "grf_ids: [";
-    for (const auto& grf_id: m_grf_ids)
-    {
-        os << " \"" << grf_id.to_string() << "\"";
-    }
-    os << " ];\n";
+    grf_desc.print(m_grf_ids, os, indent + 4);
     
     os << pad(indent) << "}\n";
 }
@@ -70,5 +66,10 @@ void Action0ERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 void Action0ERecord::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action0ERecord::parse not implemented");
+    is.match(TokenType::OpenBrace);
+    is.match_ident(str_grf_id);
+    is.match(TokenType::Colon);
+    m_grf_ids.parse(is);
+    is.match(TokenType::SemiColon);
+    is.match(TokenType::CloseBrace);
 }

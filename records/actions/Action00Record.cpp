@@ -125,6 +125,9 @@ void Action00Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+static constexpr const char* str_instance_id = "instance_id";
+
+
 void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action00" << '\n';
@@ -133,7 +136,7 @@ void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t id = m_first_id;
     for (auto instance: m_instances)
     {
-        os << pad(indent + 4) << "instance_id: " << to_hex(id++) << "\n";  
+        os << pad(indent + 4) << str_instance_id << ": " << to_hex(id++) << "\n";  
         os << pad(indent + 4) << "{\n";  
 
         for (auto [property, used]: m_properties_used) 
@@ -207,7 +210,7 @@ void Action00Record::parse(TokenStream& is)
 
     is.match(TokenType::OpenBrace);
 
-    while (is.peek().value == "instance_id")
+    while (is.peek().value == str_instance_id)
     {
         is.match(TokenType::Ident);
         is.match(TokenType::Colon);

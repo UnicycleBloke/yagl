@@ -65,5 +65,12 @@ void Action10Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 void Action10Record::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action10Record::parse not implemented");
+    is.match(TokenType::OpenAngle);
+    m_label = is.match_integer();
+    is.match(TokenType::CloseAngle);
+
+    is.match(TokenType::OpenBrace);
+    m_comment = is.match(TokenType::String);  
+    is.match(TokenType::SemiColon);
+    is.match(TokenType::CloseBrace);
 }

@@ -62,5 +62,8 @@ void Action0CRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 void Action0CRecord::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action0CRecord::parse not implemented");
+    is.match(TokenType::OpenBrace);
+    m_comment = is.match(TokenType::String);
+    is.match(TokenType::SemiColon);
+    is.match(TokenType::CloseBrace);
 }

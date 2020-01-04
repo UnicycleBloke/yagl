@@ -118,8 +118,7 @@ void Action0ARecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
 void Action0ARecord::parse(TokenStream& is)
 {
-    const std::string ident = RecordName(record_type());
-    is.match_ident(ident);
+    is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenBrace);
 
     while (is.peek().type != TokenType::CloseBrace)

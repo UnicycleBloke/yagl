@@ -110,6 +110,9 @@ const EnumDescriptorT<Action12Record::Font> font_desc =
 // }
 
 
+static constexpr const char* str_range = "range";
+
+
 void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action12" << '\n';
@@ -118,7 +121,7 @@ void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t index = 0;    
     for (const auto& range: m_ranges)
     {
-        os << pad(indent + 4) << "range<";
+        os << pad(indent + 4) << str_range << "<";
         os << font_desc.value(range.font);
         os << ", " << to_hex(range.base_char) << ">: <font, base_char>\n";
         os << pad(indent + 4) << "{" << '\n';
@@ -140,5 +143,29 @@ void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 void Action12Record::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action12Record::parse not implemented");
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        Range range{};
+
+        is.match_ident(str_range); 
+        is.match(TokenType::OpenAngle);
+        font_desc.parse(range.font, is);
+        is.match(TokenType::Comma);
+        range.base_char = is.match_integer();
+        is.match(TokenType::CloseAngle);
+
+        is.match(TokenType::OpenBrace);
+        while (is.peek().type != TokenType::CloseBrace)
+        {
+            parse_sprite(is);
+            ++range.num_chars;
+        }
+    
+        is.match(TokenType::CloseBrace);
+        m_ranges.push_back(range);
+    }
+
+    is.match(TokenType::CloseBrace);
 }

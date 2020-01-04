@@ -19,6 +19,7 @@
 #pragma once
 #include "Record.h"
 #include "GRFStrings.h"
+#include "Descriptors.h"
 
 
 // Deactivate other graphics files or force activation of current file.
@@ -46,5 +47,5 @@ public:
     void parse(TokenStream& is) override;
 
 private:
-    std::vector<GRFLabel> m_grf_ids;
+    GRFLabelList m_grf_ids;
 };
