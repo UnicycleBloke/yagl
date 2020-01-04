@@ -53,6 +53,10 @@ void Action11Record::write(std::ostream& os, const GRFInfo& info) const
 //     // Binaries are in the data section directly following this record.
 //     binary("yagl/modern_electric_slow.wav");
 //     binary("yagl/modern_electric_fast.wav");
+//
+//     // Sounds effects imports from other GRFs.
+//     import("GRFx", 0x0001);
+//     import("GRFx", 0x0002);
 // }
 
 
@@ -74,7 +78,13 @@ void Action11Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 void Action11Record::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action11Record::parse not implemented");
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        parse_sprite(is);
+    }
+    is.match(TokenType::CloseBrace);
 }
 
 

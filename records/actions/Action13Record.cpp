@@ -63,40 +63,36 @@ void Action13Record::write(std::ostream& os, const GRFInfo& info) const
     }
 }  
 
-// grf_strings<"GRFX", en_US> // Action04, English (US)
+
+// grf_strings<"GRFX", en_US, 0xC504> // <grf_id, language, first_id> Action13, English (US)
 // {
-//     // Only the first ID is meaningful - others included as an aid.     
-//     0xC504: "Roofs";
-//     0xC505: "Platform";
-//     0xC506: "Benches";
-//     0xC507: "Parking lot (front)";
-//     0xC508: "Parking lot (back)";
-//     0xC509: "Flat roofs";
-//     0xC50A: "Glass roofs";
-//     0xC50B: "Overpass";
-//     0xC50C: "Station Hall (small)";
-//     0xC50D: "Station Hall (large)";
-//     0xC50E: "Underpass";
-//     0xC50F: "empty";
-//     0xC510: "void";
+//     "Roofs"; // 0xC504
+//     "Platform"; // 0xC505
+//     "Benches"; // 0xC506
+//     "Parking lot (front)"; // 0xC507
+//     "Parking lot (back)"; // 0xC508
+//     "Flat roofs"; // 0xC509
+//     "Glass roofs"; // 0xC50A
+//     "Overpass"; // 0xC50B
+//     "Station Hall (small)"; // 0xC50C
+//     "Station Hall (large)"; // 0xC50D
+//     "Underpass"; // 0xC50E
+//     "empty"; // 0xC50F
+//     "void"; // 0xC510
 // }
 
 
 void Action13Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<\"" << m_grf_id.to_string() << "\", ";
-    os << language_iso(m_language) << "> // Action13, " << language_name(m_language) <<  '\n';
-    os << pad(indent) << "{" << '\n';
-
-    if (m_strings.size() > 1)
-    {
-        os << pad(indent + 4) << "// Only the first ID is meaningful - others included as an aid.\n";     
-    }
+    os << language_iso(m_language) << ", ";
+    os << to_hex(m_first_string_id) << "> // <grf_id, language, first_id> Action13, " << language_name(m_language) << "\n";
+    os << pad(indent) << "{\n";
 
     uint16_t string_id = m_first_string_id;
     for (const auto& s: m_strings)
     {
-        os << pad(indent + 4) << to_hex(string_id++) << ": \"" << grf_string_to_readable_utf8(s) << "\";\n";
+        os << pad(indent + 4) << "\"" << grf_string_to_readable_utf8(s) << "\"; //" << to_hex(string_id++) << "\n";
     }
 
     os << pad(indent) << "}\n";
@@ -107,5 +103,20 @@ void Action13Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 void Action13Record::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action13Record::parse not implemented");
+    is.match(TokenType::OpenAngle);
+    m_grf_id.parse(is);
+    is.match(TokenType::Comma);
+    m_language = language_id(is.match(TokenType::Ident));
+    is.match(TokenType::Comma);
+    m_first_string_id = is.match_integer();
+    is.match(TokenType::CloseAngle);
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        m_strings.push_back(is.match(TokenType::String));
+        is.match(TokenType::SemiColon);
+    }
+
+    is.match(TokenType::CloseBrace);
 }

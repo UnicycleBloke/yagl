@@ -118,13 +118,8 @@ void Action01Record::parse(TokenStream& is)
         is.match(TokenType::OpenBrace);
         while (is.peek().type != TokenType::CloseBrace)
         {
+            parse_sprite(is);
             ++num_sprites;
-
-            // The sprite itself contains one or more different version of the 
-            // image, in different zooms and/or colour depths. 
-            auto sprite = std::make_shared<SpriteIndexRecord>(record_type());
-            append_sprite(sprite);
-            sprite->parse(is);
         }
 
         is.match(TokenType::CloseBrace);
@@ -135,7 +130,7 @@ void Action01Record::parse(TokenStream& is)
         ++m_num_sets;
         if (m_num_sets == 1)
         {
-            ++m_num_sprites;
+            m_num_sprites = num_sprites;
         }
         else
         {

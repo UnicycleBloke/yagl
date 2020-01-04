@@ -94,12 +94,15 @@ void Action05Record::write(std::ostream& os, const GRFInfo& info) const
 void Action05Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<";
-    os << NewFeatureName(m_sprite_type) << "> // Action05\n";
+    os << NewFeatureName(m_sprite_type) << ", ";
+    os << to_hex(m_offset) << "> // <new_feature_type, offset>  Action05\n";
     os << pad(indent) << "{\n";
 
     uint16_t num_sprites = num_sprites_to_write();
     for (uint16_t index = 0; index < num_sprites; ++index)
     {
+        os << pad(indent + 4) << "// Replace " << NewFeatureName(m_sprite_type); 
+        os << " sprite " << to_hex<uint16_t>(m_offset + index) << "\n";
         print_sprite(index, os, sprites, indent + 4);
     }
 
@@ -110,5 +113,18 @@ void Action05Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 void Action05Record::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action05Record::parse not implemented");
+    is.match(TokenType::OpenAngle);
+    m_sprite_type = NewFeatureFromName(is.match(TokenType::Ident));
+    is.match(TokenType::Comma);
+    m_offset = is.match_integer();
+    is.match(TokenType::CloseAngle);
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        parse_sprite(is);
+        ++m_num_sprites;
+    }
+
+    is.match(TokenType::CloseBrace);
 }

@@ -134,28 +134,8 @@ void Action0ARecord::parse(TokenStream& is)
     
         while (is.peek().type != TokenType::CloseBrace)
         {
-            TokenValue token = is.peek();
-            if (token.type == TokenType::Ident)
-            {
-                std::shared_ptr<Record> record;
-                if (token.value == "sprite_id")
-                {
-                    record = std::make_shared<SpriteIndexRecord>(record_type());
-                }
-                else
-                {
-                    record = std::make_shared<RecolourRecord>();
-                }
-                
-                append_sprite(record);
-                record->parse(is);
-                ++set.num_sprites;
-            }
-            else
-            {
-                throw ParserError("Expected SpriteIndexRecord or RecolourRecord identifier here", token);
-            }
-            
+            parse_sprite(is);
+            ++set.num_sprites;
         }
     
         is.match(TokenType::CloseBrace);

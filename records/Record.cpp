@@ -18,6 +18,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Record.h"
 #include "StreamHelpers.h"
+#include "RecolourRecord.h"
+#include "ActionFFRecord.h"
+#include "ActionFERecord.h"
+#include "SpriteIndexRecord.h"
 
 
 void ActionRecord::write(std::ostream& os, const GRFInfo& info) const
@@ -82,6 +86,54 @@ void ContainerRecord::print_sprite(uint16_t index, std::ostream& os,
     {
         os << pad(indent) << "Missing record\n"; 
     }
+}
+
+
+// A container may contain four different types of objects. Only certain combinations 
+// are permitted. 
+static const std::map<std::string, uint8_t> g_indices =
+{
+    { "sprite_id",       0x00 }, // Sprite index - indirection for one or several images (zoom levels)
+                                 // Can also be indirection for a binary sound effects stored in the 
+                                 // graphics section of a Container2 file.
+    { "recolour_sprite", 0x01 }, // Colour palette shuffling.
+
+    // Only permitted in Action11 containers.
+    { "binary",          0x02 }, // Binary sound effects directly included in the data section.
+    { "import",          0x03 }, // Binary sound effects imported from other GRFs.
+};
+
+
+// This function added to avoid duplication. Several containers can contain
+// either real sprites or recolour spites. This detects the type of each contained
+// record, and parses it from the stream.
+void ContainerRecord::parse_sprite(TokenStream& is)
+{
+    TokenValue token = is.peek();
+    if (token.type == TokenType::Ident)
+    {
+        std::shared_ptr<Record> record;
+
+        const auto it = g_indices.find(token.value);
+        if (it != g_indices.end())
+        {
+            switch (it->second)
+            {
+                case 0x00: record = std::make_shared<SpriteIndexRecord>(record_type()); break;
+                case 0x01: record = std::make_shared<RecolourRecord>(); break;
+                case 0x02: record = std::make_shared<ActionFFRecord>(); break;
+                case 0x03: record = std::make_shared<ActionFERecord>(); break;
+                default:   throw ParserError("Unexpected record type", token);
+            }
+        } 
+        
+        append_sprite(record);
+        record->parse(is);
+    }
+    else
+    {
+        throw ParserError("Unexpected token type", token);
+    }            
 }
 
 
@@ -201,32 +253,53 @@ FeatureType FeatureFromName(const std::string& name)
 }
 
 
+const std::map<NewFeatureType, std::string> g_new_feature_names =
+{
+    { NewFeatureType::PreSignal,        "PreSignal" },  
+    { NewFeatureType::Catenary,         "Catenary" },  
+    { NewFeatureType::Foundations,      "Foundations" },  
+    { NewFeatureType::TTDPatchGUI,      "TTDPatchGUI" },  
+    { NewFeatureType::Canals,           "Canals" },  
+    { NewFeatureType::OneWayArrows,     "OneWayArrows" },  
+    { NewFeatureType::TwoCompanyColour, "TwoCompanyColour" },  
+    { NewFeatureType::TramTracks,       "TramTracks" },  
+    { NewFeatureType::SnowyTrees,       "SnowyTrees" },  
+    { NewFeatureType::CoastTiles,       "CoastTiles" },  
+    { NewFeatureType::NewSignals,       "NewSignals" },  
+    { NewFeatureType::SlopeTrackMarks,  "SlopeTrackMarks" },  
+    { NewFeatureType::AirportExtra,     "AirportExtra" },  
+    { NewFeatureType::RoadStops,        "RoadStops" },  
+    { NewFeatureType::Aqueducts,        "Aqueducts" },   
+    { NewFeatureType::AutoRail,         "AutoRail" },  
+    { NewFeatureType::Flags,            "Flags" },  
+    { NewFeatureType::OpenTTDGUI,       "OpenTTDGUI" },  
+    { NewFeatureType::AirportPreview,   "AirportPreview" },  
+    { NewFeatureType::RailTypeTunnel,   "RailTypeTunnel" },  
+    { NewFeatureType::ExtraAllBlack,    "ExtraAllBlack" },  
+};
+
+
 std::string NewFeatureName(NewFeatureType type)
 {
-    switch (type)
+    const auto& it = g_new_feature_names.find(type);
+    if (it != g_new_feature_names.end())
     {
-        case NewFeatureType::PreSignal:        return "PreSignal";  
-        case NewFeatureType::Catenary:         return "Catenary";  
-        case NewFeatureType::Foundations:      return "Foundations";  
-        case NewFeatureType::TTDPatchGUI:      return "TTDPatchGUI";  
-        case NewFeatureType::Canals:           return "Canals";  
-        case NewFeatureType::OneWayArrows:     return "OneWayArrows";  
-        case NewFeatureType::TwoCompanyColour: return "TwoCompanyColour";  
-        case NewFeatureType::TramTracks:       return "TramTracks";  
-        case NewFeatureType::SnowyTrees:       return "SnowyTrees";  
-        case NewFeatureType::CoastTiles:       return "CoastTiles";  
-        case NewFeatureType::NewSignals:       return "NewSignals";  
-        case NewFeatureType::SlopeTrackMarks:  return "SlopeTrackMarks";  
-        case NewFeatureType::AirportExtra:     return "AirportExtra";  
-        case NewFeatureType::RoadStops:        return "RoadStops";  
-        case NewFeatureType::Aqueducts:        return "Aqueducts";   
-        case NewFeatureType::AutoRail:         return "AutoRail";  
-        case NewFeatureType::Flags:            return "Flags";  
-        case NewFeatureType::OpenTTDGUI:       return "OpenTTDGUI";  
-        case NewFeatureType::AirportPreview:   return "AirportPreview";  
-        case NewFeatureType::RailTypeTunnel:   return "RailTypeTunnel";  
-        case NewFeatureType::ExtraAllBlack:    return "ExtraAllBlack";  
+        return it->second;
     }
 
     throw RUNTIME_ERROR("NewFeatureName");
+}
+
+
+NewFeatureType NewFeatureFromName(const std::string& name)
+{
+    for (const auto& it: g_new_feature_names)
+    {
+        if (it.second == name)
+        {
+            return it.first;
+        }
+    }
+
+    throw RUNTIME_ERROR("NewFeatureFromName");
 }

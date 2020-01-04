@@ -109,18 +109,14 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
 void Action04Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << ", ";
-    os << language_iso(m_language) << "> // Action04, " << language_name(m_language) << "\n";
+    os << language_iso(m_language) << ", ";
+    os << to_hex(m_first_string_id) << "> // <feature, language, first_id> Action04, " << language_name(m_language) << "\n";
     os << pad(indent) << "{\n";
-
-    if (m_strings.size() > 1)
-    {
-        os << pad(indent + 4) << "// Only the first ID is meaningful - others included as an aid.\n";     
-    }
 
     uint16_t string_id = m_first_string_id;
     for (const auto& s: m_strings)
     {
-        os << pad(indent + 4) << to_hex(string_id++) << ": \"" << grf_string_to_readable_utf8(s) << "\";\n";
+        os << pad(indent + 4) << "\"" << grf_string_to_readable_utf8(s) << "\"; //" << to_hex(string_id++) << "\n";
     }
 
     os << pad(indent) << "}\n";
@@ -134,23 +130,13 @@ void Action04Record::parse(TokenStream& is)
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
     m_language = language_id(is.match(TokenType::Ident));
+    is.match(TokenType::Comma);
+    m_first_string_id = is.match_integer();
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
-
-    bool first = true;
     while (is.peek().type != TokenType::CloseBrace)
     {
-        if (first)
-        {
-            m_first_string_id = is.match_integer();
-        }
-        else
-        {
-            is.match(TokenType::Number);
-        }
-    
-        is.match(TokenType::Colon);
         m_strings.push_back(is.match(TokenType::String));
         is.match(TokenType::SemiColon);
     }

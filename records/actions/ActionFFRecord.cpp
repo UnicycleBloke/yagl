@@ -54,6 +54,9 @@ void ActionFFRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+static constexpr const char* str_binary = "binary";
+
+
 void ActionFFRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     // Get the relative path for the spritesheet. This is used in the YAGL.
@@ -61,14 +64,20 @@ void ActionFFRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     file_path.append(m_filename);
 
     // This need only distinguish itself from an ActionFE record.
-    os << pad(indent) << "binary(\"" << file_path.string() << "\");\n";
+    os << pad(indent) << str_binary << "(\"" << file_path.string() << "\");\n";
 }
 
 
 void ActionFFRecord::parse(TokenStream& is)
 {
-    is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("ActionFFRecord::parse not implemented");
+    is.match_ident(str_binary);
+    is.match(TokenType::OpenParen);
+
+    fs::path file_path{is.match(TokenType::String)};
+    m_filename = file_path.filename();
+
+    is.match(TokenType::CloseParen);
+    is.match(TokenType::SemiColon);
 }
 
 
@@ -80,4 +89,18 @@ void ActionFFRecord::write_binary_file(const std::string& binary_dir)
     std::cout << "Writing binary file: " << binary_path.string() << "...\n";
     std::ofstream os(binary_path, std::ios::binary);
     os.write((char*)&m_binary[0], m_binary.size());
+}
+
+
+void ActionFFRecord::read_binary_file(const std::string& binary_dir)
+{
+    fs::path binary_path(binary_dir);
+    binary_path.append(m_filename);
+
+    std::cout << "Reading binary file: " << binary_path.string() << "...\n";
+    std::ifstream is(binary_path, std::ios::binary);
+    while(is.peek() == EOF)
+    {
+        m_binary.push_back(read_uint8(is));
+    }
 }

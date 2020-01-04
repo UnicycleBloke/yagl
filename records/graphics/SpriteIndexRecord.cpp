@@ -20,6 +20,7 @@
 #include "RealSpriteRecord.h"
 #include "RecolourRecord.h"
 #include "StreamHelpers.h"
+#include "ActionFFRecord.h"
 #include "CommandLineOptions.h"
 
 
@@ -69,17 +70,32 @@ void SpriteIndexRecord::parse(TokenStream& is)
     is.match(TokenType::Colon);
 
     m_sprite_id = is.match_integer();
-    is.match(TokenType::OpenBrace);
 
     // TODO these need to be passed back to the main structure somehow.
     std::vector<std::shared_ptr<Record>> sprite_list;
+
+    is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
-        // Need to create RealSpriteRecord     
-        // Size and compression are place holder values to be read from the token stream.
-        auto sprite = std::make_shared<RealSpriteRecord>(m_sprite_id, 0, 0);
-        sprite_list.push_back(sprite);
-        sprite->parse(is);
+        std::shared_ptr<Record> record;
+
+        // SpriteIndexRecords generally "contain" one or several real sprite images (zoom levels),
+        // But can also contain a single binary sound effect, which is itself found in the graphics
+        // section of the GRF.
+        if (is.peek().type == TokenType::OpenBracket)
+        {
+            // Need to create RealSpriteRecord     
+            // Size and compression are place holder values to be read from the token stream.
+            record = std::make_shared<RealSpriteRecord>(m_sprite_id, 0, 0);
+        }
+        else
+        {
+            // ActionFF is a sound effect.
+            record = std::make_shared<ActionFFRecord>();
+        }
+        
+        sprite_list.push_back(record);
+        record->parse(is);
     }
 
     is.match(TokenType::CloseBrace);

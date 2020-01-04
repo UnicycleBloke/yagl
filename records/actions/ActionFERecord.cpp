@@ -38,16 +38,24 @@ void ActionFERecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+static constexpr const char* str_import = "import";
+
+
 void ActionFERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     // This need only distinguish itself from an ActionFF record.
-    os << pad(indent) << "import(\"" << m_grf_id.to_string() << "\", ";
+    os << pad(indent) << str_import << "(\"" << m_grf_id.to_string() << "\", ";
     os << to_hex(m_sound_index) << ");\n";
 }
 
 
 void ActionFERecord::parse(TokenStream& is)
 {
-    is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("ActionFERecord::parse not implemented");
+    is.match_ident(str_import);
+    is.match(TokenType::OpenParen);
+    m_grf_id.parse(is);
+    is.match(TokenType::Comma);
+    m_sound_index = is.match_integer();
+    is.match(TokenType::CloseParen);
+    is.match(TokenType::SemiColon);
 }

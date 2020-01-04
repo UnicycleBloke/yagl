@@ -122,6 +122,7 @@ enum class NewFeatureType : uint8_t
     ExtraAllBlack    = 0x18,
 };
 std::string NewFeatureName(NewFeatureType type);
+NewFeatureType NewFeatureFromName(const std::string& name);
 
 
 enum class GRFFormat 
@@ -214,6 +215,13 @@ public:
     using ActionRecord::ActionRecord;
     virtual ~ContainerRecord() {}
 
+    // Binary serialisation
+    //void read(std::istream& is, const GRFInfo& info) override {};
+    //void write(std::ostream& os, const GRFInfo& info) const override; 
+    // Text serialisation
+    //void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override {};
+    //void parse(TokenStream& is) override {};
+
     void append_sprite(std::shared_ptr<Record> record) override;
     std::shared_ptr<Record> get_sprite(uint16_t index) const override 
         { return (index < num_sprites_to_write()) ? m_sprites[index] : nullptr; }
@@ -222,6 +230,7 @@ public:
 protected:    
     void print_sprite(uint16_t index, std::ostream& os, 
         const SpriteZoomMap& sprites, uint16_t indent) const;
+    void parse_sprite(TokenStream& is);
 
 private:
     std::vector<std::shared_ptr<Record>> m_sprites;            
