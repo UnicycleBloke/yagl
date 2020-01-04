@@ -633,17 +633,6 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
     SpriteSheetGenerator generator(m_sprites, image_file_base, m_info.format);
     generator.generate();
 
-    // Write out any binary sound effects. These are all held in ActionFF records, which
-    // are the children of any Action11 records we have (there should be only one, I think).
-    for (auto record: m_records)
-    {
-        if (record->record_type() == RecordType::ACTION_11)
-        {
-            const auto action11 = std::dynamic_pointer_cast<Action11Record>(record);
-            action11->write_binary_files(m_sprites, output_dir);
-        }
-    }
-
     // We need to be able to cope with changes in the text format.
     // The simplest approach is to reject text files with different 
     // versions... 
@@ -661,8 +650,21 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
 }
 
 
-void NewGRFData::parse(TokenStream& is)
+// This is used to append a sprite to the current NewGRFData::m_sprites during parsing.
+NewGRFData* g_new_grf_data = nullptr;
+void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite)
 {
+    // Assert not nullptr 
+    g_new_grf_data->append_sprite(sprite_id, sprite);
+}
+
+
+void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std::string& image_file_base)
+{
+    // A bit of a bodge, but provide the ability to append sprites from other classes as 
+    // the objects are created. Probably only needed in SpriteIndexRecord.
+    g_new_grf_data = this;
+
     const TokenValue& token = is.peek();
     if (is.match(TokenType::Ident) != "yagl_version")
     {

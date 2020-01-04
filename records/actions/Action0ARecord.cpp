@@ -18,7 +18,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action0ARecord.h"
 #include "StreamHelpers.h"
-#include "SpriteIndexRecord.h"
 #include "RecolourRecord.h"
 
 

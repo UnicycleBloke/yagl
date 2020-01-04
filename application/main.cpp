@@ -72,15 +72,24 @@ static void encode()
 
     try
     {
+        // We first create the sub-directory for the output files.
+        fs::path yagl_file = options.yagl_file();
+        fs::path yagl_dir  = yagl_file.parent_path();
+        fs::create_directory(yagl_dir);
+
+        // The spritesheet generator appends various things to this base.
+        fs::path image_base = yagl_file;
+        image_base.replace_extension();
+
         // This file already checked for existence.
         // Will need to check for the sprite sheets as we go along.
-        std::ifstream is(options.yagl_file(), std::ios::binary);
+        std::ifstream is(yagl_file, std::ios::binary);
         
         Lexer lexer;
         TokenStream token_stream(lexer.lex(is));
 
         NewGRFData grf_data;
-        grf_data.parse(token_stream); 
+        grf_data.parse(token_stream, yagl_dir, image_base); 
 
         //std::ofstream os(options.grf_file(), std::ios::binary);
         //grf_data.write(os);

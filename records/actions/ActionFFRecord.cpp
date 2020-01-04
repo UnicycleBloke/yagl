@@ -65,6 +65,12 @@ void ActionFFRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
     // This need only distinguish itself from an ActionFE record.
     os << pad(indent) << str_binary << "(\"" << file_path.string() << "\");\n";
+
+    // Write out the actual binary data.
+    CommandLineOptions& options = CommandLineOptions::options();
+    fs::path yagl_file = options.yagl_file();
+    fs::path yagl_dir  = yagl_file.parent_path();
+    write_binary_file(yagl_dir);
 }
 
 
@@ -78,10 +84,16 @@ void ActionFFRecord::parse(TokenStream& is)
 
     is.match(TokenType::CloseParen);
     is.match(TokenType::SemiColon);
+
+    // Read in the actual binary data.
+    CommandLineOptions& options = CommandLineOptions::options();
+    fs::path yagl_file = options.yagl_file();
+    fs::path yagl_dir  = yagl_file.parent_path();
+    read_binary_file(yagl_dir);
 }
 
 
-void ActionFFRecord::write_binary_file(const std::string& binary_dir)
+void ActionFFRecord::write_binary_file(const std::string& binary_dir) const
 {
     fs::path binary_path(binary_dir);
     binary_path.append(m_filename);
@@ -97,9 +109,11 @@ void ActionFFRecord::read_binary_file(const std::string& binary_dir)
     fs::path binary_path(binary_dir);
     binary_path.append(m_filename);
 
-    std::cout << "Reading binary file: " << binary_path.string() << "...\n";
-    std::ifstream is(binary_path, std::ios::binary);
-    while(is.peek() == EOF)
+    const std::string file_path = binary_path.string();
+    std::cout << "Reading binary file: " << file_path << "...\n";
+    
+    std::ifstream is(file_path, std::ios::binary);    
+    while(is.peek() != EOF)
     {
         m_binary.push_back(read_uint8(is));
     }

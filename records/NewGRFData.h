@@ -24,6 +24,10 @@
 #include <map>
 
 
+// This is used to append a sprite to the current NewGRFData::m_sprites during parsing.
+void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite);
+
+
 class NewGRFData
 {
 public:
@@ -32,7 +36,7 @@ public:
     void write(std::ostream& os) const;
     // Text serialisation
     void print(std::ostream& os, const std::string& output_dir, const std::string& image_file_base) const;
-    void parse(TokenStream& is);
+    void parse(TokenStream& is, const std::string& output_dir, const std::string& image_file_base);
 
 private:    
     // Helpers for reading a GRF binary file 
@@ -41,7 +45,8 @@ private:
     void                    read_sprite(std::istream& is, uint32_t sprite_id, uint32_t size, uint8_t compression, const GRFInfo& info);
     std::shared_ptr<Record> make_record(RecordType record_type);
 
-    void append_sprite(uint32_t sprite_id, std::shared_ptr<Record>);
+    friend void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite);
+    void append_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite);
 
     // Helpers for writing a GRF binary file
     void write_format(std::ostream& os) const;
@@ -64,3 +69,5 @@ private:
     // Some images appear to have RGB + A + P.
     std::map<uint32_t, SpriteZoomVector> m_sprites;            
 };
+
+

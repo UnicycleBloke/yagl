@@ -36,9 +36,9 @@ public:
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
     void parse(TokenStream& is) override;
 
-    // This is called to write out binary files for the sound effects. Equivalent to sprite
-    // sheets for images, but a lot simpler.
-    void write_binary_file(const std::string& binary_dir);
+private:
+    // Read and write the actual binary WAV files.
+    void write_binary_file(const std::string& binary_dir) const;
     void read_binary_file(const std::string& binary_dir);
 
 private:

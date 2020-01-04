@@ -157,6 +157,7 @@ struct GRFInfo
 };
 
 
+class NewGRFSpriteAppender;
 class Record;
 using SpriteZoomVector = std::vector<std::shared_ptr<Record>>;
 using SpriteZoomMap    = std::map<uint32_t, SpriteZoomVector>;
@@ -204,7 +205,7 @@ public:
     void write(std::ostream& os, const GRFInfo& info) const override; 
     // Text serialisation
     //void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override {};
-    //void parse(TokenStream& is) override {};
+    //void parse(TokenStream& is, NewGRFSpriteAppender& appender) override {};
 };
 
 
@@ -220,7 +221,7 @@ public:
     //void write(std::ostream& os, const GRFInfo& info) const override; 
     // Text serialisation
     //void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override {};
-    //void parse(TokenStream& is) override {};
+    //void parse(TokenStream& is, NewGRFSpriteAppender& appender) override {};
 
     void append_sprite(std::shared_ptr<Record> record) override;
     std::shared_ptr<Record> get_sprite(uint16_t index) const override 

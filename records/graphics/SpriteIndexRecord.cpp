@@ -21,6 +21,7 @@
 #include "RecolourRecord.h"
 #include "StreamHelpers.h"
 #include "ActionFFRecord.h"
+#include "NewGRFData.h"
 #include "CommandLineOptions.h"
 
 
@@ -71,9 +72,6 @@ void SpriteIndexRecord::parse(TokenStream& is)
 
     m_sprite_id = is.match_integer();
 
-    // TODO these need to be passed back to the main structure somehow.
-    std::vector<std::shared_ptr<Record>> sprite_list;
-
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
@@ -94,8 +92,10 @@ void SpriteIndexRecord::parse(TokenStream& is)
             record = std::make_shared<ActionFFRecord>();
         }
         
-        sprite_list.push_back(record);
         record->parse(is);
+
+        // This adds the sprite to the m_sprites map inside NewGRFData.
+        append_real_sprite(m_sprite_id, record);
     }
 
     is.match(TokenType::CloseBrace);

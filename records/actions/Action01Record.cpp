@@ -17,7 +17,6 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action01Record.h"
-#include "SpriteIndexRecord.h"
 #include "StreamHelpers.h"
 #include "Descriptors.h"
 
