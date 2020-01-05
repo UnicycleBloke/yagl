@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action02IndustryRecord.h"
 #include "StreamHelpers.h"
+#include "Descriptors.h"
 
 
 void Action02IndustryRecord::read(std::istream& is, const GRFInfo& info)
@@ -57,26 +58,10 @@ void Action02IndustryRecord::read(std::istream& is, const GRFInfo& info)
     else if (m_format == Format::Version2)
     {
         // Subtract amounts
-        uint8_t num_input = read_uint8(is);
-        m_version2.sub_in_cargos.resize(num_input);
-        for (uint8_t i = 0; i < num_input; ++i)
-        {
-            Cargo c;
-            c.cargo = read_uint8(is);
-            c.reg   = read_uint8(is);
-            m_version2.sub_in_cargos[i] = c;
-        }
-        
+        m_version2.sub_in_cargos.read(is);
+
         // Add amounts
-        uint8_t num_output = read_uint8(is);
-        m_version2.add_out_cargos.resize(num_output);
-        for (uint8_t i = 0; i < num_output; ++i)
-        {
-            Cargo c;
-            c.cargo = read_uint8(is);
-            c.reg   = read_uint8(is);
-            m_version2.add_out_cargos[i] = c;
-        }
+        m_version2.add_out_cargos.read(is);
 
         // Repeat flag
         m_version2.repeat_reg = read_uint8(is);
@@ -127,20 +112,10 @@ void Action02IndustryRecord::write(std::ostream& os, const GRFInfo& info) const
     else if (m_format == Format::Version2)
     {
         // Subtract amounts
-        write_uint8(os, m_version2.sub_in_cargos.size());
-        for (const auto& c: m_version2.sub_in_cargos)
-        {
-            write_uint8(os, c.cargo);
-            write_uint8(os, c.reg);
-        }
+        m_version2.sub_in_cargos.write(os);
         
         // Add amounts
-        write_uint8(os, m_version2.add_out_cargos.size());
-        for (const auto& c: m_version2.add_out_cargos)
-        {
-            write_uint8(os, c.cargo);
-            write_uint8(os, c.reg);
-        }
+        m_version2.add_out_cargos.write(os);
 
         // Repeat flag
         write_uint8(os, m_version2.repeat_reg);
@@ -152,15 +127,6 @@ void Action02IndustryRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
-using Format = Action02IndustryRecord::Format;
-const EnumNames<Format> g_format_names = 
-{{
-    { Format::Version0, "Version0" },
-    { Format::Version1, "Version1" },
-    { Format::Version2, "Version2" },
-}};
-
-
 // Three different versions of this.
 // industry<Industries, 0xEF, Version1> // Action02 industry
 // {
@@ -170,13 +136,33 @@ const EnumNames<Format> g_format_names =
 // }
 
 
+namespace {
+
+
+constexpr const char* str_format = "format";
+
+
+const EnumDescriptorT<Action02IndustryRecord::Format> desc_format = 
+{ 
+    0x00, str_format,                   
+    {
+        { 0x00, "Version0" },  
+        { 0x01, "Version1" },  
+        { 0x02, "Version2" },
+    }
+};
+
+
+} // namespace {
+
+
 void Action02IndustryRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature); 
     os << ", " << to_hex(m_act02_set_id);
-    os << ", " << g_format_names.name_of(m_format);
-    os << "> // Action02 industry" << '\n';
-    os << pad(indent) << "{" << '\n';
+    os << ", " << desc_format.value(m_format);
+    os << "> // Action02 industry\n";
+    os << pad(indent) << "{\n";
 
     if (m_format == Format::Version0)
     {
@@ -191,71 +177,247 @@ void Action02IndustryRecord::print(std::ostream& os, const SpriteZoomMap& sprite
         print_version2(os, indent + 4);
     }
 
-    os << pad(indent) << "}" << '\n';
+    os << pad(indent) << "}\n";
 }
+
+
+void Action02IndustryRecord::parse(TokenStream& is)
+{
+    is.match_ident(RecordName(record_type()));    
+    is.match(TokenType::OpenAngle);
+    m_feature = FeatureFromName(is.match(TokenType::Ident));
+    is.match(TokenType::Comma);
+    m_act02_set_id = is.match_integer();
+    is.match(TokenType::Comma);
+    desc_format.parse(m_format, is);
+    is.match(TokenType::CloseAngle);
+
+    is.match(TokenType::OpenBrace);
+
+    if (m_format == Format::Version0)
+    {
+        parse_version0(is);
+    }
+    else if (m_format == Format::Version1)
+    {
+        parse_version1(is);
+    }
+    else if (m_format == Format::Version2)
+    {
+        parse_version2(is);
+    }
+
+    is.match(TokenType::CloseBrace);
+}
+
+
+namespace {
+
+
+constexpr const char* str_sub_in_amounts  = "sub_in_amounts";
+constexpr const char* str_add_out_amounts = "add_out_amounts";
+constexpr const char* str_repeat_flag     = "repeat_flag";
+
+constexpr const char* str_sub_in_regs     = "sub_in_registers";
+constexpr const char* str_add_out_regs    = "add_out_registers";
+constexpr const char* str_repeat_reg      = "repeat_register";
+
+constexpr const char* str_sub_in_cargos   = "sub_in_cargos";
+constexpr const char* str_add_out_cargos  = "add_out_cargos";
+
+
+const std::map<std::string, uint8_t> g_indices0 =
+{
+    { str_sub_in_amounts,  0x01 },
+    { str_add_out_amounts, 0x02 },
+    { str_repeat_flag,     0x03 },
+};
+
+const std::map<std::string, uint8_t> g_indices1 =
+{
+    { str_sub_in_regs,  0x01 },
+    { str_add_out_regs, 0x02 },
+    { str_repeat_reg,   0x03 },
+};
+
+const std::map<std::string, uint8_t> g_indices2 =
+{
+    { str_sub_in_cargos,  0x01 },
+    { str_add_out_cargos, 0x02 },
+    { str_repeat_reg,     0x03 },
+};
+
+
+ArrayDescriptorT<uint16_t, 3> desc_sub_in_amounts { 0x01, str_sub_in_amounts,  PropFormat::Hex };
+ArrayDescriptorT<uint16_t, 2> desc_add_out_amounts{ 0x02, str_add_out_amounts, PropFormat::Hex };
+BooleanDescriptor             desc_repeat_flag    { 0x03, str_repeat_flag };
+
+ArrayDescriptorT<uint8_t, 3> desc_sub_in_regs { 0x01, str_sub_in_regs,  PropFormat::Hex };
+ArrayDescriptorT<uint8_t, 2> desc_add_out_regs{ 0x02, str_add_out_regs, PropFormat::Hex };
+IntegerDescriptorT<uint8_t>  desc_repeat_reg  { 0x03, str_repeat_reg };
+
+
+} // namespace {
 
 
 void Action02IndustryRecord::print_version0(std::ostream& os, uint16_t indent) const
 {
-    // Subtract amounts
-    os << pad(indent) << "sub_in_amounts: [ ";
-    os << to_hex(m_version0.sub_in_amounts[0]) << " ";
-    os << to_hex(m_version0.sub_in_amounts[1]) << " ";
-    os << to_hex(m_version0.sub_in_amounts[2]) << " ];\n";
+    desc_sub_in_amounts.print(m_version0.sub_in_amounts, os, indent);
+    desc_add_out_amounts.print(m_version0.add_out_amounts, os, indent);
+    desc_repeat_flag.print(m_version0.repeat_flag, os, indent);
+}   
 
-    // Add amounts
-    os << pad(indent) << "add_out_amounts: [ ";
-    os << to_hex(m_version0.add_out_amounts[0]) << " ";
-    os << to_hex(m_version0.add_out_amounts[1]) << " ];\n";
 
-    // Repeat flag
-    os << pad(indent) << "repeat_flag: " << to_bool(m_version0.repeat_flag) << ";\n";
+void Action02IndustryRecord::parse_version0(TokenStream& is)
+{
+    TokenValue token = is.peek();
+    const auto& it = g_indices0.find(token.value);
+    if (it != g_indices0.end())
+    {
+        is.match(TokenType::Ident);
+        is.match(TokenType::Colon);
+
+        switch (it->second)
+        {
+            case 0x01: desc_sub_in_amounts.parse(m_version0.sub_in_amounts, is); break;
+            case 0x02: desc_add_out_amounts.parse(m_version0.add_out_amounts, is); break;
+            case 0x03: desc_repeat_flag.parse(m_version0.repeat_flag, is); break;
+        }
+
+        is.match(TokenType::SemiColon);
+    }
+    else
+    {
+        throw ParserError("Unexpected identifier: " + token.value, token);
+    }
 }   
 
 
 void Action02IndustryRecord::print_version1(std::ostream& os, uint16_t indent) const  
 {
-    // Subtract amounts
-    os << pad(indent) << "sub_in_registers: [ ";
-    os << to_hex(m_version1.sub_in_regs[0]) << " ";
-    os << to_hex(m_version1.sub_in_regs[1]) << " ";
-    os << to_hex(m_version1.sub_in_regs[2]) << " ];\n";
-
-    // Add amounts
-    os << pad(indent) << "add_out_registers: [ ";
-    os << to_hex(m_version1.add_out_regs[0]) << " ";
-    os << to_hex(m_version1.add_out_regs[1]) << " ];\n";
-
-    // Repeat flag
-    os << pad(indent) << "repeat_register: " << to_hex(m_version1.repeat_reg) << ";\n";
+    desc_sub_in_regs.print(m_version1.sub_in_regs, os, indent);
+    desc_add_out_regs.print(m_version1.add_out_regs, os, indent);
+    desc_repeat_reg.print(m_version1.repeat_reg, os, indent);
 }   
+
+
+void Action02IndustryRecord::parse_version1(TokenStream& is)
+{
+    TokenValue token = is.peek();
+    const auto& it = g_indices1.find(token.value);
+    if (it != g_indices1.end())
+    {
+        is.match(TokenType::Ident);
+        is.match(TokenType::Colon);
+
+        switch (it->second)
+        {
+            case 0x01: desc_sub_in_regs.parse(m_version1.sub_in_regs, is); break;
+            case 0x02: desc_add_out_regs.parse(m_version1.add_out_regs, is); break;
+            case 0x03: desc_repeat_reg.parse(m_version1.repeat_reg, is); break;
+        }
+
+        is.match(TokenType::SemiColon);
+    }
+    else
+    {
+        throw ParserError("Unexpected identifier: " + token.value, token);
+    }
+}   
+
+
+void Action02IndustryRecord::CargoList::read(std::istream& is)
+{
+    uint8_t num_input = read_uint8(is);
+    cargos.resize(num_input);
+    for (uint8_t i = 0; i < num_input; ++i)
+    {
+        Cargo c;
+        c.cargo = read_uint8(is);
+        c.reg   = read_uint8(is);
+        cargos[i] = c;
+    }
+}
+
+
+void Action02IndustryRecord::CargoList::write(std::ostream& os) const
+{
+    write_uint8(os, cargos.size());
+    for (const auto& c: cargos)
+    {
+        write_uint8(os, c.cargo);
+        write_uint8(os, c.reg);
+    }
+}
+
+
+void Action02IndustryRecord::CargoList::print(std::ostream& os, uint16_t indent) const
+{
+    os << "[";
+    for (const auto& c: cargos)
+    {
+        os << " (" << to_hex(c.cargo) << ", " << to_hex(c.reg) << ")";
+    }
+    os << " ];\n";
+}
+
+
+void Action02IndustryRecord::CargoList::parse(TokenStream& is)
+{
+    is.match(TokenType::OpenBracket);
+    while (is.peek().type != TokenType::CloseBracket)
+    {
+        Cargo c = {};
+
+        is.match(TokenType::OpenParen);
+        c.cargo = is.match_integer();
+        is.match(TokenType::Comma);
+        c.reg   = is.match_integer();
+        is.match(TokenType::CloseParen);
+
+        cargos.push_back(c);
+    }
+
+    is.match(TokenType::CloseBracket);
+}
 
 
 void Action02IndustryRecord::print_version2(std::ostream& os, uint16_t indent) const    
 {
     // Subtract amounts
-    os << pad(indent) << "sub_in_cargos: [ ";
-    for (const auto& c: m_version2.sub_in_cargos)
-    {
-        os << "(" << to_hex(c.cargo) << ", " << to_hex(c.reg) << ") ";
-    }
-    os << " ];\n";
+    os << pad(indent) << str_sub_in_cargos << ": ";
+    m_version2.sub_in_cargos.print(os, indent);
     
     // Add amounts
-    os << pad(indent) << "add_out_cargos: [ ";
-    for (const auto& c: m_version2.add_out_cargos)
-    {
-        os << "(" << to_hex(c.cargo) << ", " << to_hex(c.reg) << ") ";
-    }
-    os << " ];\n";
+    os << pad(indent) << str_add_out_cargos << ": [ ";
+    m_version2.add_out_cargos.print(os, indent);
 
     // Repeat flag
-    os << pad(indent) << "repeat_register: " << to_hex(m_version1.repeat_reg) << ";\n";
+    desc_repeat_reg.print(m_version2.repeat_reg, os, indent);
 }   
 
 
-void Action02IndustryRecord::parse(TokenStream& is)
+void Action02IndustryRecord::parse_version2(TokenStream& is)
 {
-    is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action02IndustryRecord::parse not implemented");
-}
+    TokenValue token = is.peek();
+    const auto& it = g_indices1.find(token.value);
+    if (it != g_indices1.end())
+    {
+        is.match(TokenType::Ident);
+        is.match(TokenType::Colon);
+
+        switch (it->second)
+        {
+            case 0x01: m_version2.sub_in_cargos.parse(is); break;
+            case 0x02: m_version2.add_out_cargos.parse(is); break;
+            case 0x03: desc_repeat_reg.parse(m_version2.repeat_reg, is); break;
+        }
+
+        is.match(TokenType::SemiColon);
+    }
+    else
+    {
+        throw ParserError("Unexpected identifier: " + token.value, token);
+    }
+}   
+
