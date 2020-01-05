@@ -75,8 +75,16 @@ constexpr const char* str_primary_spritesets = "primary_spritesets";
 constexpr const char* str_secondary_spritesets = "secondary_spritesets"; 
 
 
+// Fake property numbers to facilitate out of order parsing.
+const std::map<std::string, uint8_t> g_indices =
+{
+    { str_primary_spritesets,   0x00 },
+    { str_secondary_spritesets, 0x01 },
+};
+
+
 const IntegerListDescriptorT<uint16_t> primary_desc  {0x00, str_primary_spritesets,   PropFormat::Hex };
-const IntegerListDescriptorT<uint16_t> secondary_desc{0x00, str_secondary_spritesets, PropFormat::Hex };
+const IntegerListDescriptorT<uint16_t> secondary_desc{0x01, str_secondary_spritesets, PropFormat::Hex };
 
 
 } // namespace {
@@ -114,17 +122,29 @@ void Action02BasicRecord::parse(TokenStream& is)
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
-    
-    while (is.peek().type != TokenType::CloseBrace)
+
+    // Could theoretically set the same members multiple times, but only the last will count.
+    // Could maintain a bit field to check for this happening.
+    while (is.peek().type == TokenType::Ident)
     {
-        std::string name = is.match(TokenType::String);
-        if (name == str_primary_spritesets)
+        TokenValue token = is.peek();
+        const auto& it = g_indices.find(token.value);
+        if (it != g_indices.end())
         {
-            primary_desc.parse(m_act01_set_ids_1, is);
+            is.match(TokenType::Ident);
+            is.match(TokenType::Colon);
+
+            switch (it->second)
+            {
+                case 0x00: primary_desc.parse(m_act01_set_ids_1, is); break;
+                case 0x01: secondary_desc.parse(m_act01_set_ids_2, is); break;
+            }
+
+            is.match(TokenType::SemiColon);
         }
-        if (name == str_primary_spritesets)
+        else
         {
-            secondary_desc.parse(m_act01_set_ids_2, is);
+            throw ParserError("Unexpected identifier: " + token.value, token);
         }
     }
 

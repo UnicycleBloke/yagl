@@ -35,7 +35,7 @@ public:
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
     void parse(TokenStream& is) override;
 
-private:
+public:
     // Use 80 to randomize the object (vehicle, station, building, industry, object) 
     //   based on its own triggers and bits.
     // Use 83 to randomize the object based on its "related" object (s.b.).
@@ -50,22 +50,26 @@ private:
     enum class ConsistType : uint8_t
     {
         BackwardFromVehicle = 0x00,
-        ForewardFromVehicle = 0x40,
+        ForwardFromVehicle  = 0x40,
         BackwardFromEngine  = 0x80,
         BackwardFromSameID  = 0xC0
     };
 
 private:
-    FeatureType           m_feature;
-    uint8_t               m_set_id;
-    RandomType            m_type;
+    FeatureType           m_feature = FeatureType::Trains;
+    uint8_t               m_set_id  = 0;
+    RandomType            m_type    = RandomType::Object;
 
     // Only present if type is RandomType::Consist 
-    uint8_t               m_count;
-    ConsistType           m_method;
+    uint8_t               m_count   = 0;
+    ConsistType           m_method  = ConsistType::BackwardFromEngine;
     
-    uint8_t               m_triggers;
-    uint8_t               m_randbit;
-    // Number of set IDs. Must be a power of 2 
-    std::vector<uint16_t> m_set_ids;
+    uint8_t               m_triggers = 0;
+    uint8_t               m_randbit  = 0;
+    
+    // Number of set IDs must be a power of 2. A map is 
+    // used to account for duplicates. Using a map will 
+    // reorder the set IDs into blocks: probably doesn't 
+    // matter.
+    std::map<uint16_t, uint16_t> m_set_ids;
 };

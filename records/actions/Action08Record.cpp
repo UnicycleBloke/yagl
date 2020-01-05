@@ -100,13 +100,12 @@ void Action08Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
 void Action08Record::parse(TokenStream& is)
 {
-    const std::string ident = RecordName(record_type());
-    is.match_ident(ident);
-    is.match(TokenType::OpenBrace);
+    is.match_ident(RecordName(record_type()));
 
     // Could theoretically set the same members multiple times, but only the last will count.
     // Could maintain a bit field to check for this happening.
-    while (is.peek().type == TokenType::Ident)
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
     {
         TokenValue token = is.peek();
         const auto& it = g_indices.find(token.value);

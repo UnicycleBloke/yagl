@@ -62,6 +62,10 @@ void Action06Record::write(std::ostream& os, const GRFInfo& info) const
 // }
 
 
+static constexpr const char* str_modification = "modification";
+static constexpr const char* str_parameter    = "parameter";
+
+
 void Action06Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action06\n";
@@ -70,8 +74,8 @@ void Action06Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
     for (const auto& mod: m_modifications)
     {
-        os << pad(indent + 4) << "modification("; 
-        os << "parameter[" << to_hex(mod.param_num) << "], ";
+        os << pad(indent + 4) << str_modification << "("; 
+        os << str_parameter << "[" << to_hex(mod.param_num) << "], ";
         os << static_cast<uint16_t>(mod.param_size) << ", ";
         os << mod.offset << ", ";
         os << (mod.add_bytes ? "true" : "false") << ");\n";
@@ -84,5 +88,33 @@ void Action06Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 void Action06Record::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action06Record::parse not implemented");
+    
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        Modification mod;
+
+        is.match_ident(str_modification);
+        is.match(TokenType::OpenParen);
+
+        is.match_ident(str_parameter);
+        is.match(TokenType::OpenBracket);
+        mod.param_num = is.match_integer();
+        is.match(TokenType::CloseBracket);
+        is.match(TokenType::Comma);
+
+        mod.param_size = is.match_integer();
+        is.match(TokenType::Comma);
+
+        mod.offset = is.match_integer();
+        is.match(TokenType::Comma);
+
+        mod.add_bytes = is.match_bool();
+        is.match(TokenType::CloseParen);
+        is.match(TokenType::SemiColon);
+
+        m_modifications.push_back(mod);
+    }
+
+    is.match(TokenType::CloseBrace);
 }

@@ -89,17 +89,21 @@ void Action0BRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
-static const EnumDescriptorT<Action0BRecord::Severity> severity_desc = 
-{ 
-    0x00, "severity",                   
-    {
-        { 0, "Notice" },  // Severity::Notice },    
-        { 1, "Warning" }, // Severity::Warning }, 
-        { 2, "Error" },   // Severity::Error }, 
-        { 3, "Fatal" },   // Severity::Fatal }, 
-    }
-};
+// error_message<Warning, default> // Action0B <severity, language>
+// {
+//     message_id: 0x05; // {substring1} must be loaded after {substring1}.
+//     message_data: "NuTracks"; // Second substring
+// }
 
+
+namespace {
+
+
+constexpr const char* str_message_id     = "message_id";
+constexpr const char* str_custom_message = "custom_message";
+constexpr const char* str_message_data   = "message_data";
+constexpr const char* str_param1         = "param1";
+constexpr const char* str_param2         = "param2";
 
 // From the NewGRF specs:
 constexpr const char* str_message_00 = "\x80 requires at least TTDPatch version \x80";
@@ -111,11 +115,36 @@ constexpr const char* str_message_05 = "\x80 must be loaded after \x80.";
 constexpr const char* str_message_06 = "\x80 equires OpenTTD version \x80 or better."; 
 
 
-// error_message<Warning, default> // Action0B <severity, language>
-// {
-//     message_id: 0x05; // {substring1} must be loaded after {substring1}.
-//     message_data: "NuTracks"; // Second substring
-// }
+// Fake property numbers to facilitate out of order parsing.
+const std::map<std::string, uint8_t> g_indices =
+{
+    { str_message_id,     0x01 },
+    { str_custom_message, 0x02 },
+    { str_message_data,   0x03 },
+    { str_param1,         0x04 },
+    { str_param2,         0x05 },
+};
+
+
+const EnumDescriptorT<Action0BRecord::Severity> severity_desc = 
+{ 
+    0x00, "severity",                   
+    {
+        { 0, "Notice" },  // Severity::Notice },    
+        { 1, "Warning" }, // Severity::Warning }, 
+        { 2, "Error" },   // Severity::Error }, 
+        { 3, "Fatal" },   // Severity::Fatal }, 
+    }
+};
+
+const IntegerDescriptorT<uint8_t> desc_message_id  { 0x01, str_message_id, PropFormat::Hex };
+const StringDescriptor            desc_message     { 0x02, str_custom_message };
+const StringDescriptor            desc_message_data{ 0x03, str_message_data };
+const IntegerDescriptorT<uint8_t> desc_param1      { 0x04, str_param1, PropFormat::Hex };
+const IntegerDescriptorT<uint8_t> desc_param2      { 0x05, str_param2, PropFormat::Hex };
+
+
+} // namespace {
 
 
 void Action0BRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
@@ -125,33 +154,33 @@ void Action0BRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << language_iso(m_language_id) << "> // Action0B <severity, language>\n";
     os << pad(indent) << "{\n";
 
-    os << pad(indent + 4) << "message_id: " << to_hex(m_message_id) << ";";
+    desc_message_id.print(m_message_id, os, indent + 4);
     // Indicate the standard message, if this is one.
     switch (m_message_id)
     {
         case 0x00: os << " // " << grf_string_to_readable_utf8(str_message_00); break;
-        case 0x01: os << " // " <<  grf_string_to_readable_utf8(str_message_01); break;
-        case 0x02: os << " // " <<  grf_string_to_readable_utf8(str_message_02); break;
-        case 0x03: os << " // " <<  grf_string_to_readable_utf8(str_message_03); break;
-        case 0x04: os << " // " <<  grf_string_to_readable_utf8(str_message_04); break;
-        case 0x05: os << " // " <<  grf_string_to_readable_utf8(str_message_05); break;
-        case 0x06: os << " // " <<  grf_string_to_readable_utf8(str_message_06); break;
+        case 0x01: os << " // " << grf_string_to_readable_utf8(str_message_01); break;
+        case 0x02: os << " // " << grf_string_to_readable_utf8(str_message_02); break;
+        case 0x03: os << " // " << grf_string_to_readable_utf8(str_message_03); break;
+        case 0x04: os << " // " << grf_string_to_readable_utf8(str_message_04); break;
+        case 0x05: os << " // " << grf_string_to_readable_utf8(str_message_05); break;
+        case 0x06: os << " // " << grf_string_to_readable_utf8(str_message_06); break;
     }
     os << "\n";
 
     if (m_message_id == 0xFF)
     {
-        os << pad(indent + 4) << "custom_message: \"" << grf_string_to_readable_utf8(m_custom_message) << "\";\n";
+        desc_message.print(m_custom_message, os, indent +4);
     }
 
-    os << pad(indent + 4) << "message_data: \"" << grf_string_to_readable_utf8(m_message_data) << "\"; // Second substring\n";
+    desc_message_data.print(m_message_data, os, indent +4);
     if (m_num_params > 0)
     {
-        os << pad(indent + 4) << "param1: " << to_hex(m_param1) << ";\n";
+        desc_param1.print(m_param1, os, indent + 4);
     }
     if (m_num_params > 1)
     {
-        os << pad(indent + 4) << "param2: " << to_hex(m_param2) << ";\n";
+        desc_param2.print(m_param2, os, indent + 4);
     }
 
     os << pad(indent) << "}\n";
@@ -161,6 +190,39 @@ void Action0BRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 void Action0BRecord::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action0BRecord::parse not implemented");
+    is.match(TokenType::OpenAngle);
+    severity_desc.parse(m_severity, is);
+    is.match(TokenType::Comma);
+    m_language_id = language_id(is.match(TokenType::Ident));
+    is.match(TokenType::CloseAngle);
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        TokenValue token = is.peek();
+        const auto& it = g_indices.find(token.value);
+        if (it != g_indices.end())
+        {
+            is.match(TokenType::Ident);
+            is.match(TokenType::Colon);
+
+            switch (it->second)
+            {
+                case 0x01: desc_message_id.parse(m_message_id, is); break;
+                case 0x02: desc_message.parse(m_custom_message, is); break;
+                case 0x03: desc_message_data.parse(m_message_data, is); break;
+                case 0x04: desc_param1.parse(m_param1, is); break;
+                case 0x05: desc_param2.parse(m_param2, is); break;
+            }
+
+            is.match(TokenType::SemiColon);
+        }
+        else
+        {
+            throw ParserError("Unexpected identifier: " + token.value, token);
+        }
+    }
+
+    is.match(TokenType::CloseBrace);
 }
 
