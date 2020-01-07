@@ -112,7 +112,7 @@ constexpr const char* str_message_02 = "\x80 is designed to be used with \x80"; 
 constexpr const char* str_message_03 = "Invalid parameter for \x80: parameter \x80 ( \x7B )"; // <data> should be the switch number written out ("5")
 constexpr const char* str_message_04 = "\x80 must be loaded before \x80.";
 constexpr const char* str_message_05 = "\x80 must be loaded after \x80.";
-constexpr const char* str_message_06 = "\x80 equires OpenTTD version \x80 or better."; 
+constexpr const char* str_message_06 = "\x80 requires OpenTTD version \x80 or better."; 
 
 
 // Fake property numbers to facilitate out of order parsing.
@@ -156,17 +156,21 @@ void Action0BRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
     desc_message_id.print(m_message_id, os, indent + 4);
     // Indicate the standard message, if this is one.
+    const char* std_message = nullptr;
     switch (m_message_id)
     {
-        case 0x00: os << " // " << grf_string_to_readable_utf8(str_message_00); break;
-        case 0x01: os << " // " << grf_string_to_readable_utf8(str_message_01); break;
-        case 0x02: os << " // " << grf_string_to_readable_utf8(str_message_02); break;
-        case 0x03: os << " // " << grf_string_to_readable_utf8(str_message_03); break;
-        case 0x04: os << " // " << grf_string_to_readable_utf8(str_message_04); break;
-        case 0x05: os << " // " << grf_string_to_readable_utf8(str_message_05); break;
-        case 0x06: os << " // " << grf_string_to_readable_utf8(str_message_06); break;
+        case 0x00: std_message = str_message_00; break;
+        case 0x01: std_message = str_message_01; break;
+        case 0x02: std_message = str_message_02; break;
+        case 0x03: std_message = str_message_03; break;
+        case 0x04: std_message = str_message_04; break;
+        case 0x05: std_message = str_message_05; break;
+        case 0x06: std_message = str_message_06; break;
     }
-    os << "\n";
+    if (std_message != nullptr)
+    {
+        os << pad(indent + 4) << "// " << grf_string_to_readable_utf8(std_message) << "\n";
+    }
 
     if (m_message_id == 0xFF)
     {

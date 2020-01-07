@@ -94,7 +94,7 @@ namespace {
 constexpr const char* str_target         = "target";
 constexpr const char* str_source1        = "source1";
 constexpr const char* str_source2        = "source2";
-constexpr const char* str_param          = "param";
+constexpr const char* str_param          = "parameter";
 constexpr const char* str_global_var     = "global_var";
 constexpr const char* str_patch_var      = "patch_var";
 constexpr const char* str_operator       = "operator";
@@ -102,6 +102,7 @@ constexpr const char* str_not_if_defined = "not_if_defined";
 constexpr const char* str_grf_id         = "grf_id";
 constexpr const char* str_feature        = "feature";
 constexpr const char* str_number         = "number";
+constexpr const char* str_expression     = "expression";
 
 
 const EnumDescriptorT<Action0DRecord::Type> desc_type 
@@ -150,6 +151,31 @@ constexpr BooleanDescriptor            desc_defined = { 0x00, str_not_if_defined
 constexpr GRFLabelDescriptor           desc_grf_id  = { 0x00, str_grf_id };
 constexpr IntegerDescriptorT<uint16_t> desc_number  = { 0x00, str_number, PropFormat::Dec };
 
+
+const char* short_op(Action0DRecord::Operation op)
+{
+    using Op = Action0DRecord::Operation;
+    switch (op)
+    {
+        // u and s to disambiguate signed and unsigned is an experiment - ugly.
+        case Op::Assignment:       return "=";
+        case Op::Addition:         return "+";
+        case Op::Subtraction:      return "-";
+        case Op::MultiplyUnsigned: return "*u";
+        case Op::MultiplySigned:   return "*s";
+        case Op::BitShiftUnsigned: return "<<u";
+        case Op::BitShiftSigned:   return "<<s";
+        case Op::BitwiseAND:       return "&";
+        case Op::BitwiseOR:        return "|";
+        case Op::DivideUnsigned:   return "/u";
+        case Op::DivideSigned:     return "/s";
+        case Op::ModuloUnsigned:   return "%u";
+        case Op::ModuloSigned:     return "%s";
+    }
+
+    // Should never get here.
+    return "?";
+}
 
 } // namespace {
 
@@ -207,10 +233,22 @@ std::string Action0DRecord::param_description(uint8_t param) const
 void Action0DRecord::print_param(std::ostream& os, uint16_t indent) const
 {
     // Create a descriptor to decode these strings?
-    os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
-    os << pad(indent) << str_source1 << ": " << param_description(m_source1) << ";\n";
-    os << pad(indent) << str_source2 << ": " << param_description(m_source2) << ";\n";
-    desc_operator.print(m_operation, os, indent);
+    //os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
+    //os << pad(indent) << str_source1 << ": " << param_description(m_source1) << ";\n";
+    //if (m_operation != Operation::Assignment)
+    //{
+    //    os << pad(indent) << str_source2 << ": " << param_description(m_source2) << ";\n";
+    //}
+    //desc_operator.print(m_operation, os, indent);
+
+    // This expression is better than four properties. Might be harder to parse.
+    os << pad(indent) << str_expression << ": " << param_description(m_target) << " = " << param_description(m_source1);
+    if (m_operation != Operation::Assignment)
+    {  
+        os << " " << short_op(m_operation) << " " << param_description(m_source2);
+    }
+    os << ";\n";
+
     desc_defined.print(m_not_if_defined, os, indent);
 }
 
@@ -224,8 +262,11 @@ void Action0DRecord::print_param(std::ostream& os, uint16_t indent) const
 
 void Action0DRecord::print_other(std::ostream& os, uint16_t indent) const
 {
-    os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
-    os << pad(indent) << str_source1 << ":"  "<\"" << m_grf_id.to_string() << "\">" << param_description(m_source1) << ";\n"; 
+    //os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
+    //os << pad(indent) << str_source1 << ":"  "<\"" << m_grf_id.to_string() << "\">" << param_description(m_source1) << ";\n"; 
+
+    os << pad(indent) << str_expression << ": " << param_description(m_target) << " = ";
+    os << "<\"" << m_grf_id.to_string() << "\">" << param_description(m_source1) << ";\n"; 
 }
 
 
@@ -238,8 +279,12 @@ void Action0DRecord::print_other(std::ostream& os, uint16_t indent) const
 
 void Action0DRecord::print_patch(std::ostream& os, uint16_t indent) const
 {
-    os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
-    os << pad(indent) << str_source1 << ": " << str_patch_var << "[" << to_hex(m_source1) << ";\n";
+    //os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
+    //os << pad(indent) << str_source1 << ": " << str_patch_var << "[" << to_hex(m_source1) << ";\n";
+
+    os << pad(indent) << str_expression << ": " << param_description(m_target) << " = ";
+    os << str_patch_var << "[" << to_hex(m_source1) << "];\n";
+
 }
 
 
@@ -254,10 +299,14 @@ void Action0DRecord::print_patch(std::ostream& os, uint16_t indent) const
 
 void Action0DRecord::print_resources(std::ostream& os, uint16_t indent) const
 {
-    os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
-    desc_grm_op.print(static_cast<GRMOperator>(m_source1), os, indent);
-    os << pad(indent) << str_feature << ": " << FeatureName(m_feature) << ";\n";
-    desc_number.print(m_number, os, indent);
+    //os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
+    //desc_grm_op.print(static_cast<GRMOperator>(m_source1), os, indent);
+    //os << pad(indent) << str_feature << ": " << FeatureName(m_feature) << ";\n";
+    //desc_number.print(m_number, os, indent);
+
+    os << pad(indent) << str_expression << ": " << param_description(m_target) << " = ";
+    os << desc_grm_op.value(static_cast<GRMOperator>(m_source1)) << "(";
+    os << FeatureName(m_feature) << ", " << to_hex(m_number) << ");\n";  
 }
     
 
