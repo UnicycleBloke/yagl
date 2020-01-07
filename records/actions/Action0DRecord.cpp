@@ -19,6 +19,7 @@
 #include "Action0DRecord.h"
 #include "StreamHelpers.h"
 #include "GRFStrings.h"
+#include "Descriptors.h"
 #include <sstream>
 
 
@@ -28,8 +29,8 @@ void Action0DRecord::read(std::istream& is, const GRFInfo& info)
     
     uint8_t operation = read_uint8(is);
     // This action only applies to parameters not already defined?
-    m_if_undefined = (operation & 0x80) != 0x00;
-    m_operation    = static_cast<Operation>(operation & 0x7F);
+    m_not_if_defined = (operation & 0x80) != 0x00;
+    m_operation      = static_cast<Operation>(operation & 0x7F);
     
     m_source1   = read_uint8(is);
     m_source2   = read_uint8(is);   
@@ -47,7 +48,7 @@ void Action0DRecord::write(std::ostream& os, const GRFInfo& info) const
     ActionRecord::write(os, info);
 
     write_uint8(os, m_target);
-    write_uint8(os, static_cast<uint8_t>(m_operation) | (m_if_undefined ? 0x80 : 0x00));
+    write_uint8(os, static_cast<uint8_t>(m_operation) | (m_not_if_defined ? 0x80 : 0x00));
     write_uint8(os, m_source1);
     write_uint8(os, m_source2);
 
@@ -64,122 +65,200 @@ bool Action0DRecord::has_data() const
 }
 
 
-// set_parameter // Action0D
-// {
-//     parameter[0x75]: global_var[0x9D];
-//     only_undefined: false;
-// }
-// set_parameter // Action0D
-// {
-//     parameter[0x76]: parameter[0x75] - 0x00000001;
-//     only_undefined: false;
-// }
-// set_parameter // Action0D
-// {
-//     parameter[0x76]: parameter[0x76] / parameter[0x76], signed;
-//     only_undefined: false;
-// }
-// set_parameter // Action0D
-// {
-//     parameter[0x74]: global_var[0xA1];
-//     only_undefined: false;
-// }
+Action0DRecord::Type Action0DRecord::type() const
+{
+    // Check for special operations
+    if (m_source2 == 0xFE)
+    {
+        if (m_data == 0xFFFF)
+        {
+            return Type::Patch;
+        } 
+        else if ((m_data & 0x00FF) == 0x00FF)
+        {
+            return Type::Resources;
+        }
+        else 
+        {
+            return Type::OtherGRF;
+        }
+    }
+
+    return Type::Param;
+}
+
+
+namespace {
+
+
+constexpr const char* str_target         = "target";
+constexpr const char* str_source1        = "source1";
+constexpr const char* str_source2        = "source2";
+constexpr const char* str_param          = "param";
+constexpr const char* str_global_var     = "global_var";
+constexpr const char* str_patch_var      = "patch_var";
+constexpr const char* str_operator       = "operator";
+constexpr const char* str_not_if_defined = "not_if_defined";
+constexpr const char* str_grf_id         = "grf_id";
+constexpr const char* str_feature        = "feature";
+constexpr const char* str_number         = "number";
+
+
+const EnumDescriptorT<Action0DRecord::Type> desc_type 
+{ 
+    0x00, "type", 
+    {
+        { 0, "Param" },      
+        { 1, "Patch" },  
+        { 2, "Resources" },
+        { 3, "OtherGRF" }, 
+    }
+};
+const EnumDescriptorT<Action0DRecord::Operation> desc_operator 
+{ 
+    0x00, str_operator, 
+    {
+        { 0x00, "Assignment" },
+        { 0x01, "Addition" },
+        { 0x02, "Subtraction" },
+        { 0x03, "MultiplyUnsigned" },
+        { 0x04, "MultiplySigned" },
+        { 0x05, "BitShiftUnsigned" },
+        { 0x06, "BitShiftSigned" },
+        { 0x07, "BitwiseAND" },
+        { 0x08, "BitwiseOR" },
+        { 0x09, "DivideUnsigned" },
+        { 0x0A, "DivideSigned" },
+        { 0x0B, "ModuloUnsigned" },
+        { 0x0C, "ModuloSigned" },
+    }
+};        
+const EnumDescriptorT<Action0DRecord::GRMOperator> desc_grm_op 
+{
+    0x00, str_operator, 
+    {
+        { 0x00, "GRM_Reserve" },
+        { 0x01, "GRM_Find" },
+        { 0x02, "GRM_Check" },
+        { 0x03, "GRM_Mark" },
+        { 0x04, "GRM_FindNoFail" },
+        { 0x05, "GRM_CheckNoFail" },
+        { 0x06, "GRM_GetOwner" },
+    }    
+};
+constexpr BooleanDescriptor            desc_defined = { 0x00, str_not_if_defined };
+constexpr GRFLabelDescriptor           desc_grf_id  = { 0x00, str_grf_id };
+constexpr IntegerDescriptorT<uint16_t> desc_number  = { 0x00, str_number, PropFormat::Dec };
+
+
+} // namespace {
 
 
 void Action0DRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    // This is sooooo complicated. Action0D is a bit complicated, with the various values interpreted
-    // in a multiple different ways. The code attempts to print something which is unambiguous so that 
-    // it can be easily parsed to reconstruct the binary representation. 
+    Type operation_type = type();
 
-    os << pad(indent) << RecordName(record_type()) << " // Action0D" << '\n';
-    os << pad(indent) << "{" << '\n';
+    os << pad(indent) << RecordName(record_type());
+    os << "<" << desc_type.value(operation_type) << ">";
+    os << " // Action0D\n";
+    os << pad(indent) << "{\n";
 
-    std::ostringstream sst;
-    sst << "parameter[" << to_hex(m_target) << "]";
-    std::string target = sst.str();
-
-    if (m_source2 != 0xFE)
+    switch (operation_type)
     {
-        std::ostringstream ss1;
-        if (m_source1 == 0xFF)
-            ss1 << to_hex(m_data);
-        else if (m_source1 & 0x80)
-            ss1 << "global_var[" << to_hex(m_source1) << "]";
-        else
-            ss1 << "parameter[" << to_hex(m_source1) << "]";
-        std::string source1 = ss1.str();
-
-        std::ostringstream ss2;
-        if (m_source2 == 0xFF)
-            ss2 << to_hex(m_data);
-        else if (m_source2 & 0x80)
-            ss2 << "global_var[" << to_hex(m_source2) << "]";
-        else
-            ss2 << "parameter[" << to_hex(m_source2) << "]";
-        std::string source2 = ss2.str();
-
-        os << pad(indent + 4) << target << ": " <<  source1;
-        switch (m_operation)
-        {
-            case Operation::Assignment: break;
-            case Operation::Addition:         os << " + "  << source2; break;
-            case Operation::Subtraction:      os << " - "  << source2; break;
-            case Operation::UnsignedMultiply: os << " * "  << source2 << ", unsigned"; break;
-            case Operation::SignedMultiply:   os << " * "  << source2 << ", signed"; break;
-            case Operation::UnsignedBitShift: os << " << " << source2 << ", unsigned"; break;
-            case Operation::SignedBitShift:   os << " << " << source2 << ", signed"; break;
-            case Operation::BitwiseAND:       os << " & "  << source2; break;
-            case Operation::BitwiseOR:        os << " | "  << source2; break;
-            case Operation::UnsignedDivision: os << " / "  << source2 << ", unsigned"; break;
-            case Operation::SignedDivision:   os << " / "  << source2 << ", signed"; break;
-            case Operation::UnsignedModulo:   os << " % "  << source2 << ", unsigned"; break;
-            case Operation::SignedModulo:     os << " % "  << source2 << ", signed"; break;
-        }
-        os << ";\n";
+        case Type::Param:     print_param(os, indent + 4); break;
+        case Type::OtherGRF:  print_other(os, indent + 4); break;
+        case Type::Patch:     print_patch(os, indent + 4); break;
+        case Type::Resources: print_resources(os, indent + 4); break;
     }
+
+    os << pad(indent) << "}\n";
+}
+
+
+std::string Action0DRecord::param_description(uint8_t param) const
+{
+    std::ostringstream ss;
+    if (param == 0xFF)
+    {
+        ss << to_hex(m_data);
+    }
+    else if (param & 0x80)
+    {
+        ss << str_global_var << "[" << to_hex(param) << "]";
+    }   
     else
     {
-        if (m_data == 0xFFFF)
-        {
-            os << pad(indent + 4) << target << ": ";
-            os << "patch_parameter[" << to_hex(m_source1) << "];\n";
-        }
-        else if ((m_data & 0xFF) == 0xFF)
-        {
-            os << pad(indent + 4) << target << ": ";
-            switch (m_source1)
-            {
-                // Find available resource ID and mark as in use 
-                case 00: os << "grfop_reserve(" << FeatureName(m_feature) << ", " << m_number << ")"; break;
-                // Find available resource ID but do not mark
-                case 01: os << "grfop_find(" << FeatureName(m_feature) << ", " << m_number << ")"; break;
-                // Check whether given resources (ID stored in the <target> variable) are available 
-                case 02: os << "grfop_check(" << FeatureName(m_feature) << ", " << m_number << ", " << target << ")"; break;
-                // Check that the given resources are available, and if so mark as in use 
-                case 03: os << "grfop_mark(" << FeatureName(m_feature) << ", " << m_number << ", " << target << ")"; break;
-                // Like "Find", but does not deactive the grf if no IDs found 
-                case 04: os << "grfop_find_no_fail(" << FeatureName(m_feature) << ", " << m_number << ")"; break;
-                // Like "Check", but does not deactive the grf if there is a conflict 
-                case 05: os << "grfop_check_no_fail(" << FeatureName(m_feature) << ", " << m_number << ", " << target << ")"; break;
-                // Retrieve GRFID that has reserved the given ID (or 0 if not reserved)  
-                case 06: os << "grfop_get_owner(" << FeatureName(m_feature) << ", " << m_number << ", " << target <<")"; break;
-            }
-            os << ";\n";
-        }
-        else
-        {
-            GRFLabel label{m_data}; 
-            os << pad(indent + 4) << target << ": ";
-            os << "parameter<";
-            os << label.to_string();
-            os << ">[" << to_hex(m_source1) << "];\n";
-        }        
-    }
+        ss << str_param << "[" << to_hex(param) << "]";
+    }    
+    return ss.str();
+}
 
-    os << pad(indent + 4) << "only_undefined: " << (m_if_undefined ? "true" : "false") << ";\n";
-    os << pad(indent) << "}" << '\n';
-} 
+
+// set_parameter<Param>
+// {
+//     target: param[0x00];
+//     source1: global_var[0x00]; //0x80 - names?
+//     source2: 0x00000000; // FF
+//     operation: Add;
+//     not_if_defined: true; // 0x80
+// }
+
+
+void Action0DRecord::print_param(std::ostream& os, uint16_t indent) const
+{
+    // Create a descriptor to decode these strings?
+    os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
+    os << pad(indent) << str_source1 << ": " << param_description(m_source1) << ";\n";
+    os << pad(indent) << str_source2 << ": " << param_description(m_source2) << ";\n";
+    desc_operator.print(m_operation, os, indent);
+    desc_defined.print(m_not_if_defined, os, indent);
+}
+
+
+// set_parameter<GRF>
+// {
+//     target: param[0x00];
+//     source: param<"GRFx">[0x00]; 
+// }
+
+
+void Action0DRecord::print_other(std::ostream& os, uint16_t indent) const
+{
+    os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
+    os << pad(indent) << str_source1 << ":"  "<\"" << m_grf_id.to_string() << "\">" << param_description(m_source1) << ";\n"; 
+}
+
+
+// set_parameter<Patch>
+// {
+//     target: param[0x00];
+//     source: patch_var[0x00]; // names? 
+// }
+
+
+void Action0DRecord::print_patch(std::ostream& os, uint16_t indent) const
+{
+    os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
+    os << pad(indent) << str_source1 << ": " << str_patch_var << "[" << to_hex(m_source1) << ";\n";
+}
+
+
+// set_parameter<GRM>
+// {
+//     target: param[0x00];
+//     operation: Check;
+//     feature: Trains;
+//     count: 10;
+// }
+
+
+void Action0DRecord::print_resources(std::ostream& os, uint16_t indent) const
+{
+    os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
+    desc_grm_op.print(static_cast<GRMOperator>(m_source1), os, indent);
+    os << pad(indent) << str_feature << ": " << FeatureName(m_feature) << ";\n";
+    desc_number.print(m_number, os, indent);
+}
     
 
 void Action0DRecord::parse(TokenStream& is)

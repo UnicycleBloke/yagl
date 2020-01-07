@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Record.h"
+#include "GRFStrings.h"
 
 
 // Assign parameters and calculate results.
@@ -43,23 +44,50 @@ public:
 
     bool has_data() const;
 
-private:
+public:
     enum class Operation : uint8_t
     {
         Assignment              = 0x00,	
         Addition 	            = 0x01,
         Subtraction 	        = 0x02,
-        UnsignedMultiply        = 0x03,	
-        SignedMultiply          = 0x04,
-        UnsignedBitShift        = 0x05,
-        SignedBitShift 	        = 0x06,
+        MultiplyUnsigned        = 0x03,	
+        MultiplySigned          = 0x04,
+        BitShiftUnsigned        = 0x05,
+        BitShiftSigned 	        = 0x06,
         BitwiseAND 	            = 0x07,
         BitwiseOR 	            = 0x08,
-        UnsignedDivision        = 0x09,
-        SignedDivision 	        = 0x0A,
-        UnsignedModulo 	        = 0x0B,
-        SignedModulo 	        = 0x0C
+        DivideUnsigned          = 0x09,
+        DivideSigned 	        = 0x0A,
+        ModuloUnsigned 	        = 0x0B,
+        ModuloSigned 	        = 0x0C
     }; 
+
+    enum class GRMOperator
+    {
+        Reserve      = 0x00,
+        Find         = 0x01,
+        Check        = 0x02,
+        Mark         = 0x03,
+        FindNoFail   = 0x04,
+        CheckNoFail  = 0x05,
+        GetOwner     = 0x06,
+    };
+
+    enum class Type
+    {
+        Param,     // Normal parameter operations 
+        Patch,     // Assignment from patch variables 
+        Resources, // GRF resource management 
+        OtherGRF   // Assignment from other GRF variables
+    };
+
+private:
+    Type type() const;
+    void print_param(std::ostream& os, uint16_t indent) const;
+    void print_other(std::ostream& os, uint16_t indent) const;
+    void print_patch(std::ostream& os, uint16_t indent) const;
+    void print_resources(std::ostream& os, uint16_t indent) const;
+    std::string param_description(uint8_t param) const;
 
 private:
     // target, source1, source2
@@ -89,19 +117,20 @@ private:
     // action D sets parameter 4, then parameters 2 and 3 automatically become defined 
     // and get a value of zero.  
 
-    uint8_t   m_target = 0;       // Target parameter 
-    Operation m_operation;        // Calculation to carry out - see wiki
-    bool      m_if_undefined = 0; // Apply operation only if parameter undefined 
-    uint8_t   m_source1 = 0;      // First argument 
-    uint8_t   m_source2 = 0;      // Second argument 
+    uint8_t   m_target = 0;         // Target parameter 
+    Operation m_operation;          // Calculation to carry out - see wiki
+    bool      m_not_if_defined = 0; // Apply operation only if parameter undefined 
+    uint8_t   m_source1 = 0;        // First argument 
+    uint8_t   m_source2 = 0;        // Second argument 
 
     union
     {
-        uint32_t m_data = 0;  // Value to use as source if not parameter
-        struct 
+        uint32_t m_data = 0;        // Value to use as source if not parameter
+        GRFLabel m_grf_id;          // For reading other GRF parameters
+        struct                      // For GRM operations
         {
-            uint8_t     m_ff;
-            FeatureType m_feature;
+            uint8_t     m_ff;       // Dummy
+            FeatureType m_feature; 
             uint16_t    m_number;
         };
     };
