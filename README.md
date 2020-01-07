@@ -95,6 +95,7 @@ The following header only libraries are included in the source tree along with t
 - **png++**: a C++ wrapper around the libpng API: https://www.nongnu.org/pngpp/.
 - **cxxopts**: a C++ command line option parser: https://github.com/jarro2783/cxxopts.
 
+Aside from **g++**, the build also makes use of **python** for a pre-build step to create the version number from the git repository: it runs `yagl_version.py` to create `yagl_version.h`. I found it necessary to manually create the link `/usr/bin/python` to the binary `/usr/bin/python3`. This may or may not be an issue on your system. 
 
 ## Licence
 
