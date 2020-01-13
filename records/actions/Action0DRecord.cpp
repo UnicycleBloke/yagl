@@ -157,23 +157,22 @@ const char* short_op(Action0DRecord::Operation op)
     using Op = Action0DRecord::Operation;
     switch (op)
     {
-        // u and s to disambiguate signed and unsigned is an experiment - ugly.
-        case Op::Assignment:       return "=";
-        case Op::Addition:         return "+";
-        case Op::Subtraction:      return "-";
-        case Op::MultiplyUnsigned: return "*u";
-        case Op::MultiplySigned:   return "*s";
-        case Op::BitShiftUnsigned: return "<<u";
-        case Op::BitShiftSigned:   return "<<s";
-        case Op::BitwiseAND:       return "&";
-        case Op::BitwiseOR:        return "|";
-        case Op::DivideUnsigned:   return "/u";
-        case Op::DivideSigned:     return "/s";
-        case Op::ModuloUnsigned:   return "%u";
-        case Op::ModuloSigned:     return "%s";
+        case Op::Assignment:       return "=";   // TokenType::Equals
+        case Op::Addition:         return "+";   // TokenType::OpPlus      
+        case Op::Subtraction:      return "-";   // TokenType::OpMinus      
+        case Op::MultiplyUnsigned: return "*";   // TokenType::OpMultiply, unsigned       
+        case Op::MultiplySigned:   return "*";   // TokenType::OpMultiply, signed       
+        case Op::BitShiftUnsigned: return "<<";  // TokenType::ShiftLeft, unsigned        
+        case Op::BitShiftSigned:   return "<<";  // TokenType::ShiftLeft, signed        
+        case Op::BitwiseAND:       return "&";   // TokenType::Ampersand      
+        case Op::BitwiseOR:        return "|";   // TokenType::Pipe      
+        case Op::DivideUnsigned:   return "/";   // TokenType::OpDivide, unsigned       
+        case Op::DivideSigned:     return "/";   // TokenType::OpDivide, signed       
+        case Op::ModuloUnsigned:   return "%";   // TokenType::Percent, unsigned       
+        case Op::ModuloSigned:     return "%";   // TokenType::Percent, signed      
     }
 
-    // Should never get here.
+    // Should never get here. TODO Should throw here?
     return "?";
 }
 
@@ -220,16 +219,6 @@ std::string Action0DRecord::param_description(uint8_t param) const
 }
 
 
-// set_parameter<Param>
-// {
-//     target: param[0x00];
-//     source1: global_var[0x00]; //0x80 - names?
-//     source2: 0x00000000; // FF
-//     operation: Add;
-//     not_if_defined: true; // 0x80
-// }
-
-
 void Action0DRecord::print_param(std::ostream& os, uint16_t indent) const
 {
     // Create a descriptor to decode these strings?
@@ -242,10 +231,23 @@ void Action0DRecord::print_param(std::ostream& os, uint16_t indent) const
     //desc_operator.print(m_operation, os, indent);
 
     // This expression is better than four properties. Might be harder to parse.
+    // expression: param[0x00] = param[0x01] + param[0x02];
     os << pad(indent) << str_expression << ": " << param_description(m_target) << " = " << param_description(m_source1);
     if (m_operation != Operation::Assignment)
     {  
         os << " " << short_op(m_operation) << " " << param_description(m_source2);
+        switch (m_operation)
+        {
+            case Op::MultiplyUnsigned:
+            case ...
+                os << ", unsigned";
+                break;
+
+            case Op::MultiplySigned:
+            case ...
+                os << ", signed";
+                break;
+        }
     }
     os << ";\n";
 
@@ -253,11 +255,40 @@ void Action0DRecord::print_param(std::ostream& os, uint16_t indent) const
 }
 
 
-// set_parameter<GRF>
-// {
-//     target: param[0x00];
-//     source: param<"GRFx">[0x00]; 
-// }
+void Action0DRecord::parse_param(TokenStream& is)
+{
+    parse_description(m_target, is);
+    is.match(TokenType::Equals);
+    parse_description(m_source1, is);
+    if (is.peek().type != TokenStream::SemiColon)
+    {
+        // parse_operation
+        switch (is.peek().type)
+        {
+            case TokenType::OpPlus: m_operation = Op::Assignment; break;
+        }
+
+        parse_description(m_source2, is);
+        parse_signed_operation(is);
+
+        if (m_operation) // One of the signed/unsigned bunch
+        {
+            bool is_signed = false;
+
+            if (is.peek().type == TokenType::Comma)
+            {
+                is.match(TokenType::Comma);
+
+                desc_signed.match(is_signed, is);
+                if (is_signed)
+                {
+                    // Make this compile - prefer switch?
+                    ++m_operation;
+                }
+            }
+        }
+    }
+}
 
 
 void Action0DRecord::print_other(std::ostream& os, uint16_t indent) const
@@ -270,11 +301,10 @@ void Action0DRecord::print_other(std::ostream& os, uint16_t indent) const
 }
 
 
-// set_parameter<Patch>
-// {
-//     target: param[0x00];
-//     source: patch_var[0x00]; // names? 
-// }
+void Action0DRecord::parse_other(TokenStream& is)
+{
+
+}
 
 
 void Action0DRecord::print_patch(std::ostream& os, uint16_t indent) const
@@ -288,13 +318,10 @@ void Action0DRecord::print_patch(std::ostream& os, uint16_t indent) const
 }
 
 
-// set_parameter<GRM>
-// {
-//     target: param[0x00];
-//     operation: Check;
-//     feature: Trains;
-//     count: 10;
-// }
+void Action0DRecord::parse_patch(TokenStream& is)
+{
+
+}
 
 
 void Action0DRecord::print_resources(std::ostream& os, uint16_t indent) const
@@ -308,10 +335,41 @@ void Action0DRecord::print_resources(std::ostream& os, uint16_t indent) const
     os << desc_grm_op.value(static_cast<GRMOperator>(m_source1)) << "(";
     os << FeatureName(m_feature) << ", " << to_hex(m_number) << ");\n";  
 }
-    
+
+
+void Action0DRecord::parse_resources(TokenStream& is)
+{
+
+}
+
 
 void Action0DRecord::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
     throw RUNTIME_ERROR("Action0DRecord::parse not implemented");
+
+    Type operation_type;
+    is.match_ident(RecordName(record_type()));
+    is.match(TokenType::OpenAngle);
+    desc_type.parse(operation_type, is);
+    is.match(TokenType::CloseAngle);
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        is.match_ident(str_expression);
+        is.match(TokenType::Colon);
+
+        switch (operation_type)
+        {
+            case Type::Param:     parse_param(is); break;
+            case Type::OtherGRF:  parse_other(is); break;
+            case Type::Patch:     parse_patch(is); break;
+            case Type::Resources: parse_resources(is); break;
+        }
+
+        is.match(TokenType::SemiColon);
+    }
+
+    is.match(TokenType::CloseBrace);
 }

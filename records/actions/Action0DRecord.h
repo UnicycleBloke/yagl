@@ -89,6 +89,11 @@ private:
     void print_resources(std::ostream& os, uint16_t indent) const;
     std::string param_description(uint8_t param) const;
 
+    void parse_param(TokenStream& is);
+    void parse_other(TokenStream& is);
+    void parse_patch(TokenStream& is);
+    void parse_resources(TokenStream& is);
+
 private:
     // target, source1, source2
     // These bytes specify the target parameter and source parameters. 
