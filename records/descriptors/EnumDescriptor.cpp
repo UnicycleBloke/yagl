@@ -17,6 +17,7 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "EnumDescriptor.h"
+#include <sstream>
 
 
 void EnumDescriptor::print_impl(uint32_t value, std::ostream& os, uint8_t indent) const
@@ -32,7 +33,9 @@ void EnumDescriptor::print_impl(uint32_t value, std::ostream& os, uint8_t indent
         }
     }
     
-    throw RUNTIME_ERROR("EnumDescriptor::print");
+    std::ostringstream ss;
+    ss << "EnumDescriptor::print " << value;
+    throw RUNTIME_ERROR(ss.str());
 }
 
 
@@ -47,7 +50,9 @@ void EnumDescriptor::print_value_impl(uint32_t value, std::ostream& os) const
         }
     }
     
-    throw RUNTIME_ERROR("EnumDescriptor::print_value");
+    std::ostringstream ss;
+    ss << "EnumDescriptor::print_value " << value;
+    throw RUNTIME_ERROR(ss.str());
 }
 
 
@@ -61,7 +66,9 @@ const char* EnumDescriptor::value_impl(uint32_t value) const
         }
     }
 
-    throw RUNTIME_ERROR("EnumDescriptor::value");
+    std::ostringstream ss;
+    ss << "EnumDescriptor::value " << value;
+    throw RUNTIME_ERROR(ss.str());
 }
 
 
@@ -78,7 +85,9 @@ void EnumDescriptor::parse_impl(uint32_t& value, TokenStream& is) const
         }
     }
 
-    throw RUNTIME_ERROR("EnumDescriptor::parse");
+    std::ostringstream ss;
+    ss << "EnumDescriptor::parse " << value;
+    throw RUNTIME_ERROR(ss.str());
 }
 
 

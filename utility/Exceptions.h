@@ -26,14 +26,15 @@
 class LexerError : public std::runtime_error 
 {
 public:
-    explicit LexerError(const std::string& what_arg, uint32_t line, uint32_t column);
-    explicit LexerError(const char* what_arg, uint32_t line, uint32_t column);
+    explicit LexerError(const std::string& what_arg, uint32_t line, uint32_t column, const char* file, uint32_t line2);
+    explicit LexerError(const char* what_arg, uint32_t line, uint32_t column, const char* file, uint32_t line2);
 
     const char* what() const noexcept { return m_what.c_str(); }
 
 private:    
     std::string m_what;
 };
+#define LEXER_ERROR(what, line, column) LexerError(what, line, column, __FILE__, __LINE__)
 
 
 // Exception used during parsing to indicates where in the original input the error occured.
@@ -41,14 +42,15 @@ class TokenValue;
 class ParserError : public std::runtime_error 
 {
 public:
-    explicit ParserError(const std::string& what_arg, const TokenValue& token);
-    explicit ParserError(const char* what_arg, const TokenValue& token);
+    explicit ParserError(const std::string& what_arg, const TokenValue& token, const char* file, uint32_t line);
+    explicit ParserError(const char* what_arg, const TokenValue& token, const char* file, uint32_t line);
 
     const char* what() const noexcept { return m_what.c_str(); }
 
 private:    
     std::string m_what;
 };
+#define PARSER_ERROR(what, token) ParserError(what, token, __FILE__, __LINE__)
 
 
 class RuntimeError : public std::runtime_error 

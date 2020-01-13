@@ -288,7 +288,7 @@ void Action02IndustryRecord::parse_version0(TokenStream& is)
     }
     else
     {
-        throw ParserError("Unexpected identifier: " + token.value, token);
+        throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
     }
 }   
 
@@ -321,7 +321,7 @@ void Action02IndustryRecord::parse_version1(TokenStream& is)
     }
     else
     {
-        throw ParserError("Unexpected identifier: " + token.value, token);
+        throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
     }
 }   
 
@@ -417,7 +417,7 @@ void Action02IndustryRecord::parse_version2(TokenStream& is)
     }
     else
     {
-        throw ParserError("Unexpected identifier: " + token.value, token);
+        throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
     }
 }   
 

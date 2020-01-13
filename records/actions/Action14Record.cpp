@@ -215,7 +215,7 @@ void Action14Record::parse_chunks(TokenStream& is, std::vector<Chunk>& chunks)
                 break;
 
             default:
-                throw ParserError("Invalid chunk type:", is.peek());
+                throw PARSER_ERROR("Invalid chunk type:", is.peek());
         }
 
         chunks.push_back(chunk);

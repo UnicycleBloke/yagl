@@ -62,7 +62,7 @@ public:
         ModuloSigned 	        = 0x0C
     }; 
 
-    enum class GRMOperator
+    enum class GRMOperator : uint8_t
     {
         Reserve      = 0x00,
         Find         = 0x01,
@@ -73,7 +73,17 @@ public:
         GetOwner     = 0x06,
     };
 
-    enum class Type
+    enum class GRMFeature : uint8_t
+    {
+        Trains          = static_cast<uint8_t>(FeatureType::Trains),
+        Vehicles        = static_cast<uint8_t>(FeatureType::Vehicles),
+        Ships           = static_cast<uint8_t>(FeatureType::Ships),
+        Aircraft        = static_cast<uint8_t>(FeatureType::Aircraft),
+        GeneralSprites  = static_cast<uint8_t>(FeatureType::GlobalSettings),
+        Cargos          = static_cast<uint8_t>(FeatureType::Cargos),
+    };
+
+    enum class Type : uint8_t
     {
         Param,     // Normal parameter operations 
         Patch,     // Assignment from patch variables 
@@ -93,6 +103,7 @@ private:
     void parse_other(TokenStream& is);
     void parse_patch(TokenStream& is);
     void parse_resources(TokenStream& is);
+    void parse_description(uint8_t& param, TokenStream& is);
 
 private:
     // target, source1, source2
@@ -122,21 +133,21 @@ private:
     // action D sets parameter 4, then parameters 2 and 3 automatically become defined 
     // and get a value of zero.  
 
-    uint8_t   m_target = 0;         // Target parameter 
-    Operation m_operation;          // Calculation to carry out - see wiki
-    bool      m_not_if_defined = 0; // Apply operation only if parameter undefined 
-    uint8_t   m_source1 = 0;        // First argument 
-    uint8_t   m_source2 = 0;        // Second argument 
+    uint8_t   m_target = 0;                        // Target parameter 
+    Operation m_operation = Operation::Assignment; // Calculation to carry out - see wiki
+    bool      m_not_if_defined = 0;                // Apply operation only if parameter undefined 
+    uint8_t   m_source1 = 0;                       // First argument 
+    uint8_t   m_source2 = 0;                       // Second argument 
 
     union
     {
-        uint32_t m_data = 0;        // Value to use as source if not parameter
-        GRFLabel m_grf_id;          // For reading other GRF parameters
-        struct                      // For GRM operations
+        uint32_t m_data = 0;                       // Value to use as source if not parameter
+        GRFLabel m_grf_id;                         // For reading other GRF parameters
+        struct                                     // For GRM operations
         {
-            uint8_t     m_ff;       // Dummy
-            FeatureType m_feature; 
-            uint16_t    m_number;
+            uint8_t    m_ff;                       // Dummy
+            GRMFeature m_feature;                   
+            uint16_t   m_number;
         };
     };
 };

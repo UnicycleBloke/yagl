@@ -56,7 +56,7 @@ void GRFLabel::parse(TokenStream& is)
     {
         case TokenType::Ident:
             value   = is.match(TokenType::Ident);
-            if (value.size() != 4) throw ParserError("Invalid GRF label", is.peek());
+            if (value.size() != 4) throw PARSER_ERROR("Invalid GRF label", is.peek());
             m_label = 0;
             for (uint8_t i = 0; i < 4; ++i)
             {
@@ -67,7 +67,7 @@ void GRFLabel::parse(TokenStream& is)
         case TokenType::String:
             value   = is.match(TokenType::String);
             // TODO we need to handle the escapes \xHH. "\xFB\xFB\x06\x01"
-            //if (value.size() != 4) throw ParserError("Invalid GRF label", is.peek());
+            //if (value.size() != 4) throw PARSER_ERROR("Invalid GRF label", is.peek());
             m_label = 0;
             for (uint8_t i = 0; i < value.size(); ++i)
             {
@@ -87,7 +87,7 @@ void GRFLabel::parse(TokenStream& is)
             break;
 
         default:
-            throw ParserError("Expected GRF label", is.peek());
+            throw PARSER_ERROR("Expected GRF label", is.peek());
     }
 }
 

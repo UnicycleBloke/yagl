@@ -40,7 +40,7 @@ std::vector<TokenValue> Lexer::lex(std::istream& is)
 
     if (m_state != LexerState::None)
     {
-        throw LexerError("End of input in invalid state", m_line, m_column);
+        throw LEXER_ERROR("End of input in invalid state", m_line, m_column);
     }
 
     return m_tokens;
@@ -130,7 +130,7 @@ bool Lexer::handle_byte(uint8_t c, uint8_t p)
         case LexerState::Star:  return handle_comment_star(c);
     }
 
-    throw LexerError("Unhandled character", m_line, m_column);
+    throw LEXER_ERROR("Unhandled character", m_line, m_column);
 }
 
 
@@ -162,7 +162,7 @@ bool Lexer::handle_comment_slash(uint8_t c)
     {
         case '/': m_state = LexerState::CPP; break;
         case '*': m_state = LexerState::C; break;
-        default:  throw LexerError("Comment is ill-formed", m_line, m_column);
+        default:  throw LEXER_ERROR("Comment is ill-formed", m_line, m_column);
     }
     return true;
 }
@@ -195,7 +195,6 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
         case ']' : emit(TokenType::CloseBracket, "]"); return true;
         case '{' : emit(TokenType::OpenBrace,    "{"); return true;
         case '}' : emit(TokenType::CloseBrace,   "}"); return true;
-        case '<' : emit(TokenType::OpenAngle,    "<"); return true;
         case '>' : emit(TokenType::CloseAngle,   ">"); return true;
         case ':' : emit(TokenType::Colon,        ":"); return true;
         case ';' : emit(TokenType::SemiColon,    ";"); return true;
@@ -208,6 +207,20 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
         case '-' : emit(TokenType::OpMinus,      "-"); return true;
         case '*' : emit(TokenType::OpMultiply,   "*"); return true;
         case '/' : emit(TokenType::OpMultiply,   "/"); return true;
+
+        case '<' :
+            if (p == '<')
+            {
+                emit(TokenType::ShiftLeft, "<<"); 
+                m_state = LexerState::Peeked;
+                return true;
+            }
+            else
+            {
+                emit(TokenType::OpenAngle, "<"); 
+                return true;
+            }
+            break;
 
         case '.' : 
             if (p == '.')
@@ -243,7 +256,7 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
             return true;
     }
 
-    throw LexerError("Invalid symbol character", m_line, m_column);
+    throw LEXER_ERROR("Invalid symbol character", m_line, m_column);
 }
 
 
@@ -309,7 +322,7 @@ bool Lexer::handle_octal(uint8_t c)
     // no space or anything. So don't allow it.  
     if ((c >= '8') && (c <= '9'))
     {
-        throw LexerError("Invalid octal character", m_line, m_column);
+        throw LEXER_ERROR("Invalid octal character", m_line, m_column);
     }
 
     // Octal digits...
@@ -389,7 +402,7 @@ bool Lexer::handle_hexadecimal(uint8_t c)
          ((c >= '0') && (c <= '9')) ||
          (c == '_')                 )
     {
-        throw LexerError("Invalid hexadecimal character", m_line, m_column);
+        throw LEXER_ERROR("Invalid hexadecimal character", m_line, m_column);
     }
 
     emit(TokenType::Number, NumberType::Hex, m_value);
@@ -444,7 +457,7 @@ uint32_t TokenStream::match_integer()
         case NumberType::Oct: return strtol(token.value.c_str(),     nullptr, 8);
         case NumberType::Dec: return strtol(token.value.c_str(),     nullptr, 10);
         case NumberType::Hex: return strtol(token.value.c_str() + 2, nullptr, 16);
-        default:              throw ParserError("Unexpected number format", token);
+        default:              throw PARSER_ERROR("Unexpected number format", token);
     }
 }
 
@@ -461,6 +474,6 @@ bool TokenStream::match_bool()
     {
         return false;
     }
-    throw ParserError("Unexpected number format", token);
+    throw PARSER_ERROR("Unexpected number format", token);
 }
 

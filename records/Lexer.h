@@ -42,6 +42,7 @@ enum class TokenType
     Percent,   // %
     SingleDot, // . Remove - only for file name in current output.
     DoubleDot, // ..
+    ShiftLeft, // <<
 
     OpPlus,     // +
     OpMinus,    // -
@@ -166,7 +167,7 @@ public:
         const TokenValue& token = peek();
         if (type != token.type)
         {
-            throw ParserError("Unexpected token: " + token.value, token);
+            throw PARSER_ERROR("Unexpected token: " + token.value, token);
         }
         ++m_index;    
         return token.value;
@@ -177,7 +178,7 @@ public:
         const TokenValue& token = peek();
         if ((TokenType::Ident != token.type) || (token.value != value))
         {
-            throw ParserError("Unexpected token: " + token.value, token);
+            throw PARSER_ERROR("Unexpected token: " + token.value, token);
         }
         match(TokenType::Ident);
         return true;

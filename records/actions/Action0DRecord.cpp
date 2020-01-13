@@ -35,6 +35,11 @@ void Action0DRecord::read(std::istream& is, const GRFInfo& info)
     m_source1   = read_uint8(is);
     m_source2   = read_uint8(is);   
 
+    if (m_source2 == 0xFE)
+    {
+        int x = 0;
+    }
+
     m_data = 0x00000000;
     if (has_data())
     {
@@ -103,6 +108,8 @@ constexpr const char* str_grf_id         = "grf_id";
 constexpr const char* str_feature        = "feature";
 constexpr const char* str_number         = "number";
 constexpr const char* str_expression     = "expression";
+constexpr const char* str_signed         = "signed";
+constexpr const char* str_unsigned       = "unsigned";
 
 
 const EnumDescriptorT<Action0DRecord::Type> desc_type 
@@ -147,6 +154,18 @@ const EnumDescriptorT<Action0DRecord::GRMOperator> desc_grm_op
         { 0x06, "GRM_GetOwner" },
     }    
 };
+const EnumDescriptorT<Action0DRecord::GRMFeature> desc_feature 
+{
+    0x00, "", 
+    {
+        { 0x00, "Trains" },
+        { 0x01, "Vehicles" },
+        { 0x02, "Ships" },
+        { 0x03, "Aircraft" },
+        { 0x08, "GeneralSprites" },
+        { 0x0B, "Cargos" },
+    }    
+};
 constexpr BooleanDescriptor            desc_defined = { 0x00, str_not_if_defined };
 constexpr GRFLabelDescriptor           desc_grf_id  = { 0x00, str_grf_id };
 constexpr IntegerDescriptorT<uint16_t> desc_number  = { 0x00, str_number, PropFormat::Dec };
@@ -175,6 +194,55 @@ const char* short_op(Action0DRecord::Operation op)
     // Should never get here. TODO Should throw here?
     return "?";
 }
+
+
+void print_signed(Action0DRecord::Operation op, std::ostream& os)
+{
+    using Op = Action0DRecord::Operation;
+    switch (op)
+    {
+        case Op::MultiplyUnsigned:
+        case Op::DivideUnsigned:
+        case Op::ModuloUnsigned:
+        case Op::BitShiftUnsigned:
+            os << ", " << str_unsigned;
+            break;
+
+        case Op::MultiplySigned:
+        case Op::DivideSigned:
+        case Op::ModuloSigned:
+        case Op::BitShiftSigned:
+            os << ", " << str_signed;
+            break;
+    }
+}
+
+
+Action0DRecord::Operation parse_signed(Action0DRecord::Operation op, TokenStream& is)
+{
+    if (is.peek().type != TokenType::Comma)
+    {
+        return op;
+    }
+
+    is.match(TokenType::Comma);
+    std::string ident = is.match(TokenType::Ident);
+    if (ident == str_signed)
+    {
+        using Op = Action0DRecord::Operation;
+        switch (op)
+        {
+            case Op::MultiplyUnsigned: return Op::MultiplySigned;
+            case Op::DivideUnsigned:   return Op::DivideSigned;
+            case Op::ModuloUnsigned:   return Op::ModuloSigned;
+            case Op::BitShiftUnsigned: return Op::BitShiftSigned;
+            //default: throw...    
+        }
+    }
+
+    return op;
+}
+
 
 } // namespace {
 
@@ -219,6 +287,23 @@ std::string Action0DRecord::param_description(uint8_t param) const
 }
 
 
+void Action0DRecord::parse_description(uint8_t& param, TokenStream& is)
+{    
+    if (is.peek().type == TokenType::Ident)
+    {
+        // One of param_str, str_global_var, ...
+        is.match(TokenType::Ident); 
+        is.match(TokenType::OpenBracket);
+        param = is.match_integer();
+        is.match(TokenType::CloseBracket);
+    }
+    else
+    {
+        m_data = is.match_integer();
+    }
+}
+
+
 void Action0DRecord::print_param(std::ostream& os, uint16_t indent) const
 {
     // Create a descriptor to decode these strings?
@@ -236,18 +321,7 @@ void Action0DRecord::print_param(std::ostream& os, uint16_t indent) const
     if (m_operation != Operation::Assignment)
     {  
         os << " " << short_op(m_operation) << " " << param_description(m_source2);
-        switch (m_operation)
-        {
-            case Op::MultiplyUnsigned:
-            case ...
-                os << ", unsigned";
-                break;
-
-            case Op::MultiplySigned:
-            case ...
-                os << ", signed";
-                break;
-        }
+        print_signed(m_operation, os);
     }
     os << ";\n";
 
@@ -260,33 +334,28 @@ void Action0DRecord::parse_param(TokenStream& is)
     parse_description(m_target, is);
     is.match(TokenType::Equals);
     parse_description(m_source1, is);
-    if (is.peek().type != TokenStream::SemiColon)
+    TokenValue token = is.peek();
+    if (token.type != TokenType::SemiColon)
     {
-        // parse_operation
-        switch (is.peek().type)
+        // Parse the operation
+        using Op = Action0DRecord::Operation;
+        switch (token.type)
         {
-            case TokenType::OpPlus: m_operation = Op::Assignment; break;
-        }
+            case TokenType::OpPlus:     m_operation = Op::Addition; break;
+            case TokenType::OpMinus:    m_operation = Op::Subtraction; break;
+            case TokenType::OpMultiply: m_operation = Op::MultiplyUnsigned; break;
+            case TokenType::ShiftLeft:  m_operation = Op::BitShiftUnsigned; break;
+            case TokenType::Ampersand:  m_operation = Op::BitwiseAND; break;
+            case TokenType::Pipe:       m_operation = Op::BitwiseOR; break;
+            case TokenType::OpDivide:   m_operation = Op::DivideUnsigned; break;
+            case TokenType::Percent:    m_operation = Op::ModuloUnsigned; break;
+            default: throw PARSER_ERROR("Unexpected token: " + token.value, token);
+        } 
+
+        is.match(token.type);  
 
         parse_description(m_source2, is);
-        parse_signed_operation(is);
-
-        if (m_operation) // One of the signed/unsigned bunch
-        {
-            bool is_signed = false;
-
-            if (is.peek().type == TokenType::Comma)
-            {
-                is.match(TokenType::Comma);
-
-                desc_signed.match(is_signed, is);
-                if (is_signed)
-                {
-                    // Make this compile - prefer switch?
-                    ++m_operation;
-                }
-            }
-        }
+        m_operation = parse_signed(m_operation, is);
     }
 }
 
@@ -296,6 +365,7 @@ void Action0DRecord::print_other(std::ostream& os, uint16_t indent) const
     //os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
     //os << pad(indent) << str_source1 << ":"  "<\"" << m_grf_id.to_string() << "\">" << param_description(m_source1) << ";\n"; 
 
+    // expression: param[0x00] = <"">param[0x01] + param[0x02];
     os << pad(indent) << str_expression << ": " << param_description(m_target) << " = ";
     os << "<\"" << m_grf_id.to_string() << "\">" << param_description(m_source1) << ";\n"; 
 }
@@ -303,7 +373,14 @@ void Action0DRecord::print_other(std::ostream& os, uint16_t indent) const
 
 void Action0DRecord::parse_other(TokenStream& is)
 {
+    parse_description(m_target, is);
+    is.match(TokenType::Equals);
 
+    is.match(TokenType::OpenAngle);
+    m_grf_id.parse(is);
+    is.match(TokenType::CloseAngle);
+
+    parse_description(m_source1, is);
 }
 
 
@@ -320,7 +397,11 @@ void Action0DRecord::print_patch(std::ostream& os, uint16_t indent) const
 
 void Action0DRecord::parse_patch(TokenStream& is)
 {
+    parse_description(m_target, is);
+    is.match(TokenType::Equals);
 
+    // This just expects an Ident (for now), but doesn't care about the value.
+    parse_description(m_source1, is);
 }
 
 
@@ -333,21 +414,29 @@ void Action0DRecord::print_resources(std::ostream& os, uint16_t indent) const
 
     os << pad(indent) << str_expression << ": " << param_description(m_target) << " = ";
     os << desc_grm_op.value(static_cast<GRMOperator>(m_source1)) << "(";
-    os << FeatureName(m_feature) << ", " << to_hex(m_number) << ");\n";  
+    os << desc_feature.value(m_feature) << ", " << to_hex(m_number) << ");\n";  
 }
 
 
 void Action0DRecord::parse_resources(TokenStream& is)
 {
+    parse_description(m_target, is);
+    is.match(TokenType::Equals);
 
+    GRMOperator grm_op;
+    desc_grm_op.parse(grm_op, is);
+    m_source1 = static_cast<uint8_t>(grm_op);
+
+    is.match(TokenType::OpenParen);
+    desc_feature.parse(m_feature, is);
+    is.match(TokenType::Comma);
+    m_number = is.match_integer();
+    is.match(TokenType::CloseParen);
 }
 
 
 void Action0DRecord::parse(TokenStream& is)
 {
-    is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action0DRecord::parse not implemented");
-
     Type operation_type;
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
@@ -357,15 +446,26 @@ void Action0DRecord::parse(TokenStream& is)
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
-        is.match_ident(str_expression);
+        TokenValue token  = is.peek();
+        std::string ident = is.match(TokenType::Ident);
         is.match(TokenType::Colon);
-
-        switch (operation_type)
+        if (ident == str_expression)
         {
-            case Type::Param:     parse_param(is); break;
-            case Type::OtherGRF:  parse_other(is); break;
-            case Type::Patch:     parse_patch(is); break;
-            case Type::Resources: parse_resources(is); break;
+            switch (operation_type)
+            {
+                case Type::Param:     parse_param(is); break;
+                case Type::OtherGRF:  parse_other(is); break;
+                case Type::Patch:     parse_patch(is); break;
+                case Type::Resources: parse_resources(is); break;
+            }
+        }
+        else if (ident == str_not_if_defined)
+        {
+            desc_defined.parse(m_not_if_defined, is);
+        }
+        else
+        {
+            throw PARSER_ERROR("Unexpected token: " + token.value, token);
         }
 
         is.match(TokenType::SemiColon);

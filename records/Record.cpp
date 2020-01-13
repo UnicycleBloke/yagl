@@ -123,7 +123,7 @@ void ContainerRecord::parse_sprite(TokenStream& is)
                 case 0x01: record = std::make_shared<RecolourRecord>(); break;
                 case 0x02: record = std::make_shared<ActionFFRecord>(); break;
                 case 0x03: record = std::make_shared<ActionFERecord>(); break;
-                default:   throw ParserError("Unexpected record type", token);
+                default:   throw PARSER_ERROR("Unexpected record type", token);
             }
         } 
         
@@ -132,7 +132,7 @@ void ContainerRecord::parse_sprite(TokenStream& is)
     }
     else
     {
-        throw ParserError("Unexpected token type", token);
+        throw PARSER_ERROR("Unexpected token type", token);
     }            
 }
 

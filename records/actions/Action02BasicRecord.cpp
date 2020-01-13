@@ -144,7 +144,7 @@ void Action02BasicRecord::parse(TokenStream& is)
         }
         else
         {
-            throw ParserError("Unexpected identifier: " + token.value, token);
+            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
         }
     }
 

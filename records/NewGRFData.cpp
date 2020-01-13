@@ -49,6 +49,7 @@
 #include "StreamHelpers.h"
 #include "SpriteSheetGenerator.h"
 #include "CommandLineOptions.h"
+#include "Exceptions.h"
 #include "yagl_version.h" // Generated in a pre-build step.
 #include <sstream>
 
@@ -668,7 +669,7 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
     const TokenValue& token = is.peek();
     if (is.match(TokenType::Ident) != "yagl_version")
     {
-        throw ParserError("Expected YAGL version number", token);
+        throw PARSER_ERROR("Expected YAGL version number", token);
     }
     is.match(TokenType::Colon);
     
@@ -686,7 +687,7 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
         std::ostringstream os;
         os << "YAGL version number does not match. ";
         os << "Expected: " << str_yagl_version << "; found: " << yagl_version;
-        throw ParserError(os.str(), token);
+        throw PARSER_ERROR(os.str(), token);
     }
 
     // Top level parser. Every record has the format 'keyword [<...>] { ... }'. 
