@@ -18,17 +18,82 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action07Record.h"
 #include "StreamHelpers.h"
+#include "Descriptors.h"
+
+
+namespace{
+
+
+const EnumDescriptorT<Action07Record::Condition> desc_condition 
+{ 
+    0x00, "", 
+    {
+        { 0x00, "is_bit_set" },
+        { 0x01, "is_bit_clear" },
+        { 0x02, "is_equal" },
+        { 0x03, "is_not_equal" },
+        { 0x04, "is_less_than" },
+        { 0x05, "is_greater_than" },
+        { 0x06, "is_grf_activated" },
+        { 0x07, "is_grf_not_activated" },
+        { 0x08, "is_grf_initialised" },
+        { 0x09, "is_grf_init_or_active" },
+        { 0x0A, "is_grf_disabled" },
+        { 0x0B, "is_cargo_type_invalid" },
+        { 0x0C, "is_cargo_type_valid" },
+        { 0x0D, "is_rail_type_invalid" },
+        { 0x0E, "is_rail_type_valid" },
+        { 0x0F, "is_road_type_invalid" },
+        { 0x10, "is_road_type_valid" },
+        { 0x11, "is_tram_type_invalid" },
+        { 0x12, "is_tram_type_valid" },
+    }          
+};
+
+
+constexpr const char* str_param        = "param";
+constexpr const char* str_global_var   = "global_var";
+constexpr const char* str_skip_sprites = "skip_sprites";
+
+
+std::string param_description(uint8_t param)
+{
+    std::ostringstream ss;
+    if (param & 0x80)
+    {
+        ss << str_global_var << "[" << to_hex(param) << "]";
+    }   
+    else
+    {
+        ss << str_param << "[" << to_hex(param) << "]";
+    }    
+    return ss.str();
+}
+
+
+void parse_description(uint8_t& param, TokenStream& is)
+{    
+    // One of param_str, str_global_var, ...
+    is.match(TokenType::Ident); 
+    is.match(TokenType::OpenBracket);
+    param = is.match_integer();
+    is.match(TokenType::CloseBracket);
+}
+
+
+} // namespace {
 
 
 void Action07Record::read(std::istream& is, const GRFInfo& info)
 {
     m_variable  = read_uint8(is);
     m_varsize   = read_uint8(is);
-    m_condition = read_uint8(is);
+    m_condition = static_cast<Condition>(read_uint8(is));
 
-    if (m_condition < 2)
+    if ( (m_condition == Condition::BitClear) || 
+         (m_condition == Condition::BitSet)   )
     {
-        /* Always 1 for bit tests, the given value should be ignored. */
+        // Always 1 for bit tests, the given value should be ignored.
         m_varsize = 1;
     }
 
@@ -51,7 +116,7 @@ void Action07Record::write(std::ostream& os, const GRFInfo& info) const
 
     write_uint8(os, m_variable);
     write_uint8(os, m_varsize);
-    write_uint8(os, m_condition);
+    write_uint8(os, static_cast<uint8_t>(m_condition));
 
     switch (m_varsize)
     {
@@ -79,54 +144,61 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 {
     os << pad(indent) << RecordName(record_type()) << " (";
 
-    // Variable type:
-    if      (m_variable < 0x80) os << "param[" << to_hex(m_variable) << "] ";
-    else if (m_variable < 0xC0) os << "global_var[" << to_hex(m_variable) << "] "; 
-    else                        os << "<error?>reserved[" << to_hex(m_variable) << "] ";
-
-    // Operation/condition
+    GRFLabel label{m_value};
     switch (m_condition)
     {
-        case 0x00: os << "bit_is_set "; break;    
-        case 0x01: os << "bit_is_clear "; break;  
-
-        case 0x02: os << "== "; break;
-        case 0x03: os << "!= "; break;
-        case 0x04: os << "< "; break;
-        case 0x05: os << "> "; break;
-
-        case 0x06: os << "grf_is_active "; break;
-        case 0x07: os << "grf_not_active "; break;
-        case 0x08: os << "grf_will_be_active "; break;
-        case 0x09: os << "grf_is_active_or_will_be "; break;
-        case 0x0A: os << "grf_will_not_be_active "; break;
-
-        case 0x0B: os << "cargo_type_not_available "; break;
-        case 0x0C: os << "cargo_type_is_available "; break;
-        case 0x0D: os << "rail_type_not_defined "; break;
-        case 0x0e: os << "rail_type_is_defined "; break;
-
-        default:   os << "<error> "; 
+        // e.g. BitSet(parameter[m_variable] & 0xFF, 1 << m_value) - 1-byte values
+        case Condition::BitSet:
+        case Condition::BitClear:
+            os << desc_condition.value(m_condition) << "(";
+            os << param_description(m_variable) << " & 0xFF, 1 << " << m_value << ")"; 
+            break;
+        
+        // e.g. Equal(parameter[m_variable] & m_mask, m_value)
+        case Condition::Equal:
+        case Condition::NotEqual:
+        case Condition::LessThan:
+        case Condition::GreaterThan:
+            os << desc_condition.value(m_condition) << "(";
+            os << param_description(m_variable) << " & ";
+            switch (m_varsize)
+            {
+                case 1: os << to_hex<uint8_t>(m_mask) << ", " << to_hex<uint8_t>(m_value) << ")"; break; 
+                case 2: os << to_hex<uint16_t>(m_mask) << ", " << to_hex<uint16_t>(m_value) << ")"; break; 
+                case 4: 
+                case 8: os << to_hex<uint32_t>(m_mask) << ", " << to_hex<uint32_t>(m_value) << ")"; break; 
+            }
+            break;
+        
+        // e.g. GRFActivated(m_value, m_mask) - 4-byte values
+        case Condition::GRFActivated:
+        case Condition::GRFNotActivated:
+        case Condition::GRFInitialised:
+        case Condition::GRFInitOrActive:
+        case Condition::GRFDisabled:
+            os << desc_condition.value(m_condition) << "(";
+            os << "\"" << label.to_string() << "\", " << to_hex(m_mask) << ")";
+            break;
+        
+        // e.g. CargoTypeInvalid(m_value) - 4-byte value
+        case Condition::CargoTypeInvalid:
+        case Condition::CargoTypeValid:
+        case Condition::RailTypeInvalid:
+        case Condition::RailTypeValid:
+        case Condition::RoadTypeInvalid:
+        case Condition::RoadTypeValid:
+        case Condition::TramTypeInvalid:
+        case Condition::TramTypeValid: 
+            os << desc_condition.value(m_condition) << "(";
+            os << "\"" << label.to_string() << "\")";
+            break;             
     }
 
-    // Value to compare or operate with
-    switch (m_varsize)
-    {
-        case 8:  os << to_hex(m_value) << ", " << to_hex(m_mask); break;
-        case 4:  os << to_hex(m_value); break;
-        case 2:  os << to_hex(m_value); break;
-        case 1:  os << to_hex(m_value); break;
-        default: os << "<error>"; 
-    }
-
-    os << ")";
-    if (record_type() == RecordType::ACTION_07)
-        os << " // Action07";
-    else
-        os << " // Action09";
+    os << ") // Action0";
+    os << (record_type() == RecordType::ACTION_07 ? "7" : "9"); 
     os << pad(indent) << "\n{\n";
 
-    os << pad(indent + 4) << "skip_sprites: " << to_hex(m_num_sprites) << ";\n";
+    os << pad(indent + 4) << str_skip_sprites << ": " << to_hex(m_num_sprites) << ";\n";
     os << pad(indent + 4) << "// Or skip to the next label (Action10) with this value - search wraps at end of GRF.\n";
     os << pad(indent + 4) << "// 0x00 means skip to end of GRF file - may disable the GRF.\n";  
      
@@ -134,8 +206,113 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }    
 
 
+// if_act9 (is_equal(param[0x6B] & 0xFFFFFFFF, 0x00000001)) // Action09
+// {
+//     skip_sprites: 0x02;
+//     // Or skip to the next label (Action10) with this value - search wraps at end of GRF.
+//     // 0x00 means skip to end of GRF file - may disable the GRF.
+// }
+// if_act9 (is_grf_disabled("DJT\x01", 0xFFFFFFFF)) // Action09
+// {
+//     skip_sprites: 0x01;
+//     // Or skip to the next label (Action10) with this value - search wraps at end of GRF.
+//     // 0x00 means skip to end of GRF file - may disable the GRF.
+// }
+// if_act7 (is_bit_set(param[0x6C] & 0xFF, 1 << 0)) // Action07
+// {
+//     skip_sprites: 0x01;
+//     // Or skip to the next label (Action10) with this value - search wraps at end of GRF.
+//     // 0x00 means skip to end of GRF file - may disable the GRF.
+// }
+// if_act9 (is_rail_type_invalid("SAAN")) // Action09
+// {
+//     skip_sprites: 0x01;
+//     // Or skip to the next label (Action10) with this value - search wraps at end of GRF.
+//     // 0x00 means skip to end of GRF file - may disable the GRF.
+// }
+
+
 void Action07Record::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action07Record::parse not implemented");
+    is.match(TokenType::OpenParen);
+    desc_condition.parse(m_condition, is);
+    is.match(TokenType::OpenParen);
+
+    GRFLabel label;
+    switch (m_condition)
+    {
+        // e.g. BitSet(parameter[m_variable] & 0xFF, 1 << m_value) - 1-byte values
+        case Condition::BitSet:
+        case Condition::BitClear:
+            parse_description(m_variable, is);
+            is.match(TokenType::Ampersand);
+            is.match_integer(); // 0xFF
+            m_mask = 0xFF;
+            is.match(TokenType::Comma);
+            is.match_integer(); // 1
+            is.match(TokenType::ShiftLeft);
+            m_value = is.match_integer();
+            break;
+        
+        // e.g. Equal(parameter[m_variable] & m_mask, m_value)
+        case Condition::Equal:
+        case Condition::NotEqual:
+        case Condition::LessThan:
+        case Condition::GreaterThan:
+            parse_description(m_variable, is);
+            is.match(TokenType::Ampersand);
+            m_mask = is.match_integer();
+            is.match(TokenType::Comma);
+            m_value = is.match_integer();
+            break;
+        
+        // e.g. GRFActivated(m_value, m_mask) - 4-byte values
+        case Condition::GRFActivated:
+        case Condition::GRFNotActivated:
+        case Condition::GRFInitialised:
+        case Condition::GRFInitOrActive:
+        case Condition::GRFDisabled:
+            label.parse(is);
+            m_variable = 0x88; // Must be this value
+            m_value = label.to_integer();
+            is.match(TokenType::Comma);
+            m_mask = is.match_integer();
+            break;
+        
+        // e.g. CargoTypeInvalid(m_value) - 4-byte value
+        case Condition::CargoTypeInvalid:
+        case Condition::CargoTypeValid:
+        case Condition::RailTypeInvalid:
+        case Condition::RailTypeValid:
+        case Condition::RoadTypeInvalid:
+        case Condition::RoadTypeValid:
+        case Condition::TramTypeInvalid:
+        case Condition::TramTypeValid: 
+            label.parse(is);
+            m_variable = 0x00; // Ignored
+            m_value = label.to_integer();
+            m_mask = 0xFFFFFFFF;
+            break;             
+    }
+
+    switch (m_mask)
+    {
+        case 0x000000FF: m_varsize = 1; break; 
+        case 0x0000FFFF: m_varsize = 2; break; 
+        case 0xFFFFFFFF: m_varsize = 4; break; 
+        default:         m_varsize = 8; break; 
+    }
+
+    is.match(TokenType::CloseParen);
+    is.match(TokenType::CloseParen);
+    is.match(TokenType::OpenBrace);
+
+    is.match_ident(str_skip_sprites);
+    is.match(TokenType::Colon);
+    m_num_sprites = is.match_integer();
+    is.match(TokenType::SemiColon);
+    
+    is.match(TokenType::CloseBrace);
+
 }
