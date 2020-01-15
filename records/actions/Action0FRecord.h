@@ -38,9 +38,13 @@ public:
     void parse(TokenStream& is) override;
 
 private:
+    void parse_styles(TokenStream& is);
+    void parse_part(TokenStream& is);
+
+private:
     struct Name
     {
-        uint8_t     lang_id;
+        uint8_t     lang_id = 0;
         std::string name;
     };
 

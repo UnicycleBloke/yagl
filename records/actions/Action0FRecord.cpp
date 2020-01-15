@@ -111,6 +111,61 @@ void Action0FRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
+namespace {
+constexpr const char* str_styles     = "styles";
+constexpr const char* str_part       = "part";
+constexpr const char* str_text       = "text";
+constexpr const char* str_town_names = "town_names";
+} // namespace {
+
+
+void Action0FRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+{
+    os << RecordName(record_type()) << "<" << to_hex(m_id) << "> // Action0F\n";
+    os << "{\n";
+
+    // Names in various languages for this town names style.
+    if (m_style_names.size() > 0)
+    {
+        os << pad(indent + 4) << str_styles << ":\n";
+        os << pad(indent + 4) << "{\n";
+        os << pad(indent + 8) << "// lang_id: style_name;\n";
+
+        for (const auto& style: m_style_names)
+        {
+            os << pad(indent + 8) << language_iso(style.lang_id) << ": ";
+            os << "\"" << grf_string_to_readable_utf8(style.name) << "\";\n";
+        }
+
+        os << pad(indent + 4) << "}\n";
+    }
+
+    // Descriptions of the various parts of this town names record. Can refer to others.
+    for (const auto& part: m_style_parts)
+    {
+        os << pad(indent + 4) << str_part << "<" << uint16_t(part.first_bit) << ", ";
+        os << uint16_t(part.num_bits) << ">: // <first_bit, num_bits>\n";
+        os << pad(indent + 4) << "{\n";
+
+        for (const auto& text: part.texts)
+        {
+            if (text.is_string)
+            {
+                os << pad(indent + 8) << str_text << "(\"" << grf_string_to_readable_utf8(text.text) << "\"";
+            } 
+            else
+            {
+                os << pad(indent + 8) << str_town_names << "(" << to_hex(text.action_0F_id);
+            }
+            os << ", " << uint16_t(text.probability) << ");\n";
+        }
+
+        os << pad(indent + 4) << "}\n";
+    }
+
+    os << "}\n";
+}
+
 // town_names<0x00> // Action0F
 // {
 //     styles: // lang_id: style_name;
@@ -146,56 +201,97 @@ void Action0FRecord::write(std::ostream& os, const GRFInfo& info) const
 // }
 
 
-void Action0FRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action0FRecord::parse_styles(TokenStream& is)
 {
-    os << RecordName(record_type()) << "<" << to_hex(m_id) << "> // Action0F\n";
-    os << "{\n";
-
-    // Names in various languages for this town names style.
-    if (m_style_names.size() > 0)
+    is.match(TokenType::Colon);
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
     {
-        os << pad(indent + 4) << "styles:\n";
-        os << pad(indent + 4) << "{\n";
-        os << pad(indent + 8) << "// lang_id: style_name;\n";
-
-        for (const auto& style: m_style_names)
-        {
-            os << pad(indent + 8) << language_iso(style.lang_id) << ": ";
-            os << "\"" << grf_string_to_readable_utf8(style.name) << "\";\n";
-        }
-
-        os << pad(indent + 4) << "}\n";
+        Name name;
+        name.lang_id = language_id(is.match(TokenType::Ident));
+        is.match(TokenType::Colon);
+        name.name = is.match(TokenType::String);
+        is.match(TokenType::SemiColon);
+        m_style_names.push_back(name);
     }
 
-    // Descriptions of the various parts of this town names record. Can refer to others.
-    for (const auto& part: m_style_parts)
-    {
-        os << pad(indent + 4) << "part<" << uint16_t(part.first_bit) << ", ";
-        os << uint16_t(part.num_bits) << ">: // <first_bit, num_bits>\n";
-        os << pad(indent + 4) << "{\n";
+    is.match(TokenType::CloseBrace);
+}
 
-        for (const auto& text: part.texts)
+
+void Action0FRecord::parse_part(TokenStream& is)
+{
+    Part part;
+    is.match(TokenType::OpenAngle); 
+    part.first_bit = is.match_integer();
+    is.match(TokenType::Comma);
+    part.num_bits = is.match_integer();
+    is.match(TokenType::CloseAngle); 
+
+    is.match(TokenType::Colon);
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        Text text;
+
+        TokenValue token = is.peek();
+        is.match(TokenType::Ident);
+        is.match(TokenType::OpenParen);
+
+        if (token.value == str_text)
         {
-            if (text.is_string)
-            {
-                os << pad(indent + 8) << "text(\"" << grf_string_to_readable_utf8(text.text) << "\"";
-            } 
-            else
-            {
-                os << pad(indent + 8) << "town_names(" << to_hex(text.action_0F_id);
-            }
-            os << ", " << uint16_t(text.probability) << ");\n";
+            text.text      = is.match(TokenType::String);
+            text.is_string = true;
+        }
+        else if (token.value == str_town_names)
+        {
+            text.action_0F_id = is.match_integer();
+            text.is_string    = false;
+        }
+        else
+        {
+            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
         }
 
-        os << pad(indent + 4) << "}\n";
+        is.match(TokenType::Comma);
+        text.probability = is.match_integer();
+        is.match(TokenType::CloseParen);
+        is.match(TokenType::SemiColon);
+
+        part.texts.push_back(text);
     }
 
-    os << "}\n";
+    m_style_parts.push_back(part);
+
+    is.match(TokenType::CloseBrace);
 }
 
 
 void Action0FRecord::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action0FRecord::parse not implemented");
+    is.match(TokenType::OpenAngle);
+    m_id = is.match_integer();
+    is.match(TokenType::CloseAngle);
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        TokenValue token = is.peek();
+        is.match(TokenType::Ident);
+        if (token.value == str_styles)
+        {
+            parse_styles(is);
+        }
+        else if (token.value == str_part)
+        {
+            parse_part(is);
+        }
+        else
+        {
+            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        }
+    }
+
+    is.match(TokenType::CloseBrace);
 }
