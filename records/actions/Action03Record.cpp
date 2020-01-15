@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action03Record.h"
 #include "StreamHelpers.h"
+#include "Descriptors.h"
 
 
 void Action03Record::read(std::istream& is, const GRFInfo& info)
@@ -86,12 +87,35 @@ void Action03Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
-static const char* LIVERY_OVERRIDE  = "livery_override";
-static const char* DEFAULT_SET_ID   = "default_set_id";
-static const char* FEATURE_IDS      = "feature_ids";
-static const char* CARGO_TYPES      = "cargo_types";
-static const char* CARGO_TYPE       = "cargo_type";
-static const char* SET_ID           = "set_id";
+namespace {
+
+
+constexpr const char* str_livery_override = "livery_override";
+constexpr const char* str_default_set_id  = "default_set_id";
+constexpr const char* str_feature_ids     = "feature_ids";
+constexpr const char* str_cargo_types     = "cargo_types";
+//constexpr const char* str_cargo_type      = "cargo_type";
+//constexpr const char* str_set_id          = "set_id";
+
+
+// Fake property numbers to facilitate out of order parsing.
+const std::map<std::string, uint8_t> g_indices =
+{
+    { str_livery_override, 0x01 },
+    { str_default_set_id,  0x02 },
+    { str_feature_ids,     0x03 },
+    { str_cargo_types,     0x04 },
+//    { str_cargo_type,      0x05 },
+//    { str_set_id,          0x06 },
+};
+
+
+const BooleanDescriptor                desc_livery_override { 0x01, str_livery_override };
+const IntegerDescriptorT<uint16_t>     desc_default_set_id  { 0x02, str_default_set_id, PropFormat::Hex };
+const IntegerListDescriptorT<uint16_t> desc_feature_ids     { 0x03, str_feature_ids, PropFormat::Hex };
+
+
+} // namespace {
 
 
 // feature_graphics<Stations> // Action03
@@ -111,64 +135,37 @@ void Action03Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action03" << '\n';
     os << pad(indent) << "{" << '\n';
 
-    os << pad(indent + 4) << FEATURE_IDS << ": [ ";
-    for (const auto& id: m_feature_ids)
-    {
-        os << to_hex(id);
-    }
-    os << " ]; // i.e. instances of '" << FeatureName(m_feature) << "'\n";
+    desc_livery_override.print(m_livery_override, os, indent + 4); 
+    desc_default_set_id.print(m_default_act02_set_id, os, indent + 4); 
+    desc_feature_ids.print(m_feature_ids, os, indent + 4); 
 
-    // Make this conditional...
-    os << pad(indent + 4) << CARGO_TYPES << ":\n";
-    os << pad(indent + 4) << "[\n";
+    os << pad(indent + 4) << str_cargo_types << ":\n";
+    os << pad(indent + 4) << "{\n";
     for (const auto& c: m_cargo_types)
     {
-        os << pad(indent + 8);
-        os << "{ " << CARGO_TYPE << ": " << to_hex(c.cargo_type) << "; "; 
-        os << SET_ID << ": " << to_hex(c.act02_set_id) << "; }\n";
+        os << pad(indent + 8) << to_hex(c.cargo_type) << ": " << to_hex(c.act02_set_id) << ";\n";
     }
-    os << pad(indent + 4) << "];\n";
-
-    os << pad(indent + 4) << DEFAULT_SET_ID << ": " << to_hex(m_default_act02_set_id) << ";\n";
-    os << pad(indent + 4) << LIVERY_OVERRIDE << ": " << std::boolalpha << m_livery_override << ";\n";
+    os << pad(indent + 4) << "};\n";
 
     os << pad(indent) << "}" << '\n';
 }
 
 
-namespace {
-const std::map<std::string, uint8_t> g_indices =
+void Action03Record::parse_cargo_types(TokenStream& is)
 {
-    { LIVERY_OVERRIDE, 0x00 },
-    { DEFAULT_SET_ID,  0x01 },
-    { FEATURE_IDS,     0x02 },
-    { CARGO_TYPES,     0x03 },
-};
-} // namespace {
-
-
-Action03Record::CargoType Action03Record::parse_cargo_type(TokenStream& is)
-{
-    CargoType type = {};
-
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
-        std::string name = is.match(TokenType::Ident);
+        CargoType c;
+        c.cargo_type = is.match_integer();
         is.match(TokenType::Colon);
-        if (name == CARGO_TYPE)
-        {
-            type.cargo_type = is.match_integer();
-        }
-        else if (name == SET_ID)
-        {
-            type.act02_set_id = is.match_integer();
-        }
+        c.act02_set_id = is.match_integer();
         is.match(TokenType::SemiColon);
-    }
-    is.match(TokenType::CloseBrace);
 
-    return type;
+        m_cargo_types.push_back(c);
+    }
+
+    is.match(TokenType::CloseBrace);
 }
 
 
@@ -180,41 +177,30 @@ void Action03Record::parse(TokenStream& is)
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
-    while (is.peek().type != TokenType::OpenBrace)
+    while (is.peek().type != TokenType::CloseBrace)
     {
-        const auto& it = g_indices.find(is.match(TokenType::Ident));
-        is.match(TokenType::Colon);
-        switch (it->second)
+        TokenValue token = is.peek();
+        const auto& it = g_indices.find(token.value);
+        if (it != g_indices.end())
         {
-            case 0x00:
-                m_livery_override = is.match_bool(); 
-                break;
+            is.match(TokenType::Ident);
+            is.match(TokenType::Colon);
 
-            case 0x01:
-                m_default_act02_set_id = is.match_integer();
-                break;
+            switch (it->second)
+            {
+                case 0x01: desc_livery_override.parse(m_livery_override, is); break;
+                case 0x02: desc_default_set_id.parse(m_default_act02_set_id, is); break;
+                case 0x03: desc_feature_ids.parse(m_feature_ids, is); break;
+                case 0x04: parse_cargo_types(is); break;
+            }
 
-            case 0x02:
-                is.match(TokenType::OpenBracket);
-                while (is.peek().type == TokenType::Number)
-                {
-                    m_feature_ids.push_back(is.match_integer());
-                }
-                is.match(TokenType::CloseBracket);                
-                break;
-
-            case 03:
-                is.match(TokenType::OpenBracket);
-                while (is.peek().type != TokenType::CloseBracket)
-                {
-                    CargoType type = parse_cargo_type(is);
-                    m_cargo_types.push_back(type);
-                }
-                is.match(TokenType::CloseBracket);                
-                break;
+            is.match(TokenType::SemiColon);
         }
-        is.match(TokenType::SemiColon);
+        else
+        {
+            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        }
     }
 
-    is.match(TokenType::OpenBrace);
+    is.match(TokenType::CloseBrace);
 }

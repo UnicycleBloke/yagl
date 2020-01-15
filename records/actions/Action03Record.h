@@ -38,6 +38,9 @@ public:
     void parse(TokenStream& is) override;
 
 private:
+    void parse_cargo_types(TokenStream& is);
+    
+private:
     struct CargoType
     {
         // If defined, cargo-type FF is used for graphics shown in the purchase 
@@ -48,9 +51,6 @@ private:
         uint8_t  cargo_type   = 0;
         uint16_t act02_set_id = 0;
     };
-
-private:
-    CargoType parse_cargo_type(TokenStream& is);
 
 private:
     // The type of feature for which we are making an association 
