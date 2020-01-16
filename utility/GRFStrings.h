@@ -18,13 +18,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Lexer.h"
-#include "GRFLabel.h"
 #include <string>
+#include "Languages.h"
+#include "Record.h"
+#include "GRFLabel.h"
 
 
-std::string    grf_string_to_readable_utf8(const std::string& str);
-//std::u16string grf_string_to_utf16(const std::string& str);
-//std::u16string grf_string_utf16_to_readable_utf16(const std::u16string& str);
+std::string grf_string_to_readable_utf8(const std::string& str);
 
 
 // Replace std::string with this in all the records and other structures.
@@ -52,11 +52,5 @@ private:
     // Easier to test for particular control codes if we need to do so - more uniform.
     std::string m_value;
 };
-
-
-// TODO move to own file
-std::string language_name(uint8_t language_id);
-std::string language_iso(uint8_t language_id);
-uint8_t     language_id(const std::string& iso);
 
 
