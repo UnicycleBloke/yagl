@@ -111,6 +111,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     utility/GRFStrings.cpp
     utility/GRFLabel.cpp
     utility/Exceptions.cpp
+    utility/Languages.cpp
 )
 
 # This appears to be the simplest way to create a pre-build step that

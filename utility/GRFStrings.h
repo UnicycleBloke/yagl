@@ -18,21 +18,39 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Lexer.h"
-#include "GRFLabel.h"
 #include <string>
+#include "Languages.h"
+#include "Record.h"
+#include "GRFLabel.h"
 
 
-std::string    grf_string_to_readable_utf8(const std::string& str);
-std::u16string grf_string_to_utf16(const std::string& str);
-std::u16string grf_string_utf16_to_readable_utf16(const std::u16string& str);
-
-std::string language_name(uint8_t language_id);
-std::string language_iso(uint8_t language_id);
-uint8_t     language_id(const std::string& iso);
-
-std::string grf_id_to_string(uint32_t grf_id);
+std::string grf_string_to_readable_utf8(const std::string& str);
 
 
-//uint32_t decode_number(const std::string value);
+// Replace std::string with this in all the records and other structures.
+class GRFString
+{
+public:
+    // Binary serialisation
+    // Directly read or write m_value. 
+    // TODO indicate whether the string is terminated - CTOR?.
+    void read(std::istream& is, const GRFInfo& info);
+    void write(std::ostream& os, const GRFInfo& info) const;
+
+    // Text serialisation
+    // Convert the internal representation to a human readable version.
+    void print(std::ostream& os) const;
+    // Convert the value that is read into the internal representation. 
+    // Determine whether or not the internal version needs to be UTF8.
+    void parse(TokenStream& is);
+
+private:
+    // This is the value as read from or written to a binary GRF file.
+    // When reading from or writing to a YAGL file, some conversion is 
+    // necessary.
+    // TODO maybe prefer the intermediate std::u16string though this consumes more RAM 
+    // Easier to test for particular control codes if we need to do so - more uniform.
+    std::string m_value;
+};
 
 
