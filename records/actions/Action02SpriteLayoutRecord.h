@@ -35,6 +35,11 @@ public:
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
     void parse(TokenStream& is) override;
 
+private:    
+    void parse_ground_sprite(TokenStream& is);
+    void parse_building_sprite(TokenStream& is);
+    void parse_child_sprite(TokenStream& is);
+
 private:
     struct SpriteRegisters
     {
@@ -49,7 +54,7 @@ private:
         static constexpr uint8_t BIT6_SPRITE_VAR10    = 0x40; // Resolve sprite with a specific value in variable 10.
         static constexpr uint8_t BIT7_RECOLOUR_VAR10  = 0x80; // Resolve recolour sprite with a specific value in variable 10.
 
-        uint16_t flags;
+        uint16_t flags = 0x00;
         uint8_t  skip_sprite;       // bit 0 value is 0 (skip), 1 (draw)
         uint8_t  sprite_offset;     // bit 1
         uint8_t  recolour_offset;   // bit 2
@@ -62,32 +67,33 @@ private:
         void read(std::istream& is, bool is_parent);
         void write(std::ostream& os, bool is_parent) const;
         void print(std::ostream& os, bool is_parent, uint16_t indent) const;
+        void parse(TokenStream& is, bool is_parent);
     };
 
 private:
     struct BuildingSprite
     {
-        uint32_t        sprite; /* May be zero only in the simple case */
-        SpriteRegisters regs;
-        int8_t          xofs;
-        int8_t          yofs;
-        uint8_t         zofs; /* Absent for simple case. 0x80 when re-using previous bounding box */
-        uint8_t         xext; /* Absent when re-using previous bounding box */
-        uint8_t         yext; /* Absent when re-using previous bounding box */
-        uint8_t         zext; /* Absent when re-using previous bounding box */
-        bool            new_bb;
+        uint32_t        sprite = 0x00; // May be zero only in the simple case 
+        SpriteRegisters regs   = {};
+        int8_t          xofs   = 0x00;
+        int8_t          yofs   = 0x00;
+        uint8_t         zofs   = 0x80; // Absent for simple case. 0x80 when re-using previous bounding box 
+        uint8_t         xext   = 0x00; // Absent when re-using previous bounding box 
+        uint8_t         yext   = 0x00; // Absent when re-using previous bounding box 
+        uint8_t         zext   = 0x00; // Absent when re-using previous bounding box 
+        bool            new_bb = false;
     };
 
 private:    
     enum class Format { Basic, Extended, Advanced };
 
 private:
-    FeatureType     m_feature;
-    uint8_t         m_set_id;
-    uint32_t        m_ground_sprite;
-    SpriteRegisters m_ground_regs;
+    FeatureType     m_feature       = FeatureType::Trains;
+    uint8_t         m_set_id        = 0x00;
+    uint32_t        m_ground_sprite = 0x00;
+    SpriteRegisters m_ground_regs   = {};
     // TODO this should not be a member, but derived from the other values.
-    Format          m_format = Format::Basic;
+    Format          m_format        = Format::Basic;
     std::vector<BuildingSprite> m_building_sprites;
 };
 

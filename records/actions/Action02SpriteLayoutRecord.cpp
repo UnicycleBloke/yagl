@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action02SpriteLayoutRecord.h"
 #include "StreamHelpers.h"
+#include "Descriptors.h"
 
 
 void Action02SpriteLayoutRecord::SpriteRegisters::read(std::istream& is, bool is_parent)
@@ -66,34 +67,171 @@ void Action02SpriteLayoutRecord::SpriteRegisters::write(std::ostream& os, bool i
 }
 
 
+namespace {
+
+
+constexpr const char* str_registers       = "registers";   
+constexpr const char* str_hide_sprite     = "hide_sprite";   
+constexpr const char* str_sprite_offset   = "sprite_offset"; 
+constexpr const char* str_palette_offset  = "palette_offset";
+constexpr const char* str_palette_act01   = "palette_act01";
+constexpr const char* str_offset_x        = "offset_x";
+constexpr const char* str_offset_y        = "offset_y";
+constexpr const char* str_offset_z        = "offset_z";
+constexpr const char* str_sprite_var10    = "sprite_var10"; 
+constexpr const char* str_palette_var10   = "palette_var10";
+constexpr const char* str_ground_sprite   = "ground_sprite";
+constexpr const char* str_building_sprite = "building_sprite";
+constexpr const char* str_child_sprite    = "child_sprite";
+constexpr const char* str_offset          = "offset";
+constexpr const char* str_extent          = "extent";
+
+
+// Fake property numbers to facilitate out of order parsing.
+const std::map<std::string, uint8_t> g_indices =
+{
+    { str_hide_sprite,    0x00 },
+    { str_sprite_offset,  0x01 },
+    { str_palette_offset, 0x02 },
+    { str_palette_act01,  0x03 },
+    { str_offset_x,       0x04 },
+    { str_offset_y,       0x05 },
+    { str_offset_z,       0x06 },
+    { str_sprite_var10,   0x07 },
+    { str_palette_var10,  0x08 },
+};
+
+
+// Fake property numbers to facilitate out of order parsing.
+const std::map<std::string, uint8_t> g_indices2 =
+{
+    { str_ground_sprite,   0x01 },
+    { str_building_sprite, 0x02 },
+    { str_child_sprite,    0x03 },
+};
+
+
+// Fake property numbers to facilitate out of order parsing.
+const std::map<std::string, uint8_t> g_indices3 =
+{
+    { str_offset,    0x01 },
+    { str_extent,    0x02 },
+    { str_registers, 0x03 },
+};
+
+
+const IntegerDescriptorT<uint8_t> desc_hide_sprite    { 0x00, str_hide_sprite,    PropFormat::Hex };
+const IntegerDescriptorT<uint8_t> desc_sprite_offset  { 0x01, str_sprite_offset,  PropFormat::Hex };
+const IntegerDescriptorT<uint8_t> desc_palette_offset { 0x02, str_palette_offset, PropFormat::Hex };
+const BooleanDescriptor           desc_palette_act01  { 0x03, str_palette_act01 };
+const IntegerDescriptorT<uint8_t> desc_offset_x       { 0x04, str_offset_x,       PropFormat::Hex };
+const IntegerDescriptorT<uint8_t> desc_offset_y       { 0x05, str_offset_y,       PropFormat::Hex };
+const IntegerDescriptorT<uint8_t> desc_offset_z       { 0x06, str_offset_z,       PropFormat::Hex };
+const IntegerDescriptorT<uint8_t> desc_sprite_var10   { 0x07, str_sprite_var10,   PropFormat::Hex };
+const IntegerDescriptorT<uint8_t> desc_palette_var10  { 0x08, str_palette_var10,  PropFormat::Hex };
+
+
+} // namespace {
+
+
 void Action02SpriteLayoutRecord::SpriteRegisters::print(std::ostream& os, bool is_parent, uint16_t indent) const
 {
     if ((flags & 0xFF) > 0)
     {
-        os << pad(indent) << "registers: \n";
+        os << pad(indent) << str_registers << ": \n";
         os << pad(indent) << "{\n";
 
-        if (flags & BIT0_SKIP_SPRITE)     os << pad(indent + 4) << "hide_sprite: "    << to_hex(skip_sprite) << ";\n";
-        if (flags & BIT1_SPRITE_OFFSET)   os << pad(indent + 4) << "sprite_offset: "  << to_hex(sprite_offset) << ";\n";
-        if (flags & BIT2_RECOLOUR_OFFSET) os << pad(indent + 4) << "palette_offset: " << to_hex(recolour_offset) << ";\n";
+        if (flags & BIT0_SKIP_SPRITE)     desc_hide_sprite.print(skip_sprite, os, indent + 4);
+        if (flags & BIT1_SPRITE_OFFSET)   desc_sprite_offset.print(sprite_offset, os, indent + 4);
+        if (flags & BIT2_RECOLOUR_OFFSET) desc_palette_offset.print(recolour_offset, os, indent + 4);
+        if (flags & BIT3_RECOLOUR_ACT01)
+        {
+            bool flag = true;
+            desc_palette_act01.print(flag, os, indent + 4);
+        }
         
         if (is_parent)
         {
-            if (flags & BIT4_BB_XY_OFFSET) os << pad(indent + 4) << "offset_x: " << to_hex(offset_x) << ";\n";
-            if (flags & BIT4_BB_XY_OFFSET) os << pad(indent + 4) << "offset_y: " << to_hex(offset_y) << ";\n";
-            if (flags & BIT5_BB_Z_OFFSET)  os << pad(indent + 4) << "offset_z: " << to_hex(offset_z) << ";\n";
+            if (flags & BIT4_BB_XY_OFFSET) desc_offset_x.print(offset_x, os, indent + 4);
+            if (flags & BIT4_BB_XY_OFFSET) desc_offset_y.print(offset_y, os, indent + 4);
+            if (flags & BIT5_BB_Z_OFFSET)  desc_offset_z.print(offset_z, os, indent + 4);
         }
         else
         {
-            if (flags & BIT4_CHILD_X_OFFSET) os << pad(indent + 4) << "offset_x: " << to_hex(offset_x) << ";\n";
-            if (flags & BIT5_CHILD_Y_OFFSET) os << pad(indent + 4) << "offset_y: " << to_hex(offset_y) << ";\n";
+            if (flags & BIT4_CHILD_X_OFFSET) desc_offset_x.print(offset_x, os, indent + 4);
+            if (flags & BIT5_CHILD_Y_OFFSET) desc_offset_y.print(offset_y, os, indent + 4);
         }
 
-        if (flags & BIT6_SPRITE_VAR10)   os << pad(indent + 4) << "sprite_var10: "  << to_hex(sprite_var10) << ";\n";
-        if (flags & BIT7_RECOLOUR_VAR10) os << pad(indent + 4) << "palette_var10: " << to_hex(recolour_var10) << ";\n";
+        if (flags & BIT6_SPRITE_VAR10)   desc_sprite_var10.print(sprite_var10, os, indent + 4);
+        if (flags & BIT7_RECOLOUR_VAR10) desc_palette_var10.print(recolour_var10, os, indent + 4);
 
         os << pad(indent) << "}\n";
     }
+}
+
+
+void Action02SpriteLayoutRecord::SpriteRegisters::parse(TokenStream& is, bool is_parent)
+{
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        TokenValue token = is.peek();
+        const auto& it = g_indices.find(token.value);
+        if (it != g_indices.end())
+        {
+            is.match(TokenType::Ident);
+            is.match(TokenType::Colon);
+
+            bool flag = false;
+            switch (it->second)
+            {
+                case 0x00: 
+                    desc_hide_sprite.parse(skip_sprite, is);
+                    flags |= BIT0_SKIP_SPRITE; 
+                    break;                   
+                case 0x01: 
+                    desc_sprite_offset.parse(sprite_offset, is); 
+                    flags |= BIT1_SPRITE_OFFSET; 
+                    break; 
+                case 0x02: 
+                    desc_palette_offset.parse(recolour_offset, is); 
+                    flags |= BIT2_RECOLOUR_OFFSET; 
+                    break;
+                case 0x03: 
+                    desc_palette_act01.parse(flag, is); 
+                    flags |= BIT3_RECOLOUR_ACT01; 
+                    break;
+                case 0x04: 
+                    desc_offset_x.parse(offset_x, is); 
+                    flags |= BIT4_BB_XY_OFFSET; 
+                    break;      
+                case 0x05: 
+                    desc_offset_y.parse(offset_y, is); 
+                    flags |= (is_parent ? BIT4_BB_XY_OFFSET : BIT5_CHILD_Y_OFFSET); 
+                    break;      
+                case 0x06: 
+                    desc_offset_z.parse(offset_z, is); 
+                    flags |= BIT5_BB_Z_OFFSET; 
+                    break;      
+                case 0x07: 
+                    desc_sprite_var10.parse(sprite_var10, is); 
+                    flags |= BIT6_SPRITE_VAR10; 
+                    break;  
+                case 0x08: 
+                    desc_palette_var10.parse(recolour_var10, is); 
+                    flags |= BIT7_RECOLOUR_VAR10; 
+                    break; 
+            }
+
+            is.match(TokenType::SemiColon);
+        }
+        else
+        {
+            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        }
+    }
+
+    is.match(TokenType::CloseBrace);
 }
 
 
@@ -248,57 +386,6 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
 }  
 
 
-// some bits in the sprite ID are important for other reasons.
-// If any registers are set, the action is advanced.
-// If more than one building sprite, the action is extended.
-// If more than zero child sprite, the action is extended.
-// ground_sprite<id>:
-// {
-//     registers:
-//     {
-//         skip_bb: 0x01; // hide_sprite   bit 0
-//         sprite:  0x02;
-//         palette: 0x04;
-//         palette_act01: 0x08;
-//         xoffset: 0x10;
-//         yoffset: 0x10;
-//         zoffset: 0x20;
-//         sprite_var10: 0x40;
-//         palette_var10: 0x80;
-//     }
-// }
-// building_sprite<id>:
-// {
-//     xoffset: 0;
-//     yoffset: 0;
-//     zoffset: 0;
-//     xextent: 0;
-//     yextent: 0;
-//     zextent: 0;   
-
-//     offset(x, y, z);
-//     extent(x, y, z);
-
-//     registers:
-//     {
-//     }
-// }
-// child_sprite<id>:
-// {
-//     xoffset: 0; // pixel offset
-//     yoffset: 0;
-//     registers:
-//     {
-//     }
-// }
-
-//     uint32_t        m_ground_sprite;
-//     SpriteRegisters m_ground_regs;
-//     bool            m_advanced;
-//     std::vector<BuildingSprite> m_building_sprites;
-// };
-
-
 void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
@@ -306,7 +393,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
     os << "> // Action02 random\n";
     os << pad(indent) << "{\n";
 
-    os << pad(indent + 4) << "ground_sprite: " << to_hex(m_ground_sprite) << ";\n";
+    os << pad(indent + 4) << str_ground_sprite << ": " << to_hex(m_ground_sprite) << "\n";
     os << pad(indent + 4) << "{" << '\n';
     m_ground_regs.print(os, true, indent + 8);
     os << pad(indent + 4) << "}" << '\n';
@@ -315,18 +402,18 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
     {
         if (sprite.new_bb)
         {
-            os << pad(indent + 4) << "building_sprite: " << to_hex(sprite.sprite) << '\n';
+            os << pad(indent + 4) << str_building_sprite << ": " << to_hex(sprite.sprite) << '\n';
             os << pad(indent + 4) << "{\n";
-            os << pad(indent + 8) << "offset: " << to_hex(sprite.xofs) << ", " << to_hex(sprite.yofs) << ", " << to_hex(sprite.zofs) << ";\n";
-            os << pad(indent + 8) << "extent: " << to_hex(sprite.xext) << ", " << to_hex(sprite.yext) << ", " << to_hex(sprite.zext) << ";\n";
+            os << pad(indent + 8) << str_offset << ": " << to_hex(sprite.xofs) << ", " << to_hex(sprite.yofs) << ", " << to_hex(sprite.zofs) << ";\n";
+            os << pad(indent + 8) << str_extent << ": " << to_hex(sprite.xext) << ", " << to_hex(sprite.yext) << ", " << to_hex(sprite.zext) << ";\n";
             sprite.regs.print(os, true, indent + 8);
             os << pad(indent + 4) << "}\n";
         }
         else
         {
-            os << pad(indent + 4) << "child_sprite: " << to_hex(sprite.sprite) << '\n';
+            os << pad(indent + 4) << str_child_sprite << ": " << to_hex(sprite.sprite) << '\n';
             os << pad(indent + 4) << "{\n";
-            os << pad(indent + 8) << "offset: " << to_hex(sprite.xofs) << ", " << to_hex(sprite.yofs) << ";\n";
+            os << pad(indent + 8) << str_offset << ": " << to_hex(sprite.xofs) << ", " << to_hex(sprite.yofs) << ";\n";
             sprite.regs.print(os, true, indent + 8);
             os << pad(indent + 4) << "}\n";
         }
@@ -339,5 +426,165 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
 void Action02SpriteLayoutRecord::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action02SpriteLayoutRecord::parse not implemented");
+    is.match(TokenType::OpenAngle);
+    m_feature = FeatureFromName(is.match(TokenType::Ident));
+    is.match(TokenType::Comma);
+    m_set_id = is.match_integer();
+    is.match(TokenType::CloseAngle);
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        TokenValue token = is.peek();
+        const auto& it = g_indices2.find(token.value);
+        if (it != g_indices2.end())
+        {
+            is.match(TokenType::Ident);
+            is.match(TokenType::Colon);
+
+            switch (it->second)
+            {
+                case 0x01: parse_ground_sprite(is); break;
+                case 0x02: parse_building_sprite(is); break;
+                case 0x03: parse_child_sprite(is); break;
+            }
+        }
+        else
+        {
+            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        }
+    }
+
+    is.match(TokenType::CloseBrace);
 }
+
+
+void Action02SpriteLayoutRecord::parse_ground_sprite(TokenStream& is)
+{
+    m_ground_sprite = is.match_integer();
+    m_ground_regs   = {};
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        TokenValue token = is.peek();
+        const auto& it = g_indices3.find(token.value);
+        if (it != g_indices3.end())
+        {
+            is.match(TokenType::Ident);
+            is.match(TokenType::Colon);
+
+            switch (it->second)
+            {
+                case 0x03: m_ground_regs.parse(is, true); break;
+                default:   throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            }
+        }
+        else
+        {
+            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        }
+    }
+
+    is.match(TokenType::CloseBrace);
+}
+
+
+void Action02SpriteLayoutRecord::parse_building_sprite(TokenStream& is)
+{
+    BuildingSprite sprite;
+    sprite.new_bb = true;
+    sprite.sprite = is.match_integer();
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        TokenValue token = is.peek();
+        const auto& it = g_indices3.find(token.value);
+        if (it != g_indices3.end())
+        {
+            is.match(TokenType::Ident);
+            is.match(TokenType::Colon);
+
+            switch (it->second)
+            {
+                case 0x01: 
+                    sprite.xofs = is.match_integer();
+                    is.match(TokenType::Comma);
+                    sprite.yofs = is.match_integer();
+                    is.match(TokenType::Comma);
+                    sprite.zofs = is.match_integer();
+                    is.match(TokenType::SemiColon);
+                    break; // offset
+
+                case 0x02: 
+                    sprite.xext = is.match_integer();
+                    is.match(TokenType::Comma);
+                    sprite.yext = is.match_integer();
+                    is.match(TokenType::Comma);
+                    sprite.zext = is.match_integer();
+                    is.match(TokenType::SemiColon);
+                    break; // extent
+
+                case 0x03: 
+                    sprite.regs.parse(is, true); 
+                    break;
+
+                default: throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            }
+        }
+        else
+        {
+            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        }
+    }
+
+    is.match(TokenType::CloseBrace);
+
+    m_building_sprites.push_back(sprite);
+}
+
+
+void Action02SpriteLayoutRecord::parse_child_sprite(TokenStream& is)
+{
+    BuildingSprite sprite;
+    sprite.new_bb = false;
+    sprite.sprite = is.match_integer();
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        TokenValue token = is.peek();
+        const auto& it = g_indices3.find(token.value);
+        if (it != g_indices3.end())
+        {
+            is.match(TokenType::Ident);
+            is.match(TokenType::Colon);
+
+            switch (it->second)
+            {
+                case 0x01: 
+                    sprite.xofs = is.match_integer();
+                    is.match(TokenType::Comma);
+                    sprite.yofs = is.match_integer();
+                    is.match(TokenType::SemiColon);
+                    break; // offset
+
+                case 0x03: 
+                    sprite.regs.parse(is, false); 
+                    break;
+
+                default: throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            }
+        }
+        else
+        {
+            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        }
+    }
+
+    is.match(TokenType::CloseBrace);
+
+    m_building_sprites.push_back(sprite);
+}
+
