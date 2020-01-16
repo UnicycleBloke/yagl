@@ -18,24 +18,28 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action02VariableRecord.h"
 #include "StreamHelpers.h"
+#include "Descriptors.h"
+
+
+using VarType = Action02VariableRecord::VarType;
 
 
 // The sizes of a number of the fields in the record depend on the type 
 // read near the beginning. 
-static uint32_t read_action(std::istream& is, uint8_t var_type)
+static uint32_t read_action(std::istream& is, VarType var_type)
 {
      switch (var_type)
      {
-         case 0x81:
-         case 0x82:
+         case VarType::PrimaryByte:
+         case VarType::RelatedByte:
              return read_uint8(is);
 
-         case 0x85:
-         case 0x86:
+         case VarType::PrimaryWord:
+         case VarType::RelatedWord:
              return read_uint16(is);
 
-         case 0x89:
-         case 0x8A:
+         case VarType::PrimaryDWord:
+         case VarType::RelatedDWord:
              return read_uint32(is);
      }
 
@@ -43,20 +47,20 @@ static uint32_t read_action(std::istream& is, uint8_t var_type)
 }
 
 
-static void write_action(std::ostream& os, uint8_t type, uint32_t value)
+static void write_action(std::ostream& os, VarType type, uint32_t value)
 {
      switch (type)
      {
-         case 0x81:
-         case 0x82:
+         case VarType::PrimaryByte:
+         case VarType::RelatedByte:
              write_uint8(os, value); return;
 
-         case 0x85:
-         case 0x86:
+         case VarType::PrimaryWord:
+         case VarType::RelatedWord:
              write_uint16(os, value); return;
 
-         case 0x89:
-         case 0x8A:
+         case VarType::PrimaryDWord:
+         case VarType::RelatedDWord:
              write_uint32(os, value); return;
      }
 }
@@ -66,7 +70,7 @@ void Action02VariableRecord::read(std::istream& is, const GRFInfo& info)
 {
     m_feature  = static_cast<FeatureType>(read_uint8(is));
     m_set_id   = read_uint8(is);
-    m_var_type = read_uint8(is);
+    m_var_type = static_cast<VarType>(read_uint8(is));
 
     // It's a little involved, but basically a chain of variable operations 
     // which are performed and combined in sequence.
@@ -80,7 +84,7 @@ void Action02VariableRecord::read(std::istream& is, const GRFInfo& info)
         // with the next variable calculation. 
         if (m_actions.size() > 0)
         {
-            var_action.operation = read_uint8(is);
+            var_action.operation = static_cast<Operation>(read_uint8(is));
         }
 
         // What variable are we going to perform a calculation with?
@@ -152,7 +156,7 @@ void Action02VariableRecord::write(std::ostream& os, const GRFInfo& info) const
 
     write_uint8(os, static_cast<uint8_t>(m_feature));
     write_uint8(os, m_set_id);
-    write_uint8(os, m_var_type);
+    write_uint8(os, static_cast<uint8_t>(m_var_type));
 
     uint16_t num_actions = m_actions.size();
     for (uint16_t i = 0; i < num_actions; ++i)
@@ -161,7 +165,7 @@ void Action02VariableRecord::write(std::ostream& os, const GRFInfo& info) const
 
         if (i > 0)
         {
-            write_uint8(os, varaction.operation);
+            write_uint8(os, static_cast<uint8_t>(varaction.operation));
         }
 
         write_uint8(os, varaction.variable);
@@ -203,35 +207,93 @@ void Action02VariableRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
-static std::string operation_name(uint8_t operation)
-{
-    switch (operation)
+namespace {
+
+
+const EnumDescriptorT<Action02VariableRecord::Operation> desc_operation = 
+{ 
+    0x00, "operation",                   
     {
-        case 0x00: return "add"; 
-        case 0x01: return "sub"; 
-        case 0x02: return "signed_min"; 
-        case 0x03: return "signed_max"; 
-        case 0x04: return "unsigned_min"; 
-        case 0x05: return "unsigned_max"; 
-        case 0x06: return "signed_div"; 
-        case 0x07: return "signed_mod"; 
-        case 0x08: return "unsigned_div"; 
-        case 0x09: return "unsigned_mod"; 
-        case 0x0A: return "mul"; 
-        case 0x0B: return "bitwise_and"; 
-        case 0x0C: return "bitwise_or"; 
-        case 0x0D: return "bitwise_xor"; 
-        case 0x0E: return "temp_store"; 
-        case 0x0F: return "assign"; 
-        case 0x10: return "perm_store"; 
-        case 0x11: return "ror"; 
-        case 0x12: return "signed_cmp"; 
-        case 0x13: return "unsigned_cmp"; 
-        case 0x14: return "lshift"; 
-        case 0x15: return "unsigned_rshift"; 
-        case 0x16: return "signed_rshift"; 
+        { 0x00, "Addition" },
+        { 0x01, "Subtraction" },
+        { 0x02, "SignedMin" },
+        { 0x03, "SignedMax" },
+        { 0x04, "UnsignedMin" },
+        { 0x05, "UnsignedMax" },
+        { 0x06, "SignedDiv" },
+        { 0x07, "SignedMod" },
+        { 0x08, "UnsignedDiv" },
+        { 0x09, "UnsignedMod" },
+        { 0x0A, "Multiply" },
+        { 0x0B, "BitwiseAnd" },
+        { 0x0C, "BitwiseOr" },
+        { 0x0D, "BitwiseXor" },
+        { 0x0E, "TempStore" },
+        { 0x0F, "Assign" },
+        { 0x10, "PermStore" },
+        { 0x11, "RotateRight" },
+        { 0x12, "SignedCmp" },
+        { 0x13, "UnsignedCmp" },
+        { 0x14, "ShiftLeft" },
+        { 0x15, "UnsignedShiftRight" },
+        { 0x16, "SignedShiftRight" },
+    }    
+};
+
+
+constexpr const char* str_default    = "default";
+constexpr const char* str_ranges     = "ranges";
+constexpr const char* str_value1     = "value1";
+constexpr const char* str_value2     = "value2";
+constexpr const char* str_variable   = "variable";
+constexpr const char* str_expression = "expression";
+
+
+} // namespace {
+
+
+// Could re-implement this to name the variable.
+std::string Action02VariableRecord::variable_name(const VarAction& va) const
+{
+    std::ostringstream os;
+    os << str_variable << "[" << to_hex(va.variable);
+    // Some variables take an additional argument
+    if (va.variable >= 0x60 && va.variable < 0x80)
+    {
+        os << ", " << to_hex(va.parameter);
     }
-    return "<unknown>"; 
+    os  << "]";
+
+    return os.str();
+}
+
+
+std::string Action02VariableRecord::variable_expression(const VarAction& va) const
+{
+    std::ostringstream os;
+    os << variable_name(va);
+
+    // No point showing the shift if it does nothing.
+    if (va.shift_num > 0)
+    {
+        os << " >> " << uint16_t(va.shift_num); 
+    }
+
+    os << " & " << to_hex(va.and_mask);
+
+    if ((va.action & 0xC0) != 0x00)
+    {
+        // No point showing the add value if it is zero.
+        if (va.add_value > 0)
+        {
+            os << " + " << to_hex(va.add_value);  
+        }
+        
+        os << (((va.action & 0x80) == 0x00) ? " / " : " % ");
+        os << to_hex(va.div_mod_value);  
+    }
+
+    return os.str();
 }
 
 
@@ -244,70 +306,46 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
 
     // Access general variable or variable of the primary object 81 85 89 (all odd)
     // Access variable of "related" object 82 86 8A (all even)
-    bool primary_object = (m_var_type & 0x01) == 0x01;
-    uint8_t var_size    = 4;
-    switch (m_var_type)
-    {
-         case 0x81: case 0x82: var_size = 1; break;
-         case 0x85: case 0x86: var_size = 2; break;
-         case 0x89: case 0x8A: var_size = 4; break;
-    }
+    // bool primary_object = (static_cast<uint8_t>(m_var_type) & 0x01) == 0x01;
+    // uint8_t var_size    = 4;
+    // switch (m_var_type)
+    // {
+    //      case VarType::PrimaryByte: 
+    //      case VarType::RelatedByte:  var_size = 1; break;
+    //      case VarType::PrimaryWord: 
+    //      case VarType::RelatedWord:  var_size = 2; break;
+    //      case VarType::PrimaryDWord: 
+    //      case VarType::RelatedDWord: var_size = 4; break;
+    // }
 
+    // Series of one or more VarAction calculations.
+    os << pad(indent + 4) << str_expression << ":\n";
+    os << pad(indent + 4) << "{\n" ;
     for (const auto& va: m_actions)
     {
         // For the second and later items - this is an advanced variational action 02.
-        bool advanced = &va != &m_actions[0];
-                 
-        os << pad(indent + 4) << "test: "; 
-        if (advanced)
+        if (&va == &m_actions[0])
         {
-            os << operation_name(va.operation) << "(test, ";
-        }  
-        
-        // TODO replace the variable with the proper name for the feature.
-        // Need a few maps basically. Give some thought to how we can simplify the output
-        // to make it clearer. Or maybe there is no need...
-        os << "(variable[" << to_hex(va.variable) << "]";
-
-        // Some variables take an additional argument
-        if (va.variable >= 0x60 && va.variable < 0x80)
-        {
-            os << "(" << to_hex(va.parameter) << ")";
+            os << pad(indent + 8) << str_value1 << " = "; 
+            os << variable_expression(va);
         }
-
-        // No point showing the shift if it does nothing.
-        if (va.shift_num > 0)
+        else
         {
-            os << " >> " << uint16_t(va.shift_num); 
-        }
-
-        os << " & " << to_hex(va.and_mask) << ")";
-        if ((va.action & 0xC0) != 0x00)
-        {
-            if (va.add_value > 0)
-            {
-                os << " + " << to_hex(va.add_value);  
-            }
+            os << "\n";
+            os << pad(indent + 8) << str_value2 << " = "; 
+            os  << variable_expression(va) << ";\n";
             
-            if ((va.action & 0x80) == 0x00)
-            {
-                os << " / " << to_hex(va.div_mod_value);  
-            }
-            else
-            {
-                os << " % " << to_hex(va.div_mod_value);  
-            }         
-        }
-
-        if (advanced)
-        {
-            os << ")";
-        }  
-
+            os << pad(indent + 8) << str_value1 << " = "; 
+            os << desc_operation.value(va.operation);
+            os << "(" << str_value1 << ", " << str_value2 << ")";
+        }          
+ 
         os << ";\n";
     }
+    os << pad(indent + 4) << "}\n" ;
 
-    os << pad(indent + 4) << "switch (test)\n";
+    // Selection ranges for the switch.
+    os << pad(indent + 4) << str_ranges << ":\n";
     os << pad(indent + 4) << "{\n" ;
     for (const auto& r: m_ranges)
     {
@@ -320,22 +358,11 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
         {
             os << to_hex(r.low_range) << ".." << to_hex(r.high_range) << ": ";
         }
-        os << to_hex(r.set_id) << "; ";
-        if (r.set_id & 0x8000)
-        {
-            os << "// Callback result";
-        }
-        os << "\n";
+        os << to_hex(r.set_id) << ";\n";
     }
-
-    os << pad(indent + 8) << "default: " << to_hex(m_default) << ";" ;
-    if (m_default & 0x8000)
-    {
-        os << "// Callback result";
-    }
-    os << "\n";
-
     os << pad(indent + 4) << "}\n" ;
+
+    os << pad(indent + 4) << str_default << ": " << to_hex(m_default) << ";\n" ;
 
     os << pad(indent) << "}\n" ;
 }
