@@ -430,5 +430,31 @@ static void process_utf16_control_codes(uint16_t u16, std::basic_ostringstream<c
 }
 
 
+void GRFString::read(std::istream& is, const GRFInfo& info)
+{
+    // Read until zero or end of stream. Is it terminated or not?
+    // Convert to UTF16?
+}
 
 
+void GRFString::write(std::ostream& os, const GRFInfo& info) const
+{
+    // Convert to UTF8 or Latin1
+    // Write characters to stream. Is it terminated or not?
+}
+
+
+void GRFString::print(std::ostream& os) const
+{
+    // Replace control codes binary with names
+    // Convert to UTF8
+    // Write characters to the stream
+}
+
+
+void GRFString::parse(TokenStream& is)
+{
+    std::string readable = is.match(TokenType::String);
+    // Convert to UTF16
+    // Replace control codes names with binary
+}
