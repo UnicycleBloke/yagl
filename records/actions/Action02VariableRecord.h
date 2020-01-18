@@ -40,6 +40,12 @@ private:
     std::string variable_name(const VarAction& va) const;
     std::string variable_expression(const VarAction& va) const;
 
+    void print_ranges(std::ostream& os, uint16_t indent) const;
+    void print_expression(std::ostream& os, uint16_t indent) const;
+
+    void parse_ranges(TokenStream& is);
+    void parse_expression(TokenStream& is);
+
 public:
     // Must be 0x81/0x82(B), 0x85/0x86(W), 0x89/0x8A(D)
     enum class VarType : uint8_t

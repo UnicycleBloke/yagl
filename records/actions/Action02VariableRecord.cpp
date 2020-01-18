@@ -249,6 +249,17 @@ constexpr const char* str_variable   = "variable";
 constexpr const char* str_expression = "expression";
 
 
+const std::map<std::string, uint8_t> g_indices =
+{
+    { str_expression,  0x01 },
+    { str_ranges,      0x02 },
+    { str_default,     0x03 },
+};
+
+
+const IntegerDescriptorT<uint16_t> desc_default { 0x03, str_default, PropFormat::Hex };
+
+
 } // namespace {
 
 
@@ -318,38 +329,185 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
     //      case VarType::RelatedDWord: var_size = 4; break;
     // }
 
+
+    print_expression(os, indent + 4);
+    print_ranges(os, indent + 4);
+    desc_default.print(m_default, os, indent + 4);
+
+    os << pad(indent) << "}\n" ;
+}
+
+
+void Action02VariableRecord::parse(TokenStream& is)
+{
+    is.match_ident(RecordName(record_type()));
+    is.match(TokenType::OpenAngle);
+    m_feature = FeatureFromName(is.match(TokenType::Ident));
+    is.match(TokenType::Comma);
+    m_set_id = is.match_integer();
+    is.match(TokenType::CloseAngle);
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        TokenValue token = is.peek();
+        const auto& it = g_indices.find(token.value);
+        if (it != g_indices.end())
+        {
+            is.match(TokenType::Ident);
+            is.match(TokenType::Colon);
+
+            switch (it->second)
+            {
+                case 0x01: parse_expression(is); break;
+                case 0x02: parse_ranges(is); break;
+                case 0x03: desc_default.parse(m_default, is); break;
+            }
+
+            is.match(TokenType::SemiColon);
+        }
+        else
+        {
+            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        }
+    }
+
+    is.match(TokenType::CloseBrace);
+}
+
+
+void Action02VariableRecord::print_expression(std::ostream& os, uint16_t indent) const
+{
     // Series of one or more VarAction calculations.
-    os << pad(indent + 4) << str_expression << ":\n";
-    os << pad(indent + 4) << "{\n" ;
+    os << pad(indent) << str_expression << ":\n";
+    os << pad(indent) << "{\n" ;
     for (const auto& va: m_actions)
     {
         // For the second and later items - this is an advanced variational action 02.
         if (&va == &m_actions[0])
         {
-            os << pad(indent + 8) << str_value1 << " = "; 
+            os << pad(indent + 4) << str_value1 << " = "; 
             os << variable_expression(va);
         }
         else
         {
             os << "\n";
-            os << pad(indent + 8) << str_value2 << " = "; 
+            os << pad(indent + 4) << str_value2 << " = "; 
             os  << variable_expression(va) << ";\n";
             
-            os << pad(indent + 8) << str_value1 << " = "; 
+            os << pad(indent + 4) << str_value1 << " = "; 
             os << desc_operation.value(va.operation);
             os << "(" << str_value1 << ", " << str_value2 << ")";
         }          
  
         os << ";\n";
     }
-    os << pad(indent + 4) << "}\n" ;
+    os << pad(indent) << "};\n" ;
+}
 
+
+    // struct VarAction
+    // {
+    //     bool has_parameter() const { return (variable >= 0x60) && (variable < 0x80); }
+
+    //     Operation  operation;     // Ignored for first varaction. 
+    //     uint8_t    variable;
+    //     uint8_t    parameter;     // Additional byte following 60+ variables - but not 80+? 
+    //     uint8_t    shift_num;     // Bit5 means advanced, bit6 and bit7 mutex 
+    //     uint8_t    action;
+    //     uint32_t   and_mask;
+    //     uint32_t   add_value;     // If bit6 or bit7 of shift_num set 
+    //     uint32_t   div_mod_value; // If bit6 or bit7  of shift_num set 
+    // };
+
+
+void Action02VariableRecord::parse_expression(TokenStream& is)
+{
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        VarAction action = {};
+
+        // value2 = 
+        is.match(TokenType::Ident);  // value1 or value2
+        is.match(TokenType::Equals);
+
+        // variable[variable, parameter]
+        is.match_ident(str_variable);
+        is.match(TokenType::OpenBracket);
+        action.variable = is.match_integer();
+        if (is.peek().type == TokenType::Comma)
+        {
+            is.match(TokenType::Comma);
+            action.parameter = is.match_integer();
+        }
+        is.match(TokenType::CloseBracket);
+
+        // >> shift_num
+        if (is.peek().type == TokenType::ShiftLeft)
+        {
+            is.match(TokenType::ShiftLeft);
+            action.shift_num = is.match_integer();
+        }
+
+        // & and_mask
+        if (is.peek().type == TokenType::Ampersand)
+        {
+            is.match(TokenType::Ampersand);
+            action.and_mask = is.match_integer();
+        }
+
+        // + add_value
+        if (is.peek().type == TokenType::OpPlus)
+        {
+            is.match(TokenType::OpPlus);
+            action.add_value = is.match_integer();
+        }
+
+        // / div_mod_value or % div_mod_value
+        if (is.peek().type == TokenType::OpDivide)
+        {
+            is.match(TokenType::OpDivide);
+            action.div_mod_value = is.match_integer();
+        }
+        if (is.peek().type == TokenType::Percent)
+        {
+            is.match(TokenType::Percent);
+            action.div_mod_value = is.match_integer();
+        }
+        is.match(TokenType::SemiColon);
+
+        // Advanced operations.
+        // value1 = Subtraction(value1, value2); - mostly ignored - need a more efficient representation.
+        if (m_actions.size() > 0)
+        {
+            // Horribly inefficient.
+            is.match_ident(str_value1);
+            is.match(TokenType::Equals);
+            desc_operation.parse(action.operation, is);
+            is.match(TokenType::OpenParen);
+            is.match_ident(str_value1);
+            is.match(TokenType::Comma);
+            is.match_ident(str_value2);
+            is.match(TokenType::CloseParen);
+            is.match(TokenType::SemiColon);
+        }
+
+        m_actions.push_back(action);
+    }
+
+    is.match(TokenType::CloseBrace);
+}
+
+
+void Action02VariableRecord::print_ranges(std::ostream& os, uint16_t indent) const
+{
     // Selection ranges for the switch.
-    os << pad(indent + 4) << str_ranges << ":\n";
-    os << pad(indent + 4) << "{\n" ;
+    os << pad(indent) << str_ranges << ":\n";
+    os << pad(indent) << "{\n" ;
     for (const auto& r: m_ranges)
     {
-        os << pad(indent + 8);
+        os << pad(indent + 4);
         if (r.low_range == r.high_range)
         {
             os << to_hex(r.low_range) << ": ";
@@ -360,16 +518,33 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
         }
         os << to_hex(r.set_id) << ";\n";
     }
-    os << pad(indent + 4) << "}\n" ;
-
-    os << pad(indent + 4) << str_default << ": " << to_hex(m_default) << ";\n" ;
-
-    os << pad(indent) << "}\n" ;
+    os << pad(indent) << "};\n" ;
 }
 
 
-void Action02VariableRecord::parse(TokenStream& is)
+void Action02VariableRecord::parse_ranges(TokenStream& is)
 {
-    is.match_ident(RecordName(record_type()));
-    throw RUNTIME_ERROR("Action02VariableRecord::parse not implemented");
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        VarRange range = {};
+        range.low_range = is.match_integer();
+        if (is.peek().type == TokenType::DoubleDot)
+        {
+            is.match(TokenType::DoubleDot);
+            range.high_range = is.match_integer();
+        }
+        else
+        {
+            range.high_range = range.low_range;
+        }
+
+        is.match(TokenType::Colon);
+        range.set_id = is.match_integer();
+        is.match(TokenType::SemiColon);
+
+        m_ranges.push_back(range);
+    }
+
+    is.match(TokenType::CloseBrace);
 }
