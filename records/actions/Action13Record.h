@@ -44,5 +44,5 @@ private:
     uint8_t   m_language;
     uint16_t  m_first_string_id;
 
-    std::vector<std::string> m_strings;
+    std::vector<GRFString> m_strings;
 };

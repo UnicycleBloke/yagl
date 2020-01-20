@@ -51,7 +51,8 @@ void Action04Record::read(std::istream& is, const GRFInfo& info)
     // Finally read the strings.
     for (uint8_t i = 0; i < num_strings; ++i)
     {
-        std::string str = read_string(is);
+        GRFString str;
+        str.read(is);
         m_strings.push_back(str);
     }
 }
@@ -82,7 +83,7 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
 
     for (const auto& str: m_strings)
     {
-        write_string(os, str);
+        str.write(os);
     }
 }  
 
@@ -116,7 +117,7 @@ void Action04Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t string_id = m_first_string_id;
     for (const auto& s: m_strings)
     {
-        os << pad(indent + 4) << "\"" << grf_string_to_readable_utf8(s) << "\"; //" << to_hex(string_id++) << "\n";
+        os << pad(indent + 4) << "\"" << s.readable() << "\"; //" << to_hex(string_id++) << "\n";
     }
 
     os << pad(indent) << "}\n";
@@ -137,7 +138,9 @@ void Action04Record::parse(TokenStream& is)
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
-        m_strings.push_back(is.match(TokenType::String));
+        GRFString str;
+        str.parse(is);
+        m_strings.push_back(str);
         is.match(TokenType::SemiColon);
     }
 

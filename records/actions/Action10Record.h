@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Record.h"
+#include "GRFStrings.h"
 
 
 class Action10Record : public ActionRecord
@@ -36,6 +37,6 @@ public:
     void parse(TokenStream& is) override;
 
 private:
-    uint8_t     m_label;
-    std::string m_comment;
+    uint8_t   m_label;
+    GRFString m_comment;
 };

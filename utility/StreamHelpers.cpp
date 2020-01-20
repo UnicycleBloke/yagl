@@ -104,33 +104,6 @@ void write_uint32(std::ostream& os, uint32_t value)
 }
 
 
-std::string read_string(std::istream& is)
-{
-    std::string result;
-    std::getline(is, result, char(0));
-
-    if (is.fail())
-    {
-        throw RUNTIME_ERROR("read_string failed");
-    }
-
-    return result;
-}
-
-
-void write_string(std::ostream& os, const std::string& value)
-{
-    write_string(os, value, StringTerm::Null);
-}
-
-
-void write_string(std::ostream& os, const std::string& value, StringTerm term)
-{
-    // Optionally write without a 0 terminator - one or two strings in the GRF are terminated by end of record or whatever.
-    os.write(value.c_str(), value.length() + ((term == StringTerm::None) ? 0 : 1));
-}
-
-
 // Used for debugging to see what bytes are in the stream as sort of NFO. 
 void dump_hex(std::istream& is, uint16_t length)
 { 

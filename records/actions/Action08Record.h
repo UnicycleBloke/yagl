@@ -41,6 +41,6 @@ public:
 private:
     GRFVersion  m_grf_version;
     GRFLabel    m_grf_id;
-    std::string m_name;
-    std::string m_info;
+    GRFString   m_name;
+    GRFString   m_info;
 };

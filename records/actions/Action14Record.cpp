@@ -38,7 +38,7 @@ void Action14Record::read_chunks(std::istream& is, std::vector<Chunk>& chunks)
 
             case 'T':
                 chunk.language = read_uint8(is);
-                chunk.text     = read_string(is);
+                chunk.text.read(is);
                 break;
 
             case 'B':
@@ -82,7 +82,7 @@ void Action14Record::write_chunks(std::ostream& os, const std::vector<Chunk>& ch
             case 'T':
                 {
                     write_uint8(os, chunk.language);
-                    write_string(os, chunk.text);
+                    chunk.text.write(os);
                 }
                 break;
             case 'B':
@@ -127,7 +127,7 @@ void Action14Record::print_chunks(std::ostream& os, const std::vector<Chunk>& ch
 
             case 'T':
                 os << language_iso(chunk.language) << ",";
-                os << " \"" << grf_string_to_readable_utf8(chunk.text) << "\";";
+                os << " \"" << chunk.text.readable() << "\";";
                 os << " // " << language_name(chunk.language) << "\n";
                 break;
 
@@ -199,7 +199,7 @@ void Action14Record::parse_chunks(TokenStream& is, std::vector<Chunk>& chunks)
                 chunk.language = language_id(is.match(TokenType::Ident));
                 is.match(TokenType::Comma);
                 // TODO convert the readable string to the GRF format. This is either UTF8 (sort of), or Latin-1 (sort of).
-                chunk.text = is.match(TokenType::String);
+                chunk.text.parse(is);
                 is.match(TokenType::SemiColon);
                 break;
 

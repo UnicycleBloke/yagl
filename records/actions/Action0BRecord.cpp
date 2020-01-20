@@ -39,14 +39,14 @@ void Action0BRecord::read(std::istream& is, const GRFInfo& info)
         // - The first 0x7B is the first parameter byte below.
         // - The second 0x7B is the second parameter byte below.
         // No other combinations are permitted.
-        m_custom_message = read_string(is);
+        m_custom_message.read(is);
     }
 
     // // Can either scan the string or just check for end of input. The 
     // // built in strings can't be scanned, so...
     if (is.peek() != EOF)
     {
-        m_message_data = read_string(is);
+        m_message_data.read(is);
     }
 
     m_num_params = 0;
@@ -75,13 +75,13 @@ void Action0BRecord::write(std::ostream& os, const GRFInfo& info) const
 
     if (m_message_id == 0xFF)
     {
-        write_string(os, m_custom_message);
+        m_custom_message.write(os);
     }
 
     // Bug - what if the string that was read was just a 0 termination byte?
     if (m_message_data.length() > 0)
     {
-        write_string(os, m_message_data);
+        m_message_data.write(os);
     }
 
     if (m_num_params > 0) write_uint8(os, m_param1);
@@ -138,8 +138,8 @@ const EnumDescriptorT<Action0BRecord::Severity> severity_desc =
 };
 
 const IntegerDescriptorT<uint8_t> desc_message_id  { 0x01, str_message_id, PropFormat::Hex };
-const StringDescriptor            desc_message     { 0x02, str_custom_message };
-const StringDescriptor            desc_message_data{ 0x03, str_message_data };
+const GRFStringDescriptor         desc_message     { 0x02, str_custom_message };
+const GRFStringDescriptor         desc_message_data{ 0x03, str_message_data };
 const IntegerDescriptorT<uint8_t> desc_param1      { 0x04, str_param1, PropFormat::Hex };
 const IntegerDescriptorT<uint8_t> desc_param2      { 0x05, str_param2, PropFormat::Hex };
 

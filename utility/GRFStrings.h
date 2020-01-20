@@ -24,7 +24,9 @@
 #include "GRFLabel.h"
 
 
-std::string grf_string_to_readable_utf8(const std::string& str);
+//std::string grf_string_to_readable_utf8(const std::string& str);
+
+enum class StringTerm { None, Null };
 
 
 // Replace std::string with this in all the records and other structures.
@@ -33,24 +35,30 @@ class GRFString
 public:
     // Binary serialisation
     // Directly read or write m_value. 
-    // TODO indicate whether the string is terminated - CTOR?.
-    void read(std::istream& is, const GRFInfo& info);
-    void write(std::ostream& os, const GRFInfo& info) const;
+    void read(std::istream& is, StringTerm term = StringTerm::Null);
+    void write(std::ostream& os, StringTerm term = StringTerm::Null) const;
 
     // Text serialisation
     // Convert the internal representation to a human readable version.
     void print(std::ostream& os) const;
+    std::string readable() const;
     // Convert the value that is read into the internal representation. 
     // Determine whether or not the internal version needs to be UTF8.
     void parse(TokenStream& is);
+
+    uint32_t length() const { return m_value.length(); } 
 
 private:
     // This is the value as read from or written to a binary GRF file.
     // When reading from or writing to a YAGL file, some conversion is 
     // necessary.
-    // TODO maybe prefer the intermediate std::u16string though this consumes more RAM 
-    // Easier to test for particular control codes if we need to do so - more uniform.
     std::string m_value;
 };
+
+
+std::string read_string(std::istream& is);
+void write_string(std::ostream& os, const std::string& value, StringTerm term);
+void write_string(std::ostream& os, const std::string& value);
+std::string grf_string_to_readable_utf8(const std::string& value);
 
 

@@ -23,10 +23,7 @@
 void Action10Record::read(std::istream& is, const GRFInfo& info)
 {
     m_label = read_uint8(is);
-    while (is.peek() != EOF)
-    {
-        m_comment.push_back(read_uint8(is));
-    }    
+    m_comment.read(is, StringTerm::None);
 }
 
 
@@ -36,7 +33,7 @@ void Action10Record::write(std::ostream& os, const GRFInfo& info) const
 
     write_uint8(os, m_label);
     // Write an unterminated string. The record size implies the termination.
-    write_string(os, m_comment, StringTerm::None);
+    m_comment.write(os, StringTerm::None);
 }  
 
 
@@ -55,7 +52,7 @@ void Action10Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     // print nothing, or convert to hex. 
     if (m_comment.length() > 1)
     {
-        os << pad(indent + 4) << "\"" << m_comment << "\";\n";
+        os << pad(indent + 4) << "\"" << m_comment.readable() << "\";\n";
     }
     
     os << "}\n";
@@ -70,7 +67,7 @@ void Action10Record::parse(TokenStream& is)
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
-    m_comment = is.match(TokenType::String);  
+    m_comment.parse(is);
     is.match(TokenType::SemiColon);
     is.match(TokenType::CloseBrace);
 }

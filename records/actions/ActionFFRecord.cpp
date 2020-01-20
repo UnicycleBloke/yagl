@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "ActionFFRecord.h"
 #include "StreamHelpers.h"
+#include "GRFStrings.h"
 #include "FileSystem.h"
 #include "CommandLineOptions.h"
 #include <fstream>

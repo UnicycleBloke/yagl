@@ -65,8 +65,8 @@ private:
         uint8_t  type;
 
         // Only for strings
-        uint8_t     language;
-        std::string text;
+        uint8_t   language;
+        GRFString text;
 
         // Only for binary blobs
         std::vector<uint8_t> data;

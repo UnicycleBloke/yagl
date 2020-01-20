@@ -37,20 +37,35 @@ struct PropertyDescriptor
 };
 
 
-struct StringDescriptor : PropertyDescriptor
+// struct StringDescriptor : PropertyDescriptor
+// {
+//     void print(const std::string& value, std::ostream& os, uint8_t indent) const
+//     {
+//         prefix(os, indent);
+//         // Do we always want readable strings here?
+//         os << "\"" << grf_string_to_readable_utf8(value) << "\";\n"; 
+//     }
+
+//     void parse(std::string& value, TokenStream& is) const
+//     {
+//         // TODO convert string *from* readable format.
+//         value = is.match(TokenType::String);
+
+//     }
+// };
+
+
+struct GRFStringDescriptor : PropertyDescriptor
 {
-    void print(const std::string& value, std::ostream& os, uint8_t indent) const
+    void print(const GRFString& value, std::ostream& os, uint8_t indent) const
     {
         prefix(os, indent);
-        // Do we always want readable strings here?
-        os << "\"" << grf_string_to_readable_utf8(value) << "\";\n"; 
+        value.print(os);
     }
 
-    void parse(std::string& value, TokenStream& is) const
+    void parse(GRFString& value, TokenStream& is) const
     {
-        // TODO convert string *from* readable format.
-        value = is.match(TokenType::String);
+        value.parse(is);
     }
 };
-
 

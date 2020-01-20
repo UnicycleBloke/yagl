@@ -24,10 +24,7 @@ void Action0CRecord::read(std::istream& is, const GRFInfo& info)
 {
     // This could be a text comment, or binary data (a commented pseudo-sprite).
     // UI needs to reflect this. 
-    while (is.peek() != EOF)
-    {
-        m_comment.push_back(read_uint8(is));
-    }
+    m_comment.read(is, StringTerm::None);
 }
 
 
@@ -36,7 +33,7 @@ void Action0CRecord::write(std::ostream& os, const GRFInfo& info) const
     ActionRecord::write(os, info);
  
      // Write an unterminated string. The record size implies the termination.
-    write_string(os, m_comment, StringTerm::None);
+    m_comment.write(os, StringTerm::None);
 }  
 
 
@@ -53,7 +50,7 @@ void Action0CRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
     // TODO This is probably not a valid thing to do. Should more likely
     // print nothing, or convert to hex. 
-    os << pad(indent + 4) << "\"" << m_comment << "\";\n";
+    os << pad(indent + 4) << "\"" << m_comment.readable() << "\";\n";
     
     os << "}\n";
 }
@@ -63,7 +60,7 @@ void Action0CRecord::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenBrace);
-    m_comment = is.match(TokenType::String);
+    m_comment.parse(is);
     is.match(TokenType::SemiColon);
     is.match(TokenType::CloseBrace);
 }

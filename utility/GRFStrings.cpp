@@ -430,31 +430,71 @@ static void process_utf16_control_codes(uint16_t u16, std::basic_ostringstream<c
 }
 
 
-void GRFString::read(std::istream& is, const GRFInfo& info)
+std::string read_string(std::istream& is)
 {
-    // Read until zero or end of stream. Is it terminated or not?
-    // Convert to UTF16?
+    std::string result;
+    std::getline(is, result, char(0));
+
+    if (is.fail())
+    {
+        throw RUNTIME_ERROR("read_string failed");
+    }
+
+    return result;
 }
 
 
-void GRFString::write(std::ostream& os, const GRFInfo& info) const
+void write_string(std::ostream& os, const std::string& value, StringTerm term)
 {
-    // Convert to UTF8 or Latin1
-    // Write characters to stream. Is it terminated or not?
+    // Optionally write without a 0 terminator - one or two strings in the GRF are terminated by end of record or whatever.
+    os.write(value.c_str(), value.length() + ((term == StringTerm::None) ? 0 : 1));
+}
+
+
+void write_string(std::ostream& os, const std::string& value)
+{
+    write_string(os, value, StringTerm::Null);
+}
+
+
+void GRFString::read(std::istream& is, StringTerm term)
+{
+    if (term == StringTerm::None)
+    {
+        m_value = {};
+        while (is.peek() != EOF)
+        {
+            m_value.push_back(read_uint8(is));
+        }        
+    }
+    else
+    {
+        m_value = read_string(is);
+    }
+}
+
+
+void GRFString::write(std::ostream& os, StringTerm term) const
+{
+    write_string(os, m_value, term);
 }
 
 
 void GRFString::print(std::ostream& os) const
 {
-    // Replace control codes binary with names
-    // Convert to UTF8
-    // Write characters to the stream
+    os << "\"" << readable() << "\"";
+}
+
+
+std::string GRFString::readable() const
+{
+    return grf_string_to_readable_utf8(m_value);
 }
 
 
 void GRFString::parse(TokenStream& is)
 {
     std::string readable = is.match(TokenType::String);
-    // Convert to UTF16
-    // Replace control codes names with binary
+    // Convert back to binary form.
+    m_value = readable;
 }

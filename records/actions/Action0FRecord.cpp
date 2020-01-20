@@ -34,7 +34,7 @@ void Action0FRecord::read(std::istream& is, const GRFInfo& info)
         {
             Name style_name;
             style_name.lang_id = read_uint8(is);
-            style_name.name    = read_string(is);
+            style_name.name.read(is);
             m_style_names.push_back(style_name);
         }
         while (is.peek() != 0x00);
@@ -56,7 +56,7 @@ void Action0FRecord::read(std::istream& is, const GRFInfo& info)
             text.probability = text.probability & 0x7F;
             if (text.is_string)
             {
-                text.text = read_string(is);
+                text.text.read(is);
             }
             else
             {
@@ -82,7 +82,7 @@ void Action0FRecord::write(std::ostream& os, const GRFInfo& info) const
         for (const Name& style_name: m_style_names) 
         {
             write_uint8(os, style_name.lang_id);
-            write_string(os, style_name.name);
+            style_name.name.write(os);
         }
         write_uint8(os, 0x00);
     }
@@ -100,7 +100,7 @@ void Action0FRecord::write(std::ostream& os, const GRFInfo& info) const
             write_uint8(os, text.probability | (text.is_string ? 0x00 : 0x80));
             if (text.is_string)
             {
-                write_string(os, text.text);
+                text.text.write(os);
             }
             else
             {
@@ -134,7 +134,7 @@ void Action0FRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
         for (const auto& style: m_style_names)
         {
             os << pad(indent + 8) << language_iso(style.lang_id) << ": ";
-            os << "\"" << grf_string_to_readable_utf8(style.name) << "\";\n";
+            os << "\"" << style.name.readable() << "\";\n";
         }
 
         os << pad(indent + 4) << "}\n";
@@ -151,7 +151,7 @@ void Action0FRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
         {
             if (text.is_string)
             {
-                os << pad(indent + 8) << str_text << "(\"" << grf_string_to_readable_utf8(text.text) << "\"";
+                os << pad(indent + 8) << str_text << "(\"" << text.text.readable() << "\"";
             } 
             else
             {
@@ -210,7 +210,7 @@ void Action0FRecord::parse_styles(TokenStream& is)
         Name name;
         name.lang_id = language_id(is.match(TokenType::Ident));
         is.match(TokenType::Colon);
-        name.name = is.match(TokenType::String);
+        name.name.parse(is);
         is.match(TokenType::SemiColon);
         m_style_names.push_back(name);
     }
@@ -240,7 +240,7 @@ void Action0FRecord::parse_part(TokenStream& is)
 
         if (token.value == str_text)
         {
-            text.text      = is.match(TokenType::String);
+            text.text.parse(is);
             text.is_string = true;
         }
         else if (token.value == str_town_names)

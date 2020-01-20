@@ -30,8 +30,8 @@ void Action08Record::read(std::istream& is, const GRFInfo& info)
     // Unique GRF ID. Can contain a version, or place a version in the Action14 record.
     m_grf_id.read(is);
         
-    m_name = read_string(is);
-    m_info = read_string(is);
+    m_name.read(is);
+    m_info.read(is);
 }
 
 
@@ -40,9 +40,9 @@ void Action08Record::write(std::ostream& os, const GRFInfo& info) const
     ActionRecord::write(os, info);
 
     write_uint8(os, static_cast<uint8_t>(m_grf_version));
-    m_grf_id.write(os);
-    write_string(os, m_name);
-    write_string(os, m_info);
+    m_grf_id.write(os);   
+    m_name.write(os);
+    m_info.write(os);
 }  
 
 
@@ -68,8 +68,8 @@ const std::map<std::string, uint8_t> g_indices =
 constexpr GRFLabelDescriptor          desc_grf_id      = { 0x00, str_grf_id };
 const     EnumDescriptorT<GRFVersion> desc_version     = { 0x01, str_version,
     { { 6, "GRF6" }, { 7, "GRF7" }, { 8, "GRF8" } } };
-constexpr StringDescriptor            desc_name        = { 0x02, str_name };
-constexpr StringDescriptor            desc_description = { 0x03, str_description };
+constexpr GRFStringDescriptor         desc_name        = { 0x02, str_name };
+constexpr GRFStringDescriptor         desc_description = { 0x03, str_description };
 
 
 } // namespace {

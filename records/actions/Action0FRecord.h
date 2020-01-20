@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Record.h"
+#include "GRFStrings.h"
 #include <vector>
 #include <string>
 
@@ -44,8 +45,8 @@ private:
 private:
     struct Name
     {
-        uint8_t     lang_id = 0;
-        std::string name;
+        uint8_t   lang_id = 0;
+        GRFString name;
     };
 
 private:
@@ -53,7 +54,7 @@ private:
     {
         uint8_t     probability  = 1;
         bool        is_string    = true;
-        std::string text         = "unknown";
+        GRFString   text;
         uint8_t     action_0F_id = 0;
     };
 

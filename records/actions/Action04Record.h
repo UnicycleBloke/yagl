@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Record.h"
+#include "GRFStrings.h"
 
 
 class Action04Record : public ActionRecord
@@ -41,5 +42,5 @@ private:
     uint16_t    m_first_string_id;
     bool        m_uint16_ids;
     
-    std::vector<std::string> m_strings;
+    std::vector<GRFString> m_strings;
 };

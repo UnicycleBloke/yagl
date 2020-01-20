@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Record.h"
+#include "GRFStrings.h"
 
 
 class Action0CRecord : public ActionRecord
@@ -38,5 +39,5 @@ public:
 private:
     // Could theoretically re-purpose the ignored data as a string 
     // containing a comment.
-    std::string m_comment;
+    GRFString m_comment;
 };
