@@ -41,6 +41,7 @@ static const std::map<uint8_t, ControlCode> g_control_codes =
     { 0x0E, { 0x0E, u"small-font",  0, "Set small font size" } },
     { 0x0F, { 0x0F, u"large-font",  0, "Set large font size" } },
     { 0x1F, { 0x1F, u"xy-offs",     2, "X and Y offsets in next two bytes of string" } },
+    { 0x22, { 0x22, u"dq",          0, "Double quote" } },
     { 0x7B, { 0x7B, u"sd",          0, "Print signed dword" } },
     { 0x7C, { 0x7C, u"sw",          0, "Print signed word" } },
     { 0x7D, { 0x7D, u"sb",          0, "Print signed byte" } },
@@ -457,6 +458,358 @@ void write_string(std::ostream& os, const std::string& value)
 }
 
 
+// TODO this is such bloaty code... the goal was to make sure to get something working.
+// Can always refactor later once some tests added.
+
+
+static const ControlCode& find_extension_code(const std::u16string& name)
+{
+    for (const auto& item: g_extension_codes)
+    {
+        const ControlCode& control = item.second;
+        if (control.name == name)
+        {
+            return control;
+        }
+    }
+    throw RUNTIME_ERROR("Unknown extension code");
+}
+
+
+static void parse_extension_code(std::vector<std::u16string>& args, std::basic_ostringstream<char16_t>& os)
+{
+    const ControlCode& extension = find_extension_code(args[1]);
+    os << char16_t(extension.code);
+
+    if (args.size() == (extension.data_size + 2))
+    {
+        std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> converter;
+    
+        for (uint8_t i = 0; i < extension.data_size; ++i)
+        {
+            std::string arg = converter.to_bytes(args[i + 2]);
+            char16_t value = strtol(arg.c_str() + 2, nullptr, 16);
+            os << value;
+        }
+    }
+    else 
+    {
+        throw RUNTIME_ERROR("Incorrect number of control arguments");
+    }
+}
+
+
+static const ControlCode& find_control_code(const std::u16string& name)
+{
+    for (const auto& item: g_control_codes)
+    {
+        const ControlCode& control = item.second;
+        if (control.name == name)
+        {
+            return control;
+        }
+    }
+    throw RUNTIME_ERROR("Unknown control code");
+}
+
+
+static void parse_control_code(std::vector<std::u16string>& args, std::basic_ostringstream<char16_t>& os)
+{
+    const ControlCode& control = find_control_code(args[0]);
+    os << char16_t(control.code | 0xE000);
+
+    if (control.code == 0x9A)
+    {
+        parse_extension_code(args, os);
+    }
+    else
+    {
+        if (args.size() == (control.data_size + 1))
+        {
+           std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> converter;
+      
+           for (uint8_t i = 0; i < control.data_size; ++i)
+            {
+                std::string arg = converter.to_bytes(args[i + 1]);
+                char16_t value = strtol(arg.c_str() + 2, nullptr, 16);
+                os << value;
+            }
+        }
+        else
+        {
+            throw RUNTIME_ERROR("Incorrect number of extension arguments");
+        }
+    }
+}
+
+
+static std::u16string readable_utf16_to_binary_utf16(const std::u16string& str)
+{
+    enum class State { Normal, Brace, Control };    
+    State state = State::Normal;
+
+    // Output string with text control codes converted to binary equivalents.
+    std::basic_ostringstream<char16_t> os;
+
+    // Probably not the most efficient method of finding the control codes within the string, 
+    // but we can refactor later. At least this is simple to understand. The vector of strings 
+    // is to deal with extension codes and arguments.
+    std::basic_ostringstream<char16_t> cs;
+    std::vector<std::u16string> args;
+
+    uint16_t length = str.length();
+    for (uint16_t pos = 0; pos < length; ++pos)
+    {
+        char16_t u16 = str[pos];
+        switch (state)
+        {
+            case State::Normal:
+                // '{' is the escape sequence which potentially begins a control code,
+                // or just accept the character.
+                if (u16 == u'{')
+                {
+                    state = State::Brace;
+                }
+                else
+                {
+                    os << u16;
+                }
+                break;
+
+            case State::Brace:
+                // '{{' is the escape sequence meaning a literal '{',
+                // or we have started a control code sequence.
+                if (u16 == u'{')
+                {
+                    state = State::Normal;
+                    os << u'{';
+                    break;
+                }
+                state = State::Control;
+                // Fall through
+
+            case State::Control:
+                if (u16 == u'}')
+                {
+                    args.push_back(cs.str());
+                    cs.str(u"");
+
+                    // Process control codes we found.
+                    parse_control_code(args, os);
+
+                    args.clear();
+                    state = State::Normal;
+                }
+                else if (std::isspace(u16))    
+                {
+                    // This seems to ignore empty strings, which is what we want.
+                    args.push_back(cs.str());
+                    cs.str(u"");
+                }
+                else
+                {
+                    // This is a control code character. 
+                    cs << u16;
+                }
+                break;
+        }
+    }
+
+    auto result = os.str();
+    auto c = result[0];
+    return result;
+}
+
+
+static void convert_utf32_utf8(uint32_t value, std::ostringstream& os)
+{
+    if (value < 0x80)
+    {
+        os << uint8_t(value);
+    }
+    else if (value < 0x800)
+    {
+        os << uint8_t(((value >> 6) & 0x1F) | 0xC0);
+        os << uint8_t((value & 0x3F) | 0x80);
+    }
+    else if (value < 0x10000)
+    {
+        os << uint8_t(((value >> 12) & 0x0F) | 0xE0);
+        os << uint8_t(((value >> 6) & 0x3F) | 0x80);
+        os << uint8_t((value & 0x3F) | 0x80);
+    }
+    else if (value < 0x110000)
+    {
+        value = value - 0x10000;
+        os << uint8_t(((value >> 18) & 0x07) | 0xF0);
+        os << uint8_t(((value >> 12) & 0x3F) | 0x80);
+        os << uint8_t(((value >> 6) & 0x3F) | 0x80);
+        os << uint8_t((value & 0x3F) | 0x80);
+    }
+}
+
+
+static bool binary_utf16_is_utf8(const std::u16string& str)
+{
+    uint16_t length = str.length();
+    uint16_t pos = 0;
+    while (pos < length)
+    {
+        // Items are mostly converted to UTF8 ...
+        auto c = str[pos++];
+
+        // ... but control codes get further treatment.   
+        if ((c & 0xFF00) == 0xE000)
+        {
+            // If this is an extension, the index is placed into the string without special encoding.
+            auto it = g_control_codes.find(c & 0xFF);
+            if (it->second.code == 0x9A)
+            {
+                c = str[pos++];
+                it = g_extension_codes.find(c & 0xFF);
+            }
+
+            // If the control or extension code has arguments, these are places into the string 
+            // without special encoding.
+            for (uint8_t arg = 0; arg < it->second.data_size; ++arg)
+            {
+                c = str[pos++];
+            }
+        }
+        else if (c >= 0x80)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+static std::string binary_utf16_to_utf8(const std::u16string& str)
+{
+    std::ostringstream os;
+    // Thorn indicates that this string is encoded with UTF8.
+    convert_utf32_utf8(0x00DE, os);
+
+    uint16_t length = str.length();
+    uint16_t pos = 0;
+    while (pos < length)
+    {
+        // Items are mostly converted to UTF8 ...
+        auto c = str[pos++];
+
+        // ... but control codes get further treatment.   
+        if ((c & 0xFF00) == 0xE000)
+        {
+            if (c == 0xE00D)
+            {
+                os << uint8_t(c);
+            } 
+            else
+            {
+                convert_utf32_utf8(c, os);
+            }        
+
+            // If this is an extension, the index is placed into the string without special encoding.
+            auto it = g_control_codes.find(c & 0xFF);
+            if (it->second.code == 0x9A)
+            {
+                c = str[pos++];
+                os << uint8_t(c);
+
+                it = g_extension_codes.find(c & 0xFF);
+            }
+
+            // If the control or extension code has arguments, these are places into the string 
+            // without special encoding.
+            for (uint8_t arg = 0; arg < it->second.data_size; ++arg)
+            {
+                c = str[pos++];
+                os << uint8_t(c);
+            }
+        }
+        else
+        {
+            convert_utf32_utf8(c, os);
+        }
+        
+    }
+
+    return os.str();
+}
+
+
+static std::string binary_utf16_to_latin1(const std::u16string& str)
+{
+    std::ostringstream os;
+
+    uint16_t length = str.length();
+    uint16_t pos = 0;
+    while (pos < length)
+    {
+        // Items are mostly converted to UTF8 ...
+        auto c = str[pos++];
+
+        // ... but control codes get further treatment.   
+        if ((c & 0xFF00) == 0xE000)
+        {
+            os << uint8_t(c);
+
+            // If this is an extension, the index is placed into the string without special encoding.
+            auto it = g_control_codes.find(c & 0xFF);
+            if (it->second.code == 0x9A)
+            {
+                c = str[pos++];
+                os << uint8_t(c);
+
+                it = g_extension_codes.find(c & 0xFF);
+            }
+
+            // If the control or extension code has arguments, these are places into the string 
+            // without special encoding.
+            for (uint8_t arg = 0; arg < it->second.data_size; ++arg)
+            {
+                c = str[pos++];
+                os << uint8_t(c);
+            }
+        }
+        else
+        {
+            os << uint8_t(c);
+        }
+        
+    }
+
+    return os.str();
+}
+
+
+static std::string readable_utf8_to_grf_string(const std::string& str)
+{
+    // Input is the string that comes from the YAGL.
+
+    // Convert to UTF16 as an intermediate (all characters are single elements).
+    std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> converter;
+    std::u16string readable_utf16 = converter.from_bytes(str);
+
+    // Translate the control codes into their UTF16 binary form.
+    std::u16string binary_u16 = readable_utf16_to_binary_utf16(readable_utf16);
+
+    // Test for non-Latin characters, other than control codes and their arguments.
+    std::string result;
+    if (binary_utf16_is_utf8(binary_u16))
+    {
+        result = binary_utf16_to_utf8(binary_u16);
+    }
+    else
+    {
+        result = binary_utf16_to_latin1(binary_u16);
+    }
+    return result;
+}
+
+
 void GRFString::read(std::istream& is, StringTerm term)
 {
     if (term == StringTerm::None)
@@ -486,15 +839,38 @@ void GRFString::print(std::ostream& os) const
 }
 
 
+void string_to_hex(const std::string& str)
+{
+    for (uint8_t c: str)
+    {
+        std::cout << to_hex(c, false) << ' ';
+    }
+    std::cout << "\n\n";
+}
+
+
 std::string GRFString::readable() const
 {
-    return grf_string_to_readable_utf8(m_value);
+    std::string readable = grf_string_to_readable_utf8(m_value);
+
+    // This is just for testing. Convert the string to readable
+    // and back again, and see if it matches. There are some 
+    // discrepancies, but these are so far due to the fact that
+    // the GRF string encoding is non-unique.
+    std::string binary   = readable_utf8_to_grf_string(readable);    
+    if (m_value != binary)
+    {
+        string_to_hex(m_value);
+        string_to_hex(binary);
+    }
+
+    return readable;
 }
 
 
 void GRFString::parse(TokenStream& is)
 {
     std::string readable = is.match(TokenType::String);
-    // Convert back to binary form.
-    m_value = readable;
+    m_value = readable_utf8_to_grf_string(readable);
 }
+
