@@ -260,13 +260,35 @@ Each type of record is represented by a distinct class which is derived from a c
   
 And that's pretty much the whole program in a nutshell.
 
+**Parsing YAGL**
+
+The YAGL script is run through a lexer to create a list of tokens representing strings, numbers, identifiers and assorted special symbols such as colons, braces, etc. Whitespace and comments are removed. 
+
+The list of tokens is then de-serialised to create an in-memory representation (as described above), rather than parsed in the traditional sense. There is no explicit language definition in terms of abstract production rules. Instead, the list of tokens is interpreted recursively with local lookup tables and other objects. This is analogous to the way in which the binary GRF file is read to create the in-memory representation. Reading the YAGL in this way probably results in more verbose code, but seemed like the right approach in this case. 
+
+Perhaps it makes sense to regard the in-memory representation as being an abstract syntax tree: it certainly contains all the information necessary to generate either a binary GRF file or the equivalent YAGL script. But the way it is created has more in common with de-serialisation than rules-based parsing.
+
+One of the goals for the parsing is to allow each different type of property to have its own specific mini-parser (the code calls these Descriptors). The idea is that, for example, every bit field can be represented with a series of property-specific identifiers ORed together (e.g. `climate: Arctic | Temperate`). It is simple to maintain a particular descriptor without affecting any other part of the YAGL de-serialisation. Descriptors can be created to represent any data type, but common ones are numbers, enumerations, bitfields, GRF "labels" (32-bit ID used for many things), and array of numbers and other things. Special case descriptors include snow lines and bridge tables.
+
+Descriptors are also used for print the value of a property when generating YAGL. 
+
+**GRF Strings**
+
+Strings in GRF files can be encoded in either not-quite-Latin1 or not-quite-UTF8. In both cases the strings may contain binary control codes which have special functions when the strings are rendered in-game. 
+
+Strings are converted to a human-readable pure-UTF8 format when generating YAGL. All the control codes are replaced with escaped string names (e.g. `"{blue}This text is blue. {red} This text is red."`). Braces are used to escape control sequences, and a double open brace is used to create a literal single open brace. Double quotes are escaped with `{dq}` as this symbol is used to delimit strings in YAGL. Double quotes are not special characters in GRF strings.
+
+The string conversion is done in two stages. Both Latin1 and UTF8 strings first are converted to UTF16. This unifies the two string types and makes life a little simple as a `char16_t` type can represent every code point in the Basic Multilingual Plane (we ignore the supplementary planes for now), and the control codes are represented more cleanly by private-use codepoints, U+E0XX. The second stage replaces the control codes and their arguments with string representations, and then the whole thing is converted to UTF8. The YAGL string does not contain a `thorn` prefix to indicate that it was encoded with UTF8 in the GRF. This procedure might be overkill, but the primary goal was correct function. It can be refactored later. 
+
+Parsing a string is more or less the same procedure in reverse. The UTF16 intermediate string is checked to see if it contains any characters (other than control codes) which are not Latin1. This determines whether the GRF string is encoded as Latin1 or UTF8. UTF8 strings are prefixed with a `thorn` character to disambiguate them.
+
+Note that the non-unique nature of string encoding means it is very likely that using **yagl** to decode and immediately re-encode a GRF will result in different binary files, even though they are semantically identical - a bit of a pain for testing.
+
 **Assorted details**
 
 - The map of RealSprites is walked to generate spritesheets before writing out the YAGL, this is because each sprite's position in the spritesheet needs to be calculated before the YAGL can be printed. Some sprites include both RGBA and palette information (a mask). These result in two images in different spritesheets.
 
 - Some of the pseudo-sprites have very simple flat data structures, and are quite simple to read and write. Others such as, for example, Action14, are more complicated. In such cases there may be additional classes or structures intended to break down the task of reading and writing the data.
-
-- Strings in GRF files can be encoded in either Latin1 or UTF8. In both cases the strings may contain binary control codes which have special functions when the strings are rendered in-game. All strings are converted to UTF8 in YAGL, and all the control codes are replaced with escaped strings which are hopefully a bit more readable.
 
 
 
