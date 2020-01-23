@@ -252,19 +252,21 @@ NewGRFData
 
 Each type of record is represented by a distinct class which is derived from a common base class. Each type implements methods to read/write itself from/to a file stream. 
 - There are two read methods: 
-  - one decodes the binary format for the GRF record; 
-  - the other parses the text format for the corresponding YAGL record. 
+  - one decodes the binary format for the GRF record (`read()`); 
+  - the other parses the text format for the corresponding YAGL record (`parse()`). 
 - There are also two write methods: 
-  - one encode the binary format for the GRF record; 
-  - the other prints the text format for the corresponding YAGL record. 
+  - one encode the binary format for the GRF record (`write()`); 
+  - the other prints the text format for the corresponding YAGL record (`print()`). 
   
+In some places, records are broken up recursively into collections of smaller data structures. Those structures often implement their own `read()`, `write()`, `print()` and `parse()` methods. Using Object Orientation is not everyone's cup of tea, but it makes serialisation code much simpler. 
+
 And that's pretty much the whole program in a nutshell.
 
 **Parsing YAGL**
 
 The YAGL script is run through a lexer to create a list of tokens representing strings, numbers, identifiers and assorted special symbols such as colons, braces, etc. Whitespace and comments are removed. 
 
-The list of tokens is then de-serialised to create an in-memory representation (as described above), rather than parsed in the traditional sense. There is no explicit language definition in terms of abstract production rules. Instead, the list of tokens is interpreted recursively with local lookup tables and other objects. This is analogous to the way in which the binary GRF file is read to create the in-memory representation. Reading the YAGL in this way probably results in more verbose code, but seemed like the right approach in this case. 
+The list of tokens is then de-serialised (in the `parse()` methods) to create an in-memory representation (as described above), rather than parsed in the traditional sense. There is no explicit language definition in terms of abstract production rules. Instead, the list of tokens is interpreted recursively with local lookup tables and other objects. This is analogous to the way in which the binary GRF file is read to create the in-memory representation. Reading the YAGL in this way probably results in more verbose code, but seemed like the right approach in this case. 
 
 Perhaps it makes sense to regard the in-memory representation as being an abstract syntax tree: it certainly contains all the information necessary to generate either a binary GRF file or the equivalent YAGL script. But the way it is created has more in common with de-serialisation than rules-based parsing.
 
