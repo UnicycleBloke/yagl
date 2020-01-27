@@ -105,6 +105,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     records/graphics/Palettes.cpp
     records/graphics/SpriteSheetGenerator.cpp
     records/graphics/SpriteIDLabel.cpp
+    records/graphics/SpriteSheetReader.cpp
 
     # General utilities.
     utility/StreamHelpers.cpp

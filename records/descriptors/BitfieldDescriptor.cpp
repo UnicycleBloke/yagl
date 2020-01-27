@@ -25,7 +25,7 @@ void BitfieldDescriptor::print_impl(uint32_t bits, std::ostream& os, uint8_t ind
 
     if (bits == 0)
     {
-        os << "<no_bits_set>";
+        os << "null";
     }
     else
     {

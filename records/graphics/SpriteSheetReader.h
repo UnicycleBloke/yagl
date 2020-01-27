@@ -17,24 +17,40 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include <map>
+#include <memory>
+#include "png.hpp"
+#include "RealSpriteRecord.h"
 
 
-// Wrapper for the various formats of PNG sprite sheets. 
 class SpriteSheet
 {
+public:
+    enum class Colour { Palette, RGB, RGBA }; 
+    using Pixel = RealSpriteRecord::Pixel;       
 
+public:
+    SpriteSheet() = default;
+    virtual ~SpriteSheet() {}
+
+    //virtual void read(const std::string& file_path) = 0;    
+    //virtual void write(const std::string& file_path) = 0;
+
+    virtual Pixel pixel(uint32_t x, uint32_t y) = 0;
+    //virtual void set_pixel(uint32_t x, uint32_t y, const Pixel& pixel) = 0;
 };
 
 
 // Maintains a pool of open sprite sheets so that sprites can read their 
 // pixels without opening and closing files a bazillion times.
-class SpriteSheetReader
+class SpriteSheetPool
 {
+public: 
+    static SpriteSheetPool& pool();
 
-
+public:  
+    std::shared_ptr<SpriteSheet> get_sprite_sheet(const std::string file_name, SpriteSheet::Colour colour);
 
 private:
-    // Maps filename to SpriteSheet wrapper. Entries created on demand
-    // and cached for re-use by later sprites.
-    std::map<std::string, SpriteSheet> m_sprite_sheets;
+    std::map<std::string, std::shared_ptr<SpriteSheet>> m_sheets;
 };

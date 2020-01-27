@@ -67,7 +67,12 @@ void Action10Record::parse(TokenStream& is)
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
-    m_comment.parse(is);
-    is.match(TokenType::SemiColon);
+
+    if (is.peek().type == TokenType::String)
+    {
+        m_comment.parse(is);
+        is.match(TokenType::SemiColon);
+    }
+
     is.match(TokenType::CloseBrace);
 }

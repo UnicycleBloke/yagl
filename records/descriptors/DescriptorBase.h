@@ -61,6 +61,7 @@ struct GRFStringDescriptor : PropertyDescriptor
     {
         prefix(os, indent);
         value.print(os);
+        os << ";\n"; 
     }
 
     void parse(GRFString& value, TokenStream& is) const

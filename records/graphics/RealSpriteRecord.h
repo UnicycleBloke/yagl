@@ -104,6 +104,7 @@ public:
         uint8_t index; 
     };
     Pixel pixel(uint32_t x, uint32_t y) const;
+    void  set_pixel(uint32_t x, uint32_t y, const Pixel& pix);
     
     void set_xoff(uint16_t offset) { m_xoff = offset; }
     void set_yoff(uint16_t offset) { m_yoff = offset; }

@@ -17,3 +17,125 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "SpriteSheetReader.h"
+
+
+// class RGBSpriteSheet : public SpriteSheet
+// {
+// public:
+//     RGBSpriteSheet(const std::string& file_name);     
+//     Pixel pixel(uint32_t x, uint32_t y) override;
+
+// private:
+//     png::image<png::rgb_pixel> m_image;    
+// };
+
+
+class RGBASpriteSheet : public SpriteSheet
+{
+public:
+    RGBASpriteSheet(const std::string& file_name);     
+    Pixel pixel(uint32_t x, uint32_t y) override;
+
+private:
+    png::image<png::rgba_pixel> m_image;    
+};
+
+
+class PaletteSpriteSheet : public SpriteSheet
+{
+public:
+    PaletteSpriteSheet(const std::string& file_name);     
+    Pixel pixel(uint32_t x, uint32_t y) override;
+
+private:
+    png::image<png::index_pixel> m_image;    
+};
+
+
+// RGBSpriteSheet::RGBSpriteSheet(const std::string& file_name)
+// : m_image{file_name, png::require_color_space<png::rgb_pixel>()}
+// {
+// }     
+
+
+// SpriteSheet::Pixel RGBSpriteSheet::pixel(uint32_t x, uint32_t y)
+// {
+//     png::rgb_pixel in = m_image[x][y];
+
+//     Pixel out = {};
+//     out.red   = in.red;
+//     out.green = in.green;
+//     out.blue  = in.blue;
+
+//     return out;
+// }
+
+
+RGBASpriteSheet::RGBASpriteSheet(const std::string& file_name)
+: m_image{file_name, png::require_color_space<png::rgba_pixel>()}
+{
+}     
+
+
+SpriteSheet::Pixel RGBASpriteSheet::pixel(uint32_t x, uint32_t y)
+{
+    png::rgba_pixel in = m_image[x][y];
+
+    Pixel out = {};
+    out.red   = in.red;
+    out.green = in.green;
+    out.blue  = in.blue;
+    out.alpha = in.alpha;
+
+    return out;
+}
+
+
+PaletteSpriteSheet::PaletteSpriteSheet(const std::string& file_name)
+: m_image{file_name, png::require_color_space<png::index_pixel>()}
+{
+}     
+
+
+SpriteSheet::Pixel PaletteSpriteSheet::pixel(uint32_t x, uint32_t y)
+{
+    Pixel out = {};
+    out.index = m_image[x][y];
+    return out;
+}
+
+
+SpriteSheetPool& SpriteSheetPool::pool()
+{
+    static SpriteSheetPool instance;
+    return instance;
+}
+
+
+std::shared_ptr<SpriteSheet> SpriteSheetPool::get_sprite_sheet(const std::string file_name, SpriteSheet::Colour colour)
+{
+    auto it = m_sheets.find(file_name);
+    if (it == m_sheets.end())
+    {
+        using Colour = SpriteSheet::Colour;
+
+        std::shared_ptr<SpriteSheet> sheet;
+        switch (colour)
+        {
+            case Colour::Palette:
+                sheet = std::make_shared<PaletteSpriteSheet>(file_name);
+                break; 
+            // case Colour::RGB:
+            //     sheet = std::make_shared<RGBSpriteSheet>(file_name);
+            //     break; 
+            case Colour::RGBA:
+                sheet = std::make_shared<RGBASpriteSheet>(file_name);
+                break; 
+        }
+
+        m_sheets[file_name] = sheet;
+        return sheet;
+    }
+
+    return m_sheets[file_name];
+}

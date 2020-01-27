@@ -17,6 +17,7 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "RealSpriteRecord.h"
+#include "SpriteSheetReader.h"
 #include "StreamHelpers.h"
 #include "ChunkEncoder.h"
 #include "Descriptors.h"
@@ -26,6 +27,8 @@
 #include <png.h>
 #include <cstdio>
 #include <algorithm>
+#include "FileSystem.h"
+#include "CommandLineOptions.h"
 
 
 void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
@@ -163,6 +166,34 @@ RealSpriteRecord::Pixel RealSpriteRecord::pixel(uint32_t x, uint32_t y) const
     }    
 
     return pixel;
+}
+
+
+void RealSpriteRecord::set_pixel(uint32_t x, uint32_t y, const Pixel& pixel)
+{
+    // This is probably slow. Need a better implementation/interaction with 
+    // sprite sheet generator.
+    uint8_t pix_size = 0;
+    pix_size  = (m_colour & HAS_RGB)     ? 3 : 0;
+    pix_size += (m_colour & HAS_ALPHA)   ? 1 : 0;
+    pix_size += (m_colour & HAS_PALETTE) ? 1 : 0;
+
+    uint32_t offset = (y * m_xdim + x) * pix_size;
+
+    if (m_colour & HAS_RGB)
+    {
+        m_pixels[offset++] = pixel.red;
+        m_pixels[offset++] = pixel.green;
+        m_pixels[offset++] = pixel.blue;
+    }    
+    if (m_colour & HAS_ALPHA)
+    {
+        m_pixels[offset++] = pixel.alpha;
+    }    
+    if (m_colour & HAS_PALETTE)
+    {
+        m_pixels[offset++] = pixel.index;
+    }    
 }
 
 
@@ -521,4 +552,40 @@ void RealSpriteRecord::parse(TokenStream& is)
     }
 
     is.match(TokenType::SemiColon);
+
+
+    uint8_t pix_size = 0;
+    pix_size  = (m_colour & HAS_RGB)     ? 3 : 0;
+    pix_size += (m_colour & HAS_ALPHA)   ? 1 : 0;
+    pix_size += (m_colour & HAS_PALETTE) ? 1 : 0;
+    m_pixels.resize(m_xdim * m_ydim * pix_size);
+
+
+    // TODO this wants to be in a more global scope.
+    SpriteSheetPool& pool = SpriteSheetPool::pool();
+
+    SpriteSheet::Colour colour = SpriteSheet::Colour::Palette;
+    if ((m_colour & HAS_RGB) == HAS_RGB)
+    {
+        colour = SpriteSheet::Colour::RGBA;
+    }
+
+
+    fs::path image_base = CommandLineOptions::options().yagl_file();
+    image_base = image_base.replace_extension().parent_path().parent_path();
+    image_base = image_base.append(m_filename);
+
+    auto sheet = pool.get_sprite_sheet(image_base.string(), colour);
+
+    for (uint16_t x = 0; x < m_xdim; ++x)
+    {
+        for (uint16_t y = 0; y < m_ydim; ++y)
+        {
+            // TODO get the mask value for RGBAP pixels.   
+            auto pixel = sheet->pixel(x + m_xoff, y + m_yoff);
+            set_pixel(x, y, pixel);
+        }
+    }
+
+
 }

@@ -195,14 +195,12 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
         case ']' : emit(TokenType::CloseBracket, "]"); return true;
         case '{' : emit(TokenType::OpenBrace,    "{"); return true;
         case '}' : emit(TokenType::CloseBrace,   "}"); return true;
-        case '>' : emit(TokenType::CloseAngle,   ">"); return true;
         case ':' : emit(TokenType::Colon,        ":"); return true;
         case ';' : emit(TokenType::SemiColon,    ";"); return true;
         case ',' : emit(TokenType::Comma,        ","); return true;
         case '=' : emit(TokenType::Equals,       "="); return true;
         case '&' : emit(TokenType::Ampersand,    "&"); return true;
         case '%' : emit(TokenType::Percent,      "%"); return true;
-
         case '+' : emit(TokenType::OpPlus,       "+"); return true;
         case '-' : emit(TokenType::OpMinus,      "-"); return true;
         case '*' : emit(TokenType::OpMultiply,   "*"); return true;
@@ -218,6 +216,20 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
             else
             {
                 emit(TokenType::OpenAngle, "<"); 
+                return true;
+            }
+            break;
+
+        case '>' :
+            if (p == '>')
+            {
+                emit(TokenType::ShiftRight, ">>"); 
+                m_state = LexerState::Peeked;
+                return true;
+            }
+            else
+            {
+                emit(TokenType::CloseAngle, ">"); 
                 return true;
             }
             break;
@@ -432,6 +444,12 @@ void Lexer::emit(TokenType type, std::string value)
 
 void Lexer::emit(TokenType type, NumberType num_type, std::string value) 
 {
+    // A binary minus is detected a decimal number: add a correction here.
+    if ((type == TokenType::Number) && (value == "-"))
+    {
+        type = TokenType::OpMinus; 
+    }
+
     m_tokens.push_back({type, num_type, value, m_line, m_column});
     m_state = LexerState::None;
 

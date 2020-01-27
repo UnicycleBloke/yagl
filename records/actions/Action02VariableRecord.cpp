@@ -444,9 +444,9 @@ void Action02VariableRecord::parse_expression(TokenStream& is)
         is.match(TokenType::CloseBracket);
 
         // >> shift_num
-        if (is.peek().type == TokenType::ShiftLeft)
+        if (is.peek().type == TokenType::ShiftRight)
         {
-            is.match(TokenType::ShiftLeft);
+            is.match(TokenType::ShiftRight);
             action.shift_num = is.match_integer();
         }
 

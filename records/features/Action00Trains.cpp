@@ -344,8 +344,8 @@ bool Action00Trains::parse_property(TokenStream& is, const std::string& name, ui
             case 0x1F'00: desc_1F.parse(m_1F_coeff_of_tractive_effort, is); break;
             case 0x20'00: desc_20.parse(m_20_coeff_of_air_drag, is); break;
             case 0x21'00: desc_21.parse(m_21_shorten_vehicle, is); break;
-            case 0x22'00: desc_220.parse(m_22_visual_effect_position, is); 
-            case 0x22'01: desc_221.parse(m_22_visual_effect_enum, is); 
+            case 0x22'00: desc_220.parse(m_22_visual_effect_position, is); break;
+            case 0x22'01: desc_221.parse(m_22_visual_effect_enum, is); break;
             case 0x22'02: desc_222.parse(m_22_visual_effect_disable_wagons, is); break;
             case 0x23'00: desc_23.parse(m_23_weight_from_wagons, is); break;
             case 0x24'00: desc_24.parse(m_24_weight_high_byte, is); break;

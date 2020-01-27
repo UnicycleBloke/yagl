@@ -36,13 +36,14 @@ enum class TokenType
     OpenBrace,   CloseBrace,   // Blocks
     OpenAngle,   CloseAngle,   // Arguments?
 
-    Equals,    // = 
-    NotEqual,  // !=
-    Ampersand, // &
-    Percent,   // %
-    SingleDot, // . Remove - only for file name in current output.
-    DoubleDot, // ..
-    ShiftLeft, // <<
+    Equals,     // = 
+    NotEqual,   // !=
+    Ampersand,  // &
+    Percent,    // %
+    SingleDot,  // . Remove - only for file name in current output.
+    DoubleDot,  // ..
+    ShiftLeft,  // <<
+    ShiftRight, // >>
 
     OpPlus,     // +
     OpMinus,    // -
