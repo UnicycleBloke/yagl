@@ -60,7 +60,7 @@ private:
 
 // SpriteSheet::Pixel RGBSpriteSheet::pixel(uint32_t x, uint32_t y)
 // {
-//     png::rgb_pixel in = m_image[x][y];
+//     png::rgb_pixel in = m_image[y][x];
 
 //     Pixel out = {};
 //     out.red   = in.red;
@@ -79,7 +79,7 @@ RGBASpriteSheet::RGBASpriteSheet(const std::string& file_name)
 
 SpriteSheet::Pixel RGBASpriteSheet::pixel(uint32_t x, uint32_t y)
 {
-    png::rgba_pixel in = m_image[x][y];
+    png::rgba_pixel in = m_image[y][x];
 
     Pixel out = {};
     out.red   = in.red;
@@ -100,7 +100,7 @@ PaletteSpriteSheet::PaletteSpriteSheet(const std::string& file_name)
 SpriteSheet::Pixel PaletteSpriteSheet::pixel(uint32_t x, uint32_t y)
 {
     Pixel out = {};
-    out.index = m_image[x][y];
+    out.index = m_image[y][x];
     return out;
 }
 
