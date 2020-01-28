@@ -204,7 +204,7 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
         case '+' : emit(TokenType::OpPlus,       "+"); return true;
         case '-' : emit(TokenType::OpMinus,      "-"); return true;
         case '*' : emit(TokenType::OpMultiply,   "*"); return true;
-        case '/' : emit(TokenType::OpMultiply,   "/"); return true;
+        case '/' : emit(TokenType::OpDivide,     "/"); return true;
 
         case '<' :
             if (p == '<')

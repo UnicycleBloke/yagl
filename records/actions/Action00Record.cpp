@@ -130,7 +130,9 @@ static constexpr const char* str_instance_id = "instance_id";
 
 void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action00" << '\n';
+    os << pad(indent) << RecordName(record_type()) << "<";
+    os << FeatureName(m_feature) << ", "; 
+    os << to_hex(m_first_id) << "> // Action00" << '\n';
     os << pad(indent) << "{\n";
 
     uint16_t id = m_first_id;
@@ -206,6 +208,8 @@ void Action00Record::parse(TokenStream& is)
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
+    is.match(TokenType::Comma);
+    m_first_id = is.match_integer();
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
@@ -214,8 +218,9 @@ void Action00Record::parse(TokenStream& is)
     {
         is.match(TokenType::Ident);
         is.match(TokenType::Colon);
-        m_first_id = is.match_integer();
         // Ignore second and subsequent IDs.
+        uint16_t id = is.match_integer();
+        //m_first_id  = (m_instances.size() == 0) ? id : m_first_id;
 
         is.match(TokenType::OpenBrace);
 

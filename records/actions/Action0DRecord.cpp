@@ -79,7 +79,7 @@ Action0DRecord::Type Action0DRecord::type() const
         {
             return Type::Patch;
         } 
-        else if ((m_data & 0x00FF) == 0x00FF)
+        else if ((m_data & 0xFF) == 0xFF)
         {
             return Type::Resources;
         }
@@ -299,6 +299,8 @@ void Action0DRecord::parse_description(uint8_t& param, TokenStream& is)
     }
     else
     {
+        // 0xFF indicates that the parameter is a constant.
+        param  = 0xFF;
         m_data = is.match_integer();
     }
 }
@@ -381,6 +383,8 @@ void Action0DRecord::parse_other(TokenStream& is)
     is.match(TokenType::CloseAngle);
 
     parse_description(m_source1, is);
+
+    m_source2 = 0xFE;
 }
 
 
@@ -402,16 +406,14 @@ void Action0DRecord::parse_patch(TokenStream& is)
 
     // This just expects an Ident (for now), but doesn't care about the value.
     parse_description(m_source1, is);
+
+    m_source2 = 0xFE;
+    m_data    = 0xFFFF;
 }
 
 
 void Action0DRecord::print_resources(std::ostream& os, uint16_t indent) const
 {
-    //os << pad(indent) << str_target  << ": " << param_description(m_target) << ";\n";
-    //desc_grm_op.print(static_cast<GRMOperator>(m_source1), os, indent);
-    //os << pad(indent) << str_feature << ": " << FeatureName(m_feature) << ";\n";
-    //desc_number.print(m_number, os, indent);
-
     os << pad(indent) << str_expression << ": " << param_description(m_target) << " = ";
     os << desc_grm_op.value(static_cast<GRMOperator>(m_source1)) << "(";
     os << desc_feature.value(m_feature) << ", " << to_hex(m_number) << ");\n";  
@@ -432,6 +434,9 @@ void Action0DRecord::parse_resources(TokenStream& is)
     is.match(TokenType::Comma);
     m_number = is.match_integer();
     is.match(TokenType::CloseParen);
+
+    m_source2 = 0xFE;
+    m_ff      = 0xFF;
 }
 
 

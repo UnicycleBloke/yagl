@@ -50,7 +50,7 @@ constexpr IntegerDescriptorT<uint8_t>  desc_02 = { 0x02, str_reliability_decay_s
 constexpr IntegerDescriptorT<uint8_t>  desc_03 = { 0x03, str_vehicle_life_years,      PropFormat::Dec };
 constexpr IntegerDescriptorT<uint8_t>  desc_04 = { 0x04, str_model_life_years,        PropFormat::Dec };
 const     BitfieldDescriptorT<uint8_t> desc_06 = { 0x06, str_climate_availability,    
-    { {0, "Temperate"}, {1, "Arctic"}, {2, "Tropical"}, {3, "Toyland"} } };
+    { {1, "Temperate"}, {2, "Arctic"}, {4, "Tropical"}, {8, "Toyland"} } };
 constexpr IntegerDescriptorT<uint8_t>  desc_07 = { 0x07, str_loading_speed,           PropFormat::Hex };
 
 

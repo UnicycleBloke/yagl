@@ -463,6 +463,7 @@ const BitfieldDescriptorT<uint8_t> colour_desc =
 
 void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
+    /*
     os << pad(indent) << "[" << m_xdim << ", " << m_ydim << ", " <<  m_xrel << ", " << m_yrel << "], ";
     os << zoom_desc.value(m_zoom) << ", ";
 
@@ -496,6 +497,7 @@ void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uin
     }
 
     os << ";\n";
+    */
 }
 
  

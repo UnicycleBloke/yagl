@@ -469,11 +469,13 @@ void Action02VariableRecord::parse_expression(TokenStream& is)
         {
             is.match(TokenType::OpDivide);
             action.div_mod_value = is.match_integer();
+            action.action |= 0x40;
         }
         if (is.peek().type == TokenType::Percent)
         {
             is.match(TokenType::Percent);
             action.div_mod_value = is.match_integer();
+            action.action |= 0x80;
         }
         is.match(TokenType::SemiColon);
 

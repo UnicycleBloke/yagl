@@ -56,7 +56,7 @@ static void decode()
             std::cout << "Image base: " << image_base.string() << '\n';
         }
 
-        std::ofstream os(options.yagl_file(), std::ios::binary);
+        std::ofstream os(yagl_file, std::ios::binary);
         grf_data.print(os, yagl_dir, image_base);
     }
     catch (std::exception& e)
@@ -93,6 +93,14 @@ static void encode()
 
         //std::ofstream os(options.grf_file(), std::ios::binary);
         //grf_data.write(os);
+
+        fs::path yagl_file2  = options.yagl_file();
+        fs::path image_base2 = yagl_file2;
+        yagl_file2.replace_extension("yagl2");
+        image_base2.replace_extension("images2");
+
+        std::ofstream os(yagl_file2, std::ios::binary);
+        grf_data.print(os, yagl_dir, image_base2);
     }
     catch(const std::exception& e)
     {
