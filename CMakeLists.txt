@@ -120,6 +120,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
 add_custom_target(
     prebuild_commands
     COMMAND echo Pre-build commands...
+    # Python is required. I used Python 3.8.1, but the script doesn't do much...
     # Windows Subsystem for Linux: needed to manually create soft link to /usr/bin/python3.
     COMMAND python ${PROJECT_SOURCE_DIR}/yagl_version.py
 )
@@ -141,15 +142,24 @@ target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC
 )
 
 if (UNIX)
-    # GCC
+    # Builds on UNIX-like systems: Linux, MSYS2, Windows Subsystem for Linux, ...
+    # We assume GCC is used for the build
     target_compile_options(${NEWGRF_PROGRAM_NAME} PUBLIC -g -std=c++17)
     target_link_libraries(${NEWGRF_PROGRAM_NAME} PUBLIC png stdc++fs) 
 else()
-    # Visual Studio
+    # Microsoft Visual Studio 2019 (2017 didn't work so well due to some of the C++17 features in the code).
+    # Code be fixed with a bit off faff. Or just install VS2019. :)
     target_compile_options(${NEWGRF_PROGRAM_NAME} PUBLIC /std:c++17)
     target_link_libraries(${NEWGRF_PROGRAM_NAME} PUBLIC libpng16 zlib)
-    # TODO we need to generalise the locatoin of vcpkg
-    target_link_directories(${NEWGRF_PROGRAM_NAME} PUBLIC C:/Users/ac4/Desktop/vcpkg/installed/x64-windows-static/lib) 
-    target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC C:/Users/ac4/Desktop/vcpkg/installed/x64-windows-static/include)
-    set(_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING 1)
+
+    # Is their a nicer, more automatic, way to generalise the location of vcpkg? 
+    # Here we expect -DVCPKG_DIR=<dir> to be given on the cmake command line.
+    if (NOT EXISTS ${VCPKG_DIR})
+        message(FATAL_ERROR "ERROR: The directory given by VCPKG_DIR does not exist")
+    endif()    
+    target_link_directories(${NEWGRF_PROGRAM_NAME} PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/lib) 
+    target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/include)
+    
+    # Prevent the compiler whining about this deprecated feature used in the GRFStrings stuff.    
+    add_compile_definitions(_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING)
 endif()

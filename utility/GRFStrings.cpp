@@ -488,7 +488,7 @@ static void parse_extension_code(std::vector<std::u16string>& args, std::basic_o
         for (uint8_t i = 0; i < extension.data_size; ++i)
         {
             std::string arg = converter.to_bytes(args[i + 2]);
-            char16_t value = strtol(arg.c_str() + 2, nullptr, 16);
+            char16_t value = char16_t (strtol(arg.c_str() + 2, nullptr, 16));
             os << value;
         }
     }
