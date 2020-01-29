@@ -276,13 +276,19 @@ Descriptors are also used for print the value of a property when generating YAGL
 
 **GRF Strings**
 
-Strings in GRF files can be encoded in either not-quite-Latin1 or not-quite-UTF8. In both cases the strings may contain binary control codes which have special functions when the strings are rendered in-game. 
+Strings in GRF files can be encoded in either not-quite-Latin1 or not-quite-UTF8 (prefixed with an upper case thorn character: **Þ**). In both cases the strings may contain binary control codes which have special functions when the strings are rendered in-game. 
 
 Strings are converted to a human-readable pure-UTF8 format when generating YAGL. All the control codes are replaced with escaped string names (e.g. `"{blue}This text is blue. {red} This text is red."`). Braces are used to escape control sequences, and a double open brace is used to create a literal single open brace. Double quotes are escaped with `{dq}` as this symbol is used to delimit strings in YAGL. Double quotes are not special characters in GRF strings.
 
-The string conversion is done in two stages. Both Latin1 and UTF8 strings first are converted to UTF16. This unifies the two string types and makes life a little simple as a `char16_t` type can represent every code point in the Basic Multilingual Plane (we ignore the supplementary planes for now), and the control codes are represented more cleanly by private-use codepoints, U+E0XX. The second stage replaces the control codes and their arguments with string representations, and then the whole thing is converted to UTF8. The YAGL string does not contain a `thorn` prefix to indicate that it was encoded with UTF8 in the GRF. This procedure might be overkill, but the primary goal was correct function. It can be refactored later. 
+The string conversion is done in two stages. 
 
-Parsing a string is more or less the same procedure in reverse. The UTF16 intermediate string is checked to see if it contains any characters (other than control codes) which are not Latin1. This determines whether the GRF string is encoded as Latin1 or UTF8. UTF8 strings are prefixed with a `thorn` character to disambiguate them.
+- Both Latin1 and UTF8 strings first are converted to UTF16. This unifies the two string types and makes life a little simple as a `char16_t` type can represent every code point in the Basic Multilingual Plane (we ignore the supplementary planes for now), and the control codes are represented more cleanly by private-use codepoints, **U+E0xx**. The **Þ** prefix is removed.
+
+- The second stage replaces the control codes and their arguments with string representations, and then the whole thing is converted to UTF8. 
+
+This procedure might be overkill, but the primary goal was correct function. It can be refactored later. 
+
+Parsing a string is more or less the same procedure in reverse. The UTF16 intermediate string is checked to see if it contains any characters (other than control codes) which are not Latin1. This determines whether the GRF string is encoded as Latin1 or UTF8. UTF8 strings are prefixed with a **Þ** character.
 
 Note that the non-unique nature of string encoding means it is very likely that using **yagl** to decode and immediately re-encode a GRF will result in different binary files, even though they are semantically identical - a bit of a pain for testing.
 
@@ -292,6 +298,7 @@ Note that the non-unique nature of string encoding means it is very likely that 
 
 - Some of the pseudo-sprites have very simple flat data structures, and are quite simple to read and write. Others such as, for example, Action14, are more complicated. In such cases there may be additional classes or structures intended to break down the task of reading and writing the data.
 
+- Aside from strings, one or two other features have non-unique encodings, such as extended bytes. There may be cases in which encoded RealSprites have a different format due to being chunked or no chunked. 
 
 
 ***TODO Much more information...***
