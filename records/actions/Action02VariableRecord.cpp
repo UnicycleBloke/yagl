@@ -158,7 +158,7 @@ void Action02VariableRecord::write(std::ostream& os, const GRFInfo& info) const
     write_uint8(os, m_set_id);
     write_uint8(os, static_cast<uint8_t>(m_var_type));
 
-    uint16_t num_actions = m_actions.size();
+    uint16_t num_actions = uint16_t(m_actions.size());
     for (uint16_t i = 0; i < num_actions; ++i)
     {
         const auto& varaction = m_actions[i];
@@ -193,7 +193,7 @@ void Action02VariableRecord::write(std::ostream& os, const GRFInfo& info) const
         }
     }
 
-    uint8_t num_ranges = m_ranges.size();
+    uint8_t num_ranges = uint8_t(m_ranges.size());
     write_uint8(os, num_ranges);
     for (uint8_t i = 0; i < num_ranges; ++i)
     {

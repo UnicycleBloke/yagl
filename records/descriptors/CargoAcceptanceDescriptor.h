@@ -45,7 +45,7 @@ private:
 
 struct CargoAcceptanceDescriptor : PropertyDescriptor
 {
-    void print(const CargoAcceptanceList& list, std::ostream& os, uint8_t indent) const
+    void print(const CargoAcceptanceList& list, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         list.print(os, indent);

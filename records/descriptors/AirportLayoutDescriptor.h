@@ -70,7 +70,7 @@ struct AirportLayouts
 
 struct AirportLayoutsDescriptor : PropertyDescriptor
 {
-    void print(const AirportLayouts& layouts, std::ostream& os, uint8_t indent, AirportType type) const
+    void print(const AirportLayouts& layouts, std::ostream& os, uint16_t indent, AirportType type) const
     {
         prefix(os, indent);
         layouts.print(os, indent, type);

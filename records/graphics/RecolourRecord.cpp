@@ -111,7 +111,7 @@ void RecolourRecord::parse(TokenStream& is)
 
     for (uint16_t i = 0; i < 256; ++i)
     {
-        m_colour_map[i] = i;
+        m_colour_map[i] = uint8_t(i);
     }
 
     is.match_ident(str_recolour_sprite);

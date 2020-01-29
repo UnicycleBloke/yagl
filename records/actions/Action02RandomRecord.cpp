@@ -82,7 +82,7 @@ void Action02RandomRecord::write(std::ostream& os, const GRFInfo& info) const
     {
         nrand += it.second;
     }
-    write_uint8(os, nrand);
+    write_uint8(os, uint8_t(nrand));
  
     for (const auto it: m_set_ids)
     {

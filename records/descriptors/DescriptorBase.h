@@ -33,13 +33,13 @@ struct PropertyDescriptor
     uint8_t     index;
     const char* name;
 
-    void prefix(std::ostream& os, uint8_t indent) const;
+    void prefix(std::ostream& os, uint16_t indent) const;
 };
 
 
 // struct StringDescriptor : PropertyDescriptor
 // {
-//     void print(const std::string& value, std::ostream& os, uint8_t indent) const
+//     void print(const std::string& value, std::ostream& os, uint16_t indent) const
 //     {
 //         prefix(os, indent);
 //         // Do we always want readable strings here?
@@ -57,7 +57,7 @@ struct PropertyDescriptor
 
 struct GRFStringDescriptor : PropertyDescriptor
 {
-    void print(const GRFString& value, std::ostream& os, uint8_t indent) const
+    void print(const GRFString& value, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         value.print(os);

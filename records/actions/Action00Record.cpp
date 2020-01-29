@@ -102,8 +102,8 @@ void Action00Record::write(std::ostream& os, const GRFInfo& info) const
         }
     }
     //uint8_t num_props = properties.size();
-    uint8_t num_props = m_properties.size();
-    uint8_t num_info  = m_instances.size();    
+    uint8_t num_props = uint8_t(m_properties.size());
+    uint8_t num_info  = uint8_t(m_instances.size());
 
     ActionRecord::write(os, info);
 

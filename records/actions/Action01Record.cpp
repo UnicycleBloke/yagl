@@ -62,7 +62,7 @@ void Action01Record::write(std::ostream& os, const GRFInfo& info) const
     }
     else
     {
-        write_uint8(os, m_num_sets);
+        write_uint8(os, uint8_t(m_num_sets));
         write_uint8_ext(os, m_num_sprites);
     }
 }  

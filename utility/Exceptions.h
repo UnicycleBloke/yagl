@@ -38,7 +38,7 @@ private:
 
 
 // Exception used during parsing to indicates where in the original input the error occured.
-class TokenValue;
+struct TokenValue;
 class ParserError : public std::runtime_error 
 {
 public:

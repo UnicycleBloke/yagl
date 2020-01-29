@@ -37,7 +37,7 @@ private:
 
 struct GRFLabelDescriptor : PropertyDescriptor
 {
-    void print(GRFLabel label, std::ostream& os, uint8_t indent) const
+    void print(GRFLabel label, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         os << "\"" << label.to_string() << "\";\n"; 
@@ -52,7 +52,7 @@ struct GRFLabelDescriptor : PropertyDescriptor
 
 struct GRFLabelListDescriptor : PropertyDescriptor
 {
-    void print(const GRFLabelList& labels, std::ostream& os, uint8_t indent) const
+    void print(const GRFLabelList& labels, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         labels.print(os);

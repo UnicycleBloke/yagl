@@ -57,7 +57,7 @@ static void decode()
         }
 
         std::ofstream os(yagl_file, std::ios::binary);
-        grf_data.print(os, yagl_dir, image_base);
+        grf_data.print(os, yagl_dir.string(), image_base.string());
     }
     catch (std::exception& e)
     {
@@ -89,7 +89,7 @@ static void encode()
         TokenStream token_stream(lexer.lex(is));
 
         NewGRFData grf_data;
-        grf_data.parse(token_stream, yagl_dir, image_base); 
+        grf_data.parse(token_stream, yagl_dir.string(), image_base.string()); 
 
         //std::ofstream os(options.grf_file(), std::ios::binary);
         //grf_data.write(os);
@@ -100,7 +100,7 @@ static void encode()
         image_base2.replace_extension("images2");
 
         std::ofstream os(yagl_file2, std::ios::binary);
-        grf_data.print(os, yagl_dir, image_base2);
+        grf_data.print(os, yagl_dir.string(), image_base2.string());
     }
     catch(const std::exception& e)
     {

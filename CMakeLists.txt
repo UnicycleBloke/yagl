@@ -140,6 +140,16 @@ target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC
     third_party/cxxopts/include
 )
 
-target_link_libraries(${NEWGRF_PROGRAM_NAME} PUBLIC png stdc++fs) 
-
-target_compile_options(${NEWGRF_PROGRAM_NAME} PUBLIC -g -std=c++17)
+if (UNIX)
+    # GCC
+    target_compile_options(${NEWGRF_PROGRAM_NAME} PUBLIC -g -std=c++17)
+    target_link_libraries(${NEWGRF_PROGRAM_NAME} PUBLIC png stdc++fs) 
+else()
+    # Visual Studio
+    target_compile_options(${NEWGRF_PROGRAM_NAME} PUBLIC /std:c++17)
+    target_link_libraries(${NEWGRF_PROGRAM_NAME} PUBLIC libpng16 zlib)
+    # TODO we need to generalise the locatoin of vcpkg
+    target_link_directories(${NEWGRF_PROGRAM_NAME} PUBLIC C:/Users/ac4/Desktop/vcpkg/installed/x64-windows-static/lib) 
+    target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC C:/Users/ac4/Desktop/vcpkg/installed/x64-windows-static/include)
+    set(_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING 1)
+endif()

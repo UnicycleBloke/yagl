@@ -25,7 +25,7 @@ namespace {
 
 struct BridgeLayoutDescriptor : PropertyDescriptor
 {
-    void print(const Action00Bridges::BridgeLayout& layouts, std::ostream& os, uint8_t indent) const
+    void print(const Action00Bridges::BridgeLayout& layouts, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         layouts.print(os, indent);
@@ -154,7 +154,7 @@ void Action00Bridges::BridgeLayout::write(std::ostream& os) const
 {
     write_uint8(os, m_first_table_id);
 
-    write_uint8(os, m_tables.size());
+    write_uint8(os, uint8_t(m_tables.size()));
     for (const auto& table: m_tables)
     {
         table.write(os);

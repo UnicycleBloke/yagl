@@ -481,7 +481,7 @@ std::shared_ptr<Record> NewGRFData::make_record(RecordType record_type)
 // Total number of records in the GRF file. Sprites and sounds are nested.
 uint32_t NewGRFData::total_records() const
 {
-    uint32_t result = m_records.size();
+    uint32_t result = uint32_t(m_records.size());
  
     for (std::shared_ptr<Record> record: m_records)
     {
@@ -555,7 +555,7 @@ void NewGRFData::write_record(std::ostream& os, std::shared_ptr<Record> record) 
         std::ostringstream ss;
         record->write(ss, m_info);
         std::string data = ss.str();
-        uint16_t length = data.length();
+        uint16_t length = uint16_t(data.length());
 
         // Record header
         if (m_info.format == GRFFormat::Container1)

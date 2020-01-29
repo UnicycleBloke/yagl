@@ -65,7 +65,7 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
     write_uint8(os, static_cast<uint8_t>(m_feature));
     write_uint8(os, m_language | (m_uint16_ids ? 0x80 : 0x00));
 
-    uint8_t num_strings = m_strings.size();
+    uint8_t num_strings = uint8_t(m_strings.size());
     write_uint8(os, num_strings);
 
     if (m_uint16_ids)
@@ -78,7 +78,7 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
     }
     else
     {
-        write_uint8(os, m_first_string_id);
+        write_uint8(os, uint8_t(m_first_string_id));
     }
 
     for (const auto& str: m_strings)

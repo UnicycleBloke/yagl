@@ -27,13 +27,13 @@ struct ArrayDescriptorT : PropertyDescriptor
 {
     PropFormat format;
 
-    void print(const std::array<T, N>& values, std::ostream& os, uint8_t indent) const;
+    void print(const std::array<T, N>& values, std::ostream& os, uint16_t indent) const;
     void parse(std::array<T, N>& values, TokenStream& is) const;
 };
 
 
 template <typename T, uint16_t N>
-void ArrayDescriptorT<T, N>::print(const std::array<T, N>& values, std::ostream& os, uint8_t indent) const
+void ArrayDescriptorT<T, N>::print(const std::array<T, N>& values, std::ostream& os, uint16_t indent) const
 {
     // This is the name of the property.
     prefix(os, indent);

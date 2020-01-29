@@ -26,7 +26,7 @@ namespace {
 
 struct VectorU8Descriptor : PropertyDescriptor
 {
-    void print(const Action00Industries::VectorU8& items, std::ostream& os, uint8_t indent) const
+    void print(const Action00Industries::VectorU8& items, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         items.print(os, indent);
@@ -41,7 +41,7 @@ struct VectorU8Descriptor : PropertyDescriptor
 
 struct MultipliersDescriptor : PropertyDescriptor
 {
-    void print(const Action00Industries::Multipliers& items, std::ostream& os, uint8_t indent) const
+    void print(const Action00Industries::Multipliers& items, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         items.print(os, indent);
@@ -192,7 +192,7 @@ void Action00Industries::VectorU8::read(std::istream& is)
 
 void Action00Industries::VectorU8::write(std::ostream& os) const
 {
-    write_uint8(os, items.size());
+    write_uint8(os, uint8_t(items.size()));
     for (uint8_t item: items)
     {
         write_uint8(os, item);

@@ -26,7 +26,7 @@ namespace {
 
 struct SpriteLayoutsDescriptor : PropertyDescriptor
 {
-    void print(const Action00Stations::SpriteLayout& layouts, std::ostream& os, uint8_t indent) const
+    void print(const Action00Stations::SpriteLayout& layouts, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         layouts.print(os, indent);
@@ -41,7 +41,7 @@ struct SpriteLayoutsDescriptor : PropertyDescriptor
 
 struct CustomStationsDescriptor : PropertyDescriptor
 {
-    void print(const Action00Stations::CustomStation& layouts, std::ostream& os, uint8_t indent) const
+    void print(const Action00Stations::CustomStation& layouts, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         layouts.print(os, indent);
@@ -261,7 +261,7 @@ void Action00Stations::SpriteLayout::read(std::istream& is)
 
 void Action00Stations::SpriteLayout::write(std::ostream& os) const
 {
-    write_uint8_ext(os, tiles.size());
+    write_uint8_ext(os, uint16_t(tiles.size()));
     for (const auto& tile: tiles)
     {
         tile.write(os);

@@ -38,7 +38,7 @@ void Action0ARecord::write(std::ostream& os, const GRFInfo& info) const
 {
     ContainerRecord::write(os, info);
 
-    uint8_t num_sets = m_sets.size();
+    uint8_t num_sets = uint8_t(m_sets.size());
     write_uint8(os, num_sets);
 
     for (const auto& set: m_sets)

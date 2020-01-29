@@ -67,7 +67,7 @@ void Action03Record::write(std::ostream& os, const GRFInfo& info) const
 
     write_uint8(os, static_cast<uint8_t>(m_feature));
 
-    uint8_t num_ids = m_feature_ids.size();
+    uint8_t num_ids = uint8_t(m_feature_ids.size());
     write_uint8(os, num_ids | (m_livery_override ? 0x80 : 0x00));
 
     for (const auto& id: m_feature_ids)
@@ -75,7 +75,7 @@ void Action03Record::write(std::ostream& os, const GRFInfo& info) const
         write_uint8_ext(os, id);
     }
 
-    uint8_t num_cargo_types = m_cargo_types.size();
+    uint8_t num_cargo_types = uint8_t(m_cargo_types.size());
     write_uint8(os, num_cargo_types);
     for (const auto& cargo_type: m_cargo_types)
     {

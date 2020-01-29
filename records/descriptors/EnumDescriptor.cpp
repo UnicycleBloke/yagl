@@ -20,7 +20,7 @@
 #include <sstream>
 
 
-void EnumDescriptor::print_impl(uint32_t value, std::ostream& os, uint8_t indent) const
+void EnumDescriptor::print_impl(uint32_t value, std::ostream& os, uint16_t indent) const
 {
     prefix(os, indent);
 

@@ -55,7 +55,7 @@ void Action13Record::write(std::ostream& os, const GRFInfo& info) const
         write_uint8(os, m_language);
     }
 
-    write_uint8(os,  m_strings.size());
+    write_uint8(os, uint8_t(m_strings.size()));
     write_uint16(os, m_first_string_id);
 
     for (const auto& str: m_strings)

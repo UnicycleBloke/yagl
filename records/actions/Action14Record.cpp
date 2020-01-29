@@ -87,7 +87,7 @@ void Action14Record::write_chunks(std::ostream& os, const std::vector<Chunk>& ch
                 break;
             case 'B':
                 {
-                    uint16_t length = chunk.data.size();
+                    uint16_t length = uint16_t(chunk.data.size());
                     write_uint16(os, length);
                     for (const auto& byte : chunk.data)
                     {

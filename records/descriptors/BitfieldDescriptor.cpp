@@ -19,7 +19,7 @@
 #include "BitfieldDescriptor.h"
 
 
-void BitfieldDescriptor::print_impl(uint32_t bits, std::ostream& os, uint8_t indent) const
+void BitfieldDescriptor::print_impl(uint32_t bits, std::ostream& os, uint16_t indent) const
 {
     prefix(os, indent);
 

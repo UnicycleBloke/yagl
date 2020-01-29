@@ -87,11 +87,11 @@ void Action0FRecord::write(std::ostream& os, const GRFInfo& info) const
         write_uint8(os, 0x00);
     }
 
-    write_uint8(os, m_style_parts.size());
+    write_uint8(os, uint8_t(m_style_parts.size()));
 
     for (const Part& part: m_style_parts) 
     {
-        write_uint8(os, part.texts.size());
+        write_uint8(os, uint8_t(part.texts.size()));
         write_uint8(os, part.first_bit);
         write_uint8(os, part.num_bits);
 

@@ -68,7 +68,7 @@ struct IndustryLayouts
 
 struct IndustryLayoutsDescriptor : PropertyDescriptor
 {
-    void print(const IndustryLayouts& layouts, std::ostream& os, uint8_t indent) const
+    void print(const IndustryLayouts& layouts, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         layouts.print(os, indent);

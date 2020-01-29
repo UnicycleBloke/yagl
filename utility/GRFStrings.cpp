@@ -171,7 +171,7 @@ std::u16string grf_string_latin1_to_utf16(const std::string& str)
 {
     std::basic_ostringstream<char16_t> os;
 
-    uint16_t length = str.size();
+    uint16_t length = uint16_t(str.size());
     for (uint16_t pos = 0; pos < length; ++pos)
     {
         uint8_t u16 = str[pos];
@@ -221,7 +221,7 @@ std::u16string grf_string_utf8_to_utf16(const std::string& str)
 
     std::basic_ostringstream<char16_t> os;
 
-    uint16_t length = str.size();
+    uint16_t length = uint16_t(str.size());
     //for (uint16_t pos = 0; pos < length; ++pos)
     // Skip the leading thorn character - we don't actually need this.
     for (uint16_t pos = 2; pos < length; ++pos)
@@ -309,7 +309,7 @@ std::u16string grf_string_utf16_to_readable_utf16(const std::u16string& str)
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> converter;
     std::basic_ostringstream<char16_t> os;
 
-    uint16_t length = str.size();
+    uint16_t length = uint16_t(str.size());
     for (uint16_t pos = 0; pos < length; ++pos)
     {
         char16_t c = str[pos];
@@ -331,7 +331,7 @@ std::u16string grf_string_utf16_to_readable_utf16(const std::u16string& str)
                 {
                     // This is an extension control code.
                     c = str[++pos];
-                    const auto& it2 = g_extension_codes.find(c);
+                    const auto& it2 = g_extension_codes.find(c & 0x00FF);
                     if (it2 != g_extension_codes.end())
                     {
                         const ControlCode& code = it2->second;
@@ -531,7 +531,7 @@ static void parse_control_code(std::vector<std::u16string>& args, std::basic_ost
            for (uint8_t i = 0; i < control.data_size; ++i)
             {
                 std::string arg = converter.to_bytes(args[i + 1]);
-                char16_t value = strtol(arg.c_str() + 2, nullptr, 16);
+                char16_t value = char16_t(strtol(arg.c_str() + 2, nullptr, 16));
                 os << value;
             }
         }
@@ -557,7 +557,7 @@ static std::u16string readable_utf16_to_binary_utf16(const std::u16string& str)
     std::basic_ostringstream<char16_t> cs;
     std::vector<std::u16string> args;
 
-    uint16_t length = str.length();
+    uint16_t length = uint16_t(str.length());
     for (uint16_t pos = 0; pos < length; ++pos)
     {
         char16_t u16 = str[pos];
@@ -651,7 +651,7 @@ static void convert_utf32_utf8(uint32_t value, std::ostringstream& os)
 
 static bool binary_utf16_is_utf8(const std::u16string& str)
 {
-    uint16_t length = str.length();
+    uint16_t length = uint16_t(str.length());
     uint16_t pos = 0;
     while (pos < length)
     {
@@ -692,7 +692,7 @@ static std::string binary_utf16_to_utf8(const std::u16string& str)
     // Thorn indicates that this string is encoded with UTF8.
     convert_utf32_utf8(0x00DE, os);
 
-    uint16_t length = str.length();
+    uint16_t length = uint16_t(str.length());
     uint16_t pos = 0;
     while (pos < length)
     {
@@ -744,7 +744,7 @@ static std::string binary_utf16_to_latin1(const std::u16string& str)
 {
     std::ostringstream os;
 
-    uint16_t length = str.length();
+    uint16_t length = uint16_t(str.length());
     uint16_t pos = 0;
     while (pos < length)
     {

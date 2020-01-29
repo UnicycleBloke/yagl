@@ -29,14 +29,14 @@ struct RangeDescriptor : PropertyDescriptor
         const char* name;
     };
 
-    void print(uint32_t value, std::ostream& os, uint8_t indent) const;
+    void print(uint32_t value, std::ostream& os, uint16_t indent) const;
     void parse(uint32_t& value, TokenStream& is) const;
 
     std::vector<Item> items;
 };
 
 
-inline void RangeDescriptor::print(uint32_t value, std::ostream& os, uint8_t indent) const
+inline void RangeDescriptor::print(uint32_t value, std::ostream& os, uint16_t indent) const
 {
     prefix(os, indent);
 

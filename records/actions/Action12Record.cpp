@@ -40,7 +40,7 @@ void Action12Record::write(std::ostream& os, const GRFInfo& info) const
 {
     ActionRecord::write(os, info);
 
-    write_uint8(os, m_ranges.size());
+    write_uint8(os, uint8_t(m_ranges.size()));
 
     for (const auto& range: m_ranges)
     {

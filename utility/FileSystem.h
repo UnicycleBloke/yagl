@@ -33,6 +33,7 @@
 #else
     // TODO similar checks for other compilers.
     #include <filesystem>
+    namespace fs = std::filesystem;
 #endif
 
 

@@ -22,12 +22,12 @@
 
 struct BooleanDescriptor : PropertyDescriptor
 {
-    void print(bool value, std::ostream& os, uint8_t indent) const;
+    void print(bool value, std::ostream& os, uint16_t indent) const;
     void parse(bool& value, TokenStream& is) const;
 };
 
 
-inline void BooleanDescriptor::print(bool value, std::ostream& os, uint8_t indent) const
+inline void BooleanDescriptor::print(bool value, std::ostream& os, uint16_t indent) const
 {
     prefix(os, indent);
     os << std::boolalpha << value << ";\n"; 

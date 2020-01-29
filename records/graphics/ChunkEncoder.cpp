@@ -319,7 +319,7 @@ std::vector<uint8_t> ChunkEncoder::encode()
         std::vector<uint16_t> edges       = find_row_edges(y);
         std::vector<Chunk>    chunks      = find_row_chunks(edges);
         std::vector<uint8_t>  chunked_row = make_row_data(chunks, y);       
-        chunked_size += chunked_row.size(); 
+        chunked_size += uint32_t(chunked_row.size());
         chunked_rows.push_back(chunked_row);
     }
 
@@ -342,7 +342,7 @@ std::vector<uint8_t> ChunkEncoder::encode()
             output.push_back((offset >> 24) & 0xFF);
         }
 
-        offset += chunked_row.size();
+        offset += uint32_t(chunked_row.size());
     }
 
     // Then store the chunked data for each row. 

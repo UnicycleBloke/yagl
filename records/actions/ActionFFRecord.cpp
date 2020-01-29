@@ -47,7 +47,7 @@ void ActionFFRecord::write(std::ostream& os, const GRFInfo& info) const
 {
     ActionRecord::write(os, info);
 
-    write_uint8(os, m_filename.length());
+    write_uint8(os, uint8_t(m_filename.length()));
     write_string(os, m_filename);
 
     for (const auto& byte: m_binary)
@@ -71,7 +71,7 @@ void ActionFFRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     CommandLineOptions& options = CommandLineOptions::options();
     fs::path yagl_file = options.yagl_file();
     fs::path yagl_dir  = yagl_file.parent_path();
-    write_binary_file(yagl_dir);
+    write_binary_file(yagl_dir.string());
 }
 
 
@@ -81,7 +81,7 @@ void ActionFFRecord::parse(TokenStream& is)
     is.match(TokenType::OpenParen);
 
     fs::path file_path{is.match(TokenType::String)};
-    m_filename = file_path.filename();
+    m_filename = file_path.filename().string();
 
     is.match(TokenType::CloseParen);
     is.match(TokenType::SemiColon);
@@ -90,7 +90,7 @@ void ActionFFRecord::parse(TokenStream& is)
     CommandLineOptions& options = CommandLineOptions::options();
     fs::path yagl_file = options.yagl_file();
     fs::path yagl_dir  = yagl_file.parent_path();
-    read_binary_file(yagl_dir);
+    read_binary_file(yagl_dir.string());
 }
 
 

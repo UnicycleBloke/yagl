@@ -28,7 +28,7 @@ struct BitfieldDescriptor : PropertyDescriptor
         const char* name;
     };
 
-    void print_impl(uint32_t bits, std::ostream& os, uint8_t indent) const;
+    void print_impl(uint32_t bits, std::ostream& os, uint16_t indent) const;
     void parse_impl(uint32_t& bits, TokenStream& is) const;
 
     std::vector<Item> items;
@@ -38,7 +38,7 @@ struct BitfieldDescriptor : PropertyDescriptor
 template <typename T>
 struct BitfieldDescriptorT : BitfieldDescriptor
 {
-    void print(T bits, std::ostream& os, uint8_t indent) const
+    void print(T bits, std::ostream& os, uint16_t indent) const
     {
         uint32_t temp = bits;
         print_impl(temp, os, indent);

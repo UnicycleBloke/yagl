@@ -65,7 +65,7 @@ void AirportTile::write(std::ostream& os) const
             write_uint16(os, tile);
             break;
         case Type::OldTile:
-            write_uint8(os, tile);
+            write_uint8(os, uint8_t(tile));
     }
 }
 
@@ -178,7 +178,7 @@ void AirportLayouts::read(std::istream& is, AirportType type)
 
 void AirportLayouts::write(std::ostream& os, AirportType type) const
 {
-    write_uint8(os, layouts.size());
+    write_uint8(os, uint8_t(layouts.size()));
 
     // Size needs to be calculated... 
     std::ostringstream ss;
@@ -187,7 +187,7 @@ void AirportLayouts::write(std::ostream& os, AirportType type) const
         layout.write(ss, type);
     }
 
-    write_uint32(os, ss.str().length());
+    write_uint32(os, uint32_t(ss.str().length()));
     for (const auto& layout: layouts)
     {
         layout.write(os, type);

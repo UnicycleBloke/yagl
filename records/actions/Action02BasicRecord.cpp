@@ -46,8 +46,8 @@ void Action02BasicRecord::write(std::ostream& os, const GRFInfo& info) const
 
     write_uint8(os, static_cast<uint8_t>(m_feature));
     write_uint8(os, m_act02_set_id);
-    write_uint8(os, m_act01_set_ids_1.size());
-    write_uint8(os, m_act01_set_ids_2.size());
+    write_uint8(os, uint8_t(m_act01_set_ids_1.size()));
+    write_uint8(os, uint8_t(m_act01_set_ids_2.size()));
 
     for (const auto& set_id: m_act01_set_ids_1)
     {

@@ -47,7 +47,7 @@ inline void CargoList::read(std::istream& is)
 
 inline void CargoList::write(std::ostream& os) const
 {
-    write_uint8(os, m_cargo_ids.size());
+    write_uint8(os, uint8_t(m_cargo_ids.size()));
     for (auto cargo_id: m_cargo_ids)
     {
         write_uint8(os, cargo_id);
@@ -80,12 +80,12 @@ inline void CargoList::parse(TokenStream& is)
 
 struct CargoListDescriptor : PropertyDescriptor
 {
-    void print(const CargoList& cargos, std::ostream& os, uint8_t indent) const;
+    void print(const CargoList& cargos, std::ostream& os, uint16_t indent) const;
     void parse(CargoList& cargos, TokenStream& is) const;
 };
 
 
-inline void CargoListDescriptor::print(const CargoList& cargos, std::ostream& os, uint8_t indent) const
+inline void CargoListDescriptor::print(const CargoList& cargos, std::ostream& os, uint16_t indent) const
 {
     prefix(os, indent);
     cargos.print(os);

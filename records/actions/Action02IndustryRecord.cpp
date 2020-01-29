@@ -342,7 +342,7 @@ void Action02IndustryRecord::CargoList::read(std::istream& is)
 
 void Action02IndustryRecord::CargoList::write(std::ostream& os) const
 {
-    write_uint8(os, cargos.size());
+    write_uint8(os, uint8_t(cargos.size()));
     for (const auto& c: cargos)
     {
         write_uint8(os, c.cargo);

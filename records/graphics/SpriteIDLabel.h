@@ -56,7 +56,7 @@ void SpriteIDLabel<PixType>::draw(uint32_t id, uint32_t& xoff, uint32_t yoff,
 {
     std::string value = to_hex(id, false);
 
-    uint16_t length = value.length();
+    uint16_t length = uint16_t(value.length());
     uint16_t index  = 0;
 
     // Skip leading zeroes.

@@ -235,10 +235,10 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
 
     // TODO this isn't quite right - a different size is written sometimes.
     // We need to know this value for reading chunked sprites.
-    write_uint16(os, output_data.size() + 8);
+    write_uint16(os, uint8_t(output_data.size() + 8));
 
     write_uint8(os,  m_compression);
-    write_uint8(os,  m_ydim);
+    write_uint8(os,  uint8_t(m_ydim));
     write_uint16(os, m_xdim);
     write_uint16(os, m_xrel);
     write_uint16(os, m_yrel);
@@ -267,14 +267,14 @@ void RealSpriteRecord::write_format2(std::ostream& os) const
         std::vector<uint8_t> chunked_data = encode_tile(m_pixels, m_xdim, m_ydim, 
             m_compression, GRFFormat::Container2);
         output_data = encode_lz77(chunked_data);
-        uncomp_size = chunked_data.size();
+        uncomp_size = uint32_t(chunked_data.size());
     }
     else
     {
         output_data = encode_lz77(m_pixels);
     }
 
-    uint32_t output_size = output_data.size() + ((m_compression & CHUNKED_FORMAT) ? 14 : 10);
+    uint32_t output_size = uint32_t(output_data.size() + ((m_compression & CHUNKED_FORMAT) ? 14 : 10));
 
     // TODO this isn't quite right - a different size is written sometimes.
     // We need to know this value for reading chunked sprites.
@@ -296,7 +296,7 @@ void RealSpriteRecord::write_format2(std::ostream& os) const
         write_uint32(os, uncomp_size);
     }
 
-    uint32_t size = output_data.size();
+    uint32_t size = uint32_t(output_data.size());
     for (uint32_t i = 0; i < size; ++i)
     //for (const auto byte: output_data)
     {
@@ -344,7 +344,7 @@ std::vector<uint8_t> RealSpriteRecord::encode_lz77(const std::vector<uint8_t>& i
 
     std::array<uint8_t, 0x80> literal;
     uint8_t literal_size = 0;
-    uint32_t input_size  = input_data.size();
+    int32_t input_size  = int32_t(input_data.size());
     
     int32_t position = 0;
     while (position < input_size) 

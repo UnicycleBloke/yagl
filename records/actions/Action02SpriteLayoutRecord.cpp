@@ -324,7 +324,7 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
     // Not sure I've fully understood the relationships here. It appears that
     // you can only have advanced (registers) in extended format. Presumably
     // byte written will be 0x41 rather 0x40 for a single building sprite.
-    uint8_t num_sprites     = m_building_sprites.size();
+    uint8_t num_sprites     = uint8_t(m_building_sprites.size());
     bool    extended_format = (m_format != Format::Basic) ||
                               (num_sprites != 1) ||
                               (m_building_sprites[0].new_bb == false) ||

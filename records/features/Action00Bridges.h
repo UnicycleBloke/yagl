@@ -20,6 +20,7 @@
 #include "Action00Feature.h"
 #include "StreamHelpers.h"
 #include <vector>
+#include <array>
 
 
 class Action00Bridges : public Action00Feature

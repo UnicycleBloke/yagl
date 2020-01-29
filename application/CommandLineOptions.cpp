@@ -17,7 +17,6 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "CommandLineOptions.h"
-#include <getopt.h>
 #include "Exceptions.h"
 #include "FileSystem.h"
 #include "yagl_version.h" // Generated in a pre-build step.

@@ -35,7 +35,7 @@ void CargoAcceptanceList::read(std::istream& is)
 
 void CargoAcceptanceList::write(std::ostream& os) const
 {
-    write_uint8(os, m_items.size());
+    write_uint8(os, uint8_t(m_items.size()));
     for (const auto& item: m_items)
     {
         write_uint8(os, item.cargo_type);

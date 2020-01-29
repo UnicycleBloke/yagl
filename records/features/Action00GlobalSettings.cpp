@@ -26,7 +26,7 @@ namespace {
 
 struct SnowLineDescriptor : PropertyDescriptor
 {
-    void print(const Action00GlobalSettings::SnowLine& snow_line, std::ostream& os, uint8_t indent) const
+    void print(const Action00GlobalSettings::SnowLine& snow_line, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         snow_line.print(os, indent);
@@ -41,7 +41,7 @@ struct SnowLineDescriptor : PropertyDescriptor
 
 struct GenderCaseDescriptor : PropertyDescriptor
 {
-    void print(const Action00GlobalSettings::GenderCase& gender_case, std::ostream& os, uint8_t indent) const
+    void print(const Action00GlobalSettings::GenderCase& gender_case, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
         gender_case.print(os, indent);

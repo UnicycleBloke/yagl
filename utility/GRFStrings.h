@@ -46,7 +46,7 @@ public:
     // Determine whether or not the internal version needs to be UTF8.
     void parse(TokenStream& is);
 
-    uint32_t length() const { return m_value.length(); } 
+    uint32_t length() const { return uint32_t(m_value.length()); } 
 
 private:
     // This is the value as read from or written to a binary GRF file.

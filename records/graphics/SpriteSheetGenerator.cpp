@@ -297,7 +297,7 @@ void SpriteSheetGenerator::create_sprite_sheet_8bpp(const std::string& image_pat
     {
         // Each sprite needs to know the file name of its sprite sheet so that we 
         // can put this into the YAGL and read back the pixels later.
-        sprite->set_filename(relative);
+        sprite->set_filename(relative.string());
 
         const uint32_t xdim = sprite->xdim(); 
         const uint32_t ydim = sprite->ydim(); 
@@ -357,7 +357,7 @@ void SpriteSheetGenerator::create_sprite_sheet_24bpp(const std::string& image_pa
     {
         // Each sprite needs to know the file name of its sprite sheet so that we 
         // can put this into the YAGL and read back the pixels later.
-        sprite->set_filename(relative);
+        sprite->set_filename(relative.string());
 
         const uint32_t xdim = sprite->xdim(); 
         const uint32_t ydim = sprite->ydim(); 
@@ -417,7 +417,7 @@ void SpriteSheetGenerator::create_sprite_sheet_32bpp(const std::string& image_pa
     {
         // Each sprite needs to know the file name of its sprite sheet so that we 
         // can put this into the YAGL and read back the pixels later.
-        sprite->set_filename(relative);
+        sprite->set_filename(relative.string());
 
         const uint32_t xdim = sprite->xdim(); 
         const uint32_t ydim = sprite->ydim(); 
@@ -488,7 +488,7 @@ void SpriteSheetGenerator::create_sprite_sheet_mask(const std::string& image_pat
     {
         // Each sprite needs to know the file name of its sprite sheet so that we 
         // can put this into the YAGL and read back the pixels later.
-        sprite->set_mask_filename(relative);
+        sprite->set_mask_filename(relative.string());
 
         const uint32_t xdim = sprite->xdim(); 
         const uint32_t ydim = sprite->ydim(); 

@@ -28,7 +28,7 @@ struct EnumDescriptor : PropertyDescriptor
         const char* name;
     };
 
-    void print_impl(uint32_t value, std::ostream& os, uint8_t indent) const;
+    void print_impl(uint32_t value, std::ostream& os, uint16_t indent) const;
     void print_value_impl(uint32_t value, std::ostream& os) const;
     void parse_impl(uint32_t& value, TokenStream& is) const;
     const char* value_impl(uint32_t value) const;
@@ -40,7 +40,7 @@ struct EnumDescriptor : PropertyDescriptor
 template <typename Enum>
 struct EnumDescriptorT : EnumDescriptor
 {
-    void print(Enum value, std::ostream& os, uint8_t indent) const
+    void print(Enum value, std::ostream& os, uint16_t indent) const
     {
         uint32_t temp = static_cast<uint32_t>(value);
         print_impl(temp, os, indent);
@@ -55,7 +55,7 @@ struct EnumDescriptorT : EnumDescriptor
     const char* value(Enum value) const
     {
         uint32_t temp = static_cast<uint32_t>(value);
-        value_impl(temp);
+        return value_impl(temp);
     }
 
     void parse(Enum& value, TokenStream& is) const

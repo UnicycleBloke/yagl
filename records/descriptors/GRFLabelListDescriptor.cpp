@@ -34,7 +34,7 @@ void GRFLabelList::read(std::istream& is)
 
 void GRFLabelList::write(std::ostream& os) const
 {
-    write_uint8(os, m_labels.size());
+    write_uint8(os, uint8_t(m_labels.size()));
     for (auto label: m_labels)
     {
         label.write(os);

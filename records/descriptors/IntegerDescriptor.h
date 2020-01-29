@@ -25,7 +25,7 @@ struct IntegerDescriptorT : PropertyDescriptor
 {
     PropFormat format;
 
-    void print(T value, std::ostream& os, uint8_t indent) const
+    void print(T value, std::ostream& os, uint16_t indent) const
     {
         // This is the name of the property.
         prefix(os, indent);
@@ -46,7 +46,7 @@ struct IntegerListDescriptorT : PropertyDescriptor
 {
     PropFormat format;
 
-    void print(const std::vector<T>& values, std::ostream& os, uint8_t indent) const
+    void print(const std::vector<T>& values, std::ostream& os, uint16_t indent) const
     {
         // This is the name of the property.
         prefix(os, indent);
