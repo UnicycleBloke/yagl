@@ -857,12 +857,14 @@ std::string GRFString::readable() const
     // and back again, and see if it matches. There are some 
     // discrepancies, but these are so far due to the fact that
     // the GRF string encoding is non-unique.
+    /*
     std::string binary   = readable_utf8_to_grf_string(readable);    
     if (m_value != binary)
     {
         string_to_hex(m_value);
         string_to_hex(binary);
     }
+    */
 
     return readable;
 }

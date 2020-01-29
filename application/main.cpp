@@ -91,16 +91,17 @@ static void encode()
         NewGRFData grf_data;
         grf_data.parse(token_stream, yagl_dir.string(), image_base.string()); 
 
-        //std::ofstream os(options.grf_file(), std::ios::binary);
-        //grf_data.write(os);
+        std::ofstream os(options.grf_file(), std::ios::binary);
+        grf_data.write(os);
 
-        fs::path yagl_file2  = options.yagl_file();
-        fs::path image_base2 = yagl_file2;
-        yagl_file2.replace_extension("yagl2");
-        image_base2.replace_extension("images2");
+        // Debug test which reproduces the source YAGL and images.
+        // fs::path yagl_file2  = options.yagl_file();
+        // fs::path image_base2 = yagl_file2;
+        // yagl_file2.replace_extension("yagl2");
+        // image_base2.replace_extension("images2");
 
-        std::ofstream os(yagl_file2, std::ios::binary);
-        grf_data.print(os, yagl_dir.string(), image_base2.string());
+        // std::ofstream os(yagl_file2, std::ios::binary);
+        // grf_data.print(os, yagl_dir.string(), image_base2.string());
     }
     catch(const std::exception& e)
     {
