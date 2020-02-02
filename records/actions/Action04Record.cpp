@@ -72,7 +72,9 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
     {
         write_uint16(os, m_first_string_id);
     }
-    else if (static_cast<uint8_t>(m_feature) <= 3) // Is a vehicle
+    else if ((m_first_string_id > 0xFF) || 
+             // It's a vehicle
+             (static_cast<uint8_t>(m_feature) <= static_cast<uint8_t>(FeatureType::Aircraft))) 
     {
         write_uint8_ext(os, m_first_string_id);
     }
@@ -111,7 +113,10 @@ void Action04Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << ", ";
     os << language_iso(m_language) << ", ";
-    os << to_hex(m_first_string_id) << "> // <feature, language, first_id> Action04, " << language_name(m_language) << "\n";
+    // Come up with something better than this. The * is used to disambiguate whether the original
+    // GRF used 16-bit IDs. Or we could ignore that and just go off the actual value of the ID.
+    os << to_hex(m_first_string_id) << (m_uint16_ids ? "*" : "");
+    os << "> // <feature, language, first_id> Action04, " << language_name(m_language) << "\n";
     os << pad(indent) << "{\n";
 
     uint16_t string_id = m_first_string_id;
@@ -133,6 +138,14 @@ void Action04Record::parse(TokenStream& is)
     m_language = language_id(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
     m_first_string_id = is.match_integer();
+
+    m_uint16_ids = false;
+    if (is.peek().type == TokenType::OpMultiply)
+    {
+        is.match(TokenType::OpMultiply);
+        m_uint16_ids = true;
+    }
+
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);

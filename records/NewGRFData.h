@@ -31,6 +31,8 @@ void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite);
 class NewGRFData
 {
 public:
+    NewGRFData();
+
     // Binary serialisation
     void read(std::istream& is);
     void write(std::ostream& os) const;
@@ -47,9 +49,10 @@ private:
 
     friend void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite);
     void append_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite);
+    void update_version_info(std::shared_ptr<Record> record);
 
     // Helpers for writing a GRF binary file
-    void write_format(std::ostream& os) const;
+    void write_format(std::ostream& os, uint32_t sprite_offs = 0) const;
     void write_counter(std::ostream& os) const;
     void write_record(std::ostream& os, std::shared_ptr<Record> record) const;
     uint32_t total_records() const;

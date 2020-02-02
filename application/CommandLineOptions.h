@@ -34,17 +34,20 @@ class CommandLineOptions
         void parse(int argc, char* argv[]);
         static CommandLineOptions& options();
 
-        Operation          operation() const { return m_operation; }
-        const std::string& grf_file()  const { return m_grf_file; }
-        const std::string& yagl_dir()  const { return m_yagl_dir; }
-        const std::string& yagl_file() const { return m_yagl_file; }
+        Operation          operation()  const { return m_operation; }
+        
+        const std::string& grf_file()   const { return m_grf_file; }
+        const std::string& yagl_dir()   const { return m_yagl_dir; }
+        const std::string& yagl_file()  const { return m_yagl_file; }
+        //const std::string& image_base() const { return m_image_base; }
 
-        uint32_t           width()     const { return m_width; }
-        uint32_t           height()    const { return m_height; }
-        PaletteType        palette()   const { return m_palette; }
-        GRFFormat          format()    const { return m_format; }
+        uint32_t           width()      const { return m_width; }
+        uint32_t           height()     const { return m_height; }
+        PaletteType        palette()    const { return m_palette; }
+        GRFFormat          format()     const { return m_format; }
+        uint8_t            chunk_gap()  const { return m_chunk_gap; }
 
-        bool               debug()     const { return m_debug; }
+        bool               debug()      const { return m_debug; }
         
     private:
         CommandLineOptions() {}
@@ -55,14 +58,16 @@ class CommandLineOptions
         std::string m_grf_file;
 
         // Optional arguments.
-        std::string m_yagl_dir = "sprites";
-        uint16_t    m_width    = 800;
-        uint16_t    m_height   = 16'000;
-        PaletteType m_palette  = PaletteType::Default; 
-        GRFFormat   m_format   = GRFFormat::Container2;
+        std::string m_yagl_dir  = "sprites";
+        uint16_t    m_width     = 800;                    // Max width of spritesheets
+        uint16_t    m_height    = 16'000;                 // Max height of spritesheets
+        PaletteType m_palette   = PaletteType::Default; 
+        GRFFormat   m_format    = GRFFormat::Container2;
+        uint8_t     m_chunk_gap = 3;                      // Join chunks in tiles gaps smaller than is. 
 
         // Calculated from m_grf_file and m_yagl_dir.
         std::string m_yagl_file;
+        std::string m_image_base;
 
         // Used for debugging
         bool        m_debug    = false;

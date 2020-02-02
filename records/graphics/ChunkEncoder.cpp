@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "ChunkEncoder.h"
 #include "RealSpriteRecord.h"
+#include "CommandLineOptions.h"
 #include <exception>
 
 
@@ -125,8 +126,8 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
         }
 
         // Now read out the data for each chunk.
-        uint16_t clen;
-        uint16_t coff;
+        uint32_t clen;
+        uint32_t coff;
         do
         {
             // Access the chunks for the current row.
@@ -144,11 +145,12 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
                 coff |= (chunks[offset++] << 8);
             }
 
-            uint16_t imax  = (clen & ~last_chunk) * pixel_size;
+            uint32_t imax  = (clen & ~last_chunk) * pixel_size;
             uint32_t pixel = (y * xdim + coff) * pixel_size;
             for (uint16_t i = 0; i < imax ; ++i) 
-            {
-                output[pixel++] = chunks[offset++];
+            { 
+                uint8_t pix = chunks[offset++];
+                output[pixel++] = pix;
             }
         }
         // High bit means this is the last chunk for the current row.
@@ -167,20 +169,35 @@ ChunkEncoder::ChunkEncoder(const std::vector<uint8_t>& pixels, uint16_t xdim, ui
 , m_format{format}
 {
     // Interpret the compression information
-    if ((m_compression & RealSpriteRecord::HAS_RGB) && (m_compression & RealSpriteRecord::HAS_ALPHA))
+    if (format == GRFFormat::Container2)
     {
-        m_pixel_size   = 4;
-        m_trans_offset = 3;
-    }
-    else if (m_compression & RealSpriteRecord::HAS_PALETTE)
-    {
-        m_pixel_size   = 1;
-        m_trans_offset = 0;
+        // Is this format really supported? Have seen examples in 
+        // zbase-v5588/zbase_extra.grf. Makes no sense to me.
+        if ((compression & RealSpriteRecord::HAS_RGB) && 
+            (compression & RealSpriteRecord::HAS_ALPHA) && 
+            (compression & RealSpriteRecord::HAS_PALETTE))
+        {
+            m_pixel_size   = 5;
+            m_trans_offset = 3;
+        }
+        // Is it possible to have only RGB? Or are such images converted to 
+        // RGBA with all alpha fully opaque?
+        else if ((compression & RealSpriteRecord::HAS_RGB) && 
+                 (compression & RealSpriteRecord::HAS_ALPHA))
+        {
+            m_pixel_size   = 4;
+            m_trans_offset = 3;
+        }
+        else if (compression & RealSpriteRecord::HAS_PALETTE)
+        {
+            m_pixel_size   = 1;
+            m_trans_offset = 0;
+        }
     }
     else
     {
-        // No transparency, so no chunking.
-        //throw std::__throw_runtime_error;
+        m_pixel_size   = 1;
+        m_trans_offset = 0;
     }
 
     m_last_chunk = (m_xdim > 0x100) ? LONG_LAST_CHUNK : SHORT_LAST_CHUNK;
@@ -249,7 +266,7 @@ std::vector<ChunkEncoder::Chunk> ChunkEncoder::find_row_chunks(const std::vector
         {
             // Combine chunks which are separated by small gaps
             // of transparent pixels.
-            if ((edges[e] - edge2) >= 3)
+            if ((edges[e] - edge2) >= CommandLineOptions::options().chunk_gap())
             {
                 break;
             }
@@ -276,33 +293,48 @@ std::vector<uint8_t> ChunkEncoder::make_row_data(const std::vector<ChunkEncoder:
 {
     // Created the chunked data for a single row. 
     std::vector<uint8_t> data;
-    for (const auto& chunk: chunks)
+    if (chunks.size() > 0)
     {
-        // Store the length in pixels of the chunk. This may be in short or long format.
-        data.push_back(chunk.length & 0xFF);
-        if (m_last_chunk == LONG_LAST_CHUNK)
+        for (const auto& chunk: chunks)
         {
-            data.push_back(chunk.length >> 8);
-        }
-
-        // Store the offset in pixels from the start of the row. This may be in short or long format.
-        data.push_back(chunk.offset & 0xFF);
-        if (m_last_chunk == LONG_LAST_CHUNK)
-        {
-            data.push_back(chunk.offset >> 8);
-        }
-
-        // Store the data for the pixels in the chunk.
-        uint32_t offset = (y * m_xdim + chunk.offset) * m_pixel_size;  
-        uint16_t imax   = chunk.length & ~m_last_chunk;  
-        for (uint16_t i = 0; i < imax; ++i)
-        {
-            for (uint8_t p = 0; p < m_pixel_size; ++p)
+            // Store the length in pixels of the chunk. This may be in short or long format.
+            data.push_back(chunk.length & 0xFF);
+            if (m_last_chunk == LONG_LAST_CHUNK)
             {
-                data.push_back(m_pixels[offset++]);
+                data.push_back(chunk.length >> 8);
+            }
+
+            // Store the offset in pixels from the start of the row. This may be in short or long format.
+            data.push_back(chunk.offset & 0xFF);
+            if (m_last_chunk == LONG_LAST_CHUNK)
+            {
+                data.push_back(chunk.offset >> 8);
+            }
+
+            // Store the data for the pixels in the chunk.
+            uint32_t offset = (y * m_xdim + chunk.offset) * m_pixel_size;  
+            uint16_t imax   = chunk.length & ~m_last_chunk;  
+            for (uint16_t i = 0; i < imax; ++i)
+            {
+                for (uint8_t p = 0; p < m_pixel_size; ++p)
+                {
+                    data.push_back(m_pixels[offset++]);
+                }
             }
         }
     }
+    else
+    {
+        // There are no chunks in this line of the image.
+        data.push_back(0x80);
+        data.push_back(0x00);
+        if (m_last_chunk == LONG_LAST_CHUNK)
+        {
+            data.push_back(0x00);
+            data.push_back(0x00);
+        }
+    }
+    
 
     return data;
 }

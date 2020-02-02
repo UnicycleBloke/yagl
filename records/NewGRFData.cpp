@@ -59,13 +59,14 @@ static constexpr std::array<uint8_t, 8> CONTAINER2_IDENTIFIER
     = { 0x47, 0x52, 0x46, 0x82, 0x0D, 0x0A, 0x1A, 0x0A };
 
 
-int writeImage(char* filename, int width, int height, const char* title);
+NewGRFData::NewGRFData()
+{
+    m_info.format = CommandLineOptions::options().format();
+}
 
 
 void NewGRFData::read(std::istream& is)
 {
-    //writeImage("test.png", 512, 256, "Test image");
-
     // The structure of a GRF file is pretty simple. It is just a list of 
     // variable length records in up to three sections: 
     // Header:  Format2 only        - exactly one record.
@@ -249,9 +250,10 @@ GRFFormat NewGRFData::read_format(std::istream& is)
                 identifier[i] = read_uint8(is);
             }
 
-            // We don't need to store these values as they are calculated or constant.
-            uint32_t sprite_offs = read_uint32(is);
-            uint8_t  compression = read_uint8(is);
+            // We don't really need to store these values on a read, as they are calculated or constant.
+            // But the members will be useful when writing the file out.
+            read_uint32(is);
+            read_uint8(is);
 
             if (identifier == CONTAINER2_IDENTIFIER) 
             {
@@ -417,14 +419,8 @@ std::shared_ptr<Record> NewGRFData::read_record(std::istream& is, uint32_t size,
     std::shared_ptr<Record> record = make_record(record_type);
     std::istringstream iss(data);
     record->read(iss, m_info); 
-
-    // We need to know the GRF version so we can pass it to the other records, some 
-    // of which are interpreted differently depending on the version. 
-    if (record_type == RecordType::ACTION_08)
-    {
-        auto action08  = std::dynamic_pointer_cast<Action08Record>(record);
-        m_info.version = action08->grf_version();
-    }
+    record->read_data = data;
+    update_version_info(record);
 
     return record;
 }
@@ -492,7 +488,7 @@ uint32_t NewGRFData::total_records() const
 }
 
 
-void NewGRFData::write_format(std::ostream& os) const
+void NewGRFData::write_format(std::ostream& os, uint32_t sprite_offs) const
 {
     if (m_info.format == GRFFormat::Container2)
     {
@@ -504,9 +500,9 @@ void NewGRFData::write_format(std::ostream& os) const
             write_uint8(os, item);
         }
 
-        // We need to calculate some values now, or come back later to overwrite.
-        write_uint32(os, 0x12345678); // Sprite offset in the file.
-        write_uint8(os, 0xAB); // Sprite compression
+        // Temporary values for now. Come back later to overwrite.
+        write_uint32(os, sprite_offs); // Sprite offset in the file.
+        write_uint8(os,  0x00);        // Sprite compression - it seems that no values are defined for this.
     }
 }
 
@@ -523,6 +519,29 @@ void NewGRFData::write_counter(std::ostream& os) const
     // It appears we should not count the counter itself.
     write_uint32(os, total_records());
 }
+
+
+// void compare_strings(const std::string& read, const std::string& write)
+// {
+//     std::ostringstream ros;
+//     for (auto c: read) ros << to_hex(c, false) << ' ';
+
+//     std::ostringstream wos;
+//     uint32_t len = write.length();
+//     for (uint32_t i = 1; i < len; ++i)
+//         wos << to_hex(write[i], false) << ' ';
+
+//     if (write[0] == 2)
+//         return;
+
+//     if (ros.str() != wos.str())
+//     {
+//         std::cout << ros.str() << '\n'; 
+//         std::cout << to_hex(write[0]) << '\n'; 
+//         std::cout << wos.str() << '\n'; 
+//         std::cout << '\n'; 
+//     }
+// }
 
 
 void NewGRFData::write_record(std::ostream& os, std::shared_ptr<Record> record) const
@@ -556,6 +575,15 @@ void NewGRFData::write_record(std::ostream& os, std::shared_ptr<Record> record) 
         record->write(ss, m_info);
         std::string data = ss.str();
         uint16_t length = uint16_t(data.length());
+
+        // Compare strings from read and write phases
+        // Testing only.
+        // if (record->record_type() != RecordType::SPRITE_INDEX)
+        // {
+        //     compare_strings(record->read_data, data);
+        //     std::ostringstream ss2;
+        //     record->write(ss2, m_info);
+        // }
 
         // Record header
         if (m_info.format == GRFFormat::Container1)
@@ -610,6 +638,10 @@ void NewGRFData::write(std::ostream& os) const
         write_uint32(os, 0x0000000);
     } 
 
+    // Now we know the offset for the graphics section.
+    // There is a fixed offset here which skips the file header.
+    uint32_t sprite_offs = static_cast<uint32_t>(os.tellp()) - 14U; 
+
     // For the Container version 2, all the actual image data goes at the end.
     // This section does not exist for Container version 1.
     if (m_info.format == GRFFormat::Container2)
@@ -624,6 +656,10 @@ void NewGRFData::write(std::ostream& os) const
 
         write_uint32(os, 0x0000000);
     }
+
+    // Restore the stream to the beginning to rewrite the header.
+    os.seekp(0, std::istream::beg);
+    write_format(os, sprite_offs);
 }
 
 
@@ -702,5 +738,23 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
         std::shared_ptr<Record> record = make_record(type);
         m_records.push_back(record);
         record->parse(is);
+        update_version_info(record);
     }    
+}
+
+
+void NewGRFData::update_version_info(std::shared_ptr<Record> record)
+{
+    // We need to know the GRF version so we can pass it to the other records, some 
+    // of which are interpreted differently depending on the version. 
+    if (record->record_type() == RecordType::ACTION_08)
+    {
+        auto action08  = std::dynamic_pointer_cast<Action08Record>(record);
+        m_info.version = action08->grf_version();
+
+        //if (static_cast<uint8_t>(m_info.version) < static_cast<uint8_t>(GRFVersion::GRF8))
+        //{
+        //    m_info.format = GRFFormat::Container1;
+        //}
+    }
 }

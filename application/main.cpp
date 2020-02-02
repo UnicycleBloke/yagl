@@ -30,34 +30,37 @@ static void decode()
 
     try 
     {
-        if (options.debug()) 
-        {
-            std::cout << "Reading GRF: " << options.grf_file() << '\n';
-            std::cout << "Writing YAGL: " << options.yagl_file() << '\n';
-        }
-
-        NewGRFData grf_data;
-        // This file already checked for existence.
-        std::ifstream is(options.grf_file(), std::ios::binary);    
-        grf_data.read(is);
-
         // We first create the sub-directory for the output files.
         fs::path yagl_file = options.yagl_file();
         fs::path yagl_dir  = yagl_file.parent_path();
         fs::create_directory(yagl_dir);
-
         // The spritesheet generator appends various things to this base.
         fs::path image_base = yagl_file;
         image_base.replace_extension();
-        
+
         if (options.debug()) 
         {
+            std::cout << "Reading GRF:      " << options.grf_file() << '\n';
+            std::cout << "Writing YAGL:     " << options.yagl_file() << '\n';
             std::cout << "Output directory: " << yagl_dir.string() << '\n';
-            std::cout << "Image base: " << image_base.string() << '\n';
+            std::cout << "Image base:       " << image_base.string() << '\n';
         }
 
+        // Read in the GRF file ...
+        // The GRF file already checked for existence.
+        NewGRFData grf_data;
+        std::ifstream is(options.grf_file(), std::ios::binary);    
+        grf_data.read(is);
+
+        // Write out the YAGL file and associated sprite sheets ...
         std::ofstream os(yagl_file, std::ios::binary);
         grf_data.print(os, yagl_dir.string(), image_base.string());
+
+        // Sometimes useful to check that GRF --read--> MEMORY --write--> GRF results in identical 
+        // files - there are actually some harmless sources of discrepancies, which is a bit of a pain.
+        //std::ofstream os2(options.grf_file() + "2", std::ios::binary);
+        //grf_data.write(os2);
+
     }
     catch (std::exception& e)
     {
@@ -76,21 +79,39 @@ static void encode()
         fs::path yagl_file = options.yagl_file();
         fs::path yagl_dir  = yagl_file.parent_path();
         fs::create_directory(yagl_dir);
-
         // The spritesheet generator appends various things to this base.
         fs::path image_base = yagl_file;
         image_base.replace_extension();
 
+        if (options.debug()) 
+        {
+            std::cout << "Reading YAGL:     " << options.yagl_file() << '\n';
+            std::cout << "Writing GRF:      " << options.grf_file() << '\n';
+            std::cout << "Source directory: " << yagl_dir.string() << '\n';
+            std::cout << "Image base:       " << image_base.string() << '\n';
+        }
+
+        // Read in the YAGL file ...
         // This file already checked for existence.
         // Will need to check for the sprite sheets as we go along.
-        std::ifstream is(yagl_file, std::ios::binary);
-        
         Lexer lexer;
+        std::ifstream is(yagl_file, std::ios::binary);       
         TokenStream token_stream(lexer.lex(is));
 
+        // Parse the YAGL script ...
         NewGRFData grf_data;
         grf_data.parse(token_stream, yagl_dir.string(), image_base.string()); 
 
+        // Back up the GRF before overwriting it ...
+        fs::path grf_file = options.grf_file();
+        if (fs::is_regular_file(grf_file))
+        {
+            fs::path bak_file = grf_file;
+            bak_file.replace_extension("grf.bak");
+            fs::rename(grf_file, bak_file);
+        } 
+
+        // Write out the GRF file ...
         std::ofstream os(options.grf_file(), std::ios::binary);
         grf_data.write(os);
 

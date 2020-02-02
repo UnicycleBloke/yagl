@@ -69,6 +69,7 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
         m_colour  = m_compression & (HAS_RGB | HAS_ALPHA | HAS_PALETTE);
     }   
 
+
     // Read the image data. This decompression is based on LZ77 in some way. I just followed 
     // the description in the GRF container documentation. Place the expanded data into a 
     // pre-sized buffer. Have subsequently compared the code to OpenTTD, and it looks fine.
@@ -81,8 +82,9 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
         {
             // The high bit is set, so we are going to copy data from earlier
             // in the sprite.
-            uint16_t length = -(code >> 3);                      
-            uint16_t offset = ((static_cast<uint16_t>(code) & 0x07) << 8) | read_uint8(is);
+            uint16_t length = -(code >> 3);
+            uint8_t  byte   = read_uint8(is);            
+            uint16_t offset = ((static_cast<uint16_t>(code) & 0x07) << 8) | byte;
             if (offset > index)
             {
                 std::ostringstream os;
@@ -221,21 +223,23 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
 
     std::vector<uint8_t> output_data;
     uint32_t uncomp_size = 0;
-    //if (has_transparency(m_compression, GRFFormat::Container1))
+
     if (m_compression & CHUNKED_FORMAT)
     {
         std::vector<uint8_t> chunked_data = encode_tile(m_pixels, m_xdim, m_ydim, 
-            m_compression, GRFFormat::Container1);
+            m_compression, GRFFormat::Container1); 
+        uncomp_size = uint32_t(chunked_data.size());            
         output_data = encode_lz77(chunked_data);
     }
     else
     {
         output_data = encode_lz77(m_pixels);
+        uncomp_size = uint32_t(output_data.size());    
     }
 
-    // TODO this isn't quite right - a different size is written sometimes.
     // We need to know this value for reading chunked sprites.
-    write_uint16(os, uint8_t(output_data.size() + 8));
+    uncomp_size += 8;
+    write_uint16(os, uint16_t(uncomp_size));
 
     write_uint8(os,  m_compression);
     write_uint8(os,  uint8_t(m_ydim));

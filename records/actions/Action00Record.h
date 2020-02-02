@@ -44,13 +44,10 @@ private:
     // The record may contain properties for one or more feature instances 
     // (e.g. such as two trains). This is the ID of the first one.
     uint16_t m_first_id;
-    // The record will contain one or more, but not necessarily all of the 
-    // properties for the feature. This map indicates which one are present.
-    std::map<uint8_t, bool> m_properties_used;
     // This vector holds objects representing the one or more feature instances.
     std::vector<std::shared_ptr<Action00Feature>> m_instances;
-
     // Used to keep track of the order in which properties are read from the source.
-    // Only added for testing the binary output. Probably ought to remove.
+    // This will allow for duplicates, but only the last value is preserved. A map 
+    // would eliminate duplicates, but also lose the ordering.
     std::vector<uint8_t> m_properties;    
 };

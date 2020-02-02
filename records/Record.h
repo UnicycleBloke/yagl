@@ -152,8 +152,8 @@ enum class GRFVersion
 // Information useful globally when reading and writing data for records.
 struct GRFInfo
 {
-    GRFFormat  format;  // Container format
-    GRFVersion version; // Version of the NewGRF spe
+    GRFFormat  format  = GRFFormat::Container2;  // Container format
+    GRFVersion version = GRFVersion::GRF8;       // Version of the NewGRF spe
 };
 
 
@@ -190,6 +190,11 @@ public:
     virtual std::shared_ptr<Record> get_sprite(uint16_t index) const { return nullptr; }
 
     RecordType record_type() const { return m_record_type; }
+
+public:
+    // Purely for testing purposes.
+    std::string read_data;    
+    std::string write_data;    
 };
 
 

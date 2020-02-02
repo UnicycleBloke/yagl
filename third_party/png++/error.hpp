@@ -104,11 +104,8 @@ namespace png
             strerror_r(errnum, buf, ERRBUF_SIZE);
             return std::string(buf);
 #else
-            /* GNU variant can return a pointer to static buffer instead of buf */
-            //return std::string(strerror_s(errnum));
-            //return std::string(strerror(errnum));
-            //return std::string(strerror_r(errnum, buf, ERRBUF_SIZE));
-            strerror_s(buf, ERRBUF_SIZE, errnum);
+            strerror_r(errnum, buf, ERRBUF_SIZE);     // Linux   g++
+            //strerror_s(buf, ERRBUF_SIZE, errnum);   // Windows Visual Studio 2019 
             return std::string(buf);
 #endif
 #endif

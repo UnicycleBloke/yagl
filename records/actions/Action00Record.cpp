@@ -67,7 +67,6 @@ void Action00Record::read(std::istream& is, const GRFInfo& info)
         // The property index is always a uint8_t. It is interpreted differently 
         // depending on the particular feature we are dealing with.
         uint8_t property = read_uint8(is);
-        m_properties_used[property] = true;
 
         // This keeps the order (and duplicates) of properties in the GRF. 
         // Added only to assist with testing that the write() method results in
@@ -91,17 +90,6 @@ void Action00Record::read(std::istream& is, const GRFInfo& info)
 
 void Action00Record::write(std::ostream& os, const GRFInfo& info) const
 {
-    // Make a list of the properties which have been set.
-    std::vector<uint8_t> properties;
-    //std::map<uint8_t, bool>::const_iterator it;
-    for (const auto& it: m_properties_used)
-    {
-        if (it.second)
-        {
-            properties.push_back(it.first);
-        }
-    }
-    //uint8_t num_props = properties.size();
     uint8_t num_props = uint8_t(m_properties.size());
     uint8_t num_info  = uint8_t(m_instances.size());
 
@@ -141,15 +129,12 @@ void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
         os << pad(indent + 4) << str_instance_id << ": " << to_hex(id++) << "\n";  
         os << pad(indent + 4) << "{\n";  
 
-        for (auto [property, used]: m_properties_used) 
+        for (auto property: m_properties) 
         {
-            if (used)
+            bool result = instance->print_property(os, property, indent + 8);
+            if (!result)
             {
-                bool result = instance->print_property(os, property, indent + 8);
-                if (!result)
-                {
-                    throw PROPERTY_ERROR("Unknown property", property);
-                }
+                throw PROPERTY_ERROR("Unknown property", property);
             }
         }
 
@@ -238,7 +223,7 @@ void Action00Record::parse(TokenStream& is)
             // to parse_property().
             uint8_t property;
             instance->parse_property(is, name, property);
-            m_properties_used[property] = true;
+            m_properties.push_back(property);
 
             is.match(TokenType::SemiColon);
         }
