@@ -40,6 +40,10 @@ public:
     void print(std::ostream& os, const std::string& output_dir, const std::string& image_file_base) const;
     void parse(TokenStream& is, const std::string& output_dir, const std::string& image_file_base);
 
+    // For testing only - for each record: print to a string, parse the string, write to a string, 
+    // compare to the original. 
+    void verify();
+
 private:    
     // Helpers for reading a GRF binary file 
     GRFFormat               read_format(std::istream& is);

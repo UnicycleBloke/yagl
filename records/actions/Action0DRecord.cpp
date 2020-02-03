@@ -448,6 +448,9 @@ void Action0DRecord::parse(TokenStream& is)
     desc_type.parse(operation_type, is);
     is.match(TokenType::CloseAngle);
 
+    // Assignments don't seem to set this properly when parsed.
+    m_source2 = 0x00;
+
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {

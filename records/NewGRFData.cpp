@@ -52,6 +52,7 @@
 #include "Exceptions.h"
 #include "yagl_version.h" // Generated in a pre-build step.
 #include <sstream>
+#include <fstream>
 
 
 // Expected value for the first bytes in the GRF format 2 container. 
@@ -692,7 +693,10 @@ NewGRFData* g_new_grf_data = nullptr;
 void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite)
 {
     // Assert not nullptr 
-    g_new_grf_data->append_sprite(sprite_id, sprite);
+    if (g_new_grf_data)
+    {
+        g_new_grf_data->append_sprite(sprite_id, sprite);
+    }
 }
 
 
@@ -758,3 +762,122 @@ void NewGRFData::update_version_info(std::shared_ptr<Record> record)
         //}
     }
 }
+
+
+static std::string to_nfo(const std::string& binary, uint32_t offset)
+{
+    std::ostringstream os;
+
+    uint32_t size = binary.size() - offset;
+    for (uint32_t index = 0; index < size; ++index)
+    {
+        os << to_hex<uint8_t>(binary[index + offset]) << " ";
+        if ((index % 16) == 15)
+        {
+            os << "\n";
+        }
+    }
+    return os.str();
+}
+
+
+// For testing only - for each record: print to a string, parse the string, 
+// write to a string, compare to the original. 
+void NewGRFData::verify()
+{
+    // A bit of a bodge, but provide the ability to append sprites from other classes as 
+    // the objects are created. Probably only needed in SpriteIndexRecord.
+    g_new_grf_data = nullptr;
+
+    std::ofstream error1(CommandLineOptions::options().grf_file() + ".err1");
+    std::ofstream error2(CommandLineOptions::options().grf_file() + ".err2");
+
+    uint32_t index = 0; 
+    for (auto record: m_records)
+    {
+        ++index; 
+
+        // Print the in-memory representation of the record to a YAGL string.
+        std::ostringstream os;
+        record->print(os, m_sprites, 0);
+        std::string yagl = os.str();
+        
+        // Parse the YAGL string to recreate the in-memory representation.
+        Lexer lexer;
+        std::istringstream is(yagl);       
+        TokenStream ts(lexer.lex(is));
+        RecordType  type = RecordFromName(ts.peek().value);
+        std::shared_ptr<Record> record2 = make_record(type);
+        record2->parse(ts);
+
+        // Print the duplicate in-memory representation of the record to a YAGL string.
+        // Confirm that the parsed string matches the previously printed string.
+        std::ostringstream os2;
+        record2->print(os2, m_sprites, 0);
+        std::string yagl2 = os2.str();
+        if (yagl != yagl2)
+        {
+            error1 << "Testing record #" << index << "...  YAGLs differ\n";
+            error1 << RecordName(record->record_type()) << "\n";
+            error1 << yagl << "\n\n";
+
+            error2 << "Testing record #" << index << "...  YAGLs differ\n";
+            error2 << RecordName(record->record_type()) << "\n";
+            error2 << yagl2 << "\n\n";
+
+            continue;
+        }
+
+        // Write the duplicate in-memory representation of the record to 
+        std::ostringstream os3;
+        record2->write(os3, m_info);
+        std::string nfo1 = to_nfo(record->read_data, 0);
+        std::string nfo2 = to_nfo(os3.str(), 1);
+        if (nfo1 != nfo2)
+        {
+            // With the following restrictions, dutchtrains.grf results in empty output 
+            // files.
+            if (record->record_type() == RecordType::ACTION_02_RANDOM) 
+            {                
+                //auto rec1 = std::dynamic_pointer_cast<Action02RandomRecord>(record);
+                //auto rec2 = std::dynamic_pointer_cast<Action02RandomRecord>(record2);
+                //int x = 0;
+
+                // Random switches differ due to the order of values. I use an array of
+                // length-value rather than just and array of values, so order is lost.
+                continue;
+            }
+            if (record->record_type() == RecordType::ACTION_00) 
+            {
+                // Property sets differ because although the order and number of duplicates
+                // is preserved, the earlier values of duplicates are lost.
+                continue;
+            }
+            if (record->record_type() == RecordType::ACTION_04) 
+            {
+                // Strings differ due to non-unique encoding with UTF8.
+                continue;
+            }
+            if (record->record_type() == RecordType::ACTION_0D)
+            {
+                // Assignments treat source2 inconsistently.
+                continue;
+            }
+
+            error1 << "Testing record #" << index << "...  Binaries differ\n";
+            error1 << RecordName(record->record_type()) << "\n";
+            error1 << yagl << "\n\n";
+            error1 << nfo1 << "\n\n";
+
+            error2 << "Testing record #" << index << "...  Binaries differ\n";
+            error2 << RecordName(record->record_type()) << "\n";
+            error2 << yagl2 << "\n\n";
+            error2 << nfo2 << "\n\n";
+
+            continue;
+        }
+    }
+
+    // TODO add tests for the real sprites?
+}
+

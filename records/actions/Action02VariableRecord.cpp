@@ -210,6 +210,20 @@ void Action02VariableRecord::write(std::ostream& os, const GRFInfo& info) const
 namespace {
 
 
+const EnumDescriptorT<Action02VariableRecord::VarType> desc_var_type = 
+{
+    0x00, "var_type",                   
+    {
+        { 0x81, "PrimaryByte" },
+        { 0x82, "RelatedByte" },
+        { 0x85, "PrimaryWord" },
+        { 0x86, "RelatedWord" },
+        { 0x89, "PrimaryDWord" },
+        { 0x8A, "RelatedDWord" },
+    }    
+};
+
+
 const EnumDescriptorT<Action02VariableRecord::Operation> desc_operation = 
 { 
     0x00, "operation",                   
@@ -312,6 +326,7 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
     os << ", " << to_hex(m_set_id);
+    os << ", " << desc_var_type.value(m_var_type);
     os << "> // Action02 variable" << '\n';
     os << pad(indent) << "{" << '\n';
 
@@ -345,6 +360,8 @@ void Action02VariableRecord::parse(TokenStream& is)
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
     m_set_id = is.match_integer();
+    is.match(TokenType::Comma);
+    desc_var_type.parse(m_var_type, is);
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);

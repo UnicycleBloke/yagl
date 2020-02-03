@@ -194,7 +194,6 @@ public:
 public:
     // Purely for testing purposes.
     std::string read_data;    
-    std::string write_data;    
 };
 
 

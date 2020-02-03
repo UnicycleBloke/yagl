@@ -56,11 +56,13 @@ static void decode()
         std::ofstream os(yagl_file, std::ios::binary);
         grf_data.print(os, yagl_dir.string(), image_base.string());
 
-        // Sometimes useful to check that GRF --read--> MEMORY --write--> GRF results in identical 
-        // files - there are actually some harmless sources of discrepancies, which is a bit of a pain.
-        //std::ofstream os2(options.grf_file() + "2", std::ios::binary);
-        //grf_data.write(os2);
-
+        // Check that the output file would match the input file ...
+        // This prints, parses and writes each type of pseudo-sprite to check that we get the same
+        // result as what we just read. Any diffs are written to xxx.grf.err1 (original) and xxx.grf.err2.
+        if (options.debug()) 
+        {
+            grf_data.verify();
+        }
     }
     catch (std::exception& e)
     {

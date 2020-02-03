@@ -212,7 +212,9 @@ void Action00Record::parse(TokenStream& is)
         // Parse the set of properties that have been given for this item.
         std::shared_ptr<Action00Feature> instance = make_feature(m_feature);
         m_instances.push_back(instance);
- 
+
+        // This list need to be the same for each instance, at least when sorted.
+        std::vector<uint8_t> properties;    
         while (is.peek().type != TokenType::CloseBrace)
         {
             std::string name = is.match(TokenType::Ident);
@@ -223,10 +225,25 @@ void Action00Record::parse(TokenStream& is)
             // to parse_property().
             uint8_t property;
             instance->parse_property(is, name, property);
-            m_properties.push_back(property);
+            // Remove consecutive duplicates because of the some properties are split into
+            // sub-properties. TODO switch to using map for properties.
+            if ((properties.size() == 0) || (property != properties.rbegin()[0]))
+            {
+                properties.push_back(property);
+            }
 
             is.match(TokenType::SemiColon);
         }
+
+        if (m_instances.size() == 1)
+        {
+            m_properties = properties;
+        }
+        else if (m_properties != properties)
+        {
+            throw RUNTIME_ERROR("Action00Record::parse");
+        }
+        
 
         is.match(TokenType::CloseBrace);
     }
