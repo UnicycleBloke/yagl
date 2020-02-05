@@ -33,8 +33,11 @@ CommandLineOptions& CommandLineOptions::options()
 
 void CommandLineOptions::parse(int argc, char* argv[])
 {
+    // There must a nicer way to handle an enumeration.
     bool     decode  = false;
     bool     encode  = false;
+    bool     hexdump = false;
+
     uint16_t palette = 1;
     uint16_t format  = 2;
 
@@ -49,14 +52,14 @@ void CommandLineOptions::parse(int argc, char* argv[])
             // These are mutually exclusive
             ("d,decode",    "Decodes a GRF file to YAGL script and sprite sheets", cxxopts::value<bool>(decode))
             ("e,encode",    "Encodes a GRF file from YAGL script and sprite sheets", cxxopts::value<bool>(encode))
+            ("x,hexdump",   "Reads a GRF file and dumps it to hex somewhat like NFO", cxxopts::value<bool>(hexdump))
 
             // Other options
             ("p,palette",   "Choose the initial palette for the GRF", cxxopts::value<uint16_t>(palette), "<idx>")
             ("w,width",     "Maximum width of sprite sheets", cxxopts::value<uint16_t>(m_width), "<num>")
             ("h,height",    "Maximum height of sprite sheets", cxxopts::value<uint16_t>(m_height), "<num>")
-            ("f,format",    "GRF container format", cxxopts::value<uint16_t>(format), "<idx>")
             ("v,version",   "Print version information")
-            ("x,help",      "Print help")
+            ("help",        "Print help")
 
             // A little debugging support
             ("g,debug",     "Debug trace output", cxxopts::value<bool>(m_debug), "<idx>")
@@ -84,16 +87,20 @@ void CommandLineOptions::parse(int argc, char* argv[])
         }
 
         // Make sure that one and only one operation is selected.
-        if (encode && decode)
+        uint16_t operation = decode + encode + hexdump;
+        if (operation > 1)
         {
-            std::cout << "ERROR: The --encode,-e and --decode,-d options are mutually exclusive\n";
+            std::cout << "ERROR: The --encode,-e and --decode,-d and --hexdump,-x options are mutually exclusive\n";
             exit(1);
         }
-        if (!encode && !decode)
+        if (operation == 0)
         {
-            std::cout << "ERROR: One of the --encode,-e and --decode,-d options is required\n";
+            std::cout << "ERROR: One of the --encode,-e and --decode,-d or --hexdump,-x options is required\n";
             exit(1);
         }
+        if (encode)  m_operation = Operation::Encode;
+        if (decode)  m_operation = Operation::Decode;
+        if (hexdump) m_operation = Operation::HexDump;
 
         // Make sure that we have GRF file.
         if (!result.count("grf_file"))
@@ -102,8 +109,6 @@ void CommandLineOptions::parse(int argc, char* argv[])
             exit(1);
         }
                 
-        m_operation = encode ? Operation::Encode : Operation::Decode;
-
         // GRF is in '<some_path>/<some_file>.grf'. 
         // YAGL is in '<some_path>/<yagl_dir>/<some_file>.yagl'. 
         fs::path grf_file  = m_grf_file;
@@ -137,15 +142,6 @@ void CommandLineOptions::parse(int argc, char* argv[])
             case 5: m_palette = PaletteType::WindowsToyland; break;
             default:
                 std::cout << "ERROR: Invalid palette index. Permitted values are 1, 2, 3, 4 and 5.\n";
-                exit(1);
-        }
-
-        switch (format)
-        {
-            case 1: m_format = GRFFormat::Container1; break;
-            case 2: m_format = GRFFormat::Container2; break;
-            default:
-                std::cout << "ERROR: Invalid container format. Permitted values are 1 and 2.\n";
                 exit(1);
         }
     } 

@@ -55,14 +55,6 @@ static void decode()
         // Write out the YAGL file and associated sprite sheets ...
         std::ofstream os(yagl_file, std::ios::binary);
         grf_data.print(os, yagl_dir.string(), image_base.string());
-
-        // Check that the output file would match the input file ...
-        // This prints, parses and writes each type of pseudo-sprite to check that we get the same
-        // result as what we just read. Any diffs are written to xxx.grf.err1 (original) and xxx.grf.err2.
-        if (options.debug()) 
-        {
-            grf_data.verify();
-        }
     }
     catch (std::exception& e)
     {
@@ -116,19 +108,30 @@ static void encode()
         // Write out the GRF file ...
         std::ofstream os(options.grf_file(), std::ios::binary);
         grf_data.write(os);
-
-        // Debug test which reproduces the source YAGL and images.
-        // fs::path yagl_file2  = options.yagl_file();
-        // fs::path image_base2 = yagl_file2;
-        // yagl_file2.replace_extension("yagl2");
-        // image_base2.replace_extension("images2");
-
-        // std::ofstream os(yagl_file2, std::ios::binary);
-        // grf_data.print(os, yagl_dir.string(), image_base2.string());
     }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
+    }
+}
+
+
+static void hexdump()
+{
+    CommandLineOptions& options = CommandLineOptions::options();
+
+    try 
+    {
+        // Read in the GRF file ...
+        // The GRF file already checked for existence.
+        NewGRFData grf_data;
+        std::ifstream is(options.grf_file(), std::ios::binary);    
+        grf_data.read(is);
+        grf_data.hexdump();
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << '\n';
     }
 }
 
@@ -146,6 +149,10 @@ int main (int argc, char* argv[])
 
         case CommandLineOptions::Operation::Encode:
             encode();
+            break;
+
+        case CommandLineOptions::Operation::HexDump:
+            hexdump();
             break;
     }
 }

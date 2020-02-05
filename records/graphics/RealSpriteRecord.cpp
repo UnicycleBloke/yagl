@@ -226,8 +226,7 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
 
     if (m_compression & CHUNKED_FORMAT)
     {
-        std::vector<uint8_t> chunked_data = encode_tile(m_pixels, m_xdim, m_ydim, 
-            m_compression, GRFFormat::Container1); 
+        std::vector<uint8_t> chunked_data = encode_tile(m_pixels, m_xdim, m_ydim, m_colour, GRFFormat::Container1); 
         uncomp_size = uint32_t(chunked_data.size());            
         output_data = encode_lz77(chunked_data);
     }
@@ -241,7 +240,14 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
     uncomp_size += 8;
     write_uint16(os, uint16_t(uncomp_size));
 
-    write_uint8(os,  m_compression);
+    // 0   1  Color index 0 is transparent (should always be set).
+    // 1   2  Size is compressed size if set.
+    //          If this bit is set, the given size is simply the size in the
+    //         file. If it is unset, you *must* decompress it to find out
+    //          how large it is in the file.
+    // 3   8  Has transparency (i.e. is a tile), see below.
+    write_uint8(os,  m_compression | 0x03); // Not entirely sure about bit 2 - see examples...
+    
     write_uint8(os,  uint8_t(m_ydim));
     write_uint16(os, m_xdim);
     write_uint16(os, m_xrel);
@@ -265,11 +271,9 @@ void RealSpriteRecord::write_format2(std::ostream& os) const
 
     std::vector<uint8_t> output_data;
     uint32_t uncomp_size = 0;
-    //if (has_transparency(m_compression, GRFFormat::Container2))
     if (m_compression & CHUNKED_FORMAT)
     {
-        std::vector<uint8_t> chunked_data = encode_tile(m_pixels, m_xdim, m_ydim, 
-            m_compression, GRFFormat::Container2);
+        std::vector<uint8_t> chunked_data = encode_tile(m_pixels, m_xdim, m_ydim, m_colour, GRFFormat::Container2);
         output_data = encode_lz77(chunked_data);
         uncomp_size = uint32_t(chunked_data.size());
     }
@@ -284,7 +288,12 @@ void RealSpriteRecord::write_format2(std::ostream& os) const
     // We need to know this value for reading chunked sprites.
     write_uint32(os, m_sprite_id); // sprite id
     write_uint32(os, output_size); // TODO + 4 if trans
-    write_uint8(os,  m_compression);
+
+    // 0   1  Pixel format contains RGB components.
+    // 1   2  Pixel format contains alpha component.
+    // 2   4  Pixel format contains mask/palette component.
+    // 3   8  Has transparency (i.e. is a tile), see below.
+    write_uint8(os,  m_compression | m_colour);
 
     write_uint8(os,  static_cast<uint8_t>(m_zoom));
     write_uint16(os, m_ydim);
@@ -525,9 +534,10 @@ void RealSpriteRecord::parse(TokenStream& is)
     zoom_desc.parse(m_zoom, is);
     is.match(TokenType::Comma);
     colour_desc.parse(m_colour, is);
-    m_compression  = m_colour & (RealSpriteRecord::CHUNKED_FORMAT); // | RealSpriteRecord::CROP_TRANSARENT_BORDER);
-    m_colour      &= (HAS_RGB | HAS_ALPHA | HAS_PALETTE);
     is.match(TokenType::Comma);
+  
+    m_compression  = m_colour & (RealSpriteRecord::CHUNKED_FORMAT); // | RealSpriteRecord::CROP_TRANSARENT_BORDER);
+    m_colour       = m_colour & (HAS_RGB | HAS_ALPHA | HAS_PALETTE);
 
     std::string m_filename = is.match(TokenType::String);
     is.match(TokenType::Comma);
@@ -557,13 +567,11 @@ void RealSpriteRecord::parse(TokenStream& is)
 
     is.match(TokenType::SemiColon);
 
-
     uint8_t pix_size = 0;
     pix_size  = (m_colour & HAS_RGB)     ? 3 : 0;
     pix_size += (m_colour & HAS_ALPHA)   ? 1 : 0;
     pix_size += (m_colour & HAS_PALETTE) ? 1 : 0;
     m_pixels.resize(m_xdim * m_ydim * pix_size);
-
 
     // TODO this wants to be in a more global scope.
     SpriteSheetPool& pool = SpriteSheetPool::pool();
@@ -573,7 +581,6 @@ void RealSpriteRecord::parse(TokenStream& is)
     {
         colour = SpriteSheet::Colour::RGBA;
     }
-
 
     fs::path image_base = CommandLineOptions::options().yagl_file();
     image_base = image_base.replace_extension().parent_path().parent_path();
@@ -590,6 +597,4 @@ void RealSpriteRecord::parse(TokenStream& is)
             set_pixel(x, y, pixel);
         }
     }
-
-
 }

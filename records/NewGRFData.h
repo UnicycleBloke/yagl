@@ -40,9 +40,9 @@ public:
     void print(std::ostream& os, const std::string& output_dir, const std::string& image_file_base) const;
     void parse(TokenStream& is, const std::string& output_dir, const std::string& image_file_base);
 
-    // For testing only - for each record: print to a string, parse the string, write to a string, 
-    // compare to the original. 
-    void verify();
+    // Primarily for testing - comparing two GRFs at the binary level, record by record.
+    // Dump the records as hex, but break lines between records so that diff tools can recover after diffs.
+    void hexdump();
 
 private:    
     // Helpers for reading a GRF binary file 
@@ -76,5 +76,4 @@ private:
     // Some images appear to have RGB + A + P.
     std::map<uint32_t, SpriteZoomVector> m_sprites;            
 };
-
 

@@ -53,7 +53,6 @@ private:
 
     uint16_t  m_xdim;
     uint16_t  m_ydim;
-    uint8_t   m_compression;
     GRFFormat m_format;
     
     uint16_t  m_pixel_size   = 0; 
@@ -165,7 +164,6 @@ ChunkEncoder::ChunkEncoder(const std::vector<uint8_t>& pixels, uint16_t xdim, ui
 : m_pixels{pixels}
 , m_xdim{xdim}
 , m_ydim{ydim}
-, m_compression{compression}
 , m_format{format}
 {
     // Interpret the compression information

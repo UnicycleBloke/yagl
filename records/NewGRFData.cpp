@@ -62,7 +62,6 @@ static constexpr std::array<uint8_t, 8> CONTAINER2_IDENTIFIER
 
 NewGRFData::NewGRFData()
 {
-    m_info.format = CommandLineOptions::options().format();
 }
 
 
@@ -664,6 +663,18 @@ void NewGRFData::write(std::ostream& os) const
 }
 
 
+namespace {
+const EnumDescriptorT<GRFFormat> desc_format 
+{
+    0x00, "grf_format", 
+    {
+        { 0x01, "Container1" },
+        { 0x02, "Container2" },
+    }    
+};
+} // namespace {
+
+
 void NewGRFData::print(std::ostream& os, const std::string& output_dir, const std::string& image_file_base) const
 {
     // Create sprite sheets first in order to have the filenames and locations in place
@@ -674,7 +685,8 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
     // We need to be able to cope with changes in the text format.
     // The simplest approach is to reject text files with different 
     // versions... 
-    os << "yagl_version: \"" << str_yagl_version << "\";\n\n";
+    os << "yagl_version: \"" << str_yagl_version << "\";\n";
+    desc_format.print(m_info.format, os, 0);
 
     // Finally write out the YAGL script.
     std::cout << "Writing YAGL script...\n";
@@ -706,15 +718,24 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
     // the objects are created. Probably only needed in SpriteIndexRecord.
     g_new_grf_data = this;
 
+    // Read the actual version number.
     const TokenValue& token = is.peek();
     if (is.match(TokenType::Ident) != "yagl_version")
     {
         throw PARSER_ERROR("Expected YAGL version number", token);
     }
-    is.match(TokenType::Colon);
-    
-    // Read the actual version number.
+    is.match(TokenType::Colon);    
     std::string yagl_version = is.match(TokenType::String);
+    is.match(TokenType::SemiColon);
+
+    // We expect a container format next.
+    const TokenValue& format = is.peek();
+    if (is.match(TokenType::Ident) != "grf_format")
+    {
+        throw PARSER_ERROR("Expected YAGL version number", format);
+    }
+    is.match(TokenType::Colon);
+    desc_format.parse(m_info.format, is);
     is.match(TokenType::SemiColon);
 
     // This might a bit strict, but the YAGL script may evolve over time.
@@ -781,103 +802,37 @@ static std::string to_nfo(const std::string& binary, uint32_t offset)
 }
 
 
-// For testing only - for each record: print to a string, parse the string, 
-// write to a string, compare to the original. 
-void NewGRFData::verify()
+void NewGRFData::hexdump()
 {
-    // A bit of a bodge, but provide the ability to append sprites from other classes as 
-    // the objects are created. Probably only needed in SpriteIndexRecord.
-    g_new_grf_data = nullptr;
+    uint32_t index = 0;
 
-    std::ofstream error1(CommandLineOptions::options().grf_file() + ".err1");
-    std::ofstream error2(CommandLineOptions::options().grf_file() + ".err2");
-
-    uint32_t index = 0; 
     for (auto record: m_records)
     {
         ++index; 
 
-        // Print the in-memory representation of the record to a YAGL string.
         std::ostringstream os;
-        record->print(os, m_sprites, 0);
-        std::string yagl = os.str();
-        
-        // Parse the YAGL string to recreate the in-memory representation.
-        Lexer lexer;
-        std::istringstream is(yagl);       
-        TokenStream ts(lexer.lex(is));
-        RecordType  type = RecordFromName(ts.peek().value);
-        std::shared_ptr<Record> record2 = make_record(type);
-        record2->parse(ts);
+        record->write(os, m_info);
 
-        // Print the duplicate in-memory representation of the record to a YAGL string.
-        // Confirm that the parsed string matches the previously printed string.
-        std::ostringstream os2;
-        record2->print(os2, m_sprites, 0);
-        std::string yagl2 = os2.str();
-        if (yagl != yagl2)
-        {
-            error1 << "Testing record #" << index << "...  YAGLs differ\n";
-            error1 << RecordName(record->record_type()) << "\n";
-            error1 << yagl << "\n\n";
-
-            error2 << "Testing record #" << index << "...  YAGLs differ\n";
-            error2 << RecordName(record->record_type()) << "\n";
-            error2 << yagl2 << "\n\n";
-
-            continue;
-        }
-
-        // Write the duplicate in-memory representation of the record to 
-        std::ostringstream os3;
-        record2->write(os3, m_info);
-        std::string nfo1 = to_nfo(record->read_data, 0);
-        std::string nfo2 = to_nfo(os3.str(), 1);
-        if (nfo1 != nfo2)
-        {
-            // With the following restrictions, dutchtrains.grf results in empty output 
-            // files.
-            if (record->record_type() == RecordType::ACTION_02_RANDOM) 
-            {                
-                //auto rec1 = std::dynamic_pointer_cast<Action02RandomRecord>(record);
-                //auto rec2 = std::dynamic_pointer_cast<Action02RandomRecord>(record2);
-                //int x = 0;
-
-                // Random switches differ due to the order of values. I use an array of
-                // length-value rather than just and array of values, so order is lost.
-                continue;
-            }
-            if (record->record_type() == RecordType::ACTION_00) 
-            {
-                // Property sets differ because although the order and number of duplicates
-                // is preserved, the earlier values of duplicates are lost.
-                continue;
-            }
-            if (record->record_type() == RecordType::ACTION_04) 
-            {
-                // Strings differ due to non-unique encoding with UTF8.
-                continue;
-            }
-            if (record->record_type() == RecordType::ACTION_0D)
-            {
-                // Assignments treat source2 inconsistently.
-                continue;
-            }
-
-            error1 << "Testing record #" << index << "...  Binaries differ\n";
-            error1 << RecordName(record->record_type()) << "\n";
-            error1 << yagl << "\n\n";
-            error1 << nfo1 << "\n\n";
-
-            error2 << "Testing record #" << index << "...  Binaries differ\n";
-            error2 << RecordName(record->record_type()) << "\n";
-            error2 << yagl2 << "\n\n";
-            error2 << nfo2 << "\n\n";
-
-            continue;
-        }
+        std::cout << "Record # " << to_hex(index) << "\n";
+        std::cout << RecordName(record->record_type()) << "\n";
+        std::cout << to_nfo(os.str(), 0) << "\n\n";
     }
 
-    // TODO add tests for the real sprites?
+    if (m_info.format == GRFFormat::Container2)
+    {
+        for (const auto& it: m_sprites)
+        {
+            for (const auto record: it.second)
+            {
+                ++index; 
+                auto sprite = std::dynamic_pointer_cast<RealSpriteRecord>(record);
+
+                std::ostringstream os;
+                sprite->write(os, m_info);
+                std::cout << "Sprite # " << to_hex(sprite->sprite_id()) << "\n";
+                std::cout << to_nfo(os.str(), 0) << "\n";
+            }
+        }
+    }
 }
 
