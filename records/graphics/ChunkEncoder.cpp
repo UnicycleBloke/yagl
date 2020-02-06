@@ -72,8 +72,9 @@ std::vector<uint8_t> encode_tile(const std::vector<uint8_t>& pixels, uint16_t xd
 std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xdim, uint16_t ydim, 
     uint8_t compression, GRFFormat format)
 {
+    const uint16_t LAST_CHUNK = (xdim > 0x100) ? LONG_LAST_CHUNK : SHORT_LAST_CHUNK;
+
     bool     long_offset  = chunks.size() > 0x10000;
-    uint16_t last_chunk   = (xdim > 0x100) ? LONG_LAST_CHUNK : SHORT_LAST_CHUNK;
     uint16_t pixel_size   = 0; 
     uint16_t trans_offset = 0;
 
@@ -111,7 +112,7 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
     
     // This will contain the decompressed image.
     // Make sure it is all initialised to zeroes.
-    std::vector<uint8_t> output(xdim * ydim * pixel_size);
+    std::vector<uint8_t> output(xdim * ydim * pixel_size, 0);
 
     for (uint16_t y = 0; y < ydim; ++y)
     {
@@ -125,35 +126,50 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
         }
 
         // Now read out the data for each chunk.
-        uint32_t clen;
-        uint32_t coff;
+        uint32_t chunk_len;
+        uint32_t chunk_off;
+        bool     is_last_chunk;
         do
         {
             // Access the chunks for the current row.
             // Length of the current chunk, and the flag for last chunk.
-            clen = chunks[offset++];
-            if (last_chunk == LONG_LAST_CHUNK)
+            chunk_len = chunks[offset++];
+            if (LAST_CHUNK == LONG_LAST_CHUNK)
             {
-                clen |= (chunks[offset++] << 8);
+                chunk_len |= (chunks[offset++] << 8);
             }
+            is_last_chunk  = (chunk_len >= LAST_CHUNK);
+            chunk_len     &= ~LAST_CHUNK;
+            chunk_len     %= xdim;
 
             // Row offset for the current chunk.
-            coff = chunks[offset++];
-            if (last_chunk == LONG_LAST_CHUNK)
+            chunk_off = chunks[offset++];
+            if (LAST_CHUNK == LONG_LAST_CHUNK)
             {
-                coff |= (chunks[offset++] << 8);
+                chunk_off |= (chunks[offset++] << 8);
             }
 
-            uint32_t imax  = (clen & ~last_chunk) * pixel_size;
-            uint32_t pixel = (y * xdim + coff) * pixel_size;
+            // Empty rows still in chunked data. This supposed to be with a length of zero and 
+            // the last chunk bit set. dutchtrains.grf seems to have a length of xdim instead. I
+            // have used % to get rid of this. Linux builds were fine, but this caused an exception
+            // on Windows (correctly). 
+            if (is_last_chunk && (chunk_len == 0)) // && (chunk_off == 0)) 
+            {
+                break;
+            }
+
+            uint32_t imax  = (chunk_len & ~LAST_CHUNK) * pixel_size;
+            uint32_t pixel = (y * xdim + chunk_off) * pixel_size;
             for (uint16_t i = 0; i < imax ; ++i) 
             { 
-                uint8_t pix = chunks[offset++];
-                output[pixel++] = pix;
+                uint8_t pix = chunks[offset];
+                output[pixel] = pix;
+                ++pixel;
+                ++offset;
             }
         }
         // High bit means this is the last chunk for the current row.
-        while (clen < last_chunk);
+        while (!is_last_chunk);
     }
 
     return output;

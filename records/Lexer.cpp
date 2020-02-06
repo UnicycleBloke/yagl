@@ -471,10 +471,10 @@ uint32_t TokenStream::match_integer()
     // - hex: 0xXXXXXXXXX, X is a hex digit
     switch (token.num_type)
     {
-        case NumberType::Bin: return strtol(token.value.c_str() + 2, nullptr, 2);
-        case NumberType::Oct: return strtol(token.value.c_str(),     nullptr, 8);
-        case NumberType::Dec: return strtol(token.value.c_str(),     nullptr, 10);
-        case NumberType::Hex: return strtol(token.value.c_str() + 2, nullptr, 16);
+        case NumberType::Bin: return strtoul(token.value.c_str() + 2, nullptr, 2);
+        case NumberType::Oct: return strtoul(token.value.c_str(),     nullptr, 8);
+        case NumberType::Dec: return strtoul(token.value.c_str(),     nullptr, 10);
+        case NumberType::Hex: return strtoul(token.value.c_str() + 2, nullptr, 16);
         default:              throw PARSER_ERROR("Unexpected number format", token);
     }
 }

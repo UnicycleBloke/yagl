@@ -104,8 +104,11 @@ namespace png
             strerror_r(errnum, buf, ERRBUF_SIZE);
             return std::string(buf);
 #else
+    #ifdef _WIN32
+            strerror_s(buf, ERRBUF_SIZE, errnum);   // Windows Visual Studio 2019 
+    #else
             strerror_r(errnum, buf, ERRBUF_SIZE);     // Linux   g++
-            //strerror_s(buf, ERRBUF_SIZE, errnum);   // Windows Visual Studio 2019 
+    #endif 
             return std::string(buf);
 #endif
 #endif
