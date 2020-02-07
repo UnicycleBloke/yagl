@@ -18,20 +18,24 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "IndustryLayoutDescriptor.h"
 #include "StreamHelpers.h"
+#include "Descriptors.h"
 
 
 namespace {
 
 
-constexpr const char* str_layout    = "layout";
-constexpr const char* str_clearance = "clearance";
-constexpr const char* str_new_tile  = "new_tile";
-constexpr const char* str_old_tile  = "old_tile";
+constexpr const char* str_reference    = "reference";
+constexpr const char* str_industry_num = "industry_num";
+constexpr const char* str_layout_num   = "layout_num";
+constexpr const char* str_layout       = "layout";
+constexpr const char* str_clearance    = "clearance";
+constexpr const char* str_new_tile     = "new_tile";
+constexpr const char* str_old_tile     = "old_tile";
 
 
 const EnumDescriptorT<IndustryTile::Type> desc_type 
 { 
-    0x00, "type", 
+    0x03, "type", 
     {
         { 0, str_old_tile },  // OldTile     
         { 1, str_new_tile },  // NewTile
@@ -40,9 +44,15 @@ const EnumDescriptorT<IndustryTile::Type> desc_type
 };
 
 
+// Used to determine type of layout when parsing.
+const std::map<std::string, uint16_t> g_indices =
+{
+    { str_reference, 0x01 },
+    { str_layout,    0x02 },
+};
+
+
 } // namespace {
-
-
 
 
 // This is the same as an industry tile. I think.
@@ -126,21 +136,22 @@ void IndustryTile::parse(TokenStream& is)
     {
         case Type::Clearance:
             x_off = is.match_integer(); 
-            is.match(TokenType::OpenParen);
+            is.match(TokenType::Comma);
             y_off = is.match_integer(); 
             break;
 
         case Type::NewTile:   
         case Type::OldTile:          
             x_off = is.match_integer(); 
-            is.match(TokenType::OpenParen);
+            is.match(TokenType::Comma);
             y_off = is.match_integer(); 
-            is.match(TokenType::OpenParen);
+            is.match(TokenType::Comma);
             tile = is.match_integer(); 
             break;
     }
 
     is.match(TokenType::CloseParen);
+    is.match(TokenType::SemiColon);
 }
 
 
@@ -170,55 +181,79 @@ void IndustryLayout::read(std::istream& is)
 
 void IndustryLayout::write(std::ostream& os) const
 {
-    // TODO
-    //uint8_t industry_num;
-    //uint8_t layout_num;
-
-    for (const auto& tile: tiles)
+    if (is_reference)
     {
-        tile.write(os);
+        write_uint8(os, 0xFE);
+        write_uint8(os, industry_num);
+        write_uint8(os, layout_num);
     }
-    // Write the terminator.
-    write_uint8(os, 0x00);
-    write_uint8(os, 0x80);
+    else
+    {
+        for (const auto& tile: tiles)
+        {
+            tile.write(os);
+        }
+
+        // Write the terminator.
+        write_uint8(os, 0x00);
+        write_uint8(os, 0x80);
+    }
 }
 
 
 void IndustryLayout::print(std::ostream& os, uint16_t indent) const
 {
-    // TODO
-    //uint8_t industry_num;
-    //uint8_t layout_num;
-
-    os << pad(indent) << str_layout << "\n"; 
-    os << pad(indent) << "{\n"; 
-
-    for (const auto& tile: tiles)
+    if (is_reference)
     {
-        tile.print(os, indent + 4);
+        os << pad(indent) << str_reference << "{ " << to_hex(industry_num) << ", " << to_hex(layout_num) << " }\n";
     }
+    else
+    {
+        os << pad(indent) << str_layout << "\n"; 
+        os << pad(indent) << "{\n"; 
 
-    os << pad(indent) << "}\n"; 
+        for (const auto& tile: tiles)
+        {
+            tile.print(os, indent + 4);
+        }
+
+        os << pad(indent) << "}\n"; 
+    }
 }
 
 
 void IndustryLayout::parse(TokenStream& is)
 {
-    // TODO
-    //uint8_t industry_num;
-    //uint8_t layout_num;
+    std::string name = is.match(TokenType::Ident);
+    is.match(TokenType::OpenBrace);
 
-    is.match_ident(str_layout)
-
-    is.match(TokenType::OpenBrace)
-    while (is.peek().type != TokenType::CloseBrace)
+    const auto& it = g_indices.find(name);
+    if (it != g_indices.end())
     {
-        IndustryTile tile;
-        tile.parse(is);
-        tiles.push_back(tile);
+        uint16_t index = it->second;
+        switch (index)
+        {
+            case 0x01: 
+                industry_num = is.match_integer();
+                is.match(TokenType::Comma);
+                layout_num = is.match_integer();
+                break;
+            
+            case 0x02: 
+                while (is.peek().type != TokenType::CloseBrace)
+                {
+                    IndustryTile tile;
+                    tile.parse(is);
+                    tiles.push_back(tile);
+                }
+                break;
+            
+            default:   
+                throw RUNTIME_ERROR("Unknown layout type");
+        }
     }
 
-    is.match(TokenType::CloseBrace)
+    is.match(TokenType::CloseBrace);
 }
 
 
@@ -269,7 +304,7 @@ void IndustryLayouts::print(std::ostream& os, uint16_t indent) const
 
 void IndustryLayouts::parse(TokenStream& is)
 {
-    is.match(TokenType::OpenBrace)
+    is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
         IndustryLayout layout;
@@ -277,7 +312,7 @@ void IndustryLayouts::parse(TokenStream& is)
         layouts.push_back(layout);
     }
 
-    is.match(TokenType::CloseBrace)
+    is.match(TokenType::CloseBrace);
 }
 
 

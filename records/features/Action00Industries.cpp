@@ -213,7 +213,14 @@ void Action00Industries::VectorU8::print(std::ostream& os, uint16_t indent) cons
 
 void Action00Industries::VectorU8::parse(TokenStream& is)
 {
+    is.match(TokenType::OpenBracket);
+    while (is.peek().type != TokenType::CloseBracket)
+    {
+        uint8_t value = is.match_integer();
+        items.push_back(value);
+    }
 
+    is.match(TokenType::CloseBracket);
 }
 
 
@@ -259,7 +266,27 @@ void Action00Industries::Multipliers::print(std::ostream& os, uint16_t indent) c
 
 void Action00Industries::Multipliers::parse(TokenStream& is)
 {
+    uint16_t inputs  = 0;
+    uint16_t outputs = 0;
 
+    is.match(TokenType::OpenBracket);
+    while (is.peek().type != TokenType::CloseBracket)
+    {
+        ++inputs;
+        is.match(TokenType::OpenBracket);
+        while (is.peek().type != TokenType::CloseBracket)
+        {
+            ++outputs;
+            uint8_t value = is.match_integer();
+            items.push_back(value);
+        }
+        is.match(TokenType::CloseBracket);
+    }
+    is.match(TokenType::CloseBracket);
+
+    num_inputs  = inputs;
+    num_outputs = outputs / inputs;
+    // Assert that outputs % inputs == 0.
 }
 
 
