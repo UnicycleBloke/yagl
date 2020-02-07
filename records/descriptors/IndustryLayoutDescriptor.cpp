@@ -20,6 +20,31 @@
 #include "StreamHelpers.h"
 
 
+namespace {
+
+
+constexpr const char* str_layout    = "layout";
+constexpr const char* str_clearance = "clearance";
+constexpr const char* str_new_tile  = "new_tile";
+constexpr const char* str_old_tile  = "old_tile";
+
+
+const EnumDescriptorT<IndustryTile::Type> desc_type 
+{ 
+    0x00, "type", 
+    {
+        { 0, str_old_tile },  // OldTile     
+        { 1, str_new_tile },  // NewTile
+        { 2, str_clearance }, // Clearance
+    }
+};
+
+
+} // namespace {
+
+
+
+
 // This is the same as an industry tile. I think.
 void IndustryTile::read(std::istream& is)
 {
@@ -76,18 +101,46 @@ void IndustryTile::print(std::ostream& os, uint16_t indent) const
     switch (type)
     {
         case Type::Clearance: 
-            os << pad(indent) << "clearance("; 
+            os << pad(indent) << str_clearance << "("; 
             os << int16_t(x_off) << ", " << int16_t(y_off) << ");\n"; 
             break; 
         case Type::NewTile:   
-            os << pad(indent) << "new_tile(";
+            os << pad(indent) << str_new_tile << "(";
             os << int16_t(x_off) << ", " << int16_t(y_off) << ", " << to_hex(tile) << ");\n"; 
             break;
         case Type::OldTile:          
-            os << pad(indent) << "old_tile(";
+            os << pad(indent) << str_old_tile << "(";
             os << int16_t(x_off) << ", " << int16_t(y_off) << ", " << to_hex(tile) << ");\n"; 
             break;
     }
+}
+
+
+void IndustryTile::parse(TokenStream& is)
+{
+    // Enum descriptor needed...
+    desc_type.parse(type, is);
+    is.match(TokenType::OpenParen);
+
+    switch (type)
+    {
+        case Type::Clearance:
+            x_off = is.match_integer(); 
+            is.match(TokenType::OpenParen);
+            y_off = is.match_integer(); 
+            break;
+
+        case Type::NewTile:   
+        case Type::OldTile:          
+            x_off = is.match_integer(); 
+            is.match(TokenType::OpenParen);
+            y_off = is.match_integer(); 
+            is.match(TokenType::OpenParen);
+            tile = is.match_integer(); 
+            break;
+    }
+
+    is.match(TokenType::CloseParen);
 }
 
 
@@ -117,6 +170,10 @@ void IndustryLayout::read(std::istream& is)
 
 void IndustryLayout::write(std::ostream& os) const
 {
+    // TODO
+    //uint8_t industry_num;
+    //uint8_t layout_num;
+
     for (const auto& tile: tiles)
     {
         tile.write(os);
@@ -129,7 +186,11 @@ void IndustryLayout::write(std::ostream& os) const
 
 void IndustryLayout::print(std::ostream& os, uint16_t indent) const
 {
-    os << pad(indent) << "layout\n"; 
+    // TODO
+    //uint8_t industry_num;
+    //uint8_t layout_num;
+
+    os << pad(indent) << str_layout << "\n"; 
     os << pad(indent) << "{\n"; 
 
     for (const auto& tile: tiles)
@@ -138,6 +199,26 @@ void IndustryLayout::print(std::ostream& os, uint16_t indent) const
     }
 
     os << pad(indent) << "}\n"; 
+}
+
+
+void IndustryLayout::parse(TokenStream& is)
+{
+    // TODO
+    //uint8_t industry_num;
+    //uint8_t layout_num;
+
+    is.match_ident(str_layout)
+
+    is.match(TokenType::OpenBrace)
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        IndustryTile tile;
+        tile.parse(is);
+        tiles.push_back(tile);
+    }
+
+    is.match(TokenType::CloseBrace)
 }
 
 
@@ -181,13 +262,22 @@ void IndustryLayouts::print(std::ostream& os, uint16_t indent) const
     {
         layout.print(os, indent + 4);
     }
+
     os << pad(indent) << "};\n"; 
 }
 
 
 void IndustryLayouts::parse(TokenStream& is)
 {
-    throw RUNTIME_ERROR("IndustryLayouts::parse not implemented");
+    is.match(TokenType::OpenBrace)
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        IndustryLayout layout;
+        layout.parse(is);
+        layouts.push_back(layout);
+    }
+
+    is.match(TokenType::CloseBrace)
 }
 
 
