@@ -194,17 +194,15 @@ void Action02IndustryRecord::parse(TokenStream& is)
 
     is.match(TokenType::OpenBrace);
 
-    if (m_format == Format::Version0)
+    while (is.peek().type != TokenType::CloseBrace)
     {
-        parse_version0(is);
-    }
-    else if (m_format == Format::Version1)
-    {
-        parse_version1(is);
-    }
-    else if (m_format == Format::Version2)
-    {
-        parse_version2(is);
+        switch (m_format)
+        {
+            case Format::Version0: parse_version0(is); break;
+            case Format::Version1: parse_version1(is); break;
+            case Format::Version2: parse_version2(is); break;
+            default:               throw PARSER_ERROR("Unexpected token", is.peek());
+        }
     }
 
     is.match(TokenType::CloseBrace);

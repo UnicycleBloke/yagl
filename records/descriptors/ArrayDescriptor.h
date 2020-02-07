@@ -73,8 +73,12 @@ void ArrayDescriptorT<T, N>::print(const std::array<T, N>& values, std::ostream&
 template <typename T, uint16_t N>
 void ArrayDescriptorT<T,N>::parse(std::array<T, N>& values, TokenStream& is) const
 {
+    is.match(TokenType::OpenBracket);
+
     for (auto& value: values)
     {
         value = is.match_integer();
     }
+
+    is.match(TokenType::CloseBracket);
 }

@@ -789,7 +789,7 @@ static std::string to_nfo(const std::string& binary, uint32_t offset)
 {
     std::ostringstream os;
 
-    uint32_t size = binary.size() - offset;
+    uint32_t size = (uint32_t)(binary.size() - offset);
     for (uint32_t index = 0; index < size; ++index)
     {
         os << to_hex<uint8_t>(binary[index + offset]) << " ";

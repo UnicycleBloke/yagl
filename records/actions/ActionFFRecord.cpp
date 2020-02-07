@@ -50,7 +50,6 @@ void ActionFFRecord::write(std::ostream& os, const GRFInfo& info) const
     write_uint8(os, uint8_t(m_filename.length()));
     write_string(os, m_filename);
 
-    for (const auto& byte: m_binary)
     os.write((char*)&m_binary[0], m_binary.size());
 }  
 
