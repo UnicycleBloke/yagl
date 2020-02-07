@@ -245,18 +245,18 @@ void Action02SpriteLayoutRecord::read(std::istream& is, const GRFInfo& info)
     // extended format. Presumably byte read will be 0x41 rather 0x40 for a single 
     // building sprite.
     uint8_t num_sprites = read_uint8(is);
-    Format  format = Format::Basic;
-    if (num_sprites > 0)
+    m_format = Format::Basic;
+    if ((num_sprites & 0x3F) > 0)
     {
-        format = Format::Extended;
+        m_format = Format::Extended;
     }
     if (num_sprites & 0x40)
     {
-        format = Format::Advanced;
+        m_format = Format::Advanced;
     }
     num_sprites &= 0x3F;
 
-    if (format == Format::Basic)
+    if (m_format == Format::Basic)
     {
         m_ground_sprite = read_uint32(is);
 
@@ -274,7 +274,7 @@ void Action02SpriteLayoutRecord::read(std::istream& is, const GRFInfo& info)
     else // Both Extended and Advanced handled here.
     {
         m_ground_sprite = read_uint32(is);
-        if (format == Format::Advanced)
+        if (m_format == Format::Advanced)
         {
             m_ground_regs.flags = read_uint16(is);
             m_ground_regs.read(is, true);
@@ -284,7 +284,7 @@ void Action02SpriteLayoutRecord::read(std::istream& is, const GRFInfo& info)
         {
             BuildingSprite sprite;
             sprite.sprite = read_uint32(is);
-            if (format == Format::Advanced)
+            if (m_format == Format::Advanced)
             {
                 sprite.regs.flags = read_uint16(is);
             }
@@ -302,7 +302,7 @@ void Action02SpriteLayoutRecord::read(std::istream& is, const GRFInfo& info)
                 sprite.zext   = read_uint8(is);
             }
 
-            if (format == Format::Advanced)
+            if (m_format == Format::Advanced)
             {
                 // bool parameter indicates whether this is a parent bounding box
                 sprite.regs.read(is, sprite.new_bb);
@@ -326,7 +326,7 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
     // byte written will be 0x41 rather 0x40 for a single building sprite.
     uint8_t num_sprites     = uint8_t(m_building_sprites.size());
     bool    extended_format = (m_format != Format::Basic) ||
-                              (num_sprites != 1) ||
+                              (num_sprites > 1) ||
                               (m_building_sprites[0].new_bb == false) ||
                               (m_building_sprites[0].zofs != 0);
     if (extended_format)
@@ -456,6 +456,11 @@ void Action02SpriteLayoutRecord::parse(TokenStream& is)
     }
 
     is.match(TokenType::CloseBrace);
+
+    if ((m_format == Format::Basic) && (m_building_sprites.size() > 1))
+    {
+        m_format = Format::Extended; 
+    }
 }
 
 
@@ -476,8 +481,13 @@ void Action02SpriteLayoutRecord::parse_ground_sprite(TokenStream& is)
 
             switch (it->second)
             {
-                case 0x03: m_ground_regs.parse(is, true); break;
-                default:   throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+                case 0x03: 
+                    m_ground_regs.parse(is, true); 
+                    m_format = (m_ground_regs.flags != 0x00) ? Format::Advanced : m_format;
+                    break;
+
+                default:   
+                    throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
             }
         }
         else
@@ -528,6 +538,7 @@ void Action02SpriteLayoutRecord::parse_building_sprite(TokenStream& is)
 
                 case 0x03: 
                     sprite.regs.parse(is, true); 
+                    m_format = (sprite.regs.flags != 0x00) ? Format::Advanced : m_format;
                     break;
 
                 default: throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
@@ -572,6 +583,7 @@ void Action02SpriteLayoutRecord::parse_child_sprite(TokenStream& is)
 
                 case 0x03: 
                     sprite.regs.parse(is, false); 
+                    m_format = (sprite.regs.flags != 0x00) ? Format::Advanced : m_format;
                     break;
 
                 default: throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
