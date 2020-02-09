@@ -233,7 +233,7 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
     else
     {
         output_data = encode_lz77(m_pixels);
-        uncomp_size = uint32_t(output_data.size());    
+        uncomp_size = uint32_t(m_xdim) * uint32_t(m_ydim);    
     }
 
     // We need to know this value for reading chunked sprites.
@@ -246,7 +246,7 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
     //         file. If it is unset, you *must* decompress it to find out
     //          how large it is in the file.
     // 3   8  Has transparency (i.e. is a tile), see below.
-    write_uint8(os,  m_compression | 0x03); // Not entirely sure about bit 2 - see examples...
+    write_uint8(os,  m_compression | 0x01); // Not entirely sure about bit 2 - see examples...
     
     write_uint8(os,  uint8_t(m_ydim));
     write_uint16(os, m_xdim);

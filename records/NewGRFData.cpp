@@ -97,11 +97,11 @@ void NewGRFData::read(std::istream& is)
         // Just a handle to pause a read just before it fails. If a GRF read fails,
         // Run it again with the -g option to dump records to the console as we go. This 
         // will tell us where we fell over.
-        if (record_index >= 4856)
-        {
-            int x = 0; // Breakpoint here.
-            dump_hex(is, 32);
-        }
+        //if (record_index >= 4856)
+        //{
+        //    int x = 0; // Breakpoint here.
+        //    dump_hex(is, 32);
+        //}
 
         // This section is terminated with a zero length record. The size of the length of the record
         // depends on the file format version.

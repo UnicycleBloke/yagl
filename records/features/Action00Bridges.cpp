@@ -51,6 +51,8 @@ constexpr const char* str_purchase_text       = "purchase_text";
 constexpr const char* str_description_rail    = "description_rail";
 constexpr const char* str_description_road    = "description_road";
 constexpr const char* str_cost_factor_word    = "cost_factor_word";
+constexpr const char* str_layout              = "layout";
+constexpr const char* str_table               = "table";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
@@ -112,12 +114,14 @@ void Action00Bridges::BridgeTable::write(std::ostream& os) const
 
 void Action00Bridges::BridgeTable::print(std::ostream& os, uint16_t indent) const
 {
+    os << pad(indent) << "{\n"; 
+ 
     uint16_t index = 0;
     for (const uint32_t& sprite: m_sprites)
     {
         if ((index % 8) == 0) 
         {
-            os << pad(indent);
+            os << pad(indent + 4);
         }
         
         os << to_hex(sprite) << " ";
@@ -128,12 +132,22 @@ void Action00Bridges::BridgeTable::print(std::ostream& os, uint16_t indent) cons
             os << "\n"; 
         }
     }
+
+    os << pad(indent) << "}\n"; 
 }
 
 
 void Action00Bridges::BridgeTable::parse(TokenStream& is)
 {
-
+    is.match(TokenType::OpenBrace);
+    for (uint32_t& sprite: m_sprites)
+    {
+        // We expect precisely 32 sprite indices. Anything else will lead to an exception.
+        // More than 32 will throw when matching a brace chokes on an integer.
+        // Fewer than 32 will throw when matching an integer chokes on a brace.
+        sprite = is.match_integer();
+    }
+    is.match(TokenType::CloseBrace);
 }
 
 
@@ -166,16 +180,13 @@ void Action00Bridges::BridgeLayout::print(std::ostream& os, uint16_t indent) con
 {
     uint8_t table_id = m_first_table_id;
 
-    os << pad(indent) << "layout\n"; 
+    //os << pad(indent) << str_layout << "\n"; 
+    os << "\n"; 
     os << pad(indent) << "{\n"; 
     for (const auto& table: m_tables)
     {
-        os << pad(indent + 4) << "table<" << to_hex(table_id++) << ">\n"; 
-        os << pad(indent + 4) << "{\n"; 
-
-        table.print(os, indent + 8);
-
-        os << pad(indent + 4) << "}\n"; 
+        os << pad(indent + 4) << str_table << "<" << to_hex(table_id++) << ">\n"; 
+        table.print(os, indent + 4);
     }
     os << pad(indent) << "};\n"; 
 }
@@ -183,7 +194,25 @@ void Action00Bridges::BridgeLayout::print(std::ostream& os, uint16_t indent) con
 
 void Action00Bridges::BridgeLayout::parse(TokenStream& is)
 {
+    //is.match_ident(str_layout);
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        is.match_ident(str_table);
+        is.match(TokenType::OpenAngle);
+        uint8_t table_id = is.match_integer();
+        is.match(TokenType::CloseAngle);
 
+        BridgeTable table = {};
+        table.parse(is);
+
+        m_tables.push_back(table);
+        if (m_tables.size() == 1)
+        {
+            m_first_table_id = table_id;
+        }
+    }
+    is.match(TokenType::CloseBrace);
 }
 
 
