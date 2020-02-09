@@ -97,11 +97,11 @@ void NewGRFData::read(std::istream& is)
         // Just a handle to pause a read just before it fails. If a GRF read fails,
         // Run it again with the -g option to dump records to the console as we go. This 
         // will tell us where we fell over.
-        // if (record_index == 7394)
-        // {
-        //     int x = 0; // Breakpoint here.
-        //     dump_hex(is, 32);
-        // }
+        if (record_index >= 4856)
+        {
+            int x = 0; // Breakpoint here.
+            dump_hex(is, 32);
+        }
 
         // This section is terminated with a zero length record. The size of the length of the record
         // depends on the file format version.
@@ -139,8 +139,12 @@ void NewGRFData::read(std::istream& is)
                     // This has fallen over while reading from zbase. The reason seems to be that the sprites
                     // appear as top level items, so a recolour sprite is treated as Action00. This does not 
                     // go well.
-                    //record = read_record(is, size, num_sprites == 0, m_info);
-                    record = read_record(is, size, size != 257, m_info);
+                    record = read_record(is, size, num_sprites == 0, m_info);
+                    
+                    // This version works most of the time, including for zbase. Unfortunately, it will go 
+                    // wrong for some Action00 records: encountered when parsing FIRS. If an Action00 record
+                    // has a length of 257 bytes, we will be in trouble.
+                    //record = read_record(is, size, size != 257, m_info);
                 }
                 break;
 

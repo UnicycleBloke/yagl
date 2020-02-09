@@ -234,15 +234,17 @@ void IndustryLayout::parse(TokenStream& is)
         switch (index)
         {
             case 0x01: 
+                is_reference = true;
                 industry_num = is.match_integer();
                 is.match(TokenType::Comma);
                 layout_num = is.match_integer();
                 break;
             
             case 0x02: 
+                is_reference = false;
                 while (is.peek().type != TokenType::CloseBrace)
                 {
-                    IndustryTile tile;
+                    IndustryTile tile = {};
                     tile.parse(is);
                     tiles.push_back(tile);
                 }
@@ -307,7 +309,7 @@ void IndustryLayouts::parse(TokenStream& is)
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
-        IndustryLayout layout;
+        IndustryLayout layout = {};
         layout.parse(is);
         layouts.push_back(layout);
     }
