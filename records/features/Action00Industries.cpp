@@ -284,9 +284,9 @@ void Action00Industries::Multipliers::parse(TokenStream& is)
     }
     is.match(TokenType::CloseBracket);
 
-    num_inputs  = inputs;
-    num_outputs = outputs / inputs;
-    // Assert that outputs % inputs == 0.
+    num_inputs  = static_cast<uint8_t>(inputs);
+    num_outputs = static_cast<uint8_t>(outputs / inputs);
+    // TODO Assert values < 256. Assert that outputs % inputs == 0.
 }
 
 
