@@ -52,25 +52,6 @@ private:
 };
 
 
-// RGBSpriteSheet::RGBSpriteSheet(const std::string& file_name)
-// : m_image{file_name, png::require_color_space<png::rgb_pixel>()}
-// {
-// }     
-
-
-// SpriteSheet::Pixel RGBSpriteSheet::pixel(uint32_t x, uint32_t y)
-// {
-//     png::rgb_pixel in = m_image[y][x];
-
-//     Pixel out = {};
-//     out.red   = in.red;
-//     out.green = in.green;
-//     out.blue  = in.blue;
-
-//     return out;
-// }
-
-
 RGBASpriteSheet::RGBASpriteSheet(const std::string& file_name)
 : m_image{file_name, png::require_color_space<png::rgba_pixel>()}
 {
@@ -118,6 +99,8 @@ std::shared_ptr<SpriteSheet> SpriteSheetPool::get_sprite_sheet(const std::string
     if (it == m_sheets.end())
     {
         using Colour = SpriteSheet::Colour;
+
+        std::cout << "Opening sprite sheet: " << file_name << "..." << std::endl;
 
         std::shared_ptr<SpriteSheet> sheet;
         switch (colour)

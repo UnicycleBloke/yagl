@@ -155,7 +155,7 @@ else()
     # Is their a nicer, more automatic, way to generalise the location of vcpkg? 
     # Here we expect -DVCPKG_DIR=<dir> to be given on the cmake command line.
     if (NOT EXISTS ${VCPKG_DIR})
-        message(FATAL_ERROR "ERROR: The directory given by VCPKG_DIR does not exist")
+        message(FATAL_ERROR "ERROR: The directory given by VCPKG_DIR does not exist - specify with -DVCPKG_DIR=<dir>")
     endif()    
     target_link_directories(${NEWGRF_PROGRAM_NAME} PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/lib) 
     target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/include)

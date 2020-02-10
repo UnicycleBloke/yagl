@@ -21,6 +21,7 @@
 #include "NewGRFData.h"
 #include "Lexer.h"
 #include "CommandLineOptions.h"
+#include "yagl_version.h" // Generated in a pre-build step.
 #include "FileSystem.h"
 
 
@@ -38,21 +39,23 @@ static void decode()
         fs::path image_base = yagl_file;
         image_base.replace_extension();
 
-        if (options.debug()) 
-        {
-            std::cout << "Reading GRF:      " << options.grf_file() << '\n';
-            std::cout << "Writing YAGL:     " << options.yagl_file() << '\n';
-            std::cout << "Output directory: " << yagl_dir.string() << '\n';
-            std::cout << "Image base:       " << image_base.string() << '\n';
-        }
+        std::cout << "Reading GRF:      " << options.grf_file() << "\n";
+        std::cout << "Writing YAGL:     " << options.yagl_file() << "\n";
+        std::cout << "Output directory: " << yagl_dir.string() << "\n";
+        std::cout << "Image base:       " << image_base.string() << "\n" << std::endl;
 
         // Read in the GRF file ...
         // The GRF file already checked for existence.
+        std::cout << "Reading GRF..." << std::endl;
         NewGRFData grf_data;
         std::ifstream is(options.grf_file(), std::ios::binary);    
         grf_data.read(is);
 
+        // TODO for some reason the Win64 release build throws an exception related to heap corruption here.
+        // The debug build does not. That's a bit of a pain.
+
         // Write out the YAGL file and associated sprite sheets ...
+        std::cout << "Reading YAGL and other files..." << std::endl;
         std::ofstream os(yagl_file, std::ios::binary);
         grf_data.print(os, yagl_dir.string(), image_base.string());
     }
@@ -77,22 +80,21 @@ static void encode()
         fs::path image_base = yagl_file;
         image_base.replace_extension();
 
-        if (options.debug()) 
-        {
-            std::cout << "Reading YAGL:     " << options.yagl_file() << '\n';
-            std::cout << "Writing GRF:      " << options.grf_file() << '\n';
-            std::cout << "Source directory: " << yagl_dir.string() << '\n';
-            std::cout << "Image base:       " << image_base.string() << '\n';
-        }
+        std::cout << "Reading YAGL:     " << options.yagl_file() << "\n";
+        std::cout << "Writing GRF:      " << options.grf_file() << "\n";
+        std::cout << "Source directory: " << yagl_dir.string() << "\n";
+        std::cout << "Image base:       " << image_base.string() << "\n" << std::endl;
 
         // Read in the YAGL file ...
         // This file already checked for existence.
         // Will need to check for the sprite sheets as we go along.
+        std::cout << "Lexing YAGL..." << std::endl;
         Lexer lexer;
         std::ifstream is(yagl_file, std::ios::binary);       
         TokenStream token_stream(lexer.lex(is));
 
         // Parse the YAGL script ...
+        std::cout << "Parsing YAGL..." << std::endl;
         NewGRFData grf_data;
         grf_data.parse(token_stream, yagl_dir.string(), image_base.string()); 
 
@@ -102,10 +104,13 @@ static void encode()
         {
             fs::path bak_file = grf_file;
             bak_file.replace_extension("grf.bak");
+
+            std::cout << "Creating back up GRF: " << grf_file.string() << " => " << bak_file.string() << std::endl;
             fs::rename(grf_file, bak_file);
         } 
 
         // Write out the GRF file ...
+        std::cout << "Writing GRF..." << std::endl;
         std::ofstream os(options.grf_file(), std::ios::binary);
         grf_data.write(os);
     }
@@ -140,7 +145,12 @@ int main (int argc, char* argv[])
 {
     CommandLineOptions& options = CommandLineOptions::options();
     options.parse(argc, argv);
-    
+
+    std::cout << "\n";
+    std::cout << "yagl (Yet Another GRF Language) " << str_yagl_version << "\n";
+    std::cout << "Copyright 2019 Alan Chambers (unicycle.bloke@gmail.com)\n";
+    std::cout << "Released under GNU General Public License version 3\n" << std::endl;
+
     switch (options.operation())
     {
         case CommandLineOptions::Operation::Decode:
@@ -155,6 +165,8 @@ int main (int argc, char* argv[])
             hexdump();
             break;
     }
+
+    return 0;
 }
 
 
