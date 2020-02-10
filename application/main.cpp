@@ -143,13 +143,13 @@ static void hexdump()
 
 int main (int argc, char* argv[])
 {
-    CommandLineOptions& options = CommandLineOptions::options();
-    options.parse(argc, argv);
-
     std::cout << "\n";
     std::cout << "yagl (Yet Another GRF Language) " << str_yagl_version << "\n";
     std::cout << "Copyright 2019 Alan Chambers (unicycle.bloke@gmail.com)\n";
     std::cout << "Released under GNU General Public License version 3\n" << std::endl;
+
+    CommandLineOptions& options = CommandLineOptions::options();
+    options.parse(argc, argv);
 
     switch (options.operation())
     {
