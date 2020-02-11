@@ -51,9 +51,6 @@ static void decode()
         std::ifstream is(options.grf_file(), std::ios::binary);
         grf_data.read(is);
 
-        // TODO for some reason the Win64 release build throws an exception related to heap corruption here.
-        // The debug build does not. That's a bit of a pain.
-
         // Write out the YAGL file and associated sprite sheets ...
         std::cout << "Writing YAGL and other files..." << std::endl;
         std::ofstream os(yagl_file, std::ios::binary);
