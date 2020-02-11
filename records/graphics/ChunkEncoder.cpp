@@ -119,10 +119,12 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
         // Index of the row offset in the chunked data's index array. 
         uint32_t index = y * (long_offset ? sizeof(uint32_t) : sizeof(uint16_t));
         // Offset of the first chunk for the current row.
-        uint32_t offset = chunks.at(index++) | (chunks.at(index++) << 8);
+        uint32_t offset = chunks[index++];
+        offset |= (chunks[index++] << 8);
         if (long_offset)
         {
-            offset |= (chunks.at(index++) << 16) | (chunks.at(index++) << 24);
+            offset |= (chunks[index++] << 16);
+            offset |= (chunks[index++] << 24);
         }
 
         // Now read out the data for each chunk.
@@ -133,20 +135,20 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
         {
             // Access the chunks for the current row.
             // Length of the current chunk, and the flag for last chunk.
-            chunk_len = chunks.at(offset++);
+            chunk_len = chunks[offset++];
             if (LAST_CHUNK == LONG_LAST_CHUNK)
             {
-                chunk_len |= (chunks.at(offset++) << 8);
+                chunk_len |= (chunks[offset++] << 8);
             }
             is_last_chunk  = (chunk_len >= LAST_CHUNK);
             chunk_len     &= ~LAST_CHUNK;
             chunk_len     %= xdim;
 
             // Row offset for the current chunk.
-            chunk_off = chunks.at(offset++);
+            chunk_off = chunks[offset++];
             if (LAST_CHUNK == LONG_LAST_CHUNK)
             {
-                chunk_off |= (chunks.at(offset++) << 8);
+                chunk_off |= (chunks[offset++] << 8);
             }
 
             // Empty rows still in chunked data. This supposed to be with a length of zero and 
@@ -162,8 +164,8 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
             uint32_t pixel = (y * xdim + chunk_off) * pixel_size;
             for (uint16_t i = 0; i < imax ; ++i) 
             { 
-                uint8_t pix = chunks.at(offset);
-                output.at(pixel) = pix;
+                uint8_t pix = chunks[offset];
+                output[pixel] = pix;
                 ++pixel;
                 ++offset;
             }
