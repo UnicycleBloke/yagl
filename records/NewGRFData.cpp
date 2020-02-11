@@ -206,7 +206,7 @@ void NewGRFData::read(std::istream& is)
     {
         //while (true)
         while (is.peek() != EOF)
-        {               
+        {
             // This section is terminated with a zero length record. 
             uint32_t sprite_id = read_uint32(is);
             if (sprite_id == 0)

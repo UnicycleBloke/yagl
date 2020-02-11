@@ -103,6 +103,9 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
             img_size -= length;
             for (; length > 0; length--)
             {
+                if (index < offset) throw RUNTIME_ERROR("1");
+                if (index >= pixdata.size()) throw RUNTIME_ERROR("2");
+
                 pixdata[index] = pixdata[index - offset];
                 index++;
             }
@@ -114,14 +117,17 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
             uint16_t length = (code == 0) ? 0x80 : code;
             if (img_size < length)
             {
-                throw RUNTIME_ERROR("");
+                throw RUNTIME_ERROR("3");
             }
 
             img_size -= length;
             for (; length > 0; length--)
             {
+                if (index >= pixdata.size()) throw RUNTIME_ERROR("4");
+
                 uint8_t pix = read_uint8(is);
-                pixdata[index++] = pix;
+                pixdata[index] = pix;
+                ++index;
             }
         }
     }
@@ -132,11 +138,15 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
     if (m_compression & CHUNKED_FORMAT)
     {
         m_pixels = decode_tile(pixdata, m_xdim, m_ydim, m_compression, info.format);
+        //m_pixels = std::move(pixdata);
     }
     else
     {
-        m_pixels = pixdata;
-    }    
+        // This causes an exception in Windows release build. Something buried deep in ntdll or something.
+        // It looks like new fails and goes to the new handler. Or the subsequent deallocation fails. 
+        //m_pixels = pixdata;
+        m_pixels = std::move(pixdata);
+    }
 }
 
 
