@@ -126,7 +126,9 @@ void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t id = m_first_id;
     for (auto instance: m_instances)
     {
-        os << pad(indent + 4) << str_instance_id << ": " << to_hex(id++) << "\n";  
+        // Made this into a comment since we only need the ID of the first instance, and we already have that.
+        //os << pad(indent + 4) << str_instance_id << ": " << to_hex(id++) << "\n";  
+        os << pad(indent + 4) << "// " << str_instance_id << ": " << to_hex(id++) << "\n";  
         os << pad(indent + 4) << "{\n";  
 
         for (auto property: m_properties) 
@@ -199,12 +201,15 @@ void Action00Record::parse(TokenStream& is)
 
     is.match(TokenType::OpenBrace);
 
-    while (is.peek().value == str_instance_id)
+    //while (is.peek().value == str_instance_id)
+    while (is.peek().type != TokenType::CloseBrace)
     {
-        is.match(TokenType::Ident);
-        is.match(TokenType::Colon);
+        // Made this into a comment since we only need the ID of the first instance.
+        // Also changed while condition to match.
+        //is.match(TokenType::Ident);
+        //is.match(TokenType::Colon);
         // Ignore second and subsequent IDs.
-        uint16_t id = is.match_integer();
+        //uint16_t id = is.match_integer();
         //m_first_id  = (m_instances.size() == 0) ? id : m_first_id;
 
         is.match(TokenType::OpenBrace);

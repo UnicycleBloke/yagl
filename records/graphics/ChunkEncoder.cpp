@@ -110,10 +110,10 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
         trans_offset = 0;
     }
     
-    // This will contain the decompressed image.
-    // Make sure it is all initialised to zeroes.
-    std::vector<uint8_t> output(xdim * ydim * pixel_size, 0);
-
+    // Create a array of the lengths for the chunk data in each row. We care about this to more 
+    // clearly work out which rows are empty and which are not. It seems that the length of the 
+    // first chunk cannot be entirely trusted in the case of zero or full width chunks.
+    std::vector<uint32_t> offsets;
     for (uint16_t y = 0; y < ydim; ++y)
     {
         // Index of the row offset in the chunked data's index array. 
@@ -125,6 +125,26 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
         {
             offset |= (chunks[index++] << 16);
             offset |= (chunks[index++] << 24);
+        }
+
+        offsets.push_back(offset);
+    }
+    offsets.push_back(chunks.size());
+
+    // This will contain the decompressed image.
+    // Make sure it is all initialised to zeroes.
+    std::vector<uint8_t>  output(xdim * ydim * pixel_size, 0);
+
+    for (uint16_t y = 0; y < ydim; ++y)
+    {
+        // Skips empty rows. These are indicated by rows whose length are the size of one null chunk.
+        // An empty row contains a single chunk header (byte/word cinfo and byte/word cofs), but no 
+        // further bytes. cinfo should have length zero in this case, but this doesn't seem entirely 
+        // reliable.
+        uint32_t offset = offsets[y];
+        if ((offsets[y+1] - offset) == (long_offset ? sizeof(uint32_t) : sizeof(uint16_t)))
+        {
+            continue;
         }
 
         // Now read out the data for each chunk.
@@ -142,7 +162,6 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
             }
             is_last_chunk  = (chunk_len >= LAST_CHUNK);
             chunk_len     &= ~LAST_CHUNK;
-            chunk_len     %= xdim;
 
             // Row offset for the current chunk.
             chunk_off = chunks[offset++];
@@ -155,10 +174,10 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
             // the last chunk bit set. dutchtrains.grf seems to have a length of xdim instead. I
             // have used % to get rid of this. Linux builds were fine, but this caused an exception
             // on Windows (correctly). 
-            if (is_last_chunk && (chunk_len == 0)) // && (chunk_off == 0)) 
-            {
-                break;
-            }
+            //if (is_last_chunk && (chunk_len == 0)) 
+            //{
+            //    break;
+            //}
 
             uint32_t imax  = (chunk_len & ~LAST_CHUNK) * pixel_size;
             uint32_t pixel = (y * xdim + chunk_off) * pixel_size;

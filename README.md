@@ -3,9 +3,9 @@
 **yagl** is a command line tool, and a script language (called YAGL for maximal ambiguity), for working with OpenTTD and TTDPatch GRF files, as described in the [NewGRF specs](https://newgrf-specs.tt-wiki.net/wiki/Main_Page). It is basically a codec which performs either of the following operations:
 
 1. Read a GRF file into a memory data structure, and then write out a YAGL script containing a textual representation of its contents, together with one or more sprite sheets (PNG format) containing the images present in the GRF. Sound effects are also written to files.
-2. Read a YAGL file and any associated sprite sheets (and sound effects) into a memory data structure (the same one as above), and then write out a GRF file containing the a representation of the YAGL and the encoded sprites which conforms to the NewGRF specs.
+2. Read a YAGL file and any associated sprite sheets (and sound effects) into a memory data structure (the same one as above), and then write out a GRF file containing the binary representation of the YAGL and the encoded sprites which conforms to the NewGRF specs.
 
-If you perform Step 1, and then perform Step 2 without first making any changes to the YAGL or the sprite sheets, then the re-generated GRF should be identical to the original. There are a few valid reasons why there might be discrepancies, such as the elimination of duplicate properties in Action00, re-ordering properties (the order is not significant), variant string encodings, and so on. But they should certainly be *semantically* identical.
+If you perform Step 1, and then perform Step 2 without first making any changes to the YAGL or the sprite sheets, then the re-generated GRF should in principle be identical to the original. There are a few valid reasons why there might be discrepancies, such as the elimination of duplicate properties in Action00, re-ordering properties (the order is not significant), variant string encodings, and so on. But they should certainly be *semantically* identical.
 
 A GRF is basically just a long list of records of different types. A YAGL script is also just a long list of records of different types. Each record in the YAGL should be semantically identical to the corresponding record in the GRF from which it was created. It's just that while the GRF record is binary data, the YAGL record is human-readable text. For example, the following output is used to represent an Action08 record, extracted from FIRS:
 
@@ -26,27 +26,27 @@ Though this looks superficially similar to NML, it is definitely *not* NML. For 
 
 The goal here is not to decompile NML, which is probably impossible to do well, but to create something which is hopefully  more readable than the equivalent NFO. 
 
-## Current status
+## Road map
 
-Despite what the introduction says, **yagl** is not yet complete. The current focus is on being able to successfully read any GRF file and create a reasonable YAGL representation of every feature. 
+Although theoretically complete in terms of the basic functionality, more could be done:
 
-- The code for reading in binary GRFs is basically complete. There are sure to be errors and omissions but the code theoretically covers all of the NewGRF specs, including RoadTypes and TramTypes.
+- Most properties in Action00 records are represented by simple numbers (presented in hex, but decimal, octal and binary are supported). Many of these are enumerations which could be replaced with text representations of the permitted values. Many others are bitfields for each each supported bit could be replaced by a text represention. This would make the YAGL more readable.
 
-- The code for writing out binary GRFs is basically complete. This a mirror image of the code for reading in the GRFs, and will suffer the same errors and omissions, if any. 
+- There is as yet no documentation. It would be nice if **yagl** itself could generate annotated versions of the various YAGL records it can print. 
 
-- Tests are needed ensure that reading and then writing GRF records results in the same binary data, that the coverage is complete, and to highlight any regression.
+- The software currently terminates as soon as there is a fault while parsing the YAGL. It would be good to implement a more fault tolerant design. This would not accept poorly formatted YAGL, but could form the basis for a linter. 
 
-- The code for printing out the YAGL is basically complete. There are sure to be errors and omissions, and the text formatting could very likely stand some improvements. Action00 properties are mostly shown as hex numbers: the plan is to at least handle enumerations and bitfields better.
+- It might be worth generating NFO which is compatible with **grfcodec**. 
 
-- The code for parsing the YAGL script is still a work in progress. The approach used seems to work just fine, but there is a lot to do. This procedure is a mirror image of the code to print out the YAGL, and will suffer the same errors and omissions, if any.
-
-- Tests are needed to ensure that the printed YAGL and written binary contain the same information - that is parsing the YAGL and reading the binary create an identical data structure in memory. 
-
-- Some GRF files fail to decode, and result in terminal exceptions. This is mostly likely due to errors in **yagl** which still need to be ironed out, but one or two GRFs appeared to be malformed, and the software was not forgiving.
 
 ## Building **yagl**
 
-**yagl** is a single executable so far built only on Linux or Linux-like systems. The build system is created with **CMake**, and can perform the actual build with **make**, **ninja**, or some other tool for which a generator exists. I find managing projects with **CMake** is a lot simpler than fiddling with make files directly. 
+The build system is created with **CMake**, and can perform the actual build with **make**, **ninja**, or some other tool for which a generator exists. `CMakeLists.txt` specifies at least **CMake** version 3.10. This is the lowest version for which a build was attempted. Earlier versions may also work.
+
+**yagl** is written in C++, and makes use of at least some C++17 features, notably `<filesystem>`. This affects the compiler versions which can be used.  
+
+
+### Building on Linux 
 
 Starting in some folder on your machine, execute the following commands in a terminal window:
 
@@ -68,17 +68,16 @@ ninja
 ./yagl -d <your_grf_file.grf> 
 ```
 
-`CMakeLists.txt` specifies at least **CMake** version 3.10. This is the lowest version for which a build was attempted. Earlier versions may also work.
-
-**yagl** is written in C++, and makes use of at least some C++17 features, notably `<filesystem>`. It has so far only been compiled with **g++**. Pretty much any reasonably recent Linux-like environment should be fine. The software has been built and run on the following configurations:
+The software has so far only been compiled with **g++** on Linux. Pretty much any reasonably recent Linux-like environment should be fine. The software has been built and run on the following configurations:
 - Ubuntu 16.04 LTS; CMake 3.15.0; g++ 9.2.1
 - Windows 10 Subsystem for Linux; Ubuntu 18.04 LTS; CMake 3.10; g++ 8.2.0
 
-It should also build with **g++ 7.4**, though this required a little conditional compilation around `<filesystem>`, which was not officially supported until **g++ 8.0**.
+It should also build with **g++ 7.4**, though this required a little conditional compilation around `<filesystem>`, which was not officially supported until **g++ 8.0**. Not recommended.
 
-Cygwin/MSYS2/MingW should all be fine, but remain to be tested.
+Though this has not been tried, the software seems very likely to build with **clang**, if this is preferred. The toolchain can be edited by running **ccmake**.
 
-### Build dependencies
+
+#### Build dependencies
 
 The only binary library dependency is **libpng**, which is used for reading and writing spritesheets. You may need to install the headers for this, as follows:
 
@@ -96,6 +95,10 @@ The following header only libraries are included in the source tree along with t
 - **cxxopts**: a C++ command line option parser: https://github.com/jarro2783/cxxopts.
 
 Aside from **g++**, the build also makes use of **python** for a pre-build step to create the version number from the git repository: it runs `yagl_version.py` to create `yagl_version.h`. I found it necessary to manually create the link `/usr/bin/python` to the binary `/usr/bin/python3`. This may or may not be an issue on your system. 
+
+### Building on Windows
+
+TODO
 
 ## Licence
 
@@ -117,8 +120,6 @@ The decoder should throw an exception and terminate as soon as it detects data i
 
 **To encode a YAGL script into a GRF file, run the following command:**
 
-***NOTE: This feature is not yet usable.***
-
 ```bash
 ./yagl --encode [<options>] <grf_file> [<directory>]  
 ```
@@ -133,6 +134,7 @@ Both long and short version of each option are supported.
 
 - **--decode, -d**: as described above.
 - **--encode, -e**: as described above.
+- **--hexdump, -x**: reads the GRF into memory as for **--decode**, and then dumps a hex representation somewhat similar to NFO (it is *not* NFO). The purpose is to help analyse differences between original and re-created GRF files.
 - **--palette, -p \<index\>**: choose the initial palette for the GRF. 
   - This setting will be overridden if a value is set in Action14 in a "PALS" element.
   - Permitted index values are:
@@ -149,14 +151,9 @@ Both long and short version of each option are supported.
   - The image may be taller, if the sprites in the last row would not fit.
   - The sprites are divided into multiple sprite sheets if their combined height exceeds this.
   - This option is ignored when encoding a GRF.
-- **--container, -g \<index\>**: set the container version of the GRF.
-  - Permitted index values are:
-    - 1: Container version 1
-    - 2: Container version 2 - this is the default
-  - Container version 1 is never used for sprites with 32bpp or multiple zoom levels. 
-  - This option is ignored when decoding a GRF.
 - **--version, -v**: displays the version of the **yagl** executable.
-  - The rest of the command line is ignored when this option is present.  
+  - The rest of the command line is ignored when this option is present. 
+- **--help**: displays this help in the console.   
 
 ## Software architecture
 
@@ -268,7 +265,7 @@ The YAGL script is run through a lexer to create a list of tokens representing s
 
 The list of tokens is then de-serialised (in the `parse()` methods) to create an in-memory representation (as described above), rather than parsed in the traditional sense. There is no explicit language definition in terms of abstract production rules. Instead, the list of tokens is interpreted recursively with local lookup tables and other objects. This is analogous to the way in which the binary GRF file is read to create the in-memory representation. Reading the YAGL in this way probably results in more verbose code, but seemed like the right approach in this case. 
 
-Perhaps it makes sense to regard the in-memory representation as being an abstract syntax tree: it certainly contains all the information necessary to generate either a binary GRF file or the equivalent YAGL script. But the way it is created has more in common with de-serialisation than rules-based parsing.
+Perhaps it makes sense to regard the in-memory representation itself as being an abstract syntax tree: it certainly contains all the information necessary to generate either a binary GRF file or the equivalent YAGL script. But the way it is created has more in common with de-serialisation than rules-based parsing.
 
 One of the goals for the parsing is to allow each different type of property to have its own specific mini-parser (the code calls these Descriptors). The idea is that, for example, every bit field can be represented with a series of property-specific identifiers ORed together (e.g. `climate: Arctic | Temperate`). It is simple to maintain a particular descriptor without affecting any other part of the YAGL de-serialisation. Descriptors can be created to represent any data type, but common ones are numbers, enumerations, bitfields, GRF "labels" (32-bit ID used for many things), and array of numbers and other things. Special case descriptors include snow lines and bridge tables.
 
@@ -278,7 +275,7 @@ Descriptors are also used for print the value of a property when generating YAGL
 
 Strings in GRF files can be encoded in either not-quite-Latin1 or not-quite-UTF8 (prefixed with an upper case thorn character: **Þ**). In both cases the strings may contain binary control codes which have special functions when the strings are rendered in-game. 
 
-Strings are converted to a human-readable pure-UTF8 format when generating YAGL. All the control codes are replaced with escaped string names (e.g. `"{blue}This text is blue. {red} This text is red."`). Braces are used to escape control sequences, and a double open brace is used to create a literal single open brace. Double quotes are escaped with `{dq}` as this symbol is used to delimit strings in YAGL. Double quotes are not special characters in GRF strings.
+Strings are converted to a human-readable pure-UTF8 format when generating YAGL. All the control codes are replaced with escaped string names (e.g. `"{blue}This text is blue. {red}This text is red."`). Braces are used to escape control sequences, and a double open brace is used to create a literal single open brace. Double quotes are escaped with `{dq}` as this symbol is used to delimit strings in YAGL. Double quotes are not special characters in GRF strings.
 
 The string conversion is done in two stages. 
 

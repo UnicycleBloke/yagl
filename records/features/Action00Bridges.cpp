@@ -233,6 +233,7 @@ bool Action00Bridges::read_property(std::istream& is, uint8_t property)
         case 0x11: m_11_description_rail    = read_uint16(is); break;
         case 0x12: m_12_description_road    = read_uint16(is); break;
         case 0x13: m_13_cost_factor_word    = read_uint16(is); break;
+        case 0x14: break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -281,6 +282,7 @@ bool Action00Bridges::print_property(std::ostream& os, uint8_t property, uint16_
         case 0x11: desc_11.print(m_11_description_rail, os, indent); break;
         case 0x12: desc_12.print(m_12_description_road, os, indent); break;
         case 0x13: desc_13.print(m_13_cost_factor_word, os, indent); break;
+        case 0x14: os << pad(indent) << "// unknown property 0x14" << "\n"; break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
