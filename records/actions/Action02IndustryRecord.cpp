@@ -187,7 +187,7 @@ void Action02IndustryRecord::parse(TokenStream& is)
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
-    m_act02_set_id = is.match_integer();
+    m_act02_set_id = is.match_uint8();
     is.match(TokenType::Comma);
     desc_format.parse(m_format, is);
     is.match(TokenType::CloseAngle);
@@ -368,9 +368,9 @@ void Action02IndustryRecord::CargoList::parse(TokenStream& is)
         Cargo c = {};
 
         is.match(TokenType::OpenParen);
-        c.cargo = is.match_integer();
+        c.cargo = is.match_uint8();
         is.match(TokenType::Comma);
-        c.reg   = is.match_integer();
+        c.reg   = is.match_uint8();
         is.match(TokenType::CloseParen);
 
         cargos.push_back(c);

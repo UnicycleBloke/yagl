@@ -20,7 +20,7 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include "Lexer.h"
+#include "TokenStream.h"
 
 
 class GRFLabel

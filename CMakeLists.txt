@@ -33,6 +33,8 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     records/Record.cpp
     # First stage of parsing a YAGL script - convert to a list of tokens with values.
     records/Lexer.cpp
+    # Second stage of parsing a YAGL script - deserialise the data from a stream of tokens.
+    records/TokenStream.cpp
 
     # Pseudo-sprites
     records/actions/Action00Record.cpp

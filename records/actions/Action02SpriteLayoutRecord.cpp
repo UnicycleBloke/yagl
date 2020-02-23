@@ -429,7 +429,7 @@ void Action02SpriteLayoutRecord::parse(TokenStream& is)
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
-    m_set_id = is.match_integer();
+    m_set_id = is.match_uint8();
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
@@ -466,7 +466,7 @@ void Action02SpriteLayoutRecord::parse(TokenStream& is)
 
 void Action02SpriteLayoutRecord::parse_ground_sprite(TokenStream& is)
 {
-    m_ground_sprite = is.match_integer();
+    m_ground_sprite = is.match_uint32();
     m_ground_regs   = {};
 
     is.match(TokenType::OpenBrace);
@@ -504,7 +504,7 @@ void Action02SpriteLayoutRecord::parse_building_sprite(TokenStream& is)
 {
     BuildingSprite sprite;
     sprite.new_bb = true;
-    sprite.sprite = is.match_integer();
+    sprite.sprite = is.match_uint32();
 
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
@@ -519,20 +519,20 @@ void Action02SpriteLayoutRecord::parse_building_sprite(TokenStream& is)
             switch (it->second)
             {
                 case 0x01: 
-                    sprite.xofs = is.match_integer();
+                    sprite.xofs = is.match_uint8();
                     is.match(TokenType::Comma);
-                    sprite.yofs = is.match_integer();
+                    sprite.yofs = is.match_uint8();
                     is.match(TokenType::Comma);
-                    sprite.zofs = is.match_integer();
+                    sprite.zofs = is.match_uint8();
                     is.match(TokenType::SemiColon);
                     break; // offset
 
                 case 0x02: 
-                    sprite.xext = is.match_integer();
+                    sprite.xext = is.match_uint8();
                     is.match(TokenType::Comma);
-                    sprite.yext = is.match_integer();
+                    sprite.yext = is.match_uint8();
                     is.match(TokenType::Comma);
-                    sprite.zext = is.match_integer();
+                    sprite.zext = is.match_uint8();
                     is.match(TokenType::SemiColon);
                     break; // extent
 
@@ -560,7 +560,7 @@ void Action02SpriteLayoutRecord::parse_child_sprite(TokenStream& is)
 {
     BuildingSprite sprite;
     sprite.new_bb = false;
-    sprite.sprite = is.match_integer();
+    sprite.sprite = is.match_uint32();
 
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
@@ -575,9 +575,9 @@ void Action02SpriteLayoutRecord::parse_child_sprite(TokenStream& is)
             switch (it->second)
             {
                 case 0x01: 
-                    sprite.xofs = is.match_integer();
+                    sprite.xofs = is.match_uint8();
                     is.match(TokenType::Comma);
-                    sprite.yofs = is.match_integer();
+                    sprite.yofs = is.match_uint8();
                     is.match(TokenType::SemiColon);
                     break; // offset
 

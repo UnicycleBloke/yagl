@@ -126,7 +126,7 @@ void Action0ARecord::parse(TokenStream& is)
         SpriteSet set{};
         is.match_ident(str_replacement_sprite_set); 
         is.match(TokenType::OpenAngle);
-        set.first_sprite = is.match_integer();
+        set.first_sprite = is.match_uint16();
         is.match(TokenType::CloseAngle);
         is.match(TokenType::OpenBrace);
     

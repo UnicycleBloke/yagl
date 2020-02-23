@@ -116,7 +116,7 @@ void Action05Record::parse(TokenStream& is)
     is.match(TokenType::OpenAngle);
     m_sprite_type = NewFeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
-    m_offset = is.match_integer();
+    m_offset = is.match_uint16();
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);

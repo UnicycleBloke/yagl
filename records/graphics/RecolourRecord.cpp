@@ -119,24 +119,24 @@ void RecolourRecord::parse(TokenStream& is)
 
     while (is.peek().type != TokenType::CloseBrace)
     {
-        uint16_t start = is.match_integer();
+        uint16_t start = is.match_uint16();
         uint16_t end   = start;
         uint8_t  value;
         if (is.peek().type == TokenType::Colon)
         {
             is.match(TokenType::Colon);
-            value = is.match_integer();
+            value = is.match_uint8();
         }
         else
         {
             is.match(TokenType::DoubleDot);
-            end = is.match_integer();
+            end = is.match_uint16();
 
             is.match(TokenType::Colon);
-            value = is.match_integer();
+            value = is.match_uint8();
 
             is.match(TokenType::DoubleDot);
-            is.match_integer();
+            is.match_uint8();
         }
         is.match(TokenType::SemiColon);
 

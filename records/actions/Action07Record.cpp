@@ -76,7 +76,7 @@ void parse_description(uint8_t& param, TokenStream& is)
     // One of param_str, str_global_var, ...
     is.match(TokenType::Ident); 
     is.match(TokenType::OpenBracket);
-    param = is.match_integer();
+    param = is.match_uint8();
     is.match(TokenType::CloseBracket);
 }
 
@@ -247,12 +247,12 @@ void Action07Record::parse(TokenStream& is)
         case Condition::BitClear:
             parse_description(m_variable, is);
             is.match(TokenType::Ampersand);
-            is.match_integer(); // 0xFF
+            is.match_uint8(); // 0xFF
             m_mask = 0xFF;
             is.match(TokenType::Comma);
-            is.match_integer(); // 1
+            is.match_uint8(); // 1
             is.match(TokenType::ShiftLeft);
-            m_value = is.match_integer();
+            m_value = is.match_uint32();
             break;
         
         // e.g. Equal(parameter[m_variable] & m_mask, m_value)
@@ -262,9 +262,9 @@ void Action07Record::parse(TokenStream& is)
         case Condition::GreaterThan:
             parse_description(m_variable, is);
             is.match(TokenType::Ampersand);
-            m_mask = is.match_integer();
+            m_mask = is.match_uint32();
             is.match(TokenType::Comma);
-            m_value = is.match_integer();
+            m_value = is.match_uint32();
             break;
         
         // e.g. GRFActivated(m_value, m_mask) - 4-byte values
@@ -277,7 +277,7 @@ void Action07Record::parse(TokenStream& is)
             m_variable = 0x88; // Must be this value
             m_value = label.to_integer();
             is.match(TokenType::Comma);
-            m_mask = is.match_integer();
+            m_mask = is.match_uint32();
             break;
         
         // e.g. CargoTypeInvalid(m_value) - 4-byte value
@@ -310,7 +310,7 @@ void Action07Record::parse(TokenStream& is)
 
     is.match_ident(str_skip_sprites);
     is.match(TokenType::Colon);
-    m_num_sprites = is.match_integer();
+    m_num_sprites = is.match_uint8();
     is.match(TokenType::SemiColon);
     
     is.match(TokenType::CloseBrace);

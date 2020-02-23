@@ -216,7 +216,7 @@ void Action00Industries::VectorU8::parse(TokenStream& is)
     is.match(TokenType::OpenBracket);
     while (is.peek().type != TokenType::CloseBracket)
     {
-        uint8_t value = is.match_integer();
+        uint8_t value = is.match_uint8();
         items.push_back(value);
     }
 
@@ -277,7 +277,7 @@ void Action00Industries::Multipliers::parse(TokenStream& is)
         while (is.peek().type != TokenType::CloseBracket)
         {
             ++outputs;
-            uint8_t value = is.match_integer();
+            uint8_t value = is.match_uint8();
             items.push_back(value);
         }
         is.match(TokenType::CloseBracket);

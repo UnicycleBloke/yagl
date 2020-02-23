@@ -294,14 +294,14 @@ void Action0DRecord::parse_description(uint8_t& param, TokenStream& is)
         // One of param_str, str_global_var, ...
         is.match(TokenType::Ident); 
         is.match(TokenType::OpenBracket);
-        param = is.match_integer();
+        param = is.match_uint8();
         is.match(TokenType::CloseBracket);
     }
     else
     {
         // 0xFF indicates that the parameter is a constant.
         param  = 0xFF;
-        m_data = is.match_integer();
+        m_data = is.match_uint32();
     }
 }
 
@@ -432,7 +432,7 @@ void Action0DRecord::parse_resources(TokenStream& is)
     is.match(TokenType::OpenParen);
     desc_feature.parse(m_feature, is);
     is.match(TokenType::Comma);
-    m_number = is.match_integer();
+    m_number = is.match_uint16();
     is.match(TokenType::CloseParen);
 
     m_source2 = 0xFE;

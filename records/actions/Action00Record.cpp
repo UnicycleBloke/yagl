@@ -196,7 +196,7 @@ void Action00Record::parse(TokenStream& is)
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
-    m_first_id = is.match_integer();
+    m_first_id = is.match_uint16();
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);

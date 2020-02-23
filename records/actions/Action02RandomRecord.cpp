@@ -194,7 +194,7 @@ void Action02RandomRecord::parse(TokenStream& is)
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
-    m_set_id = is.match_integer();
+    m_set_id = is.match_uint8();
     is.match(TokenType::Comma);
     random_desc.parse(m_type, is);
 
@@ -202,7 +202,7 @@ void Action02RandomRecord::parse(TokenStream& is)
     {
         consist_desc.parse(m_method, is);
         is.match(TokenType::OpenBracket);
-        m_count = is.match_integer();
+        m_count = is.match_uint8();
         is.match(TokenType::CloseBracket);
     }
 
@@ -226,9 +226,9 @@ void Action02RandomRecord::parse(TokenStream& is)
                     is.match(TokenType::OpenBrace);
                     while (is.peek().type != TokenType::CloseBrace)
                     {
-                        uint16_t set_id = is.match_integer();
+                        uint16_t set_id = is.match_uint16();
                         is.match(TokenType::Colon);
-                        uint16_t count  = is.match_integer();
+                        uint16_t count  = is.match_uint16();
                         is.match(TokenType::SemiColon);
                         m_set_ids[set_id] = count;
                     }

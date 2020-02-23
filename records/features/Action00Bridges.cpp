@@ -145,7 +145,7 @@ void Action00Bridges::BridgeTable::parse(TokenStream& is)
         // We expect precisely 32 sprite indices. Anything else will lead to an exception.
         // More than 32 will throw when matching a brace chokes on an integer.
         // Fewer than 32 will throw when matching an integer chokes on a brace.
-        sprite = is.match_integer();
+        sprite = is.match_uint32();
     }
     is.match(TokenType::CloseBrace);
 }
@@ -200,7 +200,7 @@ void Action00Bridges::BridgeLayout::parse(TokenStream& is)
     {
         is.match_ident(str_table);
         is.match(TokenType::OpenAngle);
-        uint8_t table_id = is.match_integer();
+        uint8_t table_id = is.match_uint8();
         is.match(TokenType::CloseAngle);
 
         BridgeTable table = {};

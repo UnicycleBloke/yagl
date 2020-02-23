@@ -99,14 +99,14 @@ void Action06Record::parse(TokenStream& is)
 
         is.match_ident(str_parameter);
         is.match(TokenType::OpenBracket);
-        mod.param_num = is.match_integer();
+        mod.param_num = is.match_uint8();
         is.match(TokenType::CloseBracket);
         is.match(TokenType::Comma);
 
-        mod.param_size = is.match_integer();
+        mod.param_size = is.match_uint8();
         is.match(TokenType::Comma);
 
-        mod.offset = is.match_integer();
+        mod.offset = is.match_uint16();
         is.match(TokenType::Comma);
 
         mod.add_bytes = is.match_bool();

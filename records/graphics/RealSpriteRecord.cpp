@@ -531,13 +531,13 @@ void RealSpriteRecord::parse(TokenStream& is)
     //         "sprites/zbase_extra-mask-normal-0.png", [372, 293];
 
     is.match(TokenType::OpenBracket);
-    m_xdim = is.match_integer();
+    m_xdim = is.match_uint16();
     is.match(TokenType::Comma);
-    m_ydim = is.match_integer();
+    m_ydim = is.match_uint16();
     is.match(TokenType::Comma);
-    m_xrel = is.match_integer();
+    m_xrel = is.match_uint16();
     is.match(TokenType::Comma);
-    m_yrel = is.match_integer();
+    m_yrel = is.match_uint16();
     is.match(TokenType::CloseBracket);
     is.match(TokenType::Comma);
 
@@ -553,9 +553,9 @@ void RealSpriteRecord::parse(TokenStream& is)
     is.match(TokenType::Comma);
 
     is.match(TokenType::OpenBracket);
-    m_xoff = is.match_integer();
+    m_xoff = is.match_uint16();
     is.match(TokenType::Comma);
-    m_yoff = is.match_integer();
+    m_yoff = is.match_uint16();
     is.match(TokenType::CloseBracket);
 
     // This section is used for sprites with masks.
@@ -567,9 +567,9 @@ void RealSpriteRecord::parse(TokenStream& is)
         is.match(TokenType::Comma);
 
         is.match(TokenType::OpenBracket);
-        m_mask_xoff = is.match_integer();
+        m_mask_xoff = is.match_uint16();
         is.match(TokenType::Comma);
-        m_mask_yoff = is.match_integer();
+        m_mask_yoff = is.match_uint16();
         is.match(TokenType::CloseBracket);
 
         // TODO verify that the mask bit is set.

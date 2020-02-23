@@ -169,7 +169,7 @@ void Action00GlobalSettings::SnowLine::parse(TokenStream& is)
     {
         for (uint8_t day = 0; day < 32; ++day)
         {
-            uint8_t value = is.match_integer(); 
+            uint8_t value = is.match_uint8(); 
             m_snow_heights[month*32 + day] = value;
         }
     }
@@ -224,7 +224,7 @@ void Action00GlobalSettings::GenderCase::parse(TokenStream& is)
         GenderCase::Item item;
 
         is.match(TokenType::OpenBrace);
-        item.id = is.match_integer(); 
+        item.id = is.match_uint8(); 
         is.match(TokenType::Colon);
         item.name = is.match(TokenType::String); 
         is.match(TokenType::CloseBrace);

@@ -70,7 +70,7 @@ void SpriteIndexRecord::parse(TokenStream& is)
     is.match_ident(str_sprite_id);
     is.match(TokenType::Colon);
 
-    m_sprite_id = is.match_integer();
+    m_sprite_id = is.match_uint32();
 
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)

@@ -71,7 +71,7 @@ inline void CargoList::parse(TokenStream& is)
     is.match(TokenType::OpenBracket);
     while (is.peek().type != TokenType::CloseBracket)
     {
-        uint8_t value = is.match_integer();
+        uint8_t value = is.match_uint8();
         m_cargo_ids.push_back(value);
     }
     is.match(TokenType::CloseBracket);

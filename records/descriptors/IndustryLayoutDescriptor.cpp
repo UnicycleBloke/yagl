@@ -135,18 +135,18 @@ void IndustryTile::parse(TokenStream& is)
     switch (type)
     {
         case Type::Clearance:
-            x_off = is.match_integer(); 
+            x_off = is.match_uint8(); 
             is.match(TokenType::Comma);
-            y_off = is.match_integer(); 
+            y_off = is.match_uint8(); 
             break;
 
         case Type::NewTile:   
         case Type::OldTile:          
-            x_off = is.match_integer(); 
+            x_off = is.match_uint8(); 
             is.match(TokenType::Comma);
-            y_off = is.match_integer(); 
+            y_off = is.match_uint8(); 
             is.match(TokenType::Comma);
-            tile = is.match_integer(); 
+            tile = is.match_uint16(); 
             break;
     }
 
@@ -235,9 +235,9 @@ void IndustryLayout::parse(TokenStream& is)
         {
             case 0x01: 
                 is_reference = true;
-                industry_num = is.match_integer();
+                industry_num = is.match_uint8();
                 is.match(TokenType::Comma);
-                layout_num = is.match_integer();
+                layout_num = is.match_uint8();
                 break;
             
             case 0x02: 

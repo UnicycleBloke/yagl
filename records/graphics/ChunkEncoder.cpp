@@ -129,7 +129,7 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
 
         offsets.push_back(offset);
     }
-    offsets.push_back(chunks.size());
+    offsets.push_back(static_cast<uint32_t>(chunks.size()));
 
     // This will contain the decompressed image.
     // Make sure it is all initialised to zeroes.

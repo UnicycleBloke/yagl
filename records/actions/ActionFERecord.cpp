@@ -55,7 +55,7 @@ void ActionFERecord::parse(TokenStream& is)
     is.match(TokenType::OpenParen);
     m_grf_id.parse(is);
     is.match(TokenType::Comma);
-    m_sound_index = is.match_integer();
+    m_sound_index = is.match_uint16();
     is.match(TokenType::CloseParen);
     is.match(TokenType::SemiColon);
 }

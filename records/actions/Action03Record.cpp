@@ -157,9 +157,9 @@ void Action03Record::parse_cargo_types(TokenStream& is)
     while (is.peek().type != TokenType::CloseBrace)
     {
         CargoType c;
-        c.cargo_type = is.match_integer();
+        c.cargo_type = is.match_uint8();
         is.match(TokenType::Colon);
-        c.act02_set_id = is.match_integer();
+        c.act02_set_id = is.match_uint16();
         is.match(TokenType::SemiColon);
 
         m_cargo_types.push_back(c);

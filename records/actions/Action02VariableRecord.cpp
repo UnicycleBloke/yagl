@@ -359,7 +359,7 @@ void Action02VariableRecord::parse(TokenStream& is)
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
-    m_set_id = is.match_integer();
+    m_set_id = is.match_uint8();
     is.match(TokenType::Comma);
     desc_var_type.parse(m_var_type, is);
     is.match(TokenType::CloseAngle);
@@ -452,11 +452,11 @@ void Action02VariableRecord::parse_expression(TokenStream& is)
         // variable[variable, parameter]
         is.match_ident(str_variable);
         is.match(TokenType::OpenBracket);
-        action.variable = is.match_integer();
+        action.variable = is.match_uint8();
         if (is.peek().type == TokenType::Comma)
         {
             is.match(TokenType::Comma);
-            action.parameter = is.match_integer();
+            action.parameter = is.match_uint8();
         }
         is.match(TokenType::CloseBracket);
 
@@ -464,34 +464,34 @@ void Action02VariableRecord::parse_expression(TokenStream& is)
         if (is.peek().type == TokenType::ShiftRight)
         {
             is.match(TokenType::ShiftRight);
-            action.shift_num = is.match_integer();
+            action.shift_num = is.match_uint8();
         }
 
         // & and_mask
         if (is.peek().type == TokenType::Ampersand)
         {
             is.match(TokenType::Ampersand);
-            action.and_mask = is.match_integer();
+            action.and_mask = is.match_uint32();
         }
 
         // + add_value
         if (is.peek().type == TokenType::OpPlus)
         {
             is.match(TokenType::OpPlus);
-            action.add_value = is.match_integer();
+            action.add_value = is.match_uint32();
         }
 
         // / div_mod_value or % div_mod_value
         if (is.peek().type == TokenType::OpDivide)
         {
             is.match(TokenType::OpDivide);
-            action.div_mod_value = is.match_integer();
+            action.div_mod_value = is.match_uint32();
             action.action |= 0x40;
         }
         if (is.peek().type == TokenType::Percent)
         {
             is.match(TokenType::Percent);
-            action.div_mod_value = is.match_integer();
+            action.div_mod_value = is.match_uint32();
             action.action |= 0x80;
         }
         is.match(TokenType::SemiColon);
@@ -547,11 +547,11 @@ void Action02VariableRecord::parse_ranges(TokenStream& is)
     while (is.peek().type != TokenType::CloseBrace)
     {
         VarRange range = {};
-        range.low_range = is.match_integer();
+        range.low_range = is.match_uint32();
         if (is.peek().type == TokenType::DoubleDot)
         {
             is.match(TokenType::DoubleDot);
-            range.high_range = is.match_integer();
+            range.high_range = is.match_uint32();
         }
         else
         {
@@ -559,7 +559,7 @@ void Action02VariableRecord::parse_ranges(TokenStream& is)
         }
 
         is.match(TokenType::Colon);
-        range.set_id = is.match_integer();
+        range.set_id = is.match_uint16();
         is.match(TokenType::SemiColon);
 
         m_ranges.push_back(range);

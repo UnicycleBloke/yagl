@@ -153,7 +153,7 @@ void Action12Record::parse(TokenStream& is)
         is.match(TokenType::OpenAngle);
         font_desc.parse(range.font, is);
         is.match(TokenType::Comma);
-        range.base_char = is.match_integer();
+        range.base_char = is.match_uint16();
         is.match(TokenType::CloseAngle);
 
         is.match(TokenType::OpenBrace);

@@ -34,7 +34,7 @@ struct IntegerDescriptorT : PropertyDescriptor
 
     void parse(T& value, TokenStream& is) const
     {
-        value = is.match_integer();
+        value = is.match_integer_t<T>();
     }
 
     std::string to_string(T value) const;
@@ -110,7 +110,7 @@ void IntegerListDescriptorT<T>::parse(std::vector<T>& values, TokenStream& is) c
     is.match(TokenType::OpenBracket);
     while (is.peek().type != TokenType::CloseBracket)
     {
-        T value = is.match_integer();
+        T value = is.match_integer_t<T>();
         values.push_back(value);
     }
     is.match(TokenType::CloseBracket);

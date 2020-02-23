@@ -137,7 +137,7 @@ void Action04Record::parse(TokenStream& is)
     is.match(TokenType::Comma);
     m_language = language_id(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
-    m_first_string_id = is.match_integer();
+    m_first_string_id = is.match_uint16();
 
     m_uint16_ids = false;
     if (is.peek().type == TokenType::OpMultiply)

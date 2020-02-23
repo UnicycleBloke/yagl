@@ -63,7 +63,7 @@ void Action10Record::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
-    m_label = is.match_integer();
+    m_label = is.match_uint8();
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);

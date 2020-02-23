@@ -208,7 +208,7 @@ void Action14Record::parse_chunks(TokenStream& is, std::vector<Chunk>& chunks)
                 is.match(TokenType::OpenBracket);
                 while (is.peek().type == TokenType::Number)
                 {
-                    chunk.data.push_back(is.match_integer());
+                    chunk.data.push_back(is.match_uint8());
                 }
                 is.match(TokenType::CloseBracket);
                 is.match(TokenType::SemiColon);

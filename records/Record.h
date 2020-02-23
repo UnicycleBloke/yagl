@@ -17,7 +17,7 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once 
-#include "Lexer.h"
+#include "TokenStream.h"
 #include <cstdint>
 #include <iostream>
 #include <vector>

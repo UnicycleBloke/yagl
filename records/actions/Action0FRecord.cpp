@@ -223,9 +223,9 @@ void Action0FRecord::parse_part(TokenStream& is)
 {
     Part part;
     is.match(TokenType::OpenAngle); 
-    part.first_bit = is.match_integer();
+    part.first_bit = is.match_uint8();
     is.match(TokenType::Comma);
-    part.num_bits = is.match_integer();
+    part.num_bits = is.match_uint8();
     is.match(TokenType::CloseAngle); 
 
     is.match(TokenType::Colon);
@@ -245,7 +245,7 @@ void Action0FRecord::parse_part(TokenStream& is)
         }
         else if (token.value == str_town_names)
         {
-            text.action_0F_id = is.match_integer();
+            text.action_0F_id = is.match_uint8();
             text.is_string    = false;
         }
         else
@@ -254,7 +254,7 @@ void Action0FRecord::parse_part(TokenStream& is)
         }
 
         is.match(TokenType::Comma);
-        text.probability = is.match_integer();
+        text.probability = is.match_uint8();
         is.match(TokenType::CloseParen);
         is.match(TokenType::SemiColon);
 
@@ -271,7 +271,7 @@ void Action0FRecord::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
-    m_id = is.match_integer();
+    m_id = is.match_uint8();
     is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);

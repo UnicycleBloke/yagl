@@ -83,7 +83,7 @@ void GRFLabel::parse(TokenStream& is)
             break;
 
         case TokenType::Number:
-            m_label = is.match_integer();
+            m_label = is.match_uint32();
             break;
 
         default:
