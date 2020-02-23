@@ -201,7 +201,7 @@ void Action02IndustryRecord::parse(TokenStream& is)
             case Format::Version0: parse_version0(is); break;
             case Format::Version1: parse_version1(is); break;
             case Format::Version2: parse_version2(is); break;
-            default:               throw PARSER_ERROR("Unexpected token", is.peek());
+            default:               throw PARSER_ERROR("Unexpected industry format", is.peek());
         }
     }
 
@@ -286,7 +286,7 @@ void Action02IndustryRecord::parse_version0(TokenStream& is)
     }
     else
     {
-        throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
     }
 }   
 
@@ -319,7 +319,7 @@ void Action02IndustryRecord::parse_version1(TokenStream& is)
     }
     else
     {
-        throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
     }
 }   
 
@@ -415,7 +415,7 @@ void Action02IndustryRecord::parse_version2(TokenStream& is)
     }
     else
     {
-        throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+        throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
     }
 }   
 

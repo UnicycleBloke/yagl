@@ -250,7 +250,7 @@ void Action0FRecord::parse_part(TokenStream& is)
         }
         else
         {
-            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         }
 
         is.match(TokenType::Comma);
@@ -289,7 +289,7 @@ void Action0FRecord::parse(TokenStream& is)
         }
         else
         {
-            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         }
     }
 

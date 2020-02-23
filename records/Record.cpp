@@ -123,7 +123,7 @@ void ContainerRecord::parse_sprite(TokenStream& is)
                 case 0x01: record = std::make_shared<RecolourRecord>(); break;
                 case 0x02: record = std::make_shared<ActionFFRecord>(); break;
                 case 0x03: record = std::make_shared<ActionFERecord>(); break;
-                default:   throw PARSER_ERROR("Unexpected record type", token);
+                default:   throw PARSER_ERROR("Unexpected container sub-record type", token);
             }
         } 
         
@@ -198,6 +198,23 @@ RecordType RecordFromName(const std::string& name)
     }
 
     throw RUNTIME_ERROR("RecordFromName");
+}
+
+
+RecordType parse_record_type(TokenStream& is)
+{
+    const TokenValue& token = is.peek();
+    const std::string name  = is.match(TokenType::Ident);
+
+    for (const auto& it: g_record_names)
+    {
+        if (it.second == name)
+        {
+            return it.first;
+        }
+    }
+
+    throw PARSER_ERROR("Unexpected identifier for record: '" + token.value + "'", token);
 }
 
 

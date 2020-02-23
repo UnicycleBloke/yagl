@@ -227,7 +227,7 @@ void Action02SpriteLayoutRecord::SpriteRegisters::parse(TokenStream& is, bool is
         }
         else
         {
-            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         }
     }
 
@@ -451,7 +451,7 @@ void Action02SpriteLayoutRecord::parse(TokenStream& is)
         }
         else
         {
-            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         }
     }
 
@@ -487,12 +487,12 @@ void Action02SpriteLayoutRecord::parse_ground_sprite(TokenStream& is)
                     break;
 
                 default:   
-                    throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+                    throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
             }
         }
         else
         {
-            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         }
     }
 
@@ -541,12 +541,13 @@ void Action02SpriteLayoutRecord::parse_building_sprite(TokenStream& is)
                     m_format = (sprite.regs.flags != 0x00) ? Format::Advanced : m_format;
                     break;
 
-                default: throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+                default: 
+                    throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
             }
         }
         else
         {
-            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         }
     }
 
@@ -586,12 +587,13 @@ void Action02SpriteLayoutRecord::parse_child_sprite(TokenStream& is)
                     m_format = (sprite.regs.flags != 0x00) ? Format::Advanced : m_format;
                     break;
 
-                default: throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+                default: 
+                    throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
             }
         }
         else
         {
-            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         }
     }
 

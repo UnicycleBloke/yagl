@@ -385,7 +385,7 @@ void Action02VariableRecord::parse(TokenStream& is)
         }
         else
         {
-            throw PARSER_ERROR("Unexpected identifier: " + token.value, token);
+            throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         }
     }
 

@@ -187,7 +187,8 @@ void Action14Record::parse_chunks(TokenStream& is, std::vector<Chunk>& chunks)
         chunk.label.parse(is);
         is.match(TokenType::Colon);
  
-        switch(is.peek().type)
+        const TokenValue& token = is.peek();   
+        switch(token.type)
         {
             case TokenType::OpenBrace:
                 chunk.type = 'C';
@@ -215,7 +216,7 @@ void Action14Record::parse_chunks(TokenStream& is, std::vector<Chunk>& chunks)
                 break;
 
             default:
-                throw PARSER_ERROR("Invalid chunk type:", is.peek());
+                throw PARSER_ERROR("Invalid chunk type", token);
         }
 
         chunks.push_back(chunk);

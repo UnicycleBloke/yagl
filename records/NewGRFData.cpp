@@ -269,7 +269,7 @@ GRFFormat NewGRFData::read_format(std::istream& is)
             }           
         }
     }
-    catch(...)
+    catch ([[maybe_unused]] const std::exception& e)
     {
     }
 
@@ -759,16 +759,34 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
     // We create an object corresponding to the keyword, and then have that object
     // parse its own internals. The GRF file is nothing more than a long list of 
     // such records. Reading the text should result in the same data structure as 
-    // reading the equivalent binary file. 
+    // reading the equivalent binary file.
+    uint32_t exceptions = 0;
     while (is.peek().type != TokenType::Terminator)
     {
-        TokenValue token = is.peek();
-        RecordType type  = RecordFromName(token.value);
-        std::shared_ptr<Record> record = make_record(type);
-        m_records.push_back(record);
-        record->parse(is);
-        update_version_info(record);
-    }    
+        try
+        {
+            //TokenValue token = is.peek();
+            //RecordType type  = RecordFromName(token.value);
+            RecordType type  = parse_record_type(is);
+            is.unmatch();
+
+            std::shared_ptr<Record> record = make_record(type);
+            m_records.push_back(record);
+            record->parse(is);
+            update_version_info(record);
+        }
+        catch (const std::exception& e)
+        {
+            std::cout << e.what() << '\n';
+            is.next_record();
+            ++exceptions;
+        }
+    }
+
+    if (exceptions > 0)
+    {
+        throw RUNTIME_ERROR("Exceptions occurred during parsing - terminating");
+    }
 }
 
 

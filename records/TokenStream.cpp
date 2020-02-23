@@ -17,6 +17,7 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "TokenStream.h"
+#include <sstream>
 
 
 const TokenValue& TokenStream::peek(uint16_t lookahead) 
@@ -26,7 +27,6 @@ const TokenValue& TokenStream::peek(uint16_t lookahead)
     if ((m_index + lookahead) >= m_tokens.size())
         return terminator;
 
-    //const TokenValue value = m_tokens[m_index + lookahead];    
     return m_tokens[m_index + lookahead]; 
 }
 
@@ -36,10 +36,36 @@ std::string TokenStream::match(TokenType type)
     const TokenValue& token = peek();
     if (type != token.type)
     {
-        throw PARSER_ERROR("Unexpected token: " + token.value, token);
+        throw PARSER_ERROR("Unexpected match token: '" + token.value + "'", token);
     }
-    ++m_index;    
+    ++m_index; 
+    if (token.type == TokenType::OpenBrace)
+    {
+        //std::cout << m_blocks << " -> " << (m_blocks + 1) << "\n";
+        ++m_blocks;
+    }
+    if (token.type == TokenType::CloseBrace)
+    {
+        //std::cout << m_blocks << " -> " << (m_blocks - 1) << "\n";
+        --m_blocks;
+    }
+
     return token.value;
+}
+
+
+void TokenStream::next_record()
+{
+    while (m_blocks > 0)
+    {
+        const TokenValue& token = peek();
+        if (token.type == TokenType::Terminator)
+        {
+            throw PARSER_ERROR("Unexpected end of token stream", token);
+        }
+
+        match(token.type);
+    }
 }
 
 
@@ -48,7 +74,7 @@ bool TokenStream::match_ident(const std::string& value)
     const TokenValue& token = peek();
     if ((TokenType::Ident != token.type) || (token.value != value))
     {
-        throw PARSER_ERROR("Unexpected token: " + token.value, token);
+        throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
     }
     match(TokenType::Ident);
     return true;
@@ -81,9 +107,11 @@ uint32_t TokenStream::match_uint32()
 {
     TokenValue token;
     uint64_t result = match_uint64(token);
-    if (result > 0xFFFF'FFFF)
+    // Check for negative value by inverting all the bits. High bits are all 0 or all 1 for 
+    // numbers which are in range.
+    if ((result > 0xFFFF'FFFF) && (~result > 0xFFFF'FFFF))
     {
-        throw PARSER_ERROR("UNIT32 value out of range", token);
+        throw PARSER_ERROR("UNIT32 value out of range: '" + token.value + "'", token);
     }
     return static_cast<uint32_t>(result);
 }
@@ -93,9 +121,9 @@ uint16_t TokenStream::match_uint16()
 {
     TokenValue token;
     uint64_t result = match_uint64(token);
-    if (result > 0xFFFF)
+    if ((result > 0xFFFF) && (~result > 0xFFFF))
     {
-        throw PARSER_ERROR("UNIT16 value out of range", token);
+        throw PARSER_ERROR("UNIT16 value out of range: '" + token.value + "'", token);
     }
     return static_cast<uint16_t>(result);
 }
@@ -105,9 +133,9 @@ uint8_t TokenStream::match_uint8()
 {
     TokenValue token;
     uint64_t result = match_uint64(token);
-    if (result > 0xFF)
+    if ((result > 0xFF) && (~result > 0xFF))
     {
-        throw PARSER_ERROR("UNIT8 value out of range", token);
+        throw PARSER_ERROR("UNIT8 value out of range: '" + token.value + "'", token);
     }
     return static_cast<uint8_t>(result);
 }

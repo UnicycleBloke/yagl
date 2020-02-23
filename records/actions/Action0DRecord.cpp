@@ -351,7 +351,8 @@ void Action0DRecord::parse_param(TokenStream& is)
             case TokenType::Pipe:       m_operation = Op::BitwiseOR; break;
             case TokenType::OpDivide:   m_operation = Op::DivideUnsigned; break;
             case TokenType::Percent:    m_operation = Op::ModuloUnsigned; break;
-            default: throw PARSER_ERROR("Unexpected token: " + token.value, token);
+            default: 
+                throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         } 
 
         is.match(token.type);  
@@ -473,7 +474,7 @@ void Action0DRecord::parse(TokenStream& is)
         }
         else
         {
-            throw PARSER_ERROR("Unexpected token: " + token.value, token);
+            throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         }
 
         is.match(TokenType::SemiColon);

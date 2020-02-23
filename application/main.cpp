@@ -56,7 +56,7 @@ static void decode()
         std::ofstream os(yagl_file, std::ios::binary);
         grf_data.print(os, yagl_dir.string(), image_base.string());
     }
-    catch (std::exception& e)
+    catch (const std::exception& e)
     {
         std::cout << e.what() << '\n';
     }
@@ -111,7 +111,7 @@ static void encode()
         std::ofstream os(options.grf_file(), std::ios::binary);
         grf_data.write(os);
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         std::cerr << e.what() << '\n';
     }
@@ -131,7 +131,7 @@ static void hexdump()
         grf_data.read(is);
         grf_data.hexdump();
     }
-    catch (std::exception& e)
+    catch (const std::exception& e)
     {
         std::cout << e.what() << '\n';
     }

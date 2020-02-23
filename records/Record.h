@@ -67,6 +67,7 @@ enum class RecordType
 };
 std::string RecordName(RecordType type);
 RecordType RecordFromName(const std::string& name);
+RecordType parse_record_type(TokenStream& is);
 
 
 enum class FeatureType : uint8_t

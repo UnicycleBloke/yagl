@@ -65,12 +65,26 @@ public:
     uint8_t  match_uint8();
     bool     match_bool();
 
+    // Added to allow us to move to the beginning of the next record when an exception occurs
+    // during parsing.
+    void next_record();
+    
+    // Backtrack one step. This is a bodge really, and could easily be removed. For now the 
+    // names of records are parsed to create the right type of object, but backtracked and 
+    // parsed again by that object. This gives a nicer exception...
+    void unmatch() { if (m_index > 0) --m_index; }
+
 private:
     uint64_t match_uint64(TokenValue& token);
 
 private:    
-    uint32_t                      m_index = 0;
+    // List of all tokens found in the YAGL by the lexer, in order.
     const std::vector<TokenValue> m_tokens;
+    // Current position in the stream while parsing. 
+    uint32_t m_index = 0;
+    // Current block depth. Blocks are delineated by { and }. This can used 
+    // after an exception to start parsing again with the next record.
+    uint32_t m_blocks = 0; 
 };
 
 

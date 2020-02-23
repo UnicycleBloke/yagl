@@ -50,13 +50,19 @@ static uint8_t hex_to_dec(uint8_t h)
 
 void GRFLabel::parse(TokenStream& is)
 {
+    const TokenValue& token = is.peek();
+
     uint8_t b = 0;
     std::string value;
-    switch (is.peek().type)
+    switch (token.type)
     {
         case TokenType::Ident:
-            value   = is.match(TokenType::Ident);
-            if (value.size() != 4) throw PARSER_ERROR("Invalid GRF label", is.peek());
+            value = is.match(TokenType::Ident);
+            if (value.size() != 4)
+            {
+                throw PARSER_ERROR("Invalid GRF label: '" + token.value + "'", token);
+            }
+            
             m_label = 0;
             for (uint8_t i = 0; i < 4; ++i)
             {
@@ -65,9 +71,8 @@ void GRFLabel::parse(TokenStream& is)
             break;
 
         case TokenType::String:
-            value   = is.match(TokenType::String);
-            // TODO we need to handle the escapes \xHH. "\xFB\xFB\x06\x01"
-            //if (value.size() != 4) throw PARSER_ERROR("Invalid GRF label", is.peek());
+            value = is.match(TokenType::String);
+            // TODO What about strings which are too short or too long?
             m_label = 0;
             for (uint8_t i = 0; i < value.size(); ++i)
             {
@@ -87,7 +92,7 @@ void GRFLabel::parse(TokenStream& is)
             break;
 
         default:
-            throw PARSER_ERROR("Expected GRF label", is.peek());
+            throw PARSER_ERROR("Expected GRF label, got '" + token.value + "'", token);
     }
 }
 

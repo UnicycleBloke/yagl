@@ -118,7 +118,7 @@ void dump_hex(std::istream& is, uint16_t length)
         }
         std::cout << '\n';        
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         std::cout << '\n';
         std::cout << e.what() << '\n';
