@@ -288,11 +288,6 @@ void NewGRFData::append_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprit
         m_sprites[sprite_id] = SpriteZoomVector{};
     }
     m_sprites[sprite_id].push_back(sprite);
-
-    if (CommandLineOptions::options().debug())
-    {
-        sprite->print(std::cout, m_sprites, 0);
-    }
 }
 
 
@@ -760,7 +755,8 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
     // parse its own internals. The GRF file is nothing more than a long list of 
     // such records. Reading the text should result in the same data structure as 
     // reading the equivalent binary file.
-    uint32_t exceptions = 0;
+    uint32_t exceptions    = 0;
+    uint32_t record_number = 0;
     while (is.peek().type != TokenType::Terminator)
     {
         try
@@ -774,10 +770,13 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
             m_records.push_back(record);
             record->parse(is);
             update_version_info(record);
+
+            ++record_number;
         }
         catch (const std::exception& e)
         {
-            std::cout << e.what() << '\n';
+            std::cout << "ERROR in record #" << record_number << ": ";
+            std::cout << e.what() << "\n";
             is.next_record();
             ++exceptions;
         }
@@ -798,11 +797,6 @@ void NewGRFData::update_version_info(std::shared_ptr<Record> record)
     {
         auto action08  = std::dynamic_pointer_cast<Action08Record>(record);
         m_info.version = action08->grf_version();
-
-        //if (static_cast<uint8_t>(m_info.version) < static_cast<uint8_t>(GRFVersion::GRF8))
-        //{
-        //    m_info.format = GRFFormat::Container1;
-        //}
     }
 }
 

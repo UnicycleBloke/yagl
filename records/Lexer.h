@@ -83,7 +83,8 @@ struct TokenValue
 class Lexer
 {
 public:
-    std::vector<TokenValue> lex(std::istream& is); 
+    Lexer(const std::string& yagl_file); 
+    std::vector<TokenValue> lex(); 
 
 private:
     // These return true if the byte is consumed. In some cases, the state 
@@ -129,6 +130,9 @@ private:
         // '\n' marks the end of C++-style 
         Slash, Star, CPP, C
     };
+
+    // Cached name of the script file that we are lexing.
+    std::string m_yagl_file;
 
     // The lexer is a simple state machine.
     LexerState m_state = LexerState::None;  

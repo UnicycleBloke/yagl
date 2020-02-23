@@ -19,6 +19,7 @@
 #include "Exceptions.h"
 #include "Lexer.h"
 #include "StreamHelpers.h"
+#include "CommandLineOptions.h"
 #include <sstream>
 
 
@@ -31,10 +32,15 @@ LexerError::LexerError(const std::string& what_arg, uint32_t line, uint32_t colu
 LexerError::LexerError(const char* what_arg, uint32_t line, uint32_t column, const char* file, uint32_t line2)
 : std::runtime_error{what_arg}
 {
+    CommandLineOptions& options = CommandLineOptions::options(); 
+
     std::ostringstream os;
     os << "YAGL lexer error: ";
-    os << what_arg << " at line " << line << " column " << column << " in script file";
-    os << " [at line " << line << " in source file " << file << "]";
+    os << what_arg << " at line " << line << " column " << column << " in " << options.yagl_file();
+    if (options.debug())
+    {
+        os << "\n  [at line " << line << " in source file " << file << "]";
+    }
     m_what = os.str();
 }
 
@@ -48,10 +54,15 @@ ParserError::ParserError(const std::string& what_arg, const TokenValue& token, c
 ParserError::ParserError(const char* what_arg, const TokenValue& token, const char* file, uint32_t line)
 : std::runtime_error{what_arg}
 {
+    CommandLineOptions& options = CommandLineOptions::options(); 
+
     std::ostringstream os;
     os << "YAGL parser error: ";
-    os << what_arg << " at line " << token.line << " column " << token.column << " in script file";
-    os << " [at line " << line << " in source file " << file << "]";
+    os << what_arg << " at line " << token.line << " column " << token.column << " in " << options.yagl_file();
+    if (options.debug())
+    {
+        os << "\n  [at line " << line << " in source file " << file << "]";
+    }
     m_what = os.str();
 }
 
@@ -65,10 +76,15 @@ RuntimeError::RuntimeError(const std::string& what_arg, const char* file, uint32
 RuntimeError::RuntimeError(const char* what_arg, const char* file, uint32_t line)
 : std::runtime_error(what_arg)
 {
+    CommandLineOptions& options = CommandLineOptions::options(); 
+
     std::ostringstream os;
     os << "Runtime error: ";
     os << what_arg;
-    os << " [at line " << line << " in source file " << file << "]";
+    if (options.debug())
+    {
+        os << "\n  [at line " << line << " in source file " << file << "]";
+    }
     m_what = os.str();
 }
 
@@ -82,10 +98,15 @@ PropertyError::PropertyError(const std::string& what_arg, uint8_t property, cons
 PropertyError::PropertyError(const char* what_arg, uint8_t property, const char* file, uint32_t line)
 : std::runtime_error(what_arg)
 {
+    CommandLineOptions& options = CommandLineOptions::options(); 
+
     std::ostringstream os;
     os << "Property error: ";
     os << what_arg << ": property=" << to_hex(property);
-    os << " [at line " << line << " in source file " << file << "]";
+    if (options.debug())
+    {
+        os << "\n  [at line " << line << " in source file " << file << "]";
+    }
     m_what = os.str();
 }
 

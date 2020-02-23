@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Lexer.h"
+#include <fstream>
 
 
 // Can we make this more stream based? Get the lexer to some work, and then a bit 
@@ -26,9 +27,11 @@
 class TokenStream
 {
 public:
-    TokenStream(const std::vector<TokenValue> tokens)
-    : m_tokens(tokens)
+    TokenStream(const std::string& yagl_file) //const std::vector<TokenValue> tokens)
+    : m_yagl_file{yagl_file} 
     {
+        Lexer lexer{yagl_file};
+        m_tokens = lexer.lex();
     }
 
     const TokenValue& peek(uint16_t lookahead = 0); 
@@ -74,14 +77,21 @@ public:
     // parsed again by that object. This gives a nicer exception...
     void unmatch() { if (m_index > 0) --m_index; }
 
+    const std::string& yagl_file() const { return m_yagl_file; }
+
 private:
     uint64_t match_uint64(TokenValue& token);
 
 private:    
+    // Cached name of the script file that we are parsing. Used for error reporting.
+    std::string m_yagl_file;
+
     // List of all tokens found in the YAGL by the lexer, in order.
-    const std::vector<TokenValue> m_tokens;
+    std::vector<TokenValue> m_tokens;
+    
     // Current position in the stream while parsing. 
     uint32_t m_index = 0;
+    
     // Current block depth. Blocks are delineated by { and }. This can used 
     // after an exception to start parsing again with the next record.
     uint32_t m_blocks = 0; 

@@ -22,8 +22,16 @@
 #include <stdexcept>
 
 
-std::vector<TokenValue> Lexer::lex(std::istream& is)
+Lexer::Lexer(const std::string& yagl_file)
+: m_yagl_file{yagl_file}
 {
+}
+
+
+std::vector<TokenValue> Lexer::lex()
+{
+    std::ifstream is(m_yagl_file, std::ios::binary);
+
     m_tokens.clear();
 
     while (!is.eof())
@@ -452,8 +460,5 @@ void Lexer::emit(TokenType type, NumberType num_type, std::string value)
 
     m_tokens.push_back({type, num_type, value, m_line, m_column});
     m_state = LexerState::None;
-
-    // Helps for debugging the lexer...
-    //std::cout << m_line << ": " << value << "\n";
 }
 
