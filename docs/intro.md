@@ -1,62 +1,16 @@
+[Back to table of contents](index.md)
+
 # Introduction
 
 **yagl** is a command line tool, and a script language (called YAGL for maximal ambiguity), for working with OpenTTD and TTDPatch GRF files, as described in the [NewGRF specs](https://newgrf-specs.tt-wiki.net/wiki/Main_Page). It is basically a codec which performs either of the following operations:
 
 1. Read a GRF file into memory, and then write out a YAGL script containing a textual representation of its contents, together with one or more sprite sheets (PNG format) containing the images present in the GRF. Sound effects are also written to files.
 
-```plantuml
-@startuml 
-
-file foobar.grf as foobar_grf
-node yagl [
-    <b>yagl -decode foobar.grf foodir
-]
-folder sprites [
-    foodir 
-]
-file foobar.yagl as foobar_yagl
-file foobar_8bpp_normal_0.png as foobar_png
-file etc... as foobar_etc
-
-foobar_grf --> yagl
-yagl --> sprites
-sprites --> foobar_yagl
-sprites --> foobar_png
-sprites ..> foobar_etc
-
-note right of sprites: Folder name defaults to '<b>sprites</b>'.
-
-@enduml
-```
+![Decode](images/decode.png)
 
 2. Read a YAGL file and any associated sprite sheets (and sound effects) into memory, and then write out a GRF file containing the binary representation of the YAGL and the encoded sprites which conforms to the NewGRF specs.
 
-```plantuml
-@startuml 
-
-file foobar.grf as foobar_grf
-file foobar.grf.bak as foobar_bak
-
-node yagl [
-    <b>yagl -encode foobar.grf foodir
-]
-folder sprites [
-    foodir 
-]
-file foobar.yagl as foobar_yagl
-file foobar_8bpp_normal_0.png as foobar_png
-file etc... as foobar_etc
-
-foobar_etc ..> sprites 
-foobar_png --> sprites
-foobar_yagl --> sprites
-sprites --> yagl
-yagl --> foobar_grf
-yagl --> foobar_bak
-
-note right of foobar_bak: Rename of '<b>foobar.grf</b>' if present.
-@enduml
-```
+![Encode](images/encode.png)
 
 If you perform Step 1, and then perform Step 2 without first making any changes to the YAGL or the sprite sheets, then the re-generated GRF should in principle be identical to the original. There are a few valid reasons why there might be minor discrepancies: 
 - The elimination of duplicate properties in Action00 records
@@ -137,19 +91,16 @@ TODO I probably ought to check that values are not bigger than expected.
 
 ### Future improvements
 
-The intention when creating YAGL was to directly match the contents of the GRF (or equivalent NFO) without any intervening complexity, but to make the information more human-readable. It should be possible to directly relate the contents of a YAGL record to the corresponding description in the the [NewGRF specs](https://newgrf-specs.tt-wiki.net/wiki/Main_Page). I believe this is an improvement on NFO, but there is a lot more that could still be done. One example is: 
+The intention when creating YAGL was to directly match the contents of the GRF (or equivalent NFO) without any intervening complexity, but to make the information more human-readable. It should be possible to directly relate the contents of a YAGL record to the corresponding description in the the [NewGRF specs](https://newgrf-specs.tt-wiki.net/wiki/Main_Page). I believe this is an improvement on NFO, but there is a lot more that could still be done. For example: 
 
 - Why not print '1920' for the year if that is what we mean? This is possible, but the interpretation of each property is different. And there are tons of different properties. I think this could be achieved piecemeal though: property by property. For now, it makes sense to write the hex value that should go in the GRF. 
+- Some properties are bitfields, such as climate availability. In such cases, it would be better if the values was represented by named bits ORed together, such as `Tropical | Temperate`. 
+- Some properties are enumerations. In such cases, it would be better is the values was represented by named enum values. This is like the bitfield example, but only a single value is allowed.
 
+More and better error reporting is also desired.
 
 ## About the documentation
 
 The main purpose of the documentation is to make a link between the YAGL text and the descriptions in the [NewGRF specs](https://newgrf-specs.tt-wiki.net/wiki/Main_Page). For example, there is an enumeration of names for the various feature types: Trains=0x00, Vehicles=0x01, Ships=0x02, Aircraft=0x03, Stations=0x04, and so on. There are many such enumerations in YAGL, and users can't really be expected to guess the permitted values. And there is a whole bunch of other things to explain.
 
-## Data type in YAGL
-
-- Identifiers
-- Strings
-- Numbers
-- Symbols
 
