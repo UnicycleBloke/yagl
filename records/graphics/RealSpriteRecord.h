@@ -121,6 +121,9 @@ private:
     
     std::vector<uint8_t> encode_lz77(const std::vector<uint8_t>& input) const;
 
+    // Check whether a pixel is pure white - we warn about this, and perhaps fix.
+    void check_pixel(Pixel& pixel);
+
 private:
     // This information is read before working out what type of record we have,
     // as is passed to the constructor.
@@ -146,4 +149,5 @@ private:
     std::string m_mask_filename;
 
     std::vector<uint8_t> m_pixels = {};
+    bool m_has_pure_white         = false;
 };

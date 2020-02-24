@@ -522,6 +522,45 @@ void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uin
 }
 
  
+void RealSpriteRecord::check_pixel(Pixel& pixel) 
+{
+    bool has_white = false;
+
+    if (m_colour & HAS_RGB)
+    {
+        // 0xFF is for colour intensities in this block.
+        has_white = (pixel.red == 0xFF) && (pixel.green == 0xFF) && (pixel.blue  == 0xFF);
+
+        // Not sure about this bit.
+        if (m_colour & HAS_ALPHA)
+        {
+            has_white &= (pixel.alpha == 0xFF);
+        }
+
+        // Replace the pure white colour with an off-white. 
+        // if (has_white)
+        // {
+        //     pixel.red   = 0xFC;
+        //     pixel.green = 0xFC;
+        //     pixel.blue  = 0xFC;
+        // }    
+    }
+    else if (m_colour & HAS_PALETTE)
+    {
+        // 0xFF is for a palette index in this block.
+        has_white = (pixel.index == 0xFF);
+
+        // Replace the pure white colour with an off-white (index). 
+        // if (has_white)
+        // {
+        //     pixel.index = 0x0F;
+        // }    
+    }
+
+    m_has_pure_white |= has_white;
+}
+
+
 void RealSpriteRecord::parse(TokenStream& is) 
 {
     // [8, 21, -3, -11], normal, 8bpp, 
@@ -598,13 +637,26 @@ void RealSpriteRecord::parse(TokenStream& is)
 
     auto sheet = pool.get_sprite_sheet(image_base.string(), colour);
 
+    // This will be set by the calls to set_pixel(), is necessary. 
+    m_has_pure_white = false;
     for (uint16_t x = 0; x < m_xdim; ++x)
     {
         for (uint16_t y = 0; y < m_ydim; ++y)
         {
             // TODO get the mask value for RGBAP pixels.   
             auto pixel = sheet->pixel(x + m_xoff, y + m_yoff);
+
+            // If one pixel in the sprite contain a pure white pixel, we should print a warning.
+            // TODO should we modify the pixel if it is pure white?
+            check_pixel(pixel);
+
             set_pixel(x, y, pixel);
         }
+    }
+
+    if (m_has_pure_white)
+    {
+        std::cout << "WARNING: Sprite #" << to_hex(m_sprite_id, false); 
+        std::cout << " contains pure white pixels.\n"; 
     }
 }

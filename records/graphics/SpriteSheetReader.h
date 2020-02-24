@@ -32,12 +32,7 @@ public:
 public:
     SpriteSheet() = default;
     virtual ~SpriteSheet() {}
-
-    //virtual void read(const std::string& file_path) = 0;    
-    //virtual void write(const std::string& file_path) = 0;
-
     virtual Pixel pixel(uint32_t x, uint32_t y) = 0;
-    //virtual void set_pixel(uint32_t x, uint32_t y, const Pixel& pixel) = 0;
 };
 
 
