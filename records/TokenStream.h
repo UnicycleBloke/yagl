@@ -56,7 +56,7 @@ public:
         }
         else
         {
-            const Token& token = peek();
+            const TokenValue& token = peek();
             throw PARSER_ERROR("Unsupported type: " + token.value, token);
         }
 

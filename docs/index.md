@@ -28,3 +28,7 @@
 ## Graphics
 - [RealSprite](graphics/real_sprite.md)
 - [RecolourSprite](graphics/recolour_sprite.md)
+
+## Sound effects
+- [ActionFE](actions/actionFE.md)
+- [ActionFF](actions/actionFF.md)

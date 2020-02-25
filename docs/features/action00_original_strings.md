@@ -1,1 +1,0 @@
-# Action00 (properties) - Original Strings
