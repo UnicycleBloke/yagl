@@ -32,7 +32,7 @@ public:
 public:
     SpriteSheet() = default;
     virtual ~SpriteSheet() {}
-    virtual Pixel pixel(uint32_t x, uint32_t y) = 0;
+    virtual Pixel pixel(uint32_t x, uint32_t y) const = 0;
 };
 
 

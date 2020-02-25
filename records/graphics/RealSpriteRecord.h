@@ -21,6 +21,9 @@
 #include <vector>
 
 
+class SpriteSheet;
+
+
 class RealSpriteRecord : public Record
 {
 public:
@@ -122,7 +125,11 @@ private:
     std::vector<uint8_t> encode_lz77(const std::vector<uint8_t>& input) const;
 
     // Check whether a pixel is pure white - we warn about this, and perhaps fix.
-    void check_pixel(Pixel& pixel);
+    bool is_pure_white(const Pixel& pixel);
+    // Non-owning pointers passed as a slightly more efficient implementation detail.
+    void check_white_border(const SpriteSheet* sheet); 
+    void check_white_border(const SpriteSheet* sheet, uint16_t xpix, uint16_t ypix, 
+        uint16_t& xpos, uint16_t& ypos, uint32_t& non_white_pixels);
 
 private:
     // This information is read before working out what type of record we have,
@@ -149,5 +156,4 @@ private:
     std::string m_mask_filename;
 
     std::vector<uint8_t> m_pixels = {};
-    bool m_has_pure_white         = false;
 };

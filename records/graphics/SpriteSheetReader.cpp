@@ -23,7 +23,7 @@
 // {
 // public:
 //     RGBSpriteSheet(const std::string& file_name);     
-//     Pixel pixel(uint32_t x, uint32_t y) override;
+//     Pixel pixel(uint32_t x, uint32_t y) const override;
 
 // private:
 //     png::image<png::rgb_pixel> m_image;    
@@ -34,7 +34,7 @@ class RGBASpriteSheet : public SpriteSheet
 {
 public:
     RGBASpriteSheet(const std::string& file_name);     
-    Pixel pixel(uint32_t x, uint32_t y) override;
+    Pixel pixel(uint32_t x, uint32_t y) const override;
 
 private:
     png::image<png::rgba_pixel> m_image;    
@@ -45,7 +45,7 @@ class PaletteSpriteSheet : public SpriteSheet
 {
 public:
     PaletteSpriteSheet(const std::string& file_name);     
-    Pixel pixel(uint32_t x, uint32_t y) override;
+    Pixel pixel(uint32_t x, uint32_t y) const override;
 
 private:
     png::image<png::index_pixel> m_image;    
@@ -58,7 +58,7 @@ RGBASpriteSheet::RGBASpriteSheet(const std::string& file_name)
 }     
 
 
-SpriteSheet::Pixel RGBASpriteSheet::pixel(uint32_t x, uint32_t y)
+SpriteSheet::Pixel RGBASpriteSheet::pixel(uint32_t x, uint32_t y) const
 {
     png::rgba_pixel in = m_image[y][x];
 
@@ -78,7 +78,7 @@ PaletteSpriteSheet::PaletteSpriteSheet(const std::string& file_name)
 }     
 
 
-SpriteSheet::Pixel PaletteSpriteSheet::pixel(uint32_t x, uint32_t y)
+SpriteSheet::Pixel PaletteSpriteSheet::pixel(uint32_t x, uint32_t y) const
 {
     Pixel out = {};
     out.index = m_image[y][x];

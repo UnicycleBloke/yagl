@@ -522,42 +522,28 @@ void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uin
 }
 
  
-void RealSpriteRecord::check_pixel(Pixel& pixel) 
+bool RealSpriteRecord::is_pure_white(const Pixel& pixel) 
 {
-    bool has_white = false;
+    bool is_white = false;
 
     if (m_colour & HAS_RGB)
     {
         // 0xFF is for colour intensities in this block.
-        has_white = (pixel.red == 0xFF) && (pixel.green == 0xFF) && (pixel.blue  == 0xFF);
+        is_white = (pixel.red == 0xFF) && (pixel.green == 0xFF) && (pixel.blue  == 0xFF);
 
         // Not sure about this bit.
         if (m_colour & HAS_ALPHA)
         {
-            has_white &= (pixel.alpha == 0xFF);
+            is_white &= (pixel.alpha == 0xFF);
         }
-
-        // Replace the pure white colour with an off-white. 
-        // if (has_white)
-        // {
-        //     pixel.red   = 0xFC;
-        //     pixel.green = 0xFC;
-        //     pixel.blue  = 0xFC;
-        // }    
     }
     else if (m_colour & HAS_PALETTE)
     {
         // 0xFF is for a palette index in this block.
-        has_white = (pixel.index == 0xFF);
-
-        // Replace the pure white colour with an off-white (index). 
-        // if (has_white)
-        // {
-        //     pixel.index = 0x0F;
-        // }    
+        is_white = (pixel.index == 0xFF);
     }
 
-    m_has_pure_white |= has_white;
+    return is_white;
 }
 
 
@@ -637,8 +623,11 @@ void RealSpriteRecord::parse(TokenStream& is)
 
     auto sheet = pool.get_sprite_sheet(image_base.string(), colour);
 
-    // This will be set by the calls to set_pixel(), is necessary. 
-    m_has_pure_white = false;
+    // Count the number of pure white pixels in the sprite. This should normally be none. 
+    uint32_t pure_white_pixels = 0;
+    uint16_t xpos = 0;
+    uint16_t ypos = 0;
+
     for (uint16_t x = 0; x < m_xdim; ++x)
     {
         for (uint16_t y = 0; y < m_ydim; ++y)
@@ -646,17 +635,74 @@ void RealSpriteRecord::parse(TokenStream& is)
             // TODO get the mask value for RGBAP pixels.   
             auto pixel = sheet->pixel(x + m_xoff, y + m_yoff);
 
-            // If one pixel in the sprite contain a pure white pixel, we should print a warning.
-            // TODO should we modify the pixel if it is pure white?
-            check_pixel(pixel);
+            // If even one pixel in the sprite contain a pure white pixel, we should print a warning.
+            if (is_pure_white(pixel))
+            {
+                if (pure_white_pixels == 0)
+                {
+                    xpos = x + m_xoff;
+                    ypos = y + m_yoff;
+                }
+                ++pure_white_pixels;    
+
+            }
 
             set_pixel(x, y, pixel);
         }
     }
 
-    if (m_has_pure_white)
+    if (pure_white_pixels > 0)
     {
         std::cout << "WARNING: Sprite #" << to_hex(m_sprite_id, false); 
-        std::cout << " contains pure white pixels.\n"; 
+        std::cout << " contains " << pure_white_pixels << " pure white pixels. ";
+        std::cout << "The first is at [" << xpos << ", " << ypos << "] in sprite sheet ";
+        std::cout << m_filename << "\n";  
+    }
+
+    check_white_border(sheet.get());
+}
+
+
+void RealSpriteRecord::check_white_border(const SpriteSheet* sheet, uint16_t xpix, uint16_t ypix, 
+   uint16_t& xpos, uint16_t& ypos, uint32_t& non_white_pixels)
+{
+    SpriteSheet::Pixel pixel;
+    pixel = sheet->pixel(xpix, ypix);
+    if (!is_pure_white(pixel))
+    {
+        if (non_white_pixels == 0)
+        {
+            xpos = xpix;
+            ypos = ypix;
+        }
+        ++non_white_pixels;
+    }
+}
+
+
+void RealSpriteRecord::check_white_border(const SpriteSheet* sheet) 
+{
+    // Count the number of non white pixels in the sprite's border. This should normally be none. 
+    uint32_t non_white_pixels = 0;
+    uint16_t xpos = 0;
+    uint16_t ypos = 0;
+
+    for (uint16_t x = 0; x < m_xdim; ++x)
+    {
+        check_white_border(sheet, x + m_xoff, m_yoff - 1,      xpos, ypos, non_white_pixels);
+        check_white_border(sheet, x + m_xoff, m_yoff + m_ydim, xpos, ypos, non_white_pixels);
+    }
+    for (uint16_t y = 0; y < m_ydim; ++y)
+    {
+        check_white_border(sheet, m_xoff - 1,      y + m_yoff, xpos, ypos, non_white_pixels);
+        check_white_border(sheet, m_xoff + m_xdim, y + m_yoff, xpos, ypos, non_white_pixels);
+    }
+
+    if (non_white_pixels > 0)
+    {
+        std::cout << "WARNING: Sprite #" << to_hex(m_sprite_id, false); 
+        std::cout << " contains " << non_white_pixels << " non-white pixels. ";
+        std::cout << "The first is at [" << xpos << ", " << ypos << "] in sprite sheet ";
+        std::cout << m_filename << "\n";  
     }
 }
