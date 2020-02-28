@@ -134,7 +134,13 @@ void Action01Record::parse(TokenStream& is)
         else
         {
             // Each set needs to be the same size.
-            // Assert that num_sprites == m_num_sprites
+            if (num_sprites != m_num_sprites)
+            {
+                std::ostringstream os;
+                os << "The number of sprites in each spriteset should be the same for Action01. ";
+                os << "Expected " << m_num_sprites << ", found " << num_sprites << ".";
+                throw PARSER_ERROR(os.str(), is.peek());
+            }
         }
     }
 

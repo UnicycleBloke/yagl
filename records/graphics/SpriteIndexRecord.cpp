@@ -42,7 +42,7 @@ static constexpr const char* str_sprite_id = "sprite_id";
 
 void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << str_sprite_id << ": " << to_hex(m_sprite_id) << "\n";
+    os << pad(indent) << str_sprite_id << "<" << to_hex(m_sprite_id) << ">\n";
     os << pad(indent) << "{" << '\n';
 
     if (sprites.find(m_sprite_id) != sprites.end())
@@ -68,9 +68,9 @@ void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, ui
 void SpriteIndexRecord::parse(TokenStream& is)
 {
     is.match_ident(str_sprite_id);
-    is.match(TokenType::Colon);
-
+    is.match(TokenType::OpenAngle);
     m_sprite_id = is.match_uint32();
+    is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)

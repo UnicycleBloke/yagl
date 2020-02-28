@@ -31,6 +31,9 @@
 #include "CommandLineOptions.h"
 
 
+volatile int x = 0;
+
+
 void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
 {
     // We already have the sprite ID, the size (whatever it actually means), and the compression.
@@ -45,6 +48,23 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
     // The uncompressed size is only given in certain cases. The transparency bit tells us how to decode the 
     // data after reading if from the file. It is the size of the data before chunk-compression (tiles). I think.
     m_uncomp_size = ((info.format == GRFFormat::Container2) && (m_compression & CHUNKED_FORMAT)) ? read_uint32(is) : 0;
+
+    if (CommandLineOptions::options().debug())
+    {
+        std::cout << "Reading sprite: " << to_hex(m_sprite_id);
+        std::cout << " zoom " << to_hex(static_cast<uint8_t>(m_zoom));
+        std::cout << " xdim " << to_hex(m_xdim);
+        std::cout << " ydim " << to_hex(m_ydim);
+        std::cout << " xrel " << to_hex(m_xrel);
+        std::cout << " yrel " << to_hex(m_yrel);
+        std::cout << " size " << to_hex(m_uncomp_size);
+        std::cout << "\n";
+        if (m_sprite_id == 0x000049FB)
+        {
+            x = 2;
+        }
+    }
+
 
     // The compression byte is interpreted quite differently depending on the file format.
     // Format2 images may have more than one byte per pixel. Format1 images just have a palette byte.
