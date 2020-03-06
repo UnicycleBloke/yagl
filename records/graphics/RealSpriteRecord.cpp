@@ -594,7 +594,7 @@ void RealSpriteRecord::parse(TokenStream& is)
     m_compression  = m_colour & (RealSpriteRecord::CHUNKED_FORMAT); // | RealSpriteRecord::CROP_TRANSARENT_BORDER);
     m_colour       = m_colour & (HAS_RGB | HAS_ALPHA | HAS_PALETTE);
 
-    std::string m_filename = is.match(TokenType::String);
+    m_filename = is.match(TokenType::String);
     is.match(TokenType::Comma);
 
     is.match(TokenType::OpenBracket);
@@ -608,7 +608,7 @@ void RealSpriteRecord::parse(TokenStream& is)
     {
         is.match(TokenType::Comma);
 
-        std::string m_mask_filename = is.match(TokenType::String);
+        m_mask_filename = is.match(TokenType::String);
         is.match(TokenType::Comma);
 
         is.match(TokenType::OpenBracket);
@@ -642,6 +642,7 @@ void RealSpriteRecord::parse(TokenStream& is)
     image_base = image_base.append(m_filename);
 
     auto sheet = pool.get_sprite_sheet(image_base.string(), colour);
+    //auto masksheet = optional pool.get_sprite_sheet(image_base.string(), colour);
 
     // Count the number of pure white pixels in the sprite. This should normally be none. 
     uint32_t pure_white_pixels = 0;
@@ -674,9 +675,8 @@ void RealSpriteRecord::parse(TokenStream& is)
     if (pure_white_pixels > 0)
     {
         std::cout << "WARNING: Sprite #" << to_hex(m_sprite_id, false); 
-        std::cout << " contains " << pure_white_pixels << " pure white pixels. ";
-        std::cout << "The first is at [" << xpos << ", " << ypos << "] in sprite sheet ";
-        std::cout << m_filename << "\n";  
+        std::cout << " contains " << pure_white_pixels << " pure white pixels. Its YAGL rectangle may be misaligned or too large.\n";
+        std::cout << "    The first is at [" << xpos << ", " << ypos << "] in sprite sheet " << m_filename << std::endl;  
     }
 
     check_white_border(sheet.get());
@@ -721,8 +721,7 @@ void RealSpriteRecord::check_white_border(const SpriteSheet* sheet)
     if (non_white_pixels > 0)
     {
         std::cout << "WARNING: Sprite #" << to_hex(m_sprite_id, false); 
-        std::cout << " contains " << non_white_pixels << " non-white pixels. ";
-        std::cout << "The first is at [" << xpos << ", " << ypos << "] in sprite sheet ";
-        std::cout << m_filename << "\n";  
+        std::cout << " has " << non_white_pixels << " non-white pixels in its border. Its YAGL rectangle may be misaligned or too small.\n";
+        std::cout << "    The first is at [" << xpos << ", " << ypos << "] in sprite sheet " << m_filename << std::endl;  
     }
 }

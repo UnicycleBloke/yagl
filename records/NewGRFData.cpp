@@ -771,8 +771,6 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
             m_records.push_back(record);
             record->parse(is);
             update_version_info(record);
-
-            ++record_number;
         }
         catch (const std::exception& e)
         {
@@ -781,6 +779,8 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
             is.next_record();
             ++exceptions;
         }
+
+        ++record_number;
     }
 
     if (exceptions > 0)
