@@ -11,6 +11,15 @@ block_name
 }
 ```
 
+A block may be "decorated" with information about the particular instance of that type of block:
+
+```bash
+block_name<value1, value2, ...> // One or more values giving extra data about this block
+{
+    // Block contents
+}
+```
+
 ## Syntax elements
 
 There are a small number of different kinds of elements which may appear in a YAGL file. These are easy to distinguish:

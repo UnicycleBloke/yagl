@@ -94,7 +94,7 @@ TODO I probably ought to check that values are not bigger than expected.
 The intention when creating YAGL was to directly match the contents of the GRF (or equivalent NFO) without any intervening complexity, but to make the information more human-readable. It should be possible to directly relate the contents of a YAGL record to the corresponding description in the the [NewGRF specs](https://newgrf-specs.tt-wiki.net/wiki/Main_Page). I believe this is an improvement on NFO, but there is a lot more that could still be done. For example: 
 
 - Why not print '1920' for the year if that is what we mean? This is possible, but the interpretation of each property is different. And there are tons of different properties. I think this could be achieved piecemeal though: property by property. For now, it makes sense to write the hex value that should go in the GRF. 
-- Some properties are bitfields, such as climate availability. In such cases, it would be better if the values was represented by named bits ORed together, such as `Tropical | Temperate`. 
+- Some properties are bitfields, such as climate availability. In such cases, it would be better if the value was represented by named bits ORed together, such as `Tropical | Temperate`. 
 - Some properties are enumerations. In such cases, it would be better is the values was represented by named enum values. This is like the bitfield example, but only a single value is allowed.
 
 More and better error reporting is also desired.
