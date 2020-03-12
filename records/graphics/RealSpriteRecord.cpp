@@ -489,8 +489,8 @@ const BitfieldDescriptorT<uint8_t> colour_desc =
         { 0x01, str_24bpp   }, // HAS_RGB
         { 0x03, str_32bpp   }, // HAS_RGB | HAS_ALPHA
         { 0x04, str_mask    }, // HAS_PALETTE
-        { 0x08, str_chunked }, // RealSpriteRecord::CHUNKED_FORMAT
-        { 0x40, str_no_crop }, // RealSpriteRecord::CROP_TRANSARENT_BORDER
+        { 0x08, str_chunked }, // CHUNKED_FORMAT
+        { 0x40, str_no_crop }, // CROP_TRANSARENT_BORDER
     }
 };
 
@@ -521,7 +521,7 @@ void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uin
     
     // grfcodec likes to remove extraneous transparent borders.
     // Is the sense here the right way?
-    //if (m_compression & RealSpriteRecord::CROP_TRANSARENT_BORDER) os << " | " << str_no_crop;
+    if (m_compression & RealSpriteRecord::CROP_TRANSARENT_BORDER) os << " | " << str_no_crop;
 
     // If we create a sprite_sheet containing this sprite, print the details.
     os << ", \"" << m_filename << "\", [" << m_xoff << ", " << m_yoff << "]";
@@ -585,7 +585,7 @@ void RealSpriteRecord::parse(TokenStream& is)
     colour_desc.parse(m_colour, is);
     is.match(TokenType::Comma);
   
-    m_compression  = m_colour & (RealSpriteRecord::CHUNKED_FORMAT); // | RealSpriteRecord::CROP_TRANSARENT_BORDER);
+    m_compression  = m_colour & (RealSpriteRecord::CHUNKED_FORMAT | RealSpriteRecord::CROP_TRANSARENT_BORDER);
     m_colour       = m_colour & (HAS_RGB | HAS_ALPHA | HAS_PALETTE);
 
     m_filename = is.match(TokenType::String);
@@ -687,7 +687,7 @@ void RealSpriteRecord::parse(TokenStream& is)
         std::cout << "    The first is at [" << xpos << ", " << ypos << "] in sprite sheet " << m_filename << std::endl;  
     }
 
-    check_white_border(sheet.get());
+    check_white_border(image_sheet.get());
 }
 
 
