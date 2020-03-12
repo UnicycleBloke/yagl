@@ -31,8 +31,6 @@
 #include "CommandLineOptions.h"
 
 
-volatile int x = 0;
-
 
 void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
 {
@@ -59,10 +57,6 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
         std::cout << " yrel " << to_hex(m_yrel);
         std::cout << " size " << to_hex(m_uncomp_size);
         std::cout << "\n";
-        if (m_sprite_id == 0x000049FB)
-        {
-            x = 2;
-        }
     }
 
 
@@ -637,12 +631,19 @@ void RealSpriteRecord::parse(TokenStream& is)
         colour = SpriteSheet::Colour::RGBA;
     }
 
-    fs::path image_base = CommandLineOptions::options().yagl_file();
-    image_base = image_base.replace_extension().parent_path().parent_path();
-    image_base = image_base.append(m_filename);
+    fs::path image_file = CommandLineOptions::options().yagl_file();
+    image_file = image_file.replace_extension().parent_path().parent_path();
+    image_file = image_file.append(m_filename);
+    std::shared_ptr<SpriteSheet> image_sheet = pool.get_sprite_sheet(image_file.string(), colour);
 
-    auto sheet = pool.get_sprite_sheet(image_base.string(), colour);
-    //auto masksheet = optional pool.get_sprite_sheet(image_base.string(), colour);
+    std::shared_ptr<SpriteSheet> mask_sheet;
+    if (m_mask_filename.length() > 0)
+    {
+        fs::path mask_file = CommandLineOptions::options().yagl_file();
+        mask_file  = mask_file.replace_extension().parent_path().parent_path();
+        mask_file  = mask_file.append(m_mask_filename);
+        mask_sheet = pool.get_sprite_sheet(mask_file.string(), SpriteSheet::Colour::Palette);
+    }
 
     // Count the number of pure white pixels in the sprite. This should normally be none. 
     uint32_t pure_white_pixels = 0;
@@ -653,8 +654,15 @@ void RealSpriteRecord::parse(TokenStream& is)
     {
         for (uint16_t y = 0; y < m_ydim; ++y)
         {
+            using Pixel = SpriteSheet::Pixel;
+
             // TODO get the mask value for RGBAP pixels.   
-            auto pixel = sheet->pixel(x + m_xoff, y + m_yoff);
+            Pixel pixel = image_sheet->pixel(x + m_xoff, y + m_yoff);
+            if (mask_sheet)
+            {
+                Pixel mask  = mask_sheet->pixel(x + m_mask_xoff, y + m_mask_yoff);
+                pixel.index = mask.index;
+            }
 
             // If even one pixel in the sprite contain a pure white pixel, we should print a warning.
             if (is_pure_white(pixel))

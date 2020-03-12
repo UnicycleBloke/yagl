@@ -168,7 +168,7 @@ const std::map<RecordType, std::string> g_record_names =
     { RecordType::ACTION_14,               "optional_info" },
     { RecordType::ACTION_FE,               "binary_sound" }, // ??? Binary sound effect
     { RecordType::ACTION_FF,               "imported_sound" }, // ??? Imported sound effect
-    { RecordType::SPRITE_INDEX,            "" }, // Always found inside a container
+    { RecordType::SPRITE_INDEX,            "sprite_id" }, // Always found inside a container - but zbase...
     { RecordType::REAL_SPRITE,             "" }, // Always found inside a sprite index
     { RecordType::FAKE_SPRITE,             "" }, // Is this a thing?
     { RecordType::RECOLOUR,                "" }, // Always found inside a container

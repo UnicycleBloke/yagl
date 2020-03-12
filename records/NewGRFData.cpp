@@ -463,7 +463,7 @@ std::shared_ptr<Record> NewGRFData::make_record(RecordType record_type)
 
         // These are graphics.
         case RecordType::RECOLOUR:                return std::make_shared<RecolourRecord>(); 
-        //case RecordType::SPRITE_INDEX:            return std::make_shared<SpriteIndexRecord>();
+        case RecordType::SPRITE_INDEX:            return std::make_shared<SpriteIndexRecord>(RecordType::ACTION_01);
 
         // Special case of an empty sprite used for absent image.
         //case RecordType::FAKE_SPRITE:             return std::make_shared<FakeSpriteRecord>();

@@ -239,6 +239,37 @@ ChunkEncoder::ChunkEncoder(const std::vector<uint8_t>& pixels, uint16_t xdim, ui
 }
 
 
+static std::vector<uint16_t> trim_row_edges(const std::vector<uint16_t>& edges)
+{
+    std::vector<uint16_t> trim;
+
+    auto     it  = edges.begin();
+    uint16_t beg1 = *it++;
+    uint16_t end1 = *it++;
+    while (it != edges.end())
+    {
+        uint16_t beg2 = *it++;
+        uint16_t end2 = *it++;
+        if ((beg2 - end1) >= CommandLineOptions::options().chunk_gap())
+        {
+            trim.push_back(beg1);
+            trim.push_back(end1);
+            beg1 = beg2;
+            end1 = end2;
+        }
+        else
+        {
+            end1 = end2;
+        }
+    }
+
+    trim.push_back(beg1);
+    trim.push_back(end1);
+
+    return trim;
+}
+
+
 std::vector<uint16_t> ChunkEncoder::find_row_edges(uint16_t y)
 {
     // Scan a single row of the image data to find edges where pixels transition from 
@@ -246,7 +277,7 @@ std::vector<uint16_t> ChunkEncoder::find_row_edges(uint16_t y)
     std::vector<uint16_t> edges;
 
     // Index of the first pixel in the current row.
-    uint32_t byte_index  = y * m_xdim * m_pixel_size + m_trans_offset;
+    uint32_t byte_index = y * m_xdim * m_pixel_size + m_trans_offset;
 
     // Scan through the row to find all the edges.
     uint16_t x = 0;
@@ -283,36 +314,37 @@ std::vector<uint16_t> ChunkEncoder::find_row_edges(uint16_t y)
         edges.push_back(m_xdim);
     }
 
+    // Trim out any non-visible gaps that are really short.
+    if (edges.size() > 2)
+    {
+        return trim_row_edges(edges);
+    }
     return edges;
 }
 
 
 std::vector<ChunkEncoder::Chunk> ChunkEncoder::find_row_chunks(const std::vector<uint16_t>& edges)
 {
-    // Create a collection of chunks for the current row. 
+    // Create a collection of chunks for the current row.
     std::vector<Chunk> chunks; 
-    uint16_t e = 0;
-    while (e < edges.size())
-    {
-        // Set the flag for last chunk pre-emptively.
-        uint16_t edge1 = edges[e++];
-        uint16_t edge2 = edges[e++];
-        while (e < edges.size())
-        {
-            // Combine chunks which are separated by small gaps
-            // of transparent pixels.
-            if ((edges[e] - edge2) >= CommandLineOptions::options().chunk_gap())
-            {
-                break;
-            }
-            ++e;
-            edge2 = edges[e++];
-        }
 
-        Chunk chunk;
-        chunk.offset = edge1;
-        chunk.length = static_cast<uint16_t>(edge2 - edge1); 
-        chunks.push_back(chunk);
+    auto it  = edges.begin();
+    while (it != edges.end())
+    {
+        // Start and end of a chunk. Need to divide into 
+        // two or more if the length is greater than m_last_chunk.
+        uint16_t beg = *it++;
+        uint16_t end = *it++;
+        do 
+        {
+            Chunk chunk;
+            chunk.offset = beg;
+            chunk.length = std::min<uint16_t>(end - beg, m_last_chunk - 1); 
+            chunks.push_back(chunk);
+
+            beg += chunk.length; 
+        }
+        while (beg != end);
     }
 
     if (chunks.size() > 0)
@@ -368,8 +400,7 @@ std::vector<uint8_t> ChunkEncoder::make_row_data(const std::vector<ChunkEncoder:
             data.push_back(0x00);
             data.push_back(0x00);
         }
-    }
-    
+    }  
 
     return data;
 }
