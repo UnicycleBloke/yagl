@@ -68,16 +68,19 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
     uint8_t num_strings = uint8_t(m_strings.size());
     write_uint8(os, num_strings);
 
+    // Force word IDs
     if (m_uint16_ids)
     {
         write_uint16(os, m_first_string_id);
     }
+    // OR vehicles have extended byte IDs
     else if ((m_first_string_id > 0xFF) || 
              // It's a vehicle
              (static_cast<uint8_t>(m_feature) <= static_cast<uint8_t>(FeatureType::Aircraft))) 
     {
         write_uint8_ext(os, m_first_string_id);
     }
+    // OR we just have byte IDs.
     else
     {
         write_uint8(os, uint8_t(m_first_string_id));
@@ -122,7 +125,8 @@ void Action04Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t string_id = m_first_string_id;
     for (const auto& s: m_strings)
     {
-        os << pad(indent + 4) << "\"" << s.readable() << "\"; //" << to_hex(string_id++) << "\n";
+        os << pad(indent + 4) << "/* " << to_hex(string_id++) << " */ "; 
+        os << "\"" << s.readable() << "\";\n";
     }
 
     os << pad(indent) << "}\n";
