@@ -123,11 +123,13 @@ void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     {
         os << pad(indent + 4) << str_range << "<";
         os << font_desc.value(range.font);
-        os << ", " << to_hex(range.base_char) << ">: <font, base_char>\n";
+        os << ", " << to_hex(range.base_char) << "> // <font, base_char>\n";
         os << pad(indent + 4) << "{" << '\n';
         
         for (uint16_t i = 0; i < range.num_chars; ++i)
         {
+            os << pad(indent + 8) << "// Replace character " << to_hex(range.base_char + i) << "\n";
+
             // This is a SpriteIndexRecord or a RecolourRecord
             print_sprite(index, os, sprites, indent + 8);
             ++index;
