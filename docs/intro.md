@@ -29,10 +29,20 @@ Whatever the case may be, the before and after GRFs should should certainly be *
 
 A GRF file looks like a big opaque binary blob, but it has an internal structure. That structure is really quite simple: it is just a long list of "records". A record is a series of bytes which are interpreted by OpenTTD. Each record has a length, a type, and then a bunch of following bytes which form the content of the record and give it meaning. So far so dull...
 
-An NFO file is more or less a direct representation of the bytes in each record in the GRF. An NFO file contains a long list of records, and each one directly corresponds to a single record in the GRF. For example, the following record was extracted from `WallyWebBridgeSet.nfo`:
+An NFO file is more or less a direct representation of the bytes in each record in the GRF. An NFO file contains a long list of records, and each one directly corresponds to a single record in the GRF. For example, the following record was extracted from `WallyWebBridgeSet.nfo`. I've split the properties into rows to make them a little clearer:
 
 ```bash
-   38 * 33	 00 06 0A 01 03 08 00 09 00 0A FF 0C 20 00 0E 01 0F 80 07 00 00 10 09 DC 11 0A DC 12 0B DC 13 14 00
+   38 * 33	 00 06 0A 01 03 
+             08 00 
+             09 00 
+             0A FF 
+             0C 20 00 
+             0E 01 
+             0F 80 07 00 00 
+             10 09 DC 
+             11 0A DC 
+             12 0B DC 
+             13 14 00
 ```
 
 This can be interpreted as follows:
