@@ -46,21 +46,19 @@ uint16_t read_uint8_ext(std::istream& is)
     return result == 0xFF ? read_uint16(is) : result;
 }
 
-
-void write_uint8_ext(std::ostream& os, uint16_t value)
+void write_uint8_ext(std::ostream& os, uint16_t value, ExtByteFormat format)
 {
-    write_uint8(os, 0xFF);
-    write_uint16(os, value);
-
-    // if (value >= 0xFF)
-    // {
-    //     write_uint8(os, 0xFF);
-    //     write_uint16(os, value);
-    // }
-    // else
-    // {
-    //     write_uint8(os, uint8_t(value));
-    // }
+    // Use extended format only when it is necessary for the value.
+    // OR Always used the extended format - this is what NMLC appears to do - default. 
+    if ((value >= 0xFF) || (format == ExtByteFormat::Long))
+    {
+        write_uint8(os, 0xFF);
+        write_uint16(os, value);
+    }
+    else
+    {
+        write_uint8(os, uint8_t(value));
+    }
 }
 
 

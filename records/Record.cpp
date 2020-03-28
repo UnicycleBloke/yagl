@@ -270,6 +270,21 @@ FeatureType FeatureFromName(const std::string& name)
 }
 
 
+bool feature_is_vehicle(FeatureType type)
+{
+    switch (type)
+    {
+        case FeatureType::Aircraft:
+        case FeatureType::Trains:
+        case FeatureType::Vehicles:
+        case FeatureType::Ships:
+            return true;
+    }
+
+    return false;
+}
+
+
 const std::map<NewFeatureType, std::string> g_new_feature_names =
 {
     { NewFeatureType::PreSignal,        "PreSignal" },  

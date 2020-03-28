@@ -25,14 +25,16 @@
 #include <map>
 
 
+enum class ExtByteFormat { Short, Long };
+
+
 uint8_t     read_uint8(std::istream& is);
 uint16_t    read_uint8_ext(std::istream& is);
 uint16_t    read_uint16(std::istream& is);
 uint32_t    read_uint32(std::istream& is);
 
-
 void write_uint8(std::ostream& os, uint8_t value);
-void write_uint8_ext(std::ostream& os, uint16_t value);
+void write_uint8_ext(std::ostream& os, uint16_t value, ExtByteFormat format = ExtByteFormat::Long);
 void write_uint16(std::ostream& os, uint16_t value);
 void write_uint32(std::ostream& os, uint32_t value);
 

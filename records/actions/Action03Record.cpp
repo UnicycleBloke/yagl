@@ -72,7 +72,12 @@ void Action03Record::write(std::ostream& os, const GRFInfo& info) const
 
     for (const auto& id: m_feature_ids)
     {
-        write_uint8_ext(os, id);
+        // In OpenTTD since r13482, each ID is an extended byte for vehicles, 
+        // otherwise the ID is a regular byte. Use short format where possible.
+        if (feature_is_vehicle(m_feature))
+            write_uint8_ext(os, id, ExtByteFormat::Short);
+        else
+            write_uint8(os, id);
     }
 
     uint8_t num_cargo_types = uint8_t(m_cargo_types.size());

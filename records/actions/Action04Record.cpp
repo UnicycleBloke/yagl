@@ -39,7 +39,7 @@ void Action04Record::read(std::istream& is, const GRFInfo& info)
     {
         m_first_string_id = read_uint16(is);
     }
-    else if (static_cast<uint8_t>(m_feature) <= 3) // Is a vehicle (road, rail, ship, air)
+    else if (feature_is_vehicle(m_feature)) // Is a vehicle (road, rail, ship, air)
     {
         m_first_string_id = read_uint8_ext(is);
     }

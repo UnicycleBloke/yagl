@@ -96,7 +96,7 @@ enum class FeatureType : uint8_t
 };
 std::string FeatureName(FeatureType type);
 FeatureType FeatureFromName(const std::string& name);
-
+bool feature_is_vehicle(FeatureType type);
 
 enum class NewFeatureType : uint8_t
 {
