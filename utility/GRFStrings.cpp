@@ -676,6 +676,11 @@ static bool binary_utf16_is_utf8(const std::u16string& str)
                 c = str[pos++];
             }
         }
+        // Force UTF8 encoding if the string contains braces. 
+        else if ((c == u'{') || (c == u'}'))
+        {
+            return true;
+        }
         else if (c >= 0x80)
         {
             return true;

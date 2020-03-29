@@ -65,7 +65,7 @@ replace_sprites<TwoCompanyColour, 0x0000> // <new_feature_type, offset>  Action0
 - The block name is `replace_sprites`.
 
 - The "decoration" in angle brackets after the block name includes:
-    - The type of feature (`Aqueducts` in the example) for which the sprites are created. One of the following enumeration values is possible:
+    - The type of feature (`Aqueducts` in the example) for which the sprites are created. One of the following enumeration values is possible (see [new features](../sundries/new_features.md)):
         - `PreSignal`        (value = 0x04)
         - `Catenary`         (value = 0x05)
         - `Foundations`      (value = 0x06)
@@ -114,4 +114,8 @@ is equivalent to:
 
 The block structure described above is directly related to the corresponding record in the NewGRF specifications:
 
-- [Action05 NewGRF specifications](https://newgrf-specs.tt-wiki.net/wiki/Action5)
+- [NewGRF Action05 specifications](https://newgrf-specs.tt-wiki.net/wiki/Action5)
+- [YAGL new feature enumeration](../sundries/new_features.md)
+- [YAGL real sprites](../graphics/real_sprite.md)
+- [YAGL recolour sprites](../graphics/recolour_sprite.md)
+

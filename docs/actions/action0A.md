@@ -69,9 +69,7 @@ The main block name is `replacement_sprite_sets`.
     - The replacement spritesets may contain have any number of realsprite blocks. See [Action01](action01.md) for details of these. 
     - In this example, three replacement spritesets are shown (truncated lists).
 
-- Each spriteset contains any number of individual sprites (sub-blocks prefixed with `sprite_id`). 
-    - Note that each spriteset *must* contain the same number of sprites. **yagl** checks for this when reading the YAGL, and will display an error. It doesn't know what the correct number of sprites should be, only that the sets differ.
-    - In this example, each spriteset shows two sprites (truncated lists).
+- Each spriteset contains any number of individual sprites (sub-blocks prefixed with `sprite_id`). Note that each spriteset may contain any number of sprites.
 
 The format is almost identical to that for [Action01](action01.md), so please look a that for details. Aside from block names, the key difference to note is that the replacement sprite sets do not all have to have the same number of sprites. The outer block is not decorated with the type of feature to which the sprites relate.
 
@@ -80,3 +78,6 @@ The format is almost identical to that for [Action01](action01.md), so please lo
 The block structure described above is directly related to the corresponding record in the NewGRF specifications:
 
 - [Action0A NewGRF specifications](https://newgrf-specs.tt-wiki.net/wiki/ActionA)
+- [YAGL real sprites](../graphics/real_sprite.md)
+- [YAGL recolour sprites](../graphics/recolour_sprite.md)
+

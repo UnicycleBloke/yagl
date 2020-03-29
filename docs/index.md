@@ -32,3 +32,9 @@
 ## Sound effects
 - [ActionFE](actions/actionFE.md)
 - [ActionFF](actions/actionFF.md)
+
+## Sundries
+- [Feature enumeration](sundries/features.md)
+- [New feature enumeration](sundries/new_features.md)
+- [String control codes](sundries/string_codes.md)
+- [language codes](sundries/language_codes.md)
