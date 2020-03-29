@@ -70,14 +70,14 @@ void Action03Record::write(std::ostream& os, const GRFInfo& info) const
     uint8_t num_ids = uint8_t(m_feature_ids.size());
     write_uint8(os, num_ids | (m_livery_override ? 0x80 : 0x00));
 
-    for (const auto& id: m_feature_ids)
+    for (auto id: m_feature_ids)
     {
         // In OpenTTD since r13482, each ID is an extended byte for vehicles, 
         // otherwise the ID is a regular byte. Use short format where possible.
         if (feature_is_vehicle(m_feature))
             write_uint8_ext(os, id, ExtByteFormat::Short);
         else
-            write_uint8(os, id);
+            write_uint8(os, static_cast<uint8_t>(id));
     }
 
     uint8_t num_cargo_types = uint8_t(m_cargo_types.size());
@@ -99,8 +99,6 @@ constexpr const char* str_livery_override = "livery_override";
 constexpr const char* str_default_set_id  = "default_set_id";
 constexpr const char* str_feature_ids     = "feature_ids";
 constexpr const char* str_cargo_types     = "cargo_types";
-//constexpr const char* str_cargo_type      = "cargo_type";
-//constexpr const char* str_set_id          = "set_id";
 
 
 // Fake property numbers to facilitate out of order parsing.
@@ -110,8 +108,6 @@ const std::map<std::string, uint8_t> g_indices =
     { str_default_set_id,  0x02 },
     { str_feature_ids,     0x03 },
     { str_cargo_types,     0x04 },
-//    { str_cargo_type,      0x05 },
-//    { str_set_id,          0x06 },
 };
 
 
@@ -121,18 +117,6 @@ const IntegerListDescriptorT<uint16_t> desc_feature_ids     { 0x03, str_feature_
 
 
 } // namespace {
-
-
-// feature_graphics<Stations> // Action03
-// {
-//     feature_ids: [ 0x0000 ]; // i.e. instances of 'Stations'
-//     cargo_types:
-//     [
-//         { cargo_type: 0xFF; set_id: 0x0006; }
-//     ];
-//     default_set_id: 0x0006;
-//     livery_override: false;
-// }
 
 
 void Action03Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
@@ -146,6 +130,7 @@ void Action03Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 
     os << pad(indent + 4) << str_cargo_types << ":\n";
     os << pad(indent + 4) << "{\n";
+    os << pad(indent + 8) << "// <cargo_type>: <cargo_id>;\n";
     for (const auto& c: m_cargo_types)
     {
         os << pad(indent + 8) << to_hex(c.cargo_type) << ": " << to_hex(c.act02_set_id) << ";\n";
