@@ -94,19 +94,6 @@ void Action02RandomRecord::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
-// random_switch<Trains, 0xFD> // Action02 random
-// {
-//     random_type: Object;
-//     triggers: 0x00;
-//     rand_bit: 0x00;
-//     set_ids:
-//     [
-//         0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 
-//         0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 0x00F5 0x00FA 0x00FA 
-//     ];
-// }
-
-
 namespace {
 
 
@@ -120,8 +107,6 @@ constexpr const char* str_set_ids      = "set_ids";
 // Fake property numbers to facilitate out of order parsing.
 const std::map<std::string, uint8_t> g_indices =
 {
-    //{ str_random_type,  0x00 },
-    //{ str_consist_type, 0x01 },
     { str_triggers,     0x02 },
     { str_rand_bit,     0x03 },
     { str_set_ids,      0x04 },
@@ -218,10 +203,12 @@ void Action02RandomRecord::parse(TokenStream& is)
             is.match(TokenType::Ident);
             is.match(TokenType::Colon);
 
+            uint16_t num_ids = 0;
             switch (it->second)
             {
                 case 0x02: triggers_desc.parse(m_triggers, is); break;
                 case 0x03: randbit_desc.parse(m_randbit, is); break;
+                
                 case 0x04:
                     is.match(TokenType::OpenBrace);
                     while (is.peek().type != TokenType::CloseBrace)
@@ -231,8 +218,13 @@ void Action02RandomRecord::parse(TokenStream& is)
                         uint16_t count  = is.match_uint16();
                         is.match(TokenType::SemiColon);
                         m_set_ids[set_id] = count;
+                        num_ids += count;
                     }
                     is.match(TokenType::CloseBrace);
+                    if ((num_ids == 0) || ((num_ids & (num_ids - 1)) != 0))
+                    {
+                        throw PARSER_ERROR("Total IDs must be a power of two", token);
+                    }
                     break;
             }
 
@@ -240,7 +232,7 @@ void Action02RandomRecord::parse(TokenStream& is)
         }
         else
         {
-        throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
+            throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
         }
 
     }

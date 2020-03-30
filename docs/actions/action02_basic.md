@@ -24,6 +24,8 @@ The block name is `sprite_groups` and this is decorated with two values:
 - The type of the feature whose graphics are being assigned (`Trains` in the example). See [features](../sundries/features.md) for the list of possibilities.
 - The set ID to be associated with this Action02 record.
 
+The properties inside the block are:
+
 | Name | Description |
 |-|-|
 | `primary_spritesets` | The square brackets contain a set of space-separated IDs of Action01 sprite sets. |
