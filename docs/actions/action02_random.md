@@ -3,7 +3,7 @@
 
 # Action 02 (random)
 
-Action02 (`random_switch`) is used to create randomised results which pick one of several Action02 entries.
+Action02 (`random_switch`) is used to create randomised results which pick one of several (other) Action02 entries.
 
 The following example includes a few comments for guidance generated automatically when a GRF is decoded. The YAGL format for this record is as follows:
 
