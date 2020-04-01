@@ -81,31 +81,37 @@ In this case `value1` is calculated as described above. Then `value2` is calcula
 
 The following joining operations are possible:
 
-| Name | Value | Description |
-|-|-|-|
-| `Addition` | 0x00 | `value1 = value1 + value2` |
-| `Subtraction` | 0x01 | `value1 = value1 - value2` |
-| `SignedMin` | 0x02 | `value1 = min(value1, value2)` - `value1` and `value2` are both considered signed |
-| `SignedMax` | 0x03 | `value1 = max(value1, value2)` - `value1` and `value2` are both considered signed |
-| `UnsignedMin` | 0x04 | `value1 = min(value1, value2)` - `value1` and `value2` are both considered unsigned |
-| `UnsignedMax` | 0x05 | `value1 = max(value1, value2)` - `value1` and `value2` are both considered unsigned |
-| `SignedDiv` | 0x06 | `value1 = value1 / value2` - `value1` and `value2` are both considered signed |
-| `SignedMod` | 0x07 | `value1 = value1 % value2` - `value1` and `value2` are both considered signed |
-| `UnsignedDiv` | 0x08 | `value1 = value1 / value2` - `value1` and `value2` are both considered unsigned |
-| `UnsignedMod` | 0x09 | `value1 = value1 % value2` - `value1` and `value2` are both considered unsigned |
-| `Multiply` | 0x0A | `value1 = value1 * value2` |
-| `BitwiseAnd` | 0x0B | `value1 = value1 & value2` |
-| `BitwiseOr` | 0x0C | `value1 = value1 | value2` |
-| `BitwiseXor` | 0x0D | `value1 = value1 ^ value2` |
-| `TempStore` | 0x0E | `temp_storage[value2] = value1` - temporary storage (variable 0x7D) |
-| `Assign` | 0x0F | `value1 = value2` |
-| `PermStore` | 0x10 | `permanent_storage[value2] = value1` - permanent storage (variable 0x7C) |
-| `RotateRight` | 0x11 | `value1 = value1 rotate-right value2` |
-| `SignedCmp` | 0x12 | Result is 0 if `value1 < value2`, 1 if `value1 == value2` and 2 if `value1 > value2`. Both values are considered signed. |
-| `UnsignedCmp` | 0x13 | Result is 0 if `value1 < value2`, 1 if `value1 == value2` and 2 if `value1 > value2`. Both values are considered unsigned. |
-| `ShiftLeft` | 0x14 | `value1 = value1 << value2` - `value2` should be in the range 0 to 31 |
-| `UnsignedShiftRight` | 0x15 | `value1 = value1 >> value2` - `value2` should be in the range 0 to 31, `value1` and `value2` are both considered unsigned |
-| `SignedShiftRight` | 0x16 | `value1 = value1 >> value2` - `value2` should be in the range 0 to 31, `value1` and `value2` are both considered signed |
+| Name | Value | Description | |
+|-|-|-|-|
+| `Addition`           | 0x00 | `value1 = value1 + value2` ||
+| `Subtraction`        | 0x01 | `value1 = value1 - value2` ||
+| `SignedMin`          | 0x02 | `value1 = min(value1, value2)` | Note 1 |
+| `SignedMax`          | 0x03 | `value1 = max(value1, value2)` | Note 1 |
+| `UnsignedMin`        | 0x04 | `value1 = min(value1, value2)` | Note 2 |
+| `UnsignedMax`        | 0x05 | `value1 = max(value1, value2)` | Note 2 |
+| `SignedDiv`          | 0x06 | `value1 = value1 / value2` | Note 1 |
+| `SignedMod`          | 0x07 | `value1 = value1 % value2` | Note 1 |
+| `UnsignedDiv`        | 0x08 | `value1 = value1 / value2` | Note 2 |
+| `UnsignedMod`        | 0x09 | `value1 = value1 % value2` | Note 2 |
+| `Multiply`           | 0x0A | `value1 = value1 * value2` ||
+| `BitwiseAnd`         | 0x0B | `value1 = value1 & value2` ||
+| `BitwiseOr`          | 0x0C | `value1 = value1 | value2` ||
+| `BitwiseXor`         | 0x0D | `value1 = value1 ^ value2` ||
+| `TempStore`          | 0x0E | `temp_storage[value2] = value1` | Note 4 |
+| `Assign`             | 0x0F | `value1 = value2` ||
+| `PermStore`          | 0x10 | `permanent_storage[value2] = value1` | Note 5 |
+| `RotateRight`        | 0x11 | `value1 = value1 rotate-right value2` ||
+| `SignedCmp`          | 0x12 | `value1` set to 0 if `value1 < value2`, 1 if `value1 == value2` and 2 if `value1 > value2` |  Note 1. |
+| `UnsignedCmp`        | 0x13 | `value1` set to 0 if `value1 < value2`, 1 if `value1 == value2` and 2 if `value1 > value2`| Note 2. |
+| `ShiftLeft`          | 0x14 | `value1 = value1 << value2` | Note 3 |
+| `UnsignedShiftRight` | 0x15 | `value1 = value1 >> value2` | Notes 2 and 3 |
+| `SignedShiftRight`   | 0x16 | `value1 = value1 >> value2` | Notes 1 and 3 |
+
+1. `value1` and `value2` are both considered signed.
+2. `value1` and `value2` are both considered unsigned.
+3. `value2` should be in the range 0 to 31.
+4. Temporary storage (variable 0x7D).
+5. Permanent storage (variable 0x7C).
 
 ## Links
 
