@@ -1,6 +1,9 @@
 # Table Of Contents
 - [Introduction](intro.md)
 - [YAGL syntax](yagl_syntax.md) - a basic introduction to core ideas.
+- [Building yagl on Linux](build_linux.md) 
+- [Building yagl on Windows](build_windows.md) 
+- [Software architecture](architecture.md)
 
 ## Main record types
 - [Action00](actions/action00.md) - set properties for features
