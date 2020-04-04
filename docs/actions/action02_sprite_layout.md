@@ -26,25 +26,91 @@ sprite_layout<Objects, 0x03> // Action02 random
 }
 ```
 
+The following example from the FIRS GRF is more advanced:
+
+```bash
+// Record #3790
+sprite_layout<IndustryTiles, 0xF3> // Action02 random
+{
+    ground_sprite<0x00000000>
+    {
+    }
+    child_sprite<0xC0008000>
+    {
+        offset: 0x00, 0x00;
+        registers: 
+        {
+            hide_sprite: 0x80;
+            sprite_offset: 0x81;
+        }
+    }
+    child_sprite<0xC0008001>
+    {
+        offset: 0x00, 0x00;
+        registers: 
+        {
+            hide_sprite: 0x82;
+            sprite_offset: 0x83;
+        }
+    }
+
+    ... // More omitted.
+
+    building_sprite<0x00008000>
+    {
+        offset: 0x00, 0x00, 0x00;
+        extent: 0x01, 0x10, 0x06;
+        registers: 
+        {
+            hide_sprite: 0x88;
+            sprite_offset: 0x89;
+            offset_z: 0x8A;
+        }
+    }
+    building_sprite<0x00008000>
+    {
+        offset: 0x00, 0x00, 0x00;
+        extent: 0x10, 0x01, 0x06;
+        registers: 
+        {
+            hide_sprite: 0x8B;
+            sprite_offset: 0x8C;
+            offset_z: 0x8D;
+        }
+    }
+
+    ... // More omitted.
+}
+```
+
 #### Properties
 
 The block name is `sprite_layout` and this is decorated with two values:
-- The type of the feature whose graphics are being assigned (`Objects` in the example). See [features](../sundries/features.md).
-- The set ID to be associated with this Action02 record (`0x03` in the example).
+- The type of the feature whose graphics are being assigned (`Objects` in the first example). See [features](../sundries/features.md).
+- The set ID to be associated with this Action02 record (`0x03` in the first example).
 
 Within the block there are a number of sub-blocks. There may be a single `ground_sprite` block and any number of `building_sprite` or `child_sprite` blocks. Each sub-block is decorated with a double word value for the ground sprite or building sprite it represents.
 
 **Ground sprite details** 
 
-The only item which can be found in the `ground_sprite` block is an optional set of flags and associated register values. See below for details.
+The only item which can be found in the `ground_sprite` block is an optional set of flags and associated register values: the `registers` property. See below for details.
 
 **Building sprite details**
 
+The building sprite includes two properties which define a bounding box:
+
+- `offset` is an array of three values representing `<xoffset>, <yoffset>, <zoffset>` for the bounding box.
+- `extent` is an array of three values representing `<xextent>, <yextent>, <zextent>` for the bounding box.
+- In addition, the optional `registers` property may also be present. See below for details.
+
 **Child sprite details**
 
-A `child_sprite` is a special case of `building_sprite` which shares the bounding box of the previous item. And has the following properties:
+A `child_sprite` is a special case of `building_sprite` which shares the bounding box of the previous item. A single `building_sprite` can be followed by zero or more `child_sprite` blocks. They can also be used to modify the `ground_sprite`. 
 
+The `child_sprite` include a single property related to the bounding box:
 
+- `offset`, an array of two value which represent `<xpixeloffset>, <ypixeloffset>`.
+- In addition, the optional `registers` property may also be present. See below for details. 
 
 **Registers**
 
@@ -58,9 +124,9 @@ The `registers` sub-block represents a set of flags and associated register valu
 | `sprite_offset`  | 0x02 | Add offset to sprite, disable default usage of construction stage or railtype-offset |          
 | `palette_offset` | 0x04 | Add offset to recoloursprite. |          
 | `palette_act01`  | 0x08 | Recolour sprite is from Action 1 (will be affected by the same construction stage resp. railtype-offsets as sprites, unless bit 2 is set). |         
-| `offset_x`       | 0x10 | Add offset for <xoffset>. Setting only offset_x, sets offset_y to zero. |    
-| `offset_y`       | 0x10 | Add offset for <yoffset>. Setting only offset_y, sets offset_x to zero. |    
-| `offset_z`       | 0x20 | Add offset for <zoffset>. |    
+| `offset_x`       | 0x10 | Add offset for `<xoffset>`. Setting only offset_x, sets offset_y to zero. |    
+| `offset_y`       | 0x10 | Add offset for `<yoffset>`. Setting only offset_y, sets offset_x to zero. |    
+| `offset_z`       | 0x20 | Add offset for `<zoffset>`. |    
 | `sprite_var10`   | 0x40 | Resolve sprite with Variable 10 set to a specific value. |         
 | `palette_var10`  | 0x80 | Resolve recoloursprite with Variable 10 set to a specific value. |         
 
@@ -72,8 +138,8 @@ The `registers` sub-block represents a set of flags and associated register valu
 | `sprite_offset`  | 0x02 | As above. |          
 | `palette_offset` | 0x04 | As above. |          
 | `palette_act01`  | 0x08 | As above. |         
-| `offset_x`       | 0x10 | Add offset for <xpixeloffset> |    
-| `offset_y`       | 0x20 | Add offset for <ypixeloffset> |    
+| `offset_x`       | 0x10 | Add offset for `<xpixeloffset>` |    
+| `offset_y`       | 0x20 | Add offset for `<ypixeloffset>` |    
 | `sprite_var10`   | 0x40 | As above. |         
 | `palette_var10`  | 0x80 | As above. |         
 

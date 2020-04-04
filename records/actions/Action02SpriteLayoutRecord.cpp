@@ -390,7 +390,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
     os << ", " << to_hex(m_set_id);
-    os << "> // Action02 random\n";
+    os << "> // Action02 sprite layout\n";
     os << pad(indent) << "{\n";
 
     os << pad(indent + 4) << str_ground_sprite << "<" << to_hex(m_ground_sprite) << ">\n";

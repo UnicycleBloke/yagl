@@ -2,9 +2,7 @@
 
 # Action 06
 
-Action04 (`modify_next`) allows modifying the contents of the following record. It uses the values of the GRF parameters and writes them into the data of the following record, overwriting the bytes that are present in the GRF file already. 
-
-This record type is a bit problematic for YAGL because the following record is written in YAGL rather than NFO, so it is not at all obvious what the offsets and sizes should be for the ranges of bytes that get overwritten. **yagl** has a `-x` option which dumps a GRF to a hex format somewhat similar to NFO. Using this should make it possible to encode your GRF, and then dump the hex version to work out what the modifications should be. This is not very satisfactory, but it will do for now.
+Action06 (`modify_next`) allows modifying the contents of the following record. It uses the values of the GRF parameters and writes them into the data of the following record, overwriting the bytes that are present in the GRF file already. 
 
 The following example includes a few comments for guidance generated automatically when a GRF is decoded. The YAGL format for this record is as follows:
 
@@ -16,6 +14,20 @@ modify_next // Action06
     modification(parameter[0x6C], 1, 8, false);
     modification(parameter[0x6B], 1, 9, false);
 }
+```
+
+This record type is a little bit problematic for YAGL because the following record is written in YAGL rather than NFO, so it is not at all obvious what the offsets and sizes should be for the ranges of bytes that get overwritten. **yagl** has a `-x` option which dumps a GRF to a hex format somewhat similar to NFO. Using this should make it possible to encode your GRF, and then dump the hex version to work out what the modifications should be. This is not very satisfactory, but it will do for now.
+
+The following example show the hex that is dumped for record #241 above and, more to the point, the following record #242:
+
+```bash
+Record #241
+modify_next
+06 6C 01 FF 08 00 6B 01 FF 09 00 FF 
+
+Record #242
+properties
+00 08 01 02 FF 0F 00 08 00 00 
 ```
 
 The block name `modify_next` is not decorated with additional information, and the block contains any number of `modification` items. Each modification has the following form:
