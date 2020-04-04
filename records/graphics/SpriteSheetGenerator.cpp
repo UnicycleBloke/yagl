@@ -239,9 +239,9 @@ void SpriteSheetGenerator::create_sprite_sheet(Category category, SpriteVector s
         case ColourType::Palette: 
             create_sprite_sheet_8bpp(image_path, sprites, width, height);
             break;
-        case ColourType::RGB: 
-            create_sprite_sheet_24bpp(image_path, sprites, width, height);
-            break;
+        //case ColourType::RGB: 
+        //    create_sprite_sheet_24bpp(image_path, sprites, width, height);
+        //    break;
         case ColourType::RGBA:
             create_sprite_sheet_32bpp(image_path, sprites, width, height);
             break;
@@ -283,18 +283,14 @@ void SpriteSheetGenerator::create_sprite_sheet_8bpp(const std::string& image_pat
         }
     }
 
-    // Get the relative path for the spritesheet. This is used in the YAGL.
-    fs::path absolute{image_path};
-    fs::path relative{CommandLineOptions::options().yagl_dir()};
-    relative.append(absolute.filename().string());
-
     // Copy the pixels for each sprite into the sprite sheet.
     uint32_t xlabel = 0;
     for (const auto& sprite: sprites)
     {
         // Each sprite needs to know the file name of its sprite sheet so that we 
         // can put this into the YAGL and read back the pixels later.
-        sprite->set_filename(relative.string());
+        std::string image_file = fs::path(image_path).filename().string();
+        sprite->set_filename(image_file);
 
         const uint32_t xdim = sprite->xdim(); 
         const uint32_t ydim = sprite->ydim(); 
@@ -327,6 +323,7 @@ void SpriteSheetGenerator::create_sprite_sheet_8bpp(const std::string& image_pat
 }
 
 
+/*
 void SpriteSheetGenerator::create_sprite_sheet_24bpp(const std::string& image_path, 
     SpriteVector sprites, uint32_t width, uint32_t height)
 {    
@@ -343,18 +340,14 @@ void SpriteSheetGenerator::create_sprite_sheet_24bpp(const std::string& image_pa
         }
     }
 
-    // Get the relative path for the spritesheet. This is used in the YAGL.
-    fs::path absolute{image_path};
-    fs::path relative{CommandLineOptions::options().yagl_dir()};
-    relative.append(absolute.filename().string());
-
     // Copy the pixels for each sprite into the sprite sheet.
     uint32_t xlabel = 0;
     for (const auto& sprite: sprites)
     {
         // Each sprite needs to know the file name of its sprite sheet so that we 
         // can put this into the YAGL and read back the pixels later.
-        sprite->set_filename(relative.string());
+        std::string image_file = fs::path(image_path).filename().string();
+        sprite->set_filename(image_file);
 
         const uint32_t xdim = sprite->xdim(); 
         const uint32_t ydim = sprite->ydim(); 
@@ -385,6 +378,7 @@ void SpriteSheetGenerator::create_sprite_sheet_24bpp(const std::string& image_pa
 
     image.write(image_path);
 }
+*/
 
 
 void SpriteSheetGenerator::create_sprite_sheet_32bpp(const std::string& image_path, 
@@ -403,18 +397,14 @@ void SpriteSheetGenerator::create_sprite_sheet_32bpp(const std::string& image_pa
         }
     }
 
-    // Get the relative path for the spritesheet. This is used in the YAGL.
-    fs::path absolute{image_path};
-    fs::path relative{CommandLineOptions::options().yagl_dir()};
-    relative.append(absolute.filename().string());
-
     // Copy the pixels for each sprite into the sprite sheet.
     uint32_t xlabel = 0;
     for (const auto& sprite: sprites)
     {
         // Each sprite needs to know the file name of its sprite sheet so that we 
         // can put this into the YAGL and read back the pixels later.
-        sprite->set_filename(relative.string());
+        std::string image_file = fs::path(image_path).filename().string();
+        sprite->set_filename(image_file);
 
         const uint32_t xdim = sprite->xdim(); 
         const uint32_t ydim = sprite->ydim(); 
@@ -474,18 +464,14 @@ void SpriteSheetGenerator::create_sprite_sheet_mask(const std::string& image_pat
         }
     }
 
-    // Get the relative path for the spritesheet. This is used in the YAGL.
-    fs::path absolute{image_path};
-    fs::path relative{CommandLineOptions::options().yagl_dir()};
-    relative.append(absolute.filename().string());
-
     // Copy the pixels for each sprite into the sprite sheet.
     uint32_t xlabel = 0;
     for (const auto& sprite: sprites)
     {
         // Each sprite needs to know the file name of its sprite sheet so that we 
         // can put this into the YAGL and read back the pixels later.
-        sprite->set_mask_filename(relative.string());
+        std::string image_file = fs::path(image_path).filename().string();
+        sprite->set_mask_filename(image_file);
 
         const uint32_t xdim = sprite->xdim(); 
         const uint32_t ydim = sprite->ydim(); 

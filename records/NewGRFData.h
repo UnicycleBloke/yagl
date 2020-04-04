@@ -42,7 +42,7 @@ public:
 
     // Primarily for testing - comparing two GRFs at the binary level, record by record.
     // Dump the records as hex, but break lines between records so that diff tools can recover after diffs.
-    void hexdump();
+    void hex_dump(std::ostream& os);
 
 private:    
     // Helpers for reading a GRF binary file 

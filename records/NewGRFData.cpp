@@ -695,7 +695,11 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
     {
         os << "// Record #" << index << '\n';
         record->print(os, m_sprites, 0);
-        index = index + record->num_sprites_to_write() + 1;
+
+        // This includes the number of real sprites and so on inside container record, 
+        // which is probably a mistake. The real sprites are printed inline.
+        //index = index + record->num_sprites_to_write() + 1;
+        ++index;
     }
 }
 
@@ -809,7 +813,7 @@ static std::string to_nfo(const std::string& binary, uint32_t offset)
     uint32_t size = (uint32_t)(binary.size() - offset);
     for (uint32_t index = 0; index < size; ++index)
     {
-        os << to_hex<uint8_t>(binary[index + offset]) << " ";
+        os << to_hex<uint8_t>(binary[index + offset], false) << " ";
         if ((index % 16) == 15)
         {
             os << "\n";
@@ -819,7 +823,7 @@ static std::string to_nfo(const std::string& binary, uint32_t offset)
 }
 
 
-void NewGRFData::hexdump()
+void NewGRFData::hex_dump(std::ostream& os)
 {
     uint32_t index = 0;
 
@@ -827,12 +831,13 @@ void NewGRFData::hexdump()
     {
         ++index; 
 
-        std::ostringstream os;
-        record->write(os, m_info);
 
-        std::cout << "Record # " << to_hex(index) << "\n";
-        std::cout << RecordName(record->record_type()) << "\n";
-        std::cout << to_nfo(os.str(), 0) << "\n\n";
+        std::ostringstream ss;
+        record->write(ss, m_info);
+
+        os << "Record #" << index << "\n";
+        os << RecordName(record->record_type()) << "\n";
+        os << to_nfo(ss.str(), 0) << "\n\n";
     }
 
     if (m_info.format == GRFFormat::Container2)
@@ -844,10 +849,10 @@ void NewGRFData::hexdump()
                 ++index; 
                 auto sprite = std::dynamic_pointer_cast<RealSpriteRecord>(record);
 
-                std::ostringstream os;
-                sprite->write(os, m_info);
-                std::cout << "Sprite # " << to_hex(sprite->sprite_id()) << "\n";
-                std::cout << to_nfo(os.str(), 0) << "\n";
+                std::ostringstream ss;
+                sprite->write(ss, m_info);
+                os << "Sprite #" << to_hex(sprite->sprite_id()) << "\n";
+                os << to_nfo(ss.str(), 0) << "\n";
             }
         }
     }

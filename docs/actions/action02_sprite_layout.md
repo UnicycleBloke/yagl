@@ -3,5 +3,83 @@
 
 # Action 02 (sprite layout)
 
+Action02 (`sprite_layout`) defines a spritelayout for a tile. This is used for the following feature types: `Houses`, `IndustryTiles`, `Objects` and `AirportTiles`. There are three formats available in the underlying [NewGRF specifications](https://newgrf-specs.tt-wiki.net/wiki/Action2/Sprite_Layout), but these are rolled into a single format in YAGL. The underlying format is automatically determined from the contents of the record:
+
+- Basic format for a single groundsprite and a single building sprite.
+- Extended format for combining multiple sprites.
+- Advanced format with register offsets.
+
+The following example includes a few comments for guidance generated automatically when a GRF is decoded. The YAGL format for this record is as follows:
+
+```bash
+// Record #17
+sprite_layout<Objects, 0x03> // Action02 random
+{
+    ground_sprite<0x00000F8D>
+    {
+    }
+    building_sprite<0x80008003>
+    {
+        offset: 0x00, 0x00, 0x00;
+        extent: 0x0F, 0x0F, 0x00;
+    }
+}
+```
+
+#### Properties
+
+The block name is `sprite_layout` and this is decorated with two values:
+- The type of the feature whose graphics are being assigned (`Objects` in the example). See [features](../sundries/features.md).
+- The set ID to be associated with this Action02 record (`0x03` in the example).
+
+Within the block there are a number of sub-blocks. There may be a single `ground_sprite` block and any number of `building_sprite` or `child_sprite` blocks. Each sub-block is decorated with a double word value for the ground sprite or building sprite it represents.
+
+**Ground sprite details** 
+
+The only item which can be found in the `ground_sprite` block is an optional set of flags and associated register values. See below for details.
+
+**Building sprite details**
+
+**Child sprite details**
+
+A `child_sprite` is a special case of `building_sprite` which shares the bounding box of the previous item. And has the following properties:
+
+
+
+**Registers**
+
+The `registers` sub-block represents a set of flags and associated register values. Each flag is represented by a keyword, and is followed by a register index. The set of flags bits have two slightly different interpretations, depending on what type of block they are defined inside.
+
+1. Inside a `building_sprite` block:
+
+| Flag name | Value | Description |
+|-|-|-|
+| `hide_sprite`    | 0x01 | Skip bounding box including child sprites. |          
+| `sprite_offset`  | 0x02 | Add offset to sprite, disable default usage of construction stage or railtype-offset |          
+| `palette_offset` | 0x04 | Add offset to recoloursprite. |          
+| `palette_act01`  | 0x08 | Recolour sprite is from Action 1 (will be affected by the same construction stage resp. railtype-offsets as sprites, unless bit 2 is set). |         
+| `offset_x`       | 0x10 | Add offset for <xoffset>. Setting only offset_x, sets offset_y to zero. |    
+| `offset_y`       | 0x10 | Add offset for <yoffset>. Setting only offset_y, sets offset_x to zero. |    
+| `offset_z`       | 0x20 | Add offset for <zoffset>. |    
+| `sprite_var10`   | 0x40 | Resolve sprite with Variable 10 set to a specific value. |         
+| `palette_var10`  | 0x80 | Resolve recoloursprite with Variable 10 set to a specific value. |         
+
+2. Inside a `ground_sprite` or `child_sprite` block:
+
+| Flag name | Value | Description |
+|-|-|-|
+| `hide_sprite`    | 0x01 | Skip sprite. |          
+| `sprite_offset`  | 0x02 | As above. |          
+| `palette_offset` | 0x04 | As above. |          
+| `palette_act01`  | 0x08 | As above. |         
+| `offset_x`       | 0x10 | Add offset for <xpixeloffset> |    
+| `offset_y`       | 0x20 | Add offset for <ypixeloffset> |    
+| `sprite_var10`   | 0x40 | As above. |         
+| `palette_var10`  | 0x80 | As above. |         
+
 ## Links
+
+The block structure described above is directly related to the corresponding record in the NewGRF specifications:
+
 - [Action02 NewGRF specifications](https://newgrf-specs.tt-wiki.net/wiki/Action2/Sprite_Layout)
+- [YAGL feature enumeration](../sundries/features.md)

@@ -104,3 +104,6 @@ Both long and short version of each option are supported.
 - **--version, -v**: displays the version of the **yagl** executable.
   - The rest of the command line is ignored when this option is present. 
 - **--help**: displays this help in the console.   
+
+
+Read the [main documentation](docs/index.md) here.

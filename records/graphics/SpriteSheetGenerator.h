@@ -67,8 +67,8 @@ class SpriteSheetGenerator
         // dynamic polymorphism, so create methods to handle the cases we need.
         void create_sprite_sheet_8bpp(const std::string& image_path, SpriteVector sprites, 
             uint32_t width, uint32_t height);
-        void create_sprite_sheet_24bpp(const std::string& image_path, SpriteVector sprites, 
-            uint32_t width, uint32_t height);
+        //void create_sprite_sheet_24bpp(const std::string& image_path, SpriteVector sprites, 
+        //    uint32_t width, uint32_t height);
         void create_sprite_sheet_32bpp(const std::string& image_path, SpriteVector sprites, 
             uint32_t width, uint32_t height);
         void create_sprite_sheet_mask(const std::string& image_path, SpriteVector sprites, 

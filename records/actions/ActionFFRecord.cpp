@@ -59,18 +59,15 @@ static constexpr const char* str_binary = "binary";
 
 void ActionFFRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    // Get the relative path for the spritesheet. This is used in the YAGL.
-    fs::path file_path{CommandLineOptions::options().yagl_dir()};
+    const CommandLineOptions& options = CommandLineOptions::options();
+    fs::path file_path{options.yagl_dir()};
     file_path.append(m_filename);
 
     // This need only distinguish itself from an ActionFE record.
-    os << pad(indent) << str_binary << "(\"" << file_path.string() << "\");\n";
+    os << pad(indent) << str_binary << "(\"" << file_path.make_preferred().string() << "\");\n";
 
     // Write out the actual binary data.
-    CommandLineOptions& options = CommandLineOptions::options();
-    fs::path yagl_file = options.yagl_file();
-    fs::path yagl_dir  = yagl_file.parent_path();
-    write_binary_file(yagl_dir.string());
+    write_binary_file(options.yagl_dir());
 }
 
 
@@ -86,10 +83,7 @@ void ActionFFRecord::parse(TokenStream& is)
     is.match(TokenType::SemiColon);
 
     // Read in the actual binary data.
-    CommandLineOptions& options = CommandLineOptions::options();
-    fs::path yagl_file = options.yagl_file();
-    fs::path yagl_dir  = yagl_file.parent_path();
-    read_binary_file(yagl_dir.string());
+    read_binary_file(CommandLineOptions::options().yagl_dir());
 }
 
 
@@ -98,7 +92,9 @@ void ActionFFRecord::write_binary_file(const std::string& binary_dir) const
     fs::path binary_path(binary_dir);
     binary_path.append(m_filename);
 
-    std::cout << "Writing binary file: " << binary_path.string() << "..." << std::endl;
+    const std::string file_path = binary_path.make_preferred().string();
+    std::cout << "Writing binary file: " << file_path << "..." << std::endl;
+
     std::ofstream os(binary_path, std::ios::binary);
     os.write((char*)&m_binary[0], m_binary.size());
 }
@@ -109,7 +105,7 @@ void ActionFFRecord::read_binary_file(const std::string& binary_dir)
     fs::path binary_path(binary_dir);
     binary_path.append(m_filename);
 
-    const std::string file_path = binary_path.string();
+    const std::string file_path = binary_path.make_preferred().string();
     std::cout << "Reading binary file: " << file_path << "..." << std::endl;
     
     std::ifstream is(file_path, std::ios::binary);    

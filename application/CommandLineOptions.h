@@ -39,6 +39,8 @@ class CommandLineOptions
         const std::string& grf_file()   const { return m_grf_file; }
         const std::string& yagl_dir()   const { return m_yagl_dir; }
         const std::string& yagl_file()  const { return m_yagl_file; }
+        const std::string& hex_file()   const { return m_hex_file; }
+        const std::string& image_base() const { return m_image_base; }
 
         uint32_t           width()      const { return m_width; }
         uint32_t           height()     const { return m_height; }
@@ -56,14 +58,15 @@ class CommandLineOptions
         std::string m_grf_file;
 
         // Optional arguments.
-        std::string m_yagl_dir  = "sprites";
         uint16_t    m_width     = 800;                    // Max width of spritesheets
         uint16_t    m_height    = 16'000;                 // Max height of spritesheets
         PaletteType m_palette   = PaletteType::Default; 
         uint8_t     m_chunk_gap = 3;                      // Join chunks in tiles gaps smaller than is. 
 
         // Calculated from m_grf_file and m_yagl_dir.
+        std::string m_yagl_dir  = "sprites";
         std::string m_yagl_file;
+        std::string m_hex_file;
         std::string m_image_base;
 
         // Used for debugging

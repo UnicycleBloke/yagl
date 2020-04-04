@@ -631,18 +631,16 @@ void RealSpriteRecord::parse(TokenStream& is)
         colour = SpriteSheet::Colour::RGBA;
     }
 
-    fs::path image_file = CommandLineOptions::options().yagl_file();
-    image_file = image_file.replace_extension().parent_path().parent_path();
-    image_file = image_file.append(m_filename);
-    std::shared_ptr<SpriteSheet> image_sheet = pool.get_sprite_sheet(image_file.string(), colour);
+    fs::path image_file = CommandLineOptions::options().yagl_dir();
+    image_file.append(m_filename);
+    std::shared_ptr<SpriteSheet> image_sheet = pool.get_sprite_sheet(image_file.make_preferred().string(), colour);
 
     std::shared_ptr<SpriteSheet> mask_sheet;
     if (m_mask_filename.length() > 0)
     {
-        fs::path mask_file = CommandLineOptions::options().yagl_file();
-        mask_file  = mask_file.replace_extension().parent_path().parent_path();
-        mask_file  = mask_file.append(m_mask_filename);
-        mask_sheet = pool.get_sprite_sheet(mask_file.string(), SpriteSheet::Colour::Palette);
+        fs::path mask_file = CommandLineOptions::options().yagl_dir();
+        mask_file.append(m_mask_filename);
+        mask_sheet = pool.get_sprite_sheet(mask_file.make_preferred().string(), SpriteSheet::Colour::Palette);
     }
 
     // Count the number of pure white pixels in the sprite. This should normally be none. 

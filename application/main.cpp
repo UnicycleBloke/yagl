@@ -32,17 +32,12 @@ static void decode()
     try 
     {
         // We first create the sub-directory for the output files.
-        fs::path yagl_file = options.yagl_file();
-        fs::path yagl_dir  = yagl_file.parent_path();
-        fs::create_directory(yagl_dir);
-        // The spritesheet generator appends various things to this base.
-        fs::path image_base = yagl_file;
-        image_base.replace_extension();
+        fs::create_directory(options.yagl_dir());
 
         std::cout << "Reading GRF:      " << options.grf_file() << "\n";
         std::cout << "Writing YAGL:     " << options.yagl_file() << "\n";
-        std::cout << "Output directory: " << yagl_dir.string() << "\n";
-        std::cout << "Image base:       " << image_base.string() << "\n" << std::endl;
+        std::cout << "Output directory: " << options.yagl_dir() << "\n";
+        std::cout << "Image base:       " << options.image_base() << "\n" << std::endl;
 
         // Read in the GRF file ...
         // The GRF file already checked for existence.
@@ -53,8 +48,8 @@ static void decode()
 
         // Write out the YAGL file and associated sprite sheets ...
         std::cout << "Writing YAGL and other files..." << std::endl;
-        std::ofstream os(yagl_file, std::ios::binary);
-        grf_data.print(os, yagl_dir.string(), image_base.string());
+        std::ofstream os(options.yagl_file(), std::ios::binary);
+        grf_data.print(os, options.yagl_dir(), options.image_base());
     }
     catch (const std::exception& e)
     {
@@ -69,29 +64,21 @@ static void encode()
 
     try
     {
-        // We first create the sub-directory for the output files.
-        fs::path yagl_file = options.yagl_file();
-        fs::path yagl_dir  = yagl_file.parent_path();
-        fs::create_directory(yagl_dir);
-        // The spritesheet generator appends various things to this base.
-        fs::path image_base = yagl_file;
-        image_base.replace_extension();
-
         std::cout << "Reading YAGL:     " << options.yagl_file() << "\n";
         std::cout << "Writing GRF:      " << options.grf_file() << "\n";
-        std::cout << "Source directory: " << yagl_dir.string() << "\n";
-        std::cout << "Image base:       " << image_base.string() << "\n" << std::endl;
+        std::cout << "Source directory: " << options.yagl_dir() << "\n";
+        std::cout << "Image base:       " << options.image_base() << "\n" << std::endl;
 
         // Read in the YAGL file ...
         // This file already checked for existence.
         // Will need to check for the sprite sheets as we go along.
         std::cout << "Lexing YAGL..." << std::endl;
-        TokenStream token_stream{yagl_file.string()};
+        TokenStream token_stream{options.yagl_file()};
 
         // Parse the YAGL script ...
         std::cout << "Parsing YAGL..." << std::endl;
         NewGRFData grf_data;
-        grf_data.parse(token_stream, yagl_dir.string(), image_base.string()); 
+        grf_data.parse(token_stream, options.yagl_dir(), options.image_base()); 
 
         // Back up the GRF before overwriting it ...
         fs::path grf_file = options.grf_file();
@@ -116,18 +103,30 @@ static void encode()
 }
 
 
-static void hexdump()
+static void hex_dump()
 {
     CommandLineOptions& options = CommandLineOptions::options();
 
     try 
     {
+        // We first create the sub-directory for the output files.
+        fs::create_directory(options.yagl_dir());
+
+        std::cout << "Reading GRF:      " << options.grf_file() << "\n";
+        std::cout << "Writing HEX:      " << options.yagl_file() << "\n";
+        std::cout << "Output directory: " << options.yagl_dir() << "\n";
+
         // Read in the GRF file ...
         // The GRF file already checked for existence.
+        std::cout << "Reading GRF..." << std::endl;
         NewGRFData grf_data;
-        std::ifstream is(options.grf_file(), std::ios::binary);    
+        std::ifstream is(options.grf_file(), std::ios::binary);
         grf_data.read(is);
-        grf_data.hexdump();
+
+        // Write out the HEX file...
+        std::cout << "Writing HEX..." << std::endl;
+        std::ofstream os(options.hex_file(), std::ios::binary);
+        grf_data.hex_dump(os);
     }
     catch (const std::exception& e)
     {
@@ -157,7 +156,7 @@ int main (int argc, char* argv[])
             break;
 
         case CommandLineOptions::Operation::HexDump:
-            hexdump();
+            hex_dump();
             break;
     }
 

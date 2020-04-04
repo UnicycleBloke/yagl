@@ -108,13 +108,14 @@ void CommandLineOptions::parse(int argc, char* argv[])
             std::cout << "ERROR: The name of a GRF file is a required argument\n";
             exit(1);
         }
-                
-        // GRF is in '<some_path>/<some_file>.grf'. 
-        // YAGL is in '<some_path>/<yagl_dir>/<some_file>.yagl'. 
-        fs::path grf_file  = m_grf_file;
-        fs::path yagl_file = grf_file.parent_path().append(m_yagl_dir);
-        yagl_file.append(grf_file.filename().string()).replace_extension(".yagl");
-        m_yagl_file = yagl_file.string();
+
+        // These are all the paths we might need. Image base is extended to create the name of each sprite sheet.
+        std::string grf_name = fs::path(m_grf_file).filename().string(); 
+        m_grf_file   = fs::path(m_grf_file).make_preferred().string();
+        m_yagl_dir   = fs::path(m_grf_file).parent_path().append(m_yagl_dir).make_preferred().string();
+        m_yagl_file  = fs::path(m_yagl_dir).append(grf_name).replace_extension("yagl").make_preferred().string();
+        m_hex_file   = fs::path(m_yagl_file).replace_extension("hex").make_preferred().string();
+        m_image_base = fs::path(m_yagl_file).replace_extension().make_preferred().string();
 
         if (m_operation == Operation::Decode) 
         {

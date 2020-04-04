@@ -393,7 +393,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
     os << "> // Action02 random\n";
     os << pad(indent) << "{\n";
 
-    os << pad(indent + 4) << str_ground_sprite << ": " << to_hex(m_ground_sprite) << "\n";
+    os << pad(indent + 4) << str_ground_sprite << "<" << to_hex(m_ground_sprite) << ">\n";
     os << pad(indent + 4) << "{" << '\n';
     m_ground_regs.print(os, true, indent + 8);
     os << pad(indent + 4) << "}" << '\n';
@@ -402,7 +402,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
     {
         if (sprite.new_bb)
         {
-            os << pad(indent + 4) << str_building_sprite << ": " << to_hex(sprite.sprite) << '\n';
+            os << pad(indent + 4) << str_building_sprite << "<" << to_hex(sprite.sprite) << ">\n";
             os << pad(indent + 4) << "{\n";
             os << pad(indent + 8) << str_offset << ": " << to_hex(sprite.xofs) << ", " << to_hex(sprite.yofs) << ", " << to_hex(sprite.zofs) << ";\n";
             os << pad(indent + 8) << str_extent << ": " << to_hex(sprite.xext) << ", " << to_hex(sprite.yext) << ", " << to_hex(sprite.zext) << ";\n";
@@ -411,7 +411,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
         }
         else
         {
-            os << pad(indent + 4) << str_child_sprite << ": " << to_hex(sprite.sprite) << '\n';
+            os << pad(indent + 4) << str_child_sprite << "<" << to_hex(sprite.sprite) << ">\n";
             os << pad(indent + 4) << "{\n";
             os << pad(indent + 8) << str_offset << ": " << to_hex(sprite.xofs) << ", " << to_hex(sprite.yofs) << ";\n";
             sprite.regs.print(os, true, indent + 8);
@@ -440,8 +440,6 @@ void Action02SpriteLayoutRecord::parse(TokenStream& is)
         if (it != g_indices2.end())
         {
             is.match(TokenType::Ident);
-            is.match(TokenType::Colon);
-
             switch (it->second)
             {
                 case 0x01: parse_ground_sprite(is); break;
@@ -466,8 +464,10 @@ void Action02SpriteLayoutRecord::parse(TokenStream& is)
 
 void Action02SpriteLayoutRecord::parse_ground_sprite(TokenStream& is)
 {
+    is.match(TokenType::OpenAngle);
     m_ground_sprite = is.match_uint32();
     m_ground_regs   = {};
+    is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
@@ -504,7 +504,9 @@ void Action02SpriteLayoutRecord::parse_building_sprite(TokenStream& is)
 {
     BuildingSprite sprite;
     sprite.new_bb = true;
+    is.match(TokenType::OpenAngle);
     sprite.sprite = is.match_uint32();
+    is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
@@ -561,7 +563,9 @@ void Action02SpriteLayoutRecord::parse_child_sprite(TokenStream& is)
 {
     BuildingSprite sprite;
     sprite.new_bb = false;
+    is.match(TokenType::OpenAngle);
     sprite.sprite = is.match_uint32();
+    is.match(TokenType::CloseAngle);
 
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
