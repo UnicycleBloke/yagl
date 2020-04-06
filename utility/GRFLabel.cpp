@@ -58,6 +58,7 @@ void GRFLabel::parse(TokenStream& is)
     {
         case TokenType::Ident:
             value = is.match(TokenType::Ident);
+
             if (value.size() != 4)
             {
                 throw PARSER_ERROR("Invalid GRF label: '" + token.value + "'", token);
@@ -72,9 +73,9 @@ void GRFLabel::parse(TokenStream& is)
 
         case TokenType::String:
             value = is.match(TokenType::String);
-            // TODO What about strings which are too short or too long?
+
             m_label = 0;
-            for (uint8_t i = 0; i < value.size(); ++i)
+            for (uint8_t i = 0; (i < value.size()) && (b < 4); ++i)
             {
                 uint8_t c = value[i];
                 if (c == '\\')
@@ -84,6 +85,11 @@ void GRFLabel::parse(TokenStream& is)
                     c |= hex_to_dec(value[i]);
                 }
                 m_label |= (c << (b++ * 8));
+            }
+
+            if (b != 4)
+            {
+                throw PARSER_ERROR("Invalid GRF label: '" + token.value + "'", token);
             }
             break;
 
