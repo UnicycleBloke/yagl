@@ -151,7 +151,8 @@ if (UNIX)
 else()
     # Microsoft Visual Studio 2019 (2017 didn't work so well due to some of the C++17 features in the code).
     # Code be fixed with a bit off faff. Or just install VS2019. :)
-    target_compile_options(${NEWGRF_PROGRAM_NAME} PUBLIC /std:c++17)
+    target_compile_options(${NEWGRF_PROGRAM_NAME} PUBLIC /std:c++17 /MT)
+    target_link_options(${NEWGRF_PROGRAM_NAME} PUBLIC /VERBOSE:LIB)
     target_link_libraries(${NEWGRF_PROGRAM_NAME} PUBLIC libpng16 zlib)
 
     # Is their a nicer, more automatic, way to generalise the location of vcpkg? 
