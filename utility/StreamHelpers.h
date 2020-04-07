@@ -48,12 +48,17 @@ template <> struct HexFormat<uint32_t> { static constexpr uint8_t index = 2; };
 template <typename T>
 std::string to_hex(T value, bool prefix = true)
 {
+    // Signed values are used here and there in the GRF specs. These should be converted to unsigned types of the 
+    // same size so that the sign extension to 32 or 64 bits doesn't appear in the YAGL.
+    using U = std::make_unsigned_t<T>;
+    U unsigned_value = static_cast<U>(value);
+
     std::ostringstream os;
     if (prefix)
     {
         os << "0x";
     }
-    os << std::uppercase << std::hex << std::setfill('0') << std::setw(2*sizeof(T)) << (uint32_t)value;
+    os << std::uppercase << std::hex << std::setfill('0') << std::setw(2*sizeof(T)) << static_cast<uint64_t>(unsigned_value);
     return os.str();
 }
 

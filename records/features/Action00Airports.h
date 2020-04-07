@@ -37,8 +37,7 @@ public:
 private:
     uint8_t        m_08_airport_override_id;
     AirportLayouts m_0A_airport_layouts;
-    uint16_t       m_0C_first_year_available;
-    uint16_t       m_0C_last_year_available;
+    YearsAvailable m_0C_years_available;
     uint8_t        m_0D_compatible_ttd_airport;
     uint8_t        m_0E_catchment_area;
     uint8_t        m_0F_noise_level;

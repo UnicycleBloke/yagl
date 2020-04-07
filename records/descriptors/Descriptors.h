@@ -29,3 +29,4 @@
 #include "AirportLayoutDescriptor.h"
 #include "IndustryLayoutDescriptor.h"
 #include "CargoAcceptanceDescriptor.h"
+#include "YearsAvailableDescriptor.h"
