@@ -53,7 +53,7 @@ const std::map<std::string, uint16_t> g_indices =
 
 constexpr IntegerDescriptorT<uint8_t>   desc_08 = { 0x08, str_airport_override_id,        PropFormat::Hex };
 constexpr AirportLayoutsDescriptor      desc_0A = { 0x0A, str_airport_layouts };
-constexpr YearsAvailableDescriptor      desc_0C = { 0x0C, str_years_available,            PropFormat::Dec };
+constexpr YearsAvailableDescriptor16    desc_0C = { 0x0C, str_years_available,            PropFormat::Dec };
 constexpr IntegerDescriptorT<uint8_t>   desc_0D = { 0x0D, str_compatible_ttd_airport,     PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>   desc_0E = { 0x0E, str_catchment_area,             PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>   desc_0F = { 0x0F, str_noise_level,                PropFormat::Hex };

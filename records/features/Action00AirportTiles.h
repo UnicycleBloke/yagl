@@ -33,13 +33,12 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    uint8_t  m_08_substitute_tile_id;
-    uint8_t  m_09_aiport_tile_override;
-    uint8_t  m_0E_callback_flags;
-    uint8_t  m_0F_animation_frames;
-    uint8_t  m_0F_animation_type;
-    uint8_t  m_10_animation_speed;
-    uint8_t  m_11_animation_triggers;
+    uint8_t   m_08_substitute_tile_id;
+    uint8_t   m_09_aiport_tile_override;
+    uint8_t   m_0E_callback_flags;
+    uint16_t  m_0F_animation_info;
+    uint8_t   m_10_animation_speed;
+    uint8_t   m_11_animation_triggers;
 };
 
 

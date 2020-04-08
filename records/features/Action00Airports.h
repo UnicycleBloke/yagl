@@ -35,14 +35,14 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    uint8_t        m_08_airport_override_id;
-    AirportLayouts m_0A_airport_layouts;
-    YearsAvailable m_0C_years_available;
-    uint8_t        m_0D_compatible_ttd_airport;
-    uint8_t        m_0E_catchment_area;
-    uint8_t        m_0F_noise_level;
-    uint16_t       m_10_airport_name_id;
-    uint16_t       m_11_maintenance_cost_factor;
+    uint8_t          m_08_airport_override_id;
+    AirportLayouts   m_0A_airport_layouts;
+    YearsAvailable16 m_0C_years_available;
+    uint8_t          m_0D_compatible_ttd_airport;
+    uint8_t          m_0E_catchment_area;
+    uint8_t          m_0F_noise_level;
+    uint16_t         m_10_airport_name_id;
+    uint16_t         m_11_maintenance_cost_factor;
 };
 
 

@@ -39,7 +39,7 @@ public:
     GRFVersion  grf_version() const { return m_grf_version; }
 
 private:
-    GRFVersion  m_grf_version;
+    GRFVersion  m_grf_version{};
     GRFLabel    m_grf_id;
     GRFString   m_name;
     GRFString   m_info;

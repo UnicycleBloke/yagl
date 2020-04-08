@@ -22,15 +22,18 @@
 #include "StreamHelpers.h"
 
 
-using YearsAvailable = std::array<uint16_t, 2>;
+template <typename T>
+using YearsAvailable = std::array<T, 2>;
+using YearsAvailable8  = YearsAvailable<uint8_t>;
+using YearsAvailable16 = YearsAvailable<uint16_t>;
 
 
-// Represents the from and to years available for an airport, and maybe some other things.
+template <typename T>
 struct YearsAvailableDescriptor : PropertyDescriptor
 {
     PropFormat format;
 
-    void print(const YearsAvailable& values, std::ostream& os, uint16_t indent) const
+    void print(const YearsAvailable<T>& values, std::ostream& os, uint16_t indent) const
     {
         // This is the name of the property.
         prefix(os, indent);
@@ -42,26 +45,30 @@ struct YearsAvailableDescriptor : PropertyDescriptor
         os << " ];\n";
     }
 
-    void parse(YearsAvailable& values, TokenStream& is) const
+    void parse(YearsAvailable<T>& values, TokenStream& is) const
     {
         is.match(TokenType::OpenBracket);
         while (is.peek().type != TokenType::CloseBracket)
         {
-            values[0] = is.match_integer_t<uint16_t>();
-            values[1] = is.match_integer_t<uint16_t>();
+            values[0] = is.match_integer_t<T>();
+            values[1] = is.match_integer_t<T>();
         }
         is.match(TokenType::CloseBracket);
     }
 
-    void read(YearsAvailable& values, std::istream& is) const
+    void read(YearsAvailable<T>& values, std::istream& is) const
     {
-        values[0] = read_uint16(is);
-        values[1] = read_uint16(is);
+        values[0] = read_uint<T>(is);
+        values[1] = read_uint<T>(is);
     }
 
-    void write(const YearsAvailable& values, std::ostream& os) const
+    void write(const YearsAvailable<T>& values, std::ostream& os) const
     {
-        write_uint16(os, values[0]);
-        write_uint16(os, values[1]);
+        write_uint<T>(os, values[0]);
+        write_uint<T>(os, values[1]);
     }
 };
+
+
+using YearsAvailableDescriptor8  = YearsAvailableDescriptor<uint8_t>;
+using YearsAvailableDescriptor16 = YearsAvailableDescriptor<uint16_t>;

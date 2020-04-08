@@ -54,7 +54,7 @@ class CommandLineOptions
 
     private:
         // Required arguments.
-        Operation   m_operation;
+        Operation   m_operation{};
         std::string m_grf_file;
 
         // Optional arguments.

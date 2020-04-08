@@ -36,14 +36,12 @@ public:
 private:
     uint8_t                 m_08_substitute_building_id;
     uint8_t                 m_09_building_flags;
-    uint8_t                 m_0A_first_year_available;
-    uint8_t                 m_0A_last_year_available;
+    YearsAvailable8         m_0A_years_available;
     uint8_t                 m_0B_population;
     uint8_t                 m_0C_mail_multiplier;
     uint8_t                 m_0D_passenger_acceptance;
     uint8_t                 m_0E_mail_acceptance;
     uint8_t                 m_0F_goods_etc_acceptance;
-    bool                    m_0F_accepts_goods;
     uint16_t                m_10_la_rating_decrease;
     uint8_t                 m_11_removal_cost_multiplier;
     uint16_t                m_12_building_name_id;
@@ -55,7 +53,6 @@ private:
     uint8_t                 m_18_appearance_probability;
     uint8_t                 m_19_extra_flags;
     uint8_t                 m_1A_animation_frames;
-    bool                    m_1A_animation_loops;
     uint8_t                 m_1B_animation_speed;
     uint8_t                 m_1C_building_class;
     uint8_t                 m_1D_callback_flags_2;

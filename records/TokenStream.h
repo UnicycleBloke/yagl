@@ -68,6 +68,10 @@ public:
     uint8_t  match_uint8();
     bool     match_bool();
 
+    // Special case for integer matching.
+    enum class DataType { U32, U16, U8 };
+    uint32_t match_date(DataType type); 
+    
     // Added to allow us to move to the beginning of the next record when an exception occurs
     // during parsing.
     void next_record();
@@ -80,7 +84,7 @@ public:
     const std::string& yagl_file() const { return m_yagl_file; }
 
 private:
-    uint64_t match_uint64(TokenValue& token);
+    uint64_t match_uint64(TokenValue& token, DataType type);
 
 private:    
     // Cached name of the script file that we are parsing. Used for error reporting.

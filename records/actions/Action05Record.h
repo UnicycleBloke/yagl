@@ -42,7 +42,7 @@ public:
     uint16_t num_sprites_to_read() const override { return m_num_sprites; }
 
 private:
-    NewFeatureType m_sprite_type;
-    uint16_t       m_num_sprites;
-    uint16_t       m_offset;
+    NewFeatureType m_sprite_type{};
+    uint16_t       m_num_sprites{};
+    uint16_t       m_offset{};
 };
