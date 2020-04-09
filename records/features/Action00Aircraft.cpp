@@ -97,7 +97,7 @@ constexpr IntegerDescriptorT<uint8_t>   desc_16 = { 0x16, str_retire_vehicle_ear
 constexpr IntegerDescriptorT<uint8_t>   desc_17 = { 0x17, str_miscellaneous_flags,           PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t>  desc_18 = { 0x18, str_refittable_cargo_classes,      PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t>  desc_19 = { 0x19, str_non_refittable_cargo_classes,  PropFormat::Hex };
-constexpr IntegerDescriptorT<uint32_t>  desc_1A = { 0x1A, str_long_introduction_date,        PropFormat::Hex };
+constexpr LongDateDescriptor            desc_1A = { 0x1A, str_long_introduction_date };
 constexpr IntegerDescriptorT<uint16_t>  desc_1B = { 0x1B, str_sort_purchase_list,            PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t>  desc_1C = { 0x1C, str_custom_cargo_aging_period,     PropFormat::Hex };
 constexpr CargoListDescriptor           desc_1D = { 0x1D, str_always_refittable_cargos };
@@ -134,7 +134,7 @@ bool Action00Aircraft::read_property(std::istream& is, uint8_t property)
         case 0x17: m_17_miscellaneous_flags          = read_uint8(is); break;
         case 0x18: m_18_refittable_cargo_classes     = read_uint16(is); break;
         case 0x19: m_19_non_refittable_cargo_classes = read_uint16(is); break;
-        case 0x1A: m_1A_long_introduction_date       = read_uint32(is); break;
+        case 0x1A: desc_1A.read(m_1A_long_introduction_date, is); break;
         case 0x1B: m_1B_sort_purchase_list           = read_uint8_ext(is); break;
         case 0x1C: m_1C_custom_cargo_aging_period    = read_uint16(is); break;
         case 0x1D: m_1D_always_refittable_cargos.read(is); break;
@@ -173,7 +173,7 @@ bool Action00Aircraft::write_property(std::ostream& os, uint8_t property) const
         case 0x17: write_uint8(os, m_17_miscellaneous_flags); break;
         case 0x18: write_uint16(os, m_18_refittable_cargo_classes); break;
         case 0x19: write_uint16(os, m_19_non_refittable_cargo_classes); break;
-        case 0x1A: write_uint32(os, m_1A_long_introduction_date); break;
+        case 0x1A: desc_1A.write(m_1A_long_introduction_date, os); break;
         case 0x1B: write_uint8_ext(os, m_1B_sort_purchase_list); break;
         case 0x1C: write_uint16(os, m_1C_custom_cargo_aging_period); break;
         case 0x1D: m_1D_always_refittable_cargos.write(os); break;

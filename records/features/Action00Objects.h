@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
+#include "DateDescriptor.h"
 
 
 class Action00Objects : public Action00Feature
@@ -40,8 +41,8 @@ private:
     uint8_t  m_0C_size_x; // Low nybble
     uint8_t  m_0C_size_y; // High nybble
     uint8_t  m_0D_cost_factor;
-    uint32_t m_0E_introduction_date;
-    uint32_t m_0F_end_of_life_date;
+    Date     m_0E_introduction_date;
+    Date     m_0F_end_of_life_date;
     uint16_t m_10_object_flags;
     uint8_t  m_11_animation_frames;
     uint8_t  m_11_animation_type;

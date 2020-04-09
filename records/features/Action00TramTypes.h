@@ -47,7 +47,7 @@ private:
     uint16_t     m_13_construction_costs;
     uint16_t     m_14_speed_limit;
     uint8_t      m_16_minimap_colour;
-    uint32_t     m_17_introduction_date;
+    Date         m_17_introduction_date;
     GRFLabelList m_18_required_tramtypes;
     GRFLabelList m_19_introduced_tramtypes;
     uint8_t      m_1A_sort_order;

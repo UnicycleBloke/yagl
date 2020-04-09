@@ -109,7 +109,7 @@ constexpr IntegerDescriptorT<uint8_t>  desc_1B  = { 0x1B, str_retire_vehicle_ear
 constexpr IntegerDescriptorT<uint8_t>  desc_1C  = { 0x1C, str_miscellaneous_flags,          PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_1D  = { 0x1D, str_refittable_cargo_classes,     PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_1E  = { 0x1E, str_non_refittable_cargo_classes, PropFormat::Hex };
-constexpr IntegerDescriptorT<uint32_t> desc_1F  = { 0x1F, str_long_introduction_date,       PropFormat::Hex };
+constexpr LongDateDescriptor           desc_1F  = { 0x1F, str_long_introduction_date };
 constexpr IntegerDescriptorT<uint16_t> desc_20  = { 0x20, str_sort_purchase_list,           PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_210 = { 0x21, str_visual_effect_position,       PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_211 = { 0x21, str_visual_effect_enum,           PropFormat::Hex };
@@ -151,7 +151,7 @@ bool Action00Vehicles::read_property(std::istream& is, uint8_t property)
         case 0x1C: m_1C_miscellaneous_flags          = read_uint8(is);  break;
         case 0x1D: m_1D_refittable_cargo_classes     = read_uint16(is); break;
         case 0x1E: m_1E_non_refittable_cargo_classes = read_uint16(is); break;
-        case 0x1F: m_1F_long_introduction_date       = read_uint32(is); break;
+        case 0x1F: desc_1F.read(m_1F_long_introduction_date, is); break;
         case 0x20: m_20_sort_purchase_list           = read_uint8_ext(is); break;
         case 0x21: m_21_visual_effect_position       = read_uint8(is);
                    m_21_visual_effect_enum           = (m_21_visual_effect_position & 0x70);
@@ -196,7 +196,7 @@ bool Action00Vehicles::write_property(std::ostream& os, uint8_t property) const
         case 0x1C: write_uint8(os, m_1C_miscellaneous_flags); break;
         case 0x1D: write_uint16(os, m_1D_refittable_cargo_classes); break;
         case 0x1E: write_uint16(os, m_1E_non_refittable_cargo_classes); break;
-        case 0x1F: write_uint32(os, m_1F_long_introduction_date); break;
+        case 0x1F: desc_1F.write(m_1F_long_introduction_date, os); break;
         case 0x20: write_uint8_ext(os, m_20_sort_purchase_list); break;
         case 0x21: write_uint8(os, (m_21_visual_effect_position & 0x0F) |
                                    (m_21_visual_effect_enum & 0x70)); break;

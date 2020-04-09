@@ -92,7 +92,7 @@ constexpr IntegerDescriptorT<uint16_t> desc_13 = { 0x13, str_construction_costs,
 constexpr IntegerDescriptorT<uint16_t> desc_14 = { 0x14, str_speed_limit,             PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_15 = { 0x15, str_acceleration_model,      PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_16 = { 0x16, str_minimap_colour,          PropFormat::Hex };
-constexpr IntegerDescriptorT<uint32_t> desc_17 = { 0x17, str_introduction_date,       PropFormat::Hex };
+constexpr LongDateDescriptor           desc_17 = { 0x17, str_introduction_date };
 constexpr GRFLabelListDescriptor       desc_18 = { 0x18, str_required_railtypes };
 constexpr GRFLabelListDescriptor       desc_19 = { 0x19, str_introduced_railtypes };
 constexpr IntegerDescriptorT<uint8_t>  desc_1A = { 0x1A, str_sort_order,              PropFormat::Hex };
@@ -123,7 +123,7 @@ bool Action00RailTypes::read_property(std::istream& is, uint8_t property)
         case 0x14: m_14_speed_limit             = read_uint16(is); break;
         case 0x15: m_15_acceleration_model      = read_uint8(is);  break;
         case 0x16: m_16_minimap_colour          = read_uint8(is);  break;
-        case 0x17: m_17_introduction_date       = read_uint32(is); break;
+        case 0x17: desc_17.read(m_17_introduction_date, is); break;
         case 0x18: m_18_required_railtypes.read(is);               break;
         case 0x19: m_19_introduced_railtypes.read(is);             break;
         case 0x1A: m_1A_sort_order              = read_uint8(is);  break;
@@ -156,7 +156,7 @@ bool Action00RailTypes::write_property(std::ostream& os, uint8_t property) const
         case 0x14: write_uint16(os, m_14_speed_limit); break;
         case 0x15: write_uint8(os, m_15_acceleration_model); break;
         case 0x16: write_uint8(os, m_16_minimap_colour); break;
-        case 0x17: write_uint32(os, m_17_introduction_date); break;
+        case 0x17: desc_17.write(m_17_introduction_date, os); break;
         case 0x18: m_18_required_railtypes.write(os); break;
         case 0x19: m_19_introduced_railtypes.write(os); break;
         case 0x1A: write_uint8(os, m_1A_sort_order); break;

@@ -49,7 +49,7 @@ private:
     uint16_t     m_14_speed_limit;
     uint8_t      m_15_acceleration_model;
     uint8_t      m_16_minimap_colour;
-    uint32_t     m_17_introduction_date;
+    Date         m_17_introduction_date;
     GRFLabelList m_18_required_railtypes;
     GRFLabelList m_19_introduced_railtypes;
     uint8_t      m_1A_sort_order;

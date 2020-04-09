@@ -54,7 +54,7 @@ private:
     uint8_t   m_1C_miscellaneous_flags;
     uint16_t  m_1D_refittable_cargo_classes;
     uint16_t  m_1E_non_refittable_cargo_classes;
-    uint32_t  m_1F_long_introduction_date;
+    Date      m_1F_long_introduction_date;
     uint16_t  m_20_sort_purchase_list;
     uint8_t   m_21_visual_effect_position;
     uint8_t   m_21_visual_effect_enum;

@@ -79,8 +79,8 @@ constexpr IntegerDescriptorT<uint8_t>  desc_0B  = { 0x0B, str_climate_availabili
 constexpr IntegerDescriptorT<uint8_t>  desc_0C0 = { 0x0C, str_size_x,               PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_0C1 = { 0x0C, str_size_y,               PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_0D  = { 0x0D, str_cost_factor,          PropFormat::Hex };
-constexpr IntegerDescriptorT<uint32_t> desc_0E  = { 0x0E, str_introduction_date,    PropFormat::Hex };
-constexpr IntegerDescriptorT<uint32_t> desc_0F  = { 0x0F, str_end_of_life_date,     PropFormat::Hex };
+constexpr LongDateDescriptor           desc_0E  = { 0x0E, str_introduction_date };
+constexpr LongDateDescriptor           desc_0F  = { 0x0F, str_end_of_life_date };
 constexpr IntegerDescriptorT<uint16_t> desc_10  = { 0x10, str_object_flags,         PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_110 = { 0x11, str_animation_frames,     PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_111 = { 0x11, str_animation_type,       PropFormat::Hex };
@@ -108,8 +108,8 @@ bool Action00Objects::read_property(std::istream& is, uint8_t property)
                    m_0C_size_y                 = ((m_0C_size_x & 0xF0) >> 4);
                    m_0C_size_x                &= 0x0F; break;
         case 0x0D: m_0D_cost_factor            = read_uint8(is); break;
-        case 0x0E: m_0E_introduction_date      = read_uint32(is); break;
-        case 0x0F: m_0F_end_of_life_date       = read_uint32(is); break;
+        case 0x0E: desc_0E.read(m_0E_introduction_date, is); break;
+        case 0x0F: desc_0F.read(m_0F_end_of_life_date, is); break;
         case 0x10: m_10_object_flags           = read_uint16(is); break;
         case 0x11: m_11_animation_frames       = read_uint8(is);
                    m_11_animation_type         = read_uint8(is); break;
@@ -137,8 +137,8 @@ bool Action00Objects::write_property(std::ostream& os, uint8_t property) const
         case 0x0B: write_uint8(os, m_0B_climate_availability); break;
         case 0x0C: write_uint8(os, (m_0C_size_x & 0x0F) | ((m_0C_size_y & 0x0F) << 4)); break;
         case 0x0D: write_uint8(os, m_0D_cost_factor); break;
-        case 0x0E: write_uint32(os, m_0E_introduction_date); break;
-        case 0x0F: write_uint32(os, m_0F_end_of_life_date); break;
+        case 0x0E: desc_0E.write(m_0E_introduction_date, os); break;
+        case 0x0F: desc_0F.write(m_0F_end_of_life_date, os); break;
         case 0x10: write_uint16(os, m_10_object_flags); break;
         case 0x11: write_uint8(os, (m_11_animation_type == 0xFF) ? 0xFF : m_11_animation_frames);
                    write_uint8(os, m_11_animation_type); break;
