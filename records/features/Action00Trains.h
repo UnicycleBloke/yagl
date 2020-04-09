@@ -66,7 +66,7 @@ private:
     uint8_t   m_27_miscellaneous_flags;
     uint16_t  m_28_refittable_cargo_classes;
     uint16_t  m_29_non_refittable_cargo_classes;
-    uint32_t  m_2A_long_introduction_date;
+    Date      m_2A_long_introduction_date;
     uint16_t  m_2B_custom_cargo_aging_period;   
     CargoList m_2C_always_refittable_cargos;
     CargoList m_2D_never_refittable_cargos;

@@ -19,6 +19,7 @@
 #pragma once
 #include "Action00Feature.h"
 #include "StreamHelpers.h"
+#include "DateDescriptor.h"
 
 
 class Action00Common : public Action00Feature
@@ -34,7 +35,7 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    uint16_t m_00_introduction_date;
+    Date     m_00_introduction_date;
     uint8_t  m_02_reliability_decay_speed;
     uint8_t  m_03_vehicle_life_years;
     uint8_t  m_04_model_life_years;

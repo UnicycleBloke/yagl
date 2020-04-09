@@ -142,7 +142,7 @@ constexpr IntegerDescriptorT<uint8_t>  desc_26  = { 0x26, str_retire_vehicle_ear
 constexpr IntegerDescriptorT<uint8_t>  desc_27  = { 0x27, str_miscellaneous_flags,          PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_28  = { 0x28, str_refittable_cargo_classes,     PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_29  = { 0x29, str_non_refittable_cargo_classes, PropFormat::Hex };
-constexpr IntegerDescriptorT<uint32_t> desc_2A  = { 0x2A, str_long_introduction_date,       PropFormat::Hex };
+constexpr LongDateDescriptor           desc_2A  = { 0x2A, str_long_introduction_date };
 constexpr IntegerDescriptorT<uint16_t> desc_2B  = { 0x2B, str_custom_cargo_aging_period,    PropFormat::Hex };
 constexpr CargoListDescriptor          desc_2C  = { 0x2C, str_always_refittable_cargos };
 constexpr CargoListDescriptor          desc_2D  = { 0x2D, str_never_refittable_cargos };
@@ -193,7 +193,7 @@ bool Action00Trains::read_property(std::istream& is, uint8_t property)
         case 0x27: m_27_miscellaneous_flags          = read_uint8(is); break;
         case 0x28: m_28_refittable_cargo_classes     = read_uint16(is); break;
         case 0x29: m_29_non_refittable_cargo_classes = read_uint16(is); break;
-        case 0x2A: m_2A_long_introduction_date       = read_uint32(is); break;
+        case 0x2A: desc_2A.read(m_2A_long_introduction_date, is); break;
         case 0x2B: m_2B_custom_cargo_aging_period    = read_uint16(is); break;
         case 0x2C: m_2C_always_refittable_cargos.read(is); break;
         case 0x2D: m_2D_never_refittable_cargos.read(is); break;
@@ -245,8 +245,8 @@ bool Action00Trains::write_property(std::ostream& os, uint8_t property) const
         case 0x27: write_uint8(os, m_27_miscellaneous_flags); break;
         case 0x28: write_uint16(os, m_28_refittable_cargo_classes); break;
         case 0x29: write_uint16(os, m_29_non_refittable_cargo_classes); break;
-        case 0x2A: write_uint32(os, m_2A_long_introduction_date); break;
-        case 0x2B: write_uint16(os, m_2B_custom_cargo_aging_period); break;        
+        case 0x2A: desc_2A.write(m_2A_long_introduction_date, os); break;
+        case 0x2B: write_uint16(os, m_2B_custom_cargo_aging_period); break;
         case 0x2C: m_2C_always_refittable_cargos.write(os); break;
         case 0x2D: m_2D_never_refittable_cargos.write(os); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);

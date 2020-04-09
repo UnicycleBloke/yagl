@@ -45,7 +45,7 @@ const std::map<std::string, uint16_t> g_indices =
 };
 
 
-constexpr IntegerDescriptorT<uint16_t> desc_00 = { 0x00, str_introduction_date,       PropFormat::Hex };
+constexpr ShortDateDescriptor          desc_00 = { 0x00, str_introduction_date };
 constexpr IntegerDescriptorT<uint8_t>  desc_02 = { 0x02, str_reliability_decay_speed, PropFormat::Dec };
 constexpr IntegerDescriptorT<uint8_t>  desc_03 = { 0x03, str_vehicle_life_years,      PropFormat::Dec };
 constexpr IntegerDescriptorT<uint8_t>  desc_04 = { 0x04, str_model_life_years,        PropFormat::Dec };
@@ -61,7 +61,7 @@ bool Action00Common::read_property(std::istream& is, uint8_t property)
 {
     switch (property)
     {
-        case 0x00: m_00_introduction_date       = read_uint16(is); break;
+        case 0x00: desc_00.read(m_00_introduction_date, is); break;
         case 0x02: m_02_reliability_decay_speed = read_uint8(is);  break;
         case 0x03: m_03_vehicle_life_years      = read_uint8(is);  break;
         case 0x04: m_04_model_life_years        = read_uint8(is);  break;
@@ -78,7 +78,7 @@ bool Action00Common::write_property(std::ostream& os, uint8_t property) const
 {
     switch (property)
     {
-        case 0x00: write_uint16(os, m_00_introduction_date); break;
+        case 0x00: desc_00.write(m_00_introduction_date, os); break;
         case 0x02: write_uint8(os, m_02_reliability_decay_speed); break;
         case 0x03: write_uint8(os, m_03_vehicle_life_years); break;
         case 0x04: write_uint8(os, m_04_model_life_years); break;

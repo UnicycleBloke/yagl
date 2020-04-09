@@ -30,3 +30,4 @@
 #include "IndustryLayoutDescriptor.h"
 #include "CargoAcceptanceDescriptor.h"
 #include "YearsAvailableDescriptor.h"
+#include "DateDescriptor.h"
