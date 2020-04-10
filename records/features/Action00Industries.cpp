@@ -280,8 +280,6 @@ void Action00Industries::Multipliers::parse(TokenStream& is)
 
 bool Action00Industries::read_property(std::istream& is, uint8_t property)
 {
-    uint8_t byte;
-
     switch (property)
     {
         case 0x08: m_08_substitute_industry_id      = read_uint8(is); break;

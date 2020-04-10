@@ -77,14 +77,14 @@ const std::map<std::string, uint16_t> g_indices =
 
 
 constexpr IntegerDescriptorT<uint8_t>  desc_00 = { 0x00, str_fallback_type_id,    PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_08 = { 0x08, str_year_available,      PropFormat::Hex };
+constexpr YearDescriptor<uint8_t>      desc_08 = { 0x08, str_year_available };
 constexpr IntegerDescriptorT<uint8_t>  desc_09 = { 0x09, str_minimum_length,      PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_0A = { 0x0A, str_maximum_length,      PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_0B = { 0x0B, str_cost_factor,         PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_0C = { 0x0C, str_maximum_speed,       PropFormat::Hex };
 constexpr BridgeLayoutDescriptor       desc_0D = { 0x0D, str_bridge_layout };
 constexpr IntegerDescriptorT<uint8_t>  desc_0E = { 0x0E, str_various_flags,       PropFormat::Hex };
-constexpr IntegerDescriptorT<uint32_t> desc_0F = { 0x0F, str_long_year_available, PropFormat::Hex };
+constexpr YearDescriptor<uint32_t>     desc_0F = { 0x0F, str_long_year_available };
 constexpr IntegerDescriptorT<uint16_t> desc_10 = { 0x10, str_purchase_text,       PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_11 = { 0x11, str_description_rail,    PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_12 = { 0x12, str_description_road,    PropFormat::Hex };
@@ -221,14 +221,14 @@ bool Action00Bridges::read_property(std::istream& is, uint8_t property)
     switch (property)
     {
         case 0x00: m_00_fallback_type_id    = read_uint8(is); break;
-        case 0x08: m_08_year_available      = read_uint8(is); break;
+        case 0x08: m_08_year_available.read(is); break;
         case 0x09: m_09_minimum_length      = read_uint8(is); break;
         case 0x0A: m_0A_maximum_length      = read_uint8(is); break;
         case 0x0B: m_0B_cost_factor         = read_uint8(is); break;
         case 0x0C: m_0C_maximum_speed       = read_uint16(is); break;
         case 0x0D: m_0D_bridge_layout.read(is); break;
         case 0x0E: m_0E_various_flags       = read_uint8(is); break;
-        case 0x0F: m_0F_long_year_available = read_uint32(is); break;
+        case 0x0F: m_0F_long_year_available.read(is); break;
         case 0x10: m_10_purchase_text       = read_uint16(is); break;
         case 0x11: m_11_description_rail    = read_uint16(is); break;
         case 0x12: m_12_description_road    = read_uint16(is); break;
@@ -246,14 +246,14 @@ bool Action00Bridges::write_property(std::ostream& os, uint8_t property) const
     switch (property)
     {
         case 0x00: write_uint8(os, m_00_fallback_type_id); break;
-        case 0x08: write_uint8(os, m_08_year_available); break;
+        case 0x08: m_08_year_available.write(os); break;
         case 0x09: write_uint8(os, m_09_minimum_length); break;
         case 0x0A: write_uint8(os, m_0A_maximum_length); break;
         case 0x0B: write_uint8(os, m_0B_cost_factor); break;
         case 0x0C: write_uint16(os, m_0C_maximum_speed); break;
         case 0x0D: m_0D_bridge_layout.write(os); break;
         case 0x0E: write_uint8(os, m_0E_various_flags); break;
-        case 0x0F: write_uint32(os, m_0F_long_year_available); break;
+        case 0x0F: m_0F_long_year_available.write(os); break;
         case 0x10: write_uint16(os, m_10_purchase_text); break;
         case 0x11: write_uint16(os, m_11_description_rail); break;
         case 0x12: write_uint16(os, m_12_description_road); break;

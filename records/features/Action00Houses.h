@@ -36,7 +36,7 @@ public:
 private:
     uint8_t                 m_08_substitute_building_id{};
     uint8_t                 m_09_building_flags{};
-    YearsAvailable8         m_0A_years_available{};
+    YearPair<uint8_t>       m_0A_years_available{};
     uint8_t                 m_0B_population{};
     uint8_t                 m_0C_mail_multiplier{};
     uint8_t                 m_0D_passenger_acceptance{};
@@ -59,8 +59,8 @@ private:
     std::array<uint8_t, 4>  m_1E_accepted_cargo_types{};
     uint16_t                m_1F_minimum_life_years{};
     CargoList               m_20_accepted_cargo_list{};
-    uint16_t                m_21_long_minimum_year{};
-    uint16_t                m_22_long_maximum_year{};
+    Year<uint16_t>          m_21_long_minimum_year{};
+    Year<uint16_t>          m_22_long_maximum_year{};
     CargoAcceptanceList     m_23_tile_acceptance_list{};
 };
 

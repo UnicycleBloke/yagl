@@ -53,7 +53,7 @@ const std::map<std::string, uint16_t> g_indices =
 
 constexpr IntegerDescriptorT<uint8_t>   desc_08 = { 0x08, str_airport_override_id,        PropFormat::Hex };
 constexpr AirportLayoutsDescriptor      desc_0A = { 0x0A, str_airport_layouts };
-constexpr YearsAvailableDescriptor16    desc_0C = { 0x0C, str_years_available,            PropFormat::Dec };
+constexpr YearPairDescriptor<uint16_t>  desc_0C = { 0x0C, str_years_available };
 constexpr IntegerDescriptorT<uint8_t>   desc_0D = { 0x0D, str_compatible_ttd_airport,     PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>   desc_0E = { 0x0E, str_catchment_area,             PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>   desc_0F = { 0x0F, str_noise_level,                PropFormat::Hex };
@@ -70,7 +70,7 @@ bool Action00Airports::read_property(std::istream& is, uint8_t property)
     {
         case 0x08: m_08_airport_override_id     = read_uint8(is); break;
         case 0x0A: m_0A_airport_layouts.read(is, AirportType::Airport); break;
-        case 0x0C: desc_0C.read(m_0C_years_available, is); break;
+        case 0x0C: m_0C_years_available.read(is); break;
         case 0x0D: m_0D_compatible_ttd_airport  = read_uint8(is); break;
         case 0x0E: m_0E_catchment_area          = read_uint8(is); break;
         case 0x0F: m_0F_noise_level             = read_uint8(is); break;
@@ -89,7 +89,7 @@ bool Action00Airports::write_property(std::ostream& os, uint8_t property) const
     {
         case 0x08: write_uint8(os,  m_08_airport_override_id); break;
         case 0x0A: m_0A_airport_layouts.write(os, AirportType::Airport); break;
-        case 0x0C: desc_0C.write(m_0C_years_available, os); break;
+        case 0x0C: m_0C_years_available.write(os); break;
         case 0x0D: write_uint8(os,  m_0D_compatible_ttd_airport); break;
         case 0x0E: write_uint8(os,  m_0E_catchment_area); break;
         case 0x0F: write_uint8(os,  m_0F_noise_level); break;

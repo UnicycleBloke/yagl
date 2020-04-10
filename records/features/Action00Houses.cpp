@@ -92,7 +92,7 @@ const std::map<std::string, uint16_t> g_indices =
 
 constexpr IntegerDescriptorT<uint8_t>  desc_08  = { 0x08, str_substitute_building_id, PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_09  = { 0x09, str_building_flags,         PropFormat::Hex };
-constexpr YearsAvailableDescriptor8    desc_0A  = { 0x0A, str_years_available,        PropFormat::Hex };
+constexpr YearPairDescriptor<uint8_t>  desc_0A  = { 0x0A, str_years_available };
 constexpr IntegerDescriptorT<uint8_t>  desc_0B  = { 0x0B, str_population,             PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_0C  = { 0x0C, str_mail_multiplier,        PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_0D  = { 0x0D, str_passenger_acceptance,   PropFormat::Hex };
@@ -115,9 +115,9 @@ constexpr IntegerDescriptorT<uint8_t>  desc_1D  = { 0x1D, str_callback_flags_2, 
 constexpr ArrayDescriptorT<uint8_t, 4> desc_1E  = { 0x1E, str_accepted_cargo_types,   PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_1F  = { 0x1F, str_minimum_life_years,     PropFormat::Hex };
 constexpr CargoListDescriptor          desc_20  = { 0x20, str_accepted_cargo_list };
-constexpr IntegerDescriptorT<uint16_t> desc_21  = { 0x21, str_long_minimum_year,      PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_22  = { 0x22, str_long_maximum_year,      PropFormat::Hex };
-constexpr CargoAcceptanceDescriptor    desc_23  = { 0x22, str_tile_acceptance_list };
+constexpr YearDescriptor<uint16_t>     desc_21  = { 0x21, str_long_minimum_year };
+constexpr YearDescriptor<uint16_t>     desc_22  = { 0x22, str_long_maximum_year };
+constexpr CargoAcceptanceDescriptor    desc_23  = { 0x23, str_tile_acceptance_list };
 
 
 } // namespace {
@@ -129,7 +129,7 @@ bool Action00Houses::read_property(std::istream& is, uint8_t property)
     {
         case 0x08: m_08_substitute_building_id  = read_uint8(is); break;
         case 0x09: m_09_building_flags          = read_uint8(is); break;
-        case 0x0A: desc_0A.read(m_0A_years_available, is); break;
+        case 0x0A: m_0A_years_available.read(is); break;
         case 0x0B: m_0B_population              = read_uint8(is); break;
         case 0x0C: m_0C_mail_multiplier         = read_uint8(is); break;
         case 0x0D: m_0D_passenger_acceptance    = read_uint8(is); break;
@@ -158,8 +158,8 @@ bool Action00Houses::read_property(std::istream& is, uint8_t property)
                    m_1E_accepted_cargo_types[3] = read_uint8(is); break;
         case 0x1F: m_1F_minimum_life_years      = read_uint16(is); break;
         case 0x20: m_20_accepted_cargo_list.read(is); break;
-        case 0x21: m_21_long_minimum_year       = read_uint16(is); break;
-        case 0x22: m_22_long_maximum_year       = read_uint16(is); break;
+        case 0x21: m_21_long_minimum_year.read(is); break;
+        case 0x22: m_22_long_maximum_year.read(is); break;
         case 0x23: m_23_tile_acceptance_list.read(is); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
@@ -174,7 +174,7 @@ bool Action00Houses::write_property(std::ostream& os, uint8_t property) const
     {
         case 0x08: write_uint8(os, m_08_substitute_building_id); break;
         case 0x09: write_uint8(os, m_09_building_flags); break;
-        case 0x0A: desc_0A.write(m_0A_years_available, os); break;
+        case 0x0A: m_0A_years_available.write(os); break;
         case 0x0B: write_uint8(os, m_0B_population); break;
         case 0x0C: write_uint8(os, m_0C_mail_multiplier); break;
         case 0x0D: write_uint8(os, m_0D_passenger_acceptance); break;
@@ -203,8 +203,8 @@ bool Action00Houses::write_property(std::ostream& os, uint8_t property) const
                    write_uint8(os, m_1E_accepted_cargo_types[3]); break;
         case 0x1F: write_uint16(os, m_1F_minimum_life_years); break;
         case 0x20: m_20_accepted_cargo_list.write(os); break;
-        case 0x21: write_uint16(os, m_21_long_minimum_year); break;
-        case 0x22: write_uint16(os, m_22_long_maximum_year); break;
+        case 0x21: m_21_long_minimum_year.write(os); break;
+        case 0x22: m_22_long_maximum_year.write(os); break;
         case 0x23: m_23_tile_acceptance_list.write(os); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
@@ -276,14 +276,14 @@ bool Action00Houses::parse_property(TokenStream& is, const std::string& name, ui
             case 0x14'00: desc_14.parse(m_14_callback_flags, is); break;
             case 0x15'00: desc_15.parse(m_15_override_byte, is); break;
             case 0x16'00: desc_16.parse(m_16_refresh_multiplier, is); break;
-            case 0x17'00: desc_17.parse(m_17_four_random_colours, is);
+            case 0x17'00: desc_17.parse(m_17_four_random_colours, is); break;
             case 0x18'00: desc_18.parse(m_18_appearance_probability, is); break;
             case 0x19'00: desc_19.parse(m_19_extra_flags, is); break;
             case 0x1A'00: desc_1A.parse(m_1A_animation_frames, is); break;
             case 0x1B'00: desc_1B.parse(m_1B_animation_speed, is); break;
             case 0x1C'00: desc_1C.parse(m_1C_building_class, is); break;
             case 0x1D'00: desc_1D.parse(m_1D_callback_flags_2, is); break;
-            case 0x1E'00: desc_1E.parse(m_1E_accepted_cargo_types, is);
+            case 0x1E'00: desc_1E.parse(m_1E_accepted_cargo_types, is); break;
             case 0x1F'00: desc_1F.parse(m_1F_minimum_life_years, is); break;
             case 0x20'00: desc_20.parse(m_20_accepted_cargo_list, is); break;
             case 0x21'00: desc_21.parse(m_21_long_minimum_year, is); break;

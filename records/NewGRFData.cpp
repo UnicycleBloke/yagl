@@ -98,10 +98,10 @@ void NewGRFData::read(std::istream& is)
         // Just a handle to pause a read just before it fails. If a GRF read fails,
         // Run it again with the -g option to dump records to the console as we go. This 
         // will tell us where we fell over.
-        if (record_index >= 19108)
+        if (record_index >= 111)
         {
            //std::raise(SIGINT);
-           int x = 0; // Breakpoint here.
+           int x = 111; // Breakpoint here.
         }
 
         // This section is terminated with a zero length record. The size of the length of the record
@@ -140,7 +140,16 @@ void NewGRFData::read(std::istream& is)
                     // This has fallen over while reading from zbase. The reason seems to be that the sprites
                     // appear as top level items, so a recolour sprite is treated as Action00. This does not 
                     // go well.
-                    record = read_record(is, size, num_sprites == 0, m_info);
+                    try
+                    {
+                        record = read_record(is, size, num_sprites == 0, m_info);
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cerr << e.what() << '\n';
+                        continue;
+                    }
+                    
                     
                     // This version works most of the time, including for zbase. Unfortunately, it will go 
                     // wrong for some Action00 records: encountered when parsing FIRS. If an Action00 record
