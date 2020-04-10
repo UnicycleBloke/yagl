@@ -230,12 +230,8 @@ void Action00Record::parse(TokenStream& is)
             // to parse_property().
             uint8_t property;
             instance->parse_property(is, name, property);
-            // Remove consecutive duplicates because of the some properties are split into
-            // sub-properties. TODO switch to using map for properties.
-            if ((properties.size() == 0) || (property != properties.rbegin()[0]))
-            {
-                properties.push_back(property);
-            }
+            // This preserves the order of properties and duplicates.
+            properties.push_back(property);
 
             is.match(TokenType::SemiColon);
         }
@@ -244,9 +240,10 @@ void Action00Record::parse(TokenStream& is)
         {
             m_properties = properties;
         }
+        // TODO should sort before testing because order doesn't matter so much.
         else if (m_properties != properties)
         {
-            throw RUNTIME_ERROR("Action00Record::parse");
+            throw RUNTIME_ERROR("Action00Record::parse - unexpected number of properties");
         }
         
 
