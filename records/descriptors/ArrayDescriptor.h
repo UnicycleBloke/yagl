@@ -77,7 +77,7 @@ void ArrayDescriptorT<T,N>::parse(std::array<T, N>& values, TokenStream& is) con
 
     for (auto& value: values)
     {
-        value = is.match_integer_t<T>();
+        value = is.match_uint<T>();
     }
 
     is.match(TokenType::CloseBracket);

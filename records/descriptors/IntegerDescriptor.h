@@ -34,7 +34,7 @@ struct IntegerDescriptorT : PropertyDescriptor
 
     void parse(T& value, TokenStream& is) const
     {
-        value = is.match_integer_t<T>();
+        value = is.match_uint<T>();
     }
 
     std::string to_string(T value) const;
@@ -110,8 +110,114 @@ void IntegerListDescriptorT<T>::parse(std::vector<T>& values, TokenStream& is) c
     is.match(TokenType::OpenBracket);
     while (is.peek().type != TokenType::CloseBracket)
     {
-        T value = is.match_integer_t<T>();
+        T value = is.match_uint<T>();
         values.push_back(value);
     }
     is.match(TokenType::CloseBracket);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+template <typename T>
+std::string to_string(T value, PropFormat format)
+{
+    char buffer[16];
+    switch (format)
+    {
+        case PropFormat::Hex:
+            switch (sizeof(T))
+            {
+                case 1: std::snprintf(buffer, 16, "0x%02X", value & 0xFF); break;
+                case 2: std::snprintf(buffer, 16, "0x%04X", value & 0xFFFF); break;
+                case 4: std::snprintf(buffer, 16, "0x%08X", value); break;
+            }
+            break;
+
+        case PropFormat::Dec:
+            std::snprintf(buffer, 16, "%u", value);
+            break;
+
+        case PropFormat::Bool:
+            std::snprintf(buffer, 16, "%s", value != 0x00 ? "true" : "false");
+            break;
+  
+        default:
+            std::snprintf(buffer, 16, "<error>");
+    }
+
+    return std::string{buffer};
+}
+
+
+// Use this in place of naked uint8_t, uint16_t and uint32_t.
+// Should help to avoid errors by internalising the size of reads and 
+// writes.
+// TODO what about signed types?
+template <typename T>
+class UInt
+{
+public:
+    void print(std::ostream& os, PropFormat format) const
+    {
+        os << to_string(m_value, format);
+    }
+
+    void parse(TokenStream& is)
+    {
+        m_value = is.match_uint<T>();
+    }
+
+    void read(std::istream& is)
+    {
+        m_value = read_uint<T>(is);
+    }
+
+    void write(std::ostream& os) const
+    {        
+        write_uint<T>(os, m_value);
+    }
+  
+private:
+    T m_value{};
+};
+
+
+template <typename T>
+struct UIntDescriptor : PropertyDescriptor
+{
+    PropFormat format;
+
+    void print(const UInt<T>& value, std::ostream& os, uint16_t indent) const
+    {
+        // This is the name of the property.
+        prefix(os, indent);
+        value.print(os, format);
+        os << ";\n";
+    }
+
+    void parse(UInt<T>& value, TokenStream& is) const
+    {
+        value.parse(is);
+    }
+};
+
+
+using UInt8  = UInt<uint8_t>;
+using UInt16 = UInt<uint16_t>;
+using UInt32 = UInt<uint32_t>;
+
+using UInt8Descriptor  = UIntDescriptor<uint8_t>;
+using UInt16Descriptor = UIntDescriptor<uint16_t>;
+using UInt32Descriptor = UIntDescriptor<uint32_t>;

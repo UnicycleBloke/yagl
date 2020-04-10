@@ -34,7 +34,7 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    uint8_t   m_08_sprite_id{};
+    UInt8     m_08_sprite_id{};
     bool      m_09_is_helicopter{};
     bool      m_0A_is_large{};
     uint8_t   m_0B_cost_factor{};

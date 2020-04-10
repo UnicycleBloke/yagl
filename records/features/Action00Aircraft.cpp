@@ -80,7 +80,7 @@ const std::map<std::string, uint16_t> g_indices =
 };
 
 
-constexpr IntegerDescriptorT<uint8_t>   desc_08 = { 0x08, str_sprite_id,                     PropFormat::Hex };
+constexpr UInt8Descriptor               desc_08 = { 0x08, str_sprite_id,                     PropFormat::Hex };
 constexpr BooleanDescriptor             desc_09 = { 0x09, str_is_helicopter };
 constexpr BooleanDescriptor             desc_0A = { 0x0A, str_is_large };
 constexpr IntegerDescriptorT<uint8_t>   desc_0B = { 0x0B, str_cost_factor,                   PropFormat::Hex };
@@ -117,7 +117,7 @@ bool Action00Aircraft::read_property(std::istream& is, uint8_t property)
 
     switch (property)
     {
-        case 0x08: m_08_sprite_id                    = read_uint8(is); break;
+        case 0x08: m_08_sprite_id.read(is); break;
         case 0x09: m_09_is_helicopter                = (read_uint8(is) == 0x00); break; // 2 means no
         case 0x0A: m_0A_is_large                     = (read_uint8(is) == 0x01); break; // 0 means no
         case 0x0B: m_0B_cost_factor                  = read_uint8(is); break;
@@ -156,7 +156,7 @@ bool Action00Aircraft::write_property(std::ostream& os, uint8_t property) const
 
     switch (property)
     {
-        case 0x08: write_uint8(os, m_08_sprite_id); break;
+        case 0x08: m_08_sprite_id.write(os); break;
         case 0x09: write_uint8(os, m_09_is_helicopter ? 0x00 : 0x02); break; // 2 means no
         case 0x0A: write_uint8(os, m_0A_is_large ? 0x01 : 0x00); break;
         case 0x0B: write_uint8(os, m_0B_cost_factor); break;

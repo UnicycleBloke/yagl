@@ -40,7 +40,7 @@ public:
     bool match_ident(const std::string& value);
 
     template <typename T>
-    T match_integer_t()
+    T match_uint()
     {
         if constexpr (std::is_same_v<T, uint8_t>)
         {
