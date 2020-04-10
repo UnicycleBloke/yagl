@@ -19,6 +19,11 @@
 #pragma once
 #include "DescriptorBase.h"
 #include "GRFLabel.h"
+#include <array>
+
+
+// This is used for GRF overrides in the global settings.
+using GRFLabelPair = std::array<GRFLabel, 2>;
 
 
 class GRFLabelList
@@ -46,6 +51,38 @@ struct GRFLabelDescriptor : PropertyDescriptor
     void parse(GRFLabel& label, TokenStream& is) const
     {
         label.parse(is);
+    }
+};
+
+
+struct GRFLabelPairDescriptor : PropertyDescriptor
+{
+    void print(const GRFLabelPair& labels, std::ostream& os, uint16_t indent) const
+    {
+        prefix(os, indent);
+        os << "[ ";
+        os << "\"" << labels[0].to_string() << "\" "; 
+        os << "\"" << labels[1].to_string() << "\" "; 
+        os << "]; // [ <source> <target> ]\n";
+    }
+
+    void parse(GRFLabelPair& labels, TokenStream& is) const
+    {
+        is.match(TokenType::OpenBracket);
+        labels[0].parse(is);
+        labels[1].parse(is);
+    }
+
+    void read(GRFLabelPair& labels, std::istream& is) const
+    {
+        labels[0].read(is);
+        labels[1].read(is);
+    } 
+
+    void write(const GRFLabelPair& labels, std::ostream& os) const
+    {
+        labels[0].write(os);
+        labels[1].write(os);
     }
 };
 

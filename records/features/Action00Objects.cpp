@@ -28,14 +28,12 @@ constexpr const char* str_class_label          = "class_label";
 constexpr const char* str_class_text_id        = "class_text_id";
 constexpr const char* str_object_text_id       = "object_text_id";
 constexpr const char* str_climate_availability = "climate_availability";
-constexpr const char* str_size_x               = "size_x";
-constexpr const char* str_size_y               = "size_y";
+constexpr const char* str_size_xy              = "size_xy";
 constexpr const char* str_cost_factor          = "cost_factor";
 constexpr const char* str_introduction_date    = "introduction_date";
 constexpr const char* str_end_of_life_date     = "end_of_life_date";
 constexpr const char* str_object_flags         = "object_flags";
-constexpr const char* str_animation_frames     = "animation_frames";
-constexpr const char* str_animation_type       = "animation_type";
+constexpr const char* str_animation_info       = "animation_info";
 constexpr const char* str_animation_speed      = "animation_speed";
 constexpr const char* str_animation_triggers   = "animation_triggers";
 constexpr const char* str_removal_cost_factor  = "removal_cost_factor";
@@ -54,14 +52,12 @@ const std::map<std::string, uint16_t> g_indices =
     { str_class_text_id,        0x09'00 },
     { str_object_text_id,       0x0A'00 },
     { str_climate_availability, 0x0B'00 },
-    { str_size_x,               0x0C'00 },
-    { str_size_y,               0x0C'01 },
+    { str_size_xy,              0x0C'00 },
     { str_cost_factor,          0x0D'00 },
     { str_introduction_date,    0x0E'00 },
     { str_end_of_life_date,     0x0F'00 },
     { str_object_flags,         0x10'00 },
-    { str_animation_frames,     0x11'00 },
-    { str_animation_type,       0x11'01 },
+    { str_animation_info,       0x11'00 },
     { str_animation_speed,      0x12'00 },
     { str_animation_triggers,   0x13'00 },
     { str_removal_cost_factor,  0x14'00 },
@@ -76,14 +72,12 @@ constexpr IntegerDescriptorT<uint32_t> desc_08  = { 0x08, str_class_label,      
 constexpr IntegerDescriptorT<uint16_t> desc_09  = { 0x09, str_class_text_id,        PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_0A  = { 0x0A, str_object_text_id,       PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_0B  = { 0x0B, str_climate_availability, PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_0C0 = { 0x0C, str_size_x,               PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_0C1 = { 0x0C, str_size_y,               PropFormat::Hex };
+constexpr IntegerDescriptorT<uint8_t>  desc_0C  = { 0x0C, str_size_xy,              PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_0D  = { 0x0D, str_cost_factor,          PropFormat::Hex };
 constexpr LongDateDescriptor           desc_0E  = { 0x0E, str_introduction_date };
 constexpr LongDateDescriptor           desc_0F  = { 0x0F, str_end_of_life_date };
 constexpr IntegerDescriptorT<uint16_t> desc_10  = { 0x10, str_object_flags,         PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_110 = { 0x11, str_animation_frames,     PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_111 = { 0x11, str_animation_type,       PropFormat::Hex };
+constexpr IntegerDescriptorT<uint16_t> desc_11  = { 0x11, str_animation_info,       PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_12  = { 0x12, str_animation_speed,      PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_13  = { 0x13, str_animation_triggers,   PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_14  = { 0x14, str_removal_cost_factor,  PropFormat::Hex };
@@ -104,15 +98,12 @@ bool Action00Objects::read_property(std::istream& is, uint8_t property)
         case 0x09: m_09_class_text_id          = read_uint16(is); break;
         case 0x0A: m_0A_object_text_id         = read_uint16(is); break;
         case 0x0B: m_0B_climate_availability   = read_uint8(is); break;
-        case 0x0C: m_0C_size_x                 = read_uint8(is);
-                   m_0C_size_y                 = ((m_0C_size_x & 0xF0) >> 4);
-                   m_0C_size_x                &= 0x0F; break;
+        case 0x0C: m_0C_size_xy                = read_uint8(is); break;
         case 0x0D: m_0D_cost_factor            = read_uint8(is); break;
         case 0x0E: desc_0E.read(m_0E_introduction_date, is); break;
         case 0x0F: desc_0F.read(m_0F_end_of_life_date, is); break;
         case 0x10: m_10_object_flags           = read_uint16(is); break;
-        case 0x11: m_11_animation_frames       = read_uint8(is);
-                   m_11_animation_type         = read_uint8(is); break;
+        case 0x11: m_11_animation_info         = read_uint16(is); break;
         case 0x12: m_12_animation_speed        = read_uint8(is); break;
         case 0x13: m_13_animation_triggers     = read_uint16(is); break;
         case 0x14: m_14_removal_cost_factor    = read_uint8(is); break;
@@ -135,13 +126,12 @@ bool Action00Objects::write_property(std::ostream& os, uint8_t property) const
         case 0x09: write_uint16(os, m_09_class_text_id); break;
         case 0x0A: write_uint16(os, m_0A_object_text_id); break;
         case 0x0B: write_uint8(os, m_0B_climate_availability); break;
-        case 0x0C: write_uint8(os, (m_0C_size_x & 0x0F) | ((m_0C_size_y & 0x0F) << 4)); break;
+        case 0x0C: write_uint8(os, m_0C_size_xy); break;
         case 0x0D: write_uint8(os, m_0D_cost_factor); break;
         case 0x0E: desc_0E.write(m_0E_introduction_date, os); break;
         case 0x0F: desc_0F.write(m_0F_end_of_life_date, os); break;
         case 0x10: write_uint16(os, m_10_object_flags); break;
-        case 0x11: write_uint8(os, (m_11_animation_type == 0xFF) ? 0xFF : m_11_animation_frames);
-                   write_uint8(os, m_11_animation_type); break;
+        case 0x11: write_uint16(os, m_11_animation_info); break;
         case 0x12: write_uint8(os, m_12_animation_speed); break;
         case 0x13: write_uint16(os, m_13_animation_triggers); break;
         case 0x14: write_uint8(os, m_14_removal_cost_factor); break;
@@ -164,14 +154,12 @@ bool Action00Objects::print_property(std::ostream& os, uint8_t property, uint16_
         case 0x09: desc_09.print(m_09_class_text_id, os, indent); break;
         case 0x0A: desc_0A.print(m_0A_object_text_id, os, indent); break;
         case 0x0B: desc_0B.print(m_0B_climate_availability, os, indent); break;
-        case 0x0C: desc_0C0.print(m_0C_size_x, os, indent); 
-                   desc_0C1.print(m_0C_size_y, os, indent); break;
+        case 0x0C: desc_0C.print(m_0C_size_xy, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_cost_factor, os, indent); break;
         case 0x0E: desc_0E.print(m_0E_introduction_date, os, indent); break;
         case 0x0F: desc_0F.print(m_0F_end_of_life_date, os, indent); break;
         case 0x10: desc_10.print(m_10_object_flags, os, indent); break;
-        case 0x11: desc_110.print(m_11_animation_frames, os, indent); 
-                   desc_111.print(m_11_animation_type, os, indent); break; 
+        case 0x11: desc_11.print(m_11_animation_info, os, indent); break; 
         case 0x12: desc_12.print(m_12_animation_speed, os, indent); break;
         case 0x13: desc_13.print(m_13_animation_triggers, os, indent); break;
         case 0x14: desc_14.print(m_14_removal_cost_factor, os, indent); break;
@@ -199,14 +187,12 @@ bool Action00Objects::parse_property(TokenStream& is, const std::string& name, u
             case 0x09'00: desc_09.parse(m_09_class_text_id, is); break;
             case 0x0A'00: desc_0A.parse(m_0A_object_text_id, is); break;
             case 0x0B'00: desc_0B.parse(m_0B_climate_availability, is); break;
-            case 0x0C'00: desc_0C0.parse(m_0C_size_x, is); break;
-            case 0x0C'01: desc_0C1.parse(m_0C_size_y, is); break;
+            case 0x0C'00: desc_0C.parse(m_0C_size_xy, is); break;
             case 0x0D'00: desc_0D.parse(m_0D_cost_factor, is); break;
             case 0x0E'00: desc_0E.parse(m_0E_introduction_date, is); break;
             case 0x0F'00: desc_0F.parse(m_0F_end_of_life_date, is); break;
             case 0x10'00: desc_10.parse(m_10_object_flags, is); break;
-            case 0x11'00: desc_110.parse(m_11_animation_frames, is); break;
-            case 0x11'01: desc_111.parse(m_11_animation_type, is); break;
+            case 0x11'00: desc_11.parse(m_11_animation_info, is); break;
             case 0x12'00: desc_12.parse(m_12_animation_speed, is); break;
             case 0x13'00: desc_13.parse(m_13_animation_triggers, is); break;
             case 0x14'00: desc_14.parse(m_14_removal_cost_factor, is); break;

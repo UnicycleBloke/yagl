@@ -33,8 +33,8 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    uint8_t m_08_callback_flags;
-    uint8_t m_09_graphics_flags;
+    uint8_t m_08_callback_flags{};
+    uint8_t m_09_graphics_flags{};
 };
 
 

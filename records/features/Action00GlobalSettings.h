@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
+#include "GRFLabelListDescriptor.h"
 #include "GRFStrings.h"
 #include <array>
 #include <vector>
@@ -47,7 +48,8 @@ public:
         void parse(TokenStream& is);
 
     private:
-        std::array<uint8_t, 32*12> m_snow_heights;
+        static constexpr uint32_t SNOW_LINE_SIZE = 32U * 12;
+        std::array<uint8_t, SNOW_LINE_SIZE> m_snow_heights;
     };
 
 public:
@@ -84,63 +86,61 @@ private:
     // entries in the cargo table.
 
     // TTD has 49 base costs (66 in OpenTTD currently) which govern how much everything costs.
-    uint8_t    m_08_cost_base_multipliers;
+    uint8_t    m_08_cost_base_multipliers{};
 
     // Translates a GRFLable, such as "MAIL" into an index so that different GRFs can work together.
     // Note that this property cannot be set incrementally, you must set all types in a single 
     // action 0 starting from ID 0. 
-    GRFLabel   m_09_cargo_translation_table;
+    GRFLabel   m_09_cargo_translation_table{};
 
     // This and the following properties can be used to modify currencies. Each of them 
     // can have IDs 0-18 (decimal), the IDs being ordered the same as in the Currency 
     // drop-down list. This property allows changing currency names that are displayed in the 
     // Currency drop-down in the Game Options window. This property is a textID, and if you need 
     // to supply your own text, it must be a DCxx one. 
-    uint16_t   m_0A_currency_display_names;
+    uint16_t   m_0A_currency_display_names{};
     // The equivalent of 1 British pound in this currency, multiplied by 1000. 
     // For example, 1 GBP=2 USD, so this should be 2000 for US dollars. 
-    uint32_t   m_0B_currency_multipliers;
+    uint32_t   m_0B_currency_multipliers{};
     // The low byte of this word specifies the thousands separator to be used for this currency 
     // (usually dot "." or comma ","). The high byte should be zero if the currency symbol 
     // should be in front of the number ($123,456) and should be 1 if the currency symbol should 
-    // be shown after the number (123,456$). 
-    uint8_t    m_0C_currency_separator;
-    bool       m_0C_currency_is_postfix;
+    // be shown after the number (123,456$).
+    uint16_t   m_0C_currency_options{}; 
     // These doublewords are interpreted as a string of up to 4 characters. If you need fewer 
     // characters, the remaining bytes should be zero. 
-    GRFLabel   m_0D_currency_symbols_prefix;
-    GRFLabel   m_0E_currency_symbols_suffix;
+    GRFLabel   m_0D_currency_symbols_prefix{};
+    GRFLabel   m_0E_currency_symbols_suffix{};
     // This value allows you to have Euro introduced instead the currency at a given time. If this 
     // value is zero, the currency is never substituted with the Euro (USD, for example). If it's 
     // nonzero, it gives the year when the currency is replaced by Euro (for example, 2002 for DM). 
-    uint16_t   m_0F_euro_introduction_dates;
+    uint16_t   m_0F_euro_introduction_dates{};
 
     // This property allows you to specify the snow line height for every day of the year. The 
     // only ID you can set is 0, and the value must be 12*32=384 bytes long. To simplify things 
     // for the patch, every month has 32 entries, and the impossible combinations (like 32th January 
     // or 31th April) will never be read. 
-    SnowLine   m_10_snow_line_table;
+    SnowLine   m_10_snow_line_table{};
 
     // Allows you to provide a list of 'source' and 'target' GRFIDs to let vehicles in the source 
     // GRF override those in the target GRF, when dynamic engines is enabled. 
-    GRFLabel   m_11_grf_overrides_source;
-    GRFLabel   m_11_grf_overrides_target;
+    GRFLabelPair m_11_grf_overrides{};
 
     // Provides ability to specify rail types via a translation table, similar to using a cargo 
     // translation table. 
-    GRFLabel   m_12_railtype_translation_table;
+    GRFLabel   m_12_railtype_translation_table{};
 
     // Provides ability to specify genders or cases via a translation table. These map NewGRF 
     // internal IDs for the genders or cases to the genders or cases as defined in OpenTTD's 
     // language files so NewGRF strings and OpenTTD strings can interact on eachother's gender 
     // or cases. 
-    GenderCase m_13_gender_translation_table;
-    GenderCase m_14_case_translation_table;
+    GenderCase m_13_gender_translation_table{};
+    GenderCase m_14_case_translation_table{};
 
     // Defines the plural form for a language. The ID used is the Action 4 (GRF version 7 or higher) 
     // language-id, i.e. this only works with GRF version 7 or higher. Language-id 7F (any) is 
     // not allowed. 
-    uint8_t    m_15_plural_form;
+    uint8_t    m_15_plural_form{};
 };
 
 

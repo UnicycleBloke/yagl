@@ -45,8 +45,7 @@ constexpr const char* str_refittable_cargo_classes     = "refittable_cargo_class
 constexpr const char* str_non_refittable_cargo_classes = "non_refittable_cargo_classes";
 constexpr const char* str_long_introduction_date       = "long_introduction_date";
 constexpr const char* str_sort_purchase_list           = "sort_purchase_list";
-constexpr const char* str_visual_effect_position       = "visual_effect_position";
-constexpr const char* str_visual_effect_enum           = "visual_effect_enum";
+constexpr const char* str_visual_effect                = "visual_effect";
 constexpr const char* str_custom_cargo_aging_period    = "custom_cargo_aging_period";
 constexpr const char* str_shorten_vehicle              = "shorten_vehicle";
 constexpr const char* str_always_refittable_cargos     = "always_refittable_cargos";
@@ -80,8 +79,7 @@ const std::map<std::string, uint16_t> g_indices =
     { str_non_refittable_cargo_classes, 0x1E'00 },
     { str_long_introduction_date,       0x1F'00 },
     { str_sort_purchase_list,           0x20'00 },
-    { str_visual_effect_position,       0x21'00 },
-    { str_visual_effect_enum,           0x21'01 },
+    { str_visual_effect,                0x21'00 },
     { str_custom_cargo_aging_period,    0x22'00 },
     { str_shorten_vehicle,              0x23'00 },
     { str_always_refittable_cargos,     0x24'00 },
@@ -111,8 +109,7 @@ constexpr IntegerDescriptorT<uint16_t> desc_1D  = { 0x1D, str_refittable_cargo_c
 constexpr IntegerDescriptorT<uint16_t> desc_1E  = { 0x1E, str_non_refittable_cargo_classes, PropFormat::Hex };
 constexpr LongDateDescriptor           desc_1F  = { 0x1F, str_long_introduction_date };
 constexpr IntegerDescriptorT<uint16_t> desc_20  = { 0x20, str_sort_purchase_list,           PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_210 = { 0x21, str_visual_effect_position,       PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_211 = { 0x21, str_visual_effect_enum,           PropFormat::Hex };
+constexpr IntegerDescriptorT<uint8_t>  desc_21  = { 0x21, str_visual_effect,                PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_22  = { 0x22, str_custom_cargo_aging_period,    PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_23  = { 0x23, str_shorten_vehicle,              PropFormat::Hex };
 constexpr CargoListDescriptor          desc_24  = { 0x24, str_always_refittable_cargos };
@@ -153,9 +150,7 @@ bool Action00Vehicles::read_property(std::istream& is, uint8_t property)
         case 0x1E: m_1E_non_refittable_cargo_classes = read_uint16(is); break;
         case 0x1F: desc_1F.read(m_1F_long_introduction_date, is); break;
         case 0x20: m_20_sort_purchase_list           = read_uint8_ext(is); break;
-        case 0x21: m_21_visual_effect_position       = read_uint8(is);
-                   m_21_visual_effect_enum           = (m_21_visual_effect_position & 0x70);
-                   m_21_visual_effect_position      &= 0x0F;            break;
+        case 0x21: m_21_visual_effect                = read_uint8(is);  break;
         case 0x22: m_22_custom_cargo_aging_period    = read_uint16(is); break;
         case 0x23: m_23_shorten_vehicle              = read_uint8(is);  break;
         case 0x24: m_24_always_refittable_cargos.read(is);              break;
@@ -198,8 +193,7 @@ bool Action00Vehicles::write_property(std::ostream& os, uint8_t property) const
         case 0x1E: write_uint16(os, m_1E_non_refittable_cargo_classes); break;
         case 0x1F: desc_1F.write(m_1F_long_introduction_date, os); break;
         case 0x20: write_uint8_ext(os, m_20_sort_purchase_list); break;
-        case 0x21: write_uint8(os, (m_21_visual_effect_position & 0x0F) |
-                                   (m_21_visual_effect_enum & 0x70)); break;
+        case 0x21: write_uint8(os, m_21_visual_effect); break;
         case 0x22: write_uint16(os, m_22_custom_cargo_aging_period); break;
         case 0x23: write_uint8(os, m_23_shorten_vehicle); break;
         case 0x24: m_24_always_refittable_cargos.write(os); break;
@@ -242,8 +236,7 @@ bool Action00Vehicles::print_property(std::ostream& os, uint8_t property, uint16
         case 0x1E: desc_1E.print(m_1E_non_refittable_cargo_classes, os, indent); break;
         case 0x1F: desc_1F.print(m_1F_long_introduction_date, os, indent); break;
         case 0x20: desc_20.print(m_20_sort_purchase_list, os, indent); break;
-        case 0x21: desc_210.print(m_21_visual_effect_position, os, indent); 
-                   desc_211.print(m_21_visual_effect_enum, os, indent); break;
+        case 0x21: desc_21.print(m_21_visual_effect, os, indent); break;
         case 0x22: desc_22.print(m_22_custom_cargo_aging_period, os, indent); break;
         case 0x23: desc_23.print(m_23_shorten_vehicle, os, indent); break;
         case 0x24: desc_24.print(m_24_always_refittable_cargos, os, indent); break;
@@ -291,8 +284,7 @@ bool Action00Vehicles::parse_property(TokenStream& is, const std::string& name, 
             case 0x1E'00: desc_1E.parse(m_1E_non_refittable_cargo_classes, is); break;
             case 0x1F'00: desc_1F.parse(m_1F_long_introduction_date, is); break;
             case 0x20'00: desc_20.parse(m_20_sort_purchase_list, is); break;
-            case 0x21'00: desc_210.parse(m_21_visual_effect_position, is); break; 
-            case 0x21'01: desc_211.parse(m_21_visual_effect_enum, is); break;
+            case 0x21'00: desc_21.parse(m_21_visual_effect, is); break;
             case 0x22'00: desc_22.parse(m_22_custom_cargo_aging_period, is); break;
             case 0x23'00: desc_23.parse(m_23_shorten_vehicle, is); break;
             case 0x24'00: desc_24.parse(m_24_always_refittable_cargos, is); break;

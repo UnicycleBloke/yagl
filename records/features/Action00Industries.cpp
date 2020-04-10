@@ -69,18 +69,14 @@ constexpr const char* str_production_multipliers_2    = "production_multipliers_
 constexpr const char* str_minimum_distributed         = "minimum_distributed";
 constexpr const char* str_sound_effects               = "sound_effects";
 constexpr const char* str_conflicting_industries      = "conflicting_industries";
-constexpr const char* str_conflicting_old_new         = "conflicting_old_new";
 constexpr const char* str_random_probability          = "random_probability";
 constexpr const char* str_gameplay_probability        = "gameplay_probability";
 constexpr const char* str_map_colour                  = "map_colour";
 constexpr const char* str_special_flags               = "special_flags";
 constexpr const char* str_new_industry_text_id        = "new_industry_text_id";
-constexpr const char* str_input_multipliers_A1        = "input_multipliers_A1";
-constexpr const char* str_input_multipliers_B1        = "input_multipliers_B1";
-constexpr const char* str_input_multipliers_A2        = "input_multipliers_A2";
-constexpr const char* str_input_multipliers_B2        = "input_multipliers_B2";
-constexpr const char* str_input_multipliers_A3        = "input_multipliers_A3";
-constexpr const char* str_input_multipliers_B3        = "input_multipliers_B3";
+constexpr const char* str_input_multipliers1          = "input_multipliers1";
+constexpr const char* str_input_multipliers2          = "input_multipliers2";
+constexpr const char* str_input_multipliers3          = "input_multipliers3";
 constexpr const char* str_industry_name_id            = "industry_name_id";
 constexpr const char* str_prospecting_probability     = "prospecting_probability";
 constexpr const char* str_callback_flags_1            = "callback_flags_1";
@@ -113,18 +109,14 @@ const std::map<std::string, uint16_t> g_indices =
     { str_minimum_distributed,         0x14'00 },
     { str_sound_effects,               0x15'00 },
     { str_conflicting_industries,      0x16'00 },
-    { str_conflicting_old_new,         0x16'01 },
     { str_random_probability,          0x17'00 },
     { str_gameplay_probability,        0x18'00 },
     { str_map_colour,                  0x19'00 },
     { str_special_flags,               0x1A'00 },
     { str_new_industry_text_id,        0x1B'00 },
-    { str_input_multipliers_A1,        0x1C'00 },
-    { str_input_multipliers_B1,        0x1C'01 },
-    { str_input_multipliers_A2,        0x1D'00 },
-    { str_input_multipliers_B2,        0x1D'01 },
-    { str_input_multipliers_A3,        0x1E'00 },
-    { str_input_multipliers_B3,        0x1E'01 },
+    { str_input_multipliers1,          0x1C'00 },
+    { str_input_multipliers2,          0x1D'00 },
+    { str_input_multipliers3,          0x1E'00 },
     { str_industry_name_id,            0x1F'00 },
     { str_prospecting_probability,     0x20'00 },
     { str_callback_flags_1,            0x21'00 },
@@ -152,19 +144,15 @@ constexpr IntegerDescriptorT<uint8_t>  desc_12  = { 0x12, str_production_multipl
 constexpr IntegerDescriptorT<uint8_t>  desc_13  = { 0x13, str_production_multipliers_2,    PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_14  = { 0x14, str_minimum_distributed,         PropFormat::Hex };
 constexpr VectorU8Descriptor           desc_15  = { 0x15, str_sound_effects };
-constexpr ArrayDescriptorT<uint8_t, 3> desc_160 = { 0x16, str_conflicting_industries,      PropFormat::Hex };
-constexpr ArrayDescriptorT<uint8_t, 3> desc_161 = { 0x16, str_conflicting_old_new,         PropFormat::Hex };
+constexpr ArrayDescriptorT<uint8_t, 3> desc_16  = { 0x16, str_conflicting_industries,      PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_17  = { 0x17, str_random_probability,          PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_18  = { 0x18, str_gameplay_probability,        PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_19  = { 0x19, str_map_colour,                  PropFormat::Hex };
 constexpr IntegerDescriptorT<uint32_t> desc_1A  = { 0x1A, str_special_flags,               PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_1B  = { 0x1B, str_new_industry_text_id,        PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_1C0 = { 0x1C, str_input_multipliers_A1,        PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_1C1 = { 0x1C, str_input_multipliers_B1,        PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_1D0 = { 0x1D, str_input_multipliers_A2,        PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_1D1 = { 0x1D, str_input_multipliers_B2,        PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_1E0 = { 0x1E, str_input_multipliers_A3,        PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_1E1 = { 0x1E, str_input_multipliers_B3,        PropFormat::Hex };
+constexpr IntegerDescriptorT<uint32_t> desc_1C  = { 0x1C, str_input_multipliers1,          PropFormat::Hex };
+constexpr IntegerDescriptorT<uint32_t> desc_1D  = { 0x1D, str_input_multipliers2,          PropFormat::Hex };
+constexpr IntegerDescriptorT<uint32_t> desc_1E  = { 0x1E, str_input_multipliers3,          PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_1F  = { 0x1F, str_industry_name_id,            PropFormat::Hex };
 constexpr IntegerDescriptorT<uint32_t> desc_20  = { 0x20, str_prospecting_probability,     PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_21  = { 0x21, str_callback_flags_1,            PropFormat::Hex };
@@ -314,26 +302,17 @@ bool Action00Industries::read_property(std::istream& is, uint8_t property)
         case 0x13: m_13_production_multipliers_2    = read_uint8(is); break;
         case 0x14: m_14_minimum_distributed         = read_uint8(is); break;
         case 0x15: m_15_sound_effects.read(is); break;
-        case 0x16: byte                             = read_uint8(is);
-                   m_16_conflicting_industries[0]   = byte & 0x7F;
-                   m_16_conflicting_old_new[0]      = (byte != 0xFF) ? (byte & 0x80) : 0xFF;
-                   byte                             = read_uint8(is);
-                   m_16_conflicting_industries[1]   = byte & 0x7F;
-                   m_16_conflicting_old_new[1]      = (byte != 0xFF) ? (byte & 0x80) : 0xFF;
-                   byte                             = read_uint8(is);
-                   m_16_conflicting_industries[2]   = byte & 0x7F;
-                   m_16_conflicting_old_new[2]      = (byte != 0xFF) ? (byte & 0x80) : 0xFF; break;
+        case 0x16: m_16_conflicting_industries[0]   = read_uint8(is);
+                   m_16_conflicting_industries[1]   = read_uint8(is);
+                   m_16_conflicting_industries[2]   = read_uint8(is); break;
         case 0x17: m_17_random_probability          = read_uint8(is); break;
         case 0x18: m_18_gameplay_probability        = read_uint8(is); break;
         case 0x19: m_19_map_colour                  = read_uint8(is); break;
         case 0x1A: m_1A_special_flags               = read_uint32(is); break;
         case 0x1B: m_1B_new_industry_text_id        = read_uint16(is); break;
-        case 0x1C: m_1C_input_multipliers_A1        = read_uint16(is);
-                   m_1C_input_multipliers_B1        = read_uint16(is); break;
-        case 0x1D: m_1D_input_multipliers_A2        = read_uint16(is);
-                   m_1D_input_multipliers_B2        = read_uint16(is); break;
-        case 0x1E: m_1E_input_multipliers_A3        = read_uint16(is);
-                   m_1E_input_multipliers_B3        = read_uint16(is); break;
+        case 0x1C: m_1C_input_multipliers1          = read_uint32(is); break;
+        case 0x1D: m_1D_input_multipliers2          = read_uint32(is); break;
+        case 0x1E: m_1E_input_multipliers3          = read_uint32(is); break;
         case 0x1F: m_1F_industry_name_id            = read_uint16(is); break;
         case 0x20: m_20_prospecting_probability     = read_uint32(is); break;
         case 0x21: m_21_callback_flags_1            = read_uint8(is); break;
@@ -373,20 +352,17 @@ bool Action00Industries::write_property(std::ostream& os, uint8_t property) cons
         case 0x13: write_uint8(os, m_13_production_multipliers_2); break;
         case 0x14: write_uint8(os, m_14_minimum_distributed); break;
         case 0x15: m_15_sound_effects.write(os); break;
-        case 0x16: write_uint8(os, m_16_conflicting_industries[0] | m_16_conflicting_old_new[0]);
-                   write_uint8(os, m_16_conflicting_industries[1] | m_16_conflicting_old_new[1]);
-                   write_uint8(os, m_16_conflicting_industries[2] | m_16_conflicting_old_new[2]); break;
+        case 0x16: write_uint8(os, m_16_conflicting_industries[0]);
+                   write_uint8(os, m_16_conflicting_industries[1]);
+                   write_uint8(os, m_16_conflicting_industries[2]); break;
         case 0x17: write_uint8(os, m_17_random_probability); break;
         case 0x18: write_uint8(os, m_18_gameplay_probability); break;
         case 0x19: write_uint8(os, m_19_map_colour); break;
         case 0x1A: write_uint32(os, m_1A_special_flags); break;
         case 0x1B: write_uint16(os, m_1B_new_industry_text_id); break;
-        case 0x1C: write_uint16(os, m_1C_input_multipliers_A1);
-                   write_uint16(os, m_1C_input_multipliers_B1); break;
-        case 0x1D: write_uint16(os, m_1D_input_multipliers_A2);
-                   write_uint16(os, m_1D_input_multipliers_B2); break;
-        case 0x1E: write_uint16(os, m_1E_input_multipliers_A3);
-                   write_uint16(os, m_1E_input_multipliers_B3); break;
+        case 0x1C: write_uint32(os, m_1C_input_multipliers1); break;
+        case 0x1D: write_uint32(os, m_1D_input_multipliers2); break;
+        case 0x1E: write_uint32(os, m_1E_input_multipliers3); break;
         case 0x1F: write_uint16(os, m_1F_industry_name_id); break;
         case 0x20: write_uint32(os, m_20_prospecting_probability); break;
         case 0x21: write_uint8(os, m_21_callback_flags_1); break;
@@ -422,19 +398,15 @@ bool Action00Industries::print_property(std::ostream& os, uint8_t property, uint
         case 0x13: desc_13.print(m_13_production_multipliers_2, os, indent); break;
         case 0x14: desc_14.print(m_14_minimum_distributed, os, indent); break;
         case 0x15: desc_15.print(m_15_sound_effects, os, indent); break;
-        case 0x16: desc_160.print(m_16_conflicting_industries, os, indent); 
-                   desc_161.print(m_16_conflicting_old_new, os, indent); break;
+        case 0x16: desc_16.print(m_16_conflicting_industries, os, indent); break;
         case 0x17: desc_17.print(m_17_random_probability, os, indent); break;
         case 0x18: desc_18.print(m_18_gameplay_probability, os, indent); break;
         case 0x19: desc_19.print(m_19_map_colour, os, indent); break;
         case 0x1A: desc_1A.print(m_1A_special_flags, os, indent); break;
         case 0x1B: desc_1B.print(m_1B_new_industry_text_id, os, indent); break;
-        case 0x1C: desc_1C0.print(m_1C_input_multipliers_A1, os, indent); 
-                   desc_1C1.print(m_1C_input_multipliers_B1, os, indent); break;
-        case 0x1D: desc_1D0.print(m_1D_input_multipliers_A2, os, indent); 
-                   desc_1D1.print(m_1D_input_multipliers_B2, os, indent); break;
-        case 0x1E: desc_1E0.print(m_1E_input_multipliers_A3, os, indent); 
-                   desc_1E1.print(m_1E_input_multipliers_B3, os, indent); break;
+        case 0x1C: desc_1C.print(m_1C_input_multipliers1, os, indent); break;
+        case 0x1D: desc_1D.print(m_1D_input_multipliers2, os, indent); break;
+        case 0x1E: desc_1E.print(m_1E_input_multipliers3, os, indent); break;
         case 0x1F: desc_1F.print(m_1F_industry_name_id, os, indent); break;
         case 0x20: desc_20.print(m_20_prospecting_probability, os, indent); break;
         case 0x21: desc_21.print(m_21_callback_flags_1, os, indent); break;
@@ -475,19 +447,15 @@ bool Action00Industries::parse_property(TokenStream& is, const std::string& name
             case 0x13'00: desc_13.parse(m_13_production_multipliers_2, is); break;
             case 0x14'00: desc_14.parse(m_14_minimum_distributed, is); break;
             case 0x15'00: desc_15.parse(m_15_sound_effects, is); break;
-            case 0x16'00: desc_160.parse(m_16_conflicting_industries, is); break;
-            case 0x16'01: desc_161.parse(m_16_conflicting_old_new, is); break;
+            case 0x16'00: desc_16.parse(m_16_conflicting_industries, is); break;
             case 0x17'00: desc_17.parse(m_17_random_probability, is); break;
             case 0x18'00: desc_18.parse(m_18_gameplay_probability, is); break;
             case 0x19'00: desc_19.parse(m_19_map_colour, is); break;
             case 0x1A'00: desc_1A.parse(m_1A_special_flags, is); break;
             case 0x1B'00: desc_1B.parse(m_1B_new_industry_text_id, is); break;
-            case 0x1C'00: desc_1C0.parse(m_1C_input_multipliers_A1, is); break;
-            case 0x1C'01: desc_1C1.parse(m_1C_input_multipliers_B1, is); break;
-            case 0x1D'00: desc_1D0.parse(m_1D_input_multipliers_A2, is); break;
-            case 0x1D'01: desc_1D1.parse(m_1D_input_multipliers_B2, is); break;
-            case 0x1E'00: desc_1E0.parse(m_1E_input_multipliers_A3, is); break;
-            case 0x1E'01: desc_1E1.parse(m_1E_input_multipliers_B3, is); break;
+            case 0x1C'00: desc_1C.parse(m_1C_input_multipliers1, is); break;
+            case 0x1D'00: desc_1D.parse(m_1D_input_multipliers2, is); break;
+            case 0x1E'00: desc_1E.parse(m_1E_input_multipliers3, is); break;
             case 0x1F'00: desc_1F.parse(m_1F_industry_name_id, is); break;
             case 0x20'00: desc_20.parse(m_20_prospecting_probability, is); break;
             case 0x21'00: desc_21.parse(m_21_callback_flags_1, is); break;

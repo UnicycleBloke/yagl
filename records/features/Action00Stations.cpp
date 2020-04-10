@@ -68,8 +68,7 @@ constexpr const char* str_cargo_type_triggers       = "cargo_type_triggers";
 constexpr const char* str_general_flags             = "general_flags";
 constexpr const char* str_overhead_wire_placement   = "overhead_wire_placement";
 constexpr const char* str_can_train_enter_tile      = "can_train_enter_tile";
-constexpr const char* str_animation_frames          = "animation_frames";
-constexpr const char* str_animation_type            = "animation_type";
+constexpr const char* str_animation_info            = "animation_info";
 constexpr const char* str_animation_speed           = "animation_speed";
 constexpr const char* str_animation_triggers        = "animation_triggers";
 
@@ -93,8 +92,7 @@ const std::map<std::string, uint16_t> g_indices =
     { str_general_flags,             0x13'00 },
     { str_overhead_wire_placement,   0x14'00 },
     { str_can_train_enter_tile,      0x15'00 },
-    { str_animation_frames,          0x16'00 },
-    { str_animation_type,            0x16'01 },
+    { str_animation_info,            0x16'00 },
     { str_animation_speed,           0x17'00 },
     { str_animation_triggers,        0x18'00 },
 };
@@ -114,8 +112,7 @@ constexpr IntegerDescriptorT<uint32_t> desc_12  = { 0x12, str_cargo_type_trigger
 constexpr IntegerDescriptorT<uint8_t>  desc_13  = { 0x13, str_general_flags,             PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_14  = { 0x14, str_overhead_wire_placement,   PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_15  = { 0x15, str_can_train_enter_tile,      PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_160 = { 0x16, str_animation_frames,          PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_161 = { 0x16, str_animation_type,            PropFormat::Hex };
+constexpr IntegerDescriptorT<uint16_t> desc_16  = { 0x16, str_animation_info,            PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_17  = { 0x17, str_animation_speed,           PropFormat::Hex };
 constexpr IntegerDescriptorT<uint16_t> desc_18  = { 0x18, str_animation_triggers,        PropFormat::Hex };
 
@@ -414,8 +411,7 @@ bool Action00Stations::read_property(std::istream& is, uint8_t property)
         case 0x13: m_13_general_flags             = read_uint8(is);  break;
         case 0x14: m_14_overhead_wire_placement   = read_uint8(is);  break;
         case 0x15: m_15_can_train_enter_tile      = read_uint8(is);  break;
-        case 0x16: m_16_animation_frames          = read_uint8(is);
-                   m_16_animation_type            = read_uint8(is);  break;
+        case 0x16: m_16_animation_info            = read_uint16(is);  break;
         case 0x17: m_17_animation_speed           = read_uint8(is);  break;
         case 0x18: m_18_animation_triggers        = read_uint16(is); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
@@ -443,8 +439,7 @@ bool Action00Stations::write_property(std::ostream& os, uint8_t property) const
         case 0x13: write_uint8(os, m_13_general_flags); break;
         case 0x14: write_uint8(os, m_14_overhead_wire_placement); break;
         case 0x15: write_uint8(os, m_15_can_train_enter_tile); break;
-        case 0x16: write_uint8(os, m_16_animation_frames);
-                   write_uint8(os, m_16_animation_type); break;
+        case 0x16: write_uint16(os, m_16_animation_info); break;
         case 0x17: write_uint8(os, m_17_animation_speed); break;
         case 0x18: write_uint16(os, m_18_animation_triggers); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
@@ -472,8 +467,7 @@ bool Action00Stations::print_property(std::ostream& os, uint8_t property, uint16
         case 0x13: desc_13.print(m_13_general_flags, os, indent); break;
         case 0x14: desc_14.print(m_14_overhead_wire_placement, os, indent); break;
         case 0x15: desc_15.print(m_15_can_train_enter_tile, os, indent); break;
-        case 0x16: desc_160.print(m_16_animation_frames, os, indent); 
-                   desc_161.print(m_16_animation_type, os, indent); break;
+        case 0x16: desc_16.print(m_16_animation_info, os, indent); break;
         case 0x17: desc_17.print(m_17_animation_speed, os, indent); break;
         case 0x18: desc_18.print(m_18_animation_triggers, os, indent); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
@@ -506,8 +500,7 @@ bool Action00Stations::parse_property(TokenStream& is, const std::string& name, 
             case 0x13'00: desc_13.parse(m_13_general_flags, is); break;
             case 0x14'00: desc_14.parse(m_14_overhead_wire_placement, is); break;
             case 0x15'00: desc_15.parse(m_15_can_train_enter_tile, is); break;
-            case 0x16'00: desc_160.parse(m_16_animation_frames, is); break;
-            case 0x16'01: desc_161.parse(m_16_animation_type, is); break;
+            case 0x16'00: desc_16.parse(m_16_animation_info, is); break;
             case 0x17'00: desc_17.parse(m_17_animation_speed, is); break;
             case 0x18'00: desc_18.parse(m_18_animation_triggers, is); break;
             default:      throw PROPERTY_ERROR("Unknown property", property);

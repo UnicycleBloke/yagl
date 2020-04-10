@@ -108,24 +108,23 @@ public:
     };
 
 private:
-    uint32_t       m_08_class_id;
-    SpriteLayout   m_09_sprite_layout;
-    uint8_t        m_0A_copy_sprite_layout_id;
-    uint8_t        m_0B_callback_flags;
-    uint8_t        m_0C_disabled_platform_numbers;
-    uint8_t        m_0D_disabled_platform_lengths;
-    CustomStation  m_0E_custom_layout;
-    uint8_t        m_0F_copy_custom_layout_id;
-    uint16_t       m_10_little_lots_threshold;
-    uint8_t        m_11_pylon_placement;
-    uint32_t       m_12_cargo_type_triggers;
-    uint8_t        m_13_general_flags;
-    uint8_t        m_14_overhead_wire_placement;
-    uint8_t        m_15_can_train_enter_tile;
-    uint8_t        m_16_animation_frames;
-    uint8_t        m_16_animation_type;
-    uint8_t        m_17_animation_speed;
-    uint16_t       m_18_animation_triggers;
+    uint32_t       m_08_class_id{};
+    SpriteLayout   m_09_sprite_layout{};
+    uint8_t        m_0A_copy_sprite_layout_id{};
+    uint8_t        m_0B_callback_flags{};
+    uint8_t        m_0C_disabled_platform_numbers{};
+    uint8_t        m_0D_disabled_platform_lengths{};
+    CustomStation  m_0E_custom_layout{};
+    uint8_t        m_0F_copy_custom_layout_id{};
+    uint16_t       m_10_little_lots_threshold{};
+    uint8_t        m_11_pylon_placement{};
+    uint32_t       m_12_cargo_type_triggers{};
+    uint8_t        m_13_general_flags{};
+    uint8_t        m_14_overhead_wire_placement{};
+    uint8_t        m_15_can_train_enter_tile{};
+    uint16_t       m_16_animation_info{};
+    uint8_t        m_17_animation_speed{};
+    uint16_t       m_18_animation_triggers{};
 
     // TODO 
     //Action00StationRouting  m_19_station_routing;

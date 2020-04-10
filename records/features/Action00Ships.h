@@ -34,30 +34,29 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    uint8_t   m_08_sprite_id;
-    bool      m_09_is_refittable;
-    uint8_t   m_0A_cost_factor;
-    uint8_t   m_0B_speed_2_kmh;
-    uint8_t   m_0C_cargo_type;
-    uint16_t  m_0D_cargo_capacity;
-    uint8_t   m_0F_running_cost_factor;
-    uint8_t   m_10_sound_effect_type;
-    uint32_t  m_11_refit_cargo_types;
-    uint8_t   m_12_callback_flags_mask;
-    uint8_t   m_13_refit_cost;
-    uint8_t   m_14_ocean_speed_fraction;
-    uint8_t   m_15_canal_speed_fraction;
-    uint8_t   m_16_retire_vehicle_early;
-    uint8_t   m_17_miscellaneous_flags;
-    uint16_t  m_18_refittable_cargo_classes;
-    uint16_t  m_19_non_refittable_cargo_classes;
-    Date      m_1A_long_introduction_date;
-    uint16_t  m_1B_sort_purchase_list;
-    uint8_t   m_1C_visual_effect_position;
-    uint8_t   m_1C_visual_effect_enum;
-    uint16_t  m_1D_custom_cargo_aging_period;
-    CargoList m_1E_always_refittable_cargos;
-    CargoList m_1F_never_refittable_cargos;
+    uint8_t   m_08_sprite_id{};
+    bool      m_09_is_refittable{};
+    uint8_t   m_0A_cost_factor{};
+    uint8_t   m_0B_speed_2_kmh{};
+    uint8_t   m_0C_cargo_type{};
+    uint16_t  m_0D_cargo_capacity{};
+    uint8_t   m_0F_running_cost_factor{};
+    uint8_t   m_10_sound_effect_type{};
+    uint32_t  m_11_refit_cargo_types{};
+    uint8_t   m_12_callback_flags_mask{};
+    uint8_t   m_13_refit_cost{};
+    uint8_t   m_14_ocean_speed_fraction{};
+    uint8_t   m_15_canal_speed_fraction{};
+    uint8_t   m_16_retire_vehicle_early{};
+    uint8_t   m_17_miscellaneous_flags{};
+    uint16_t  m_18_refittable_cargo_classes{};
+    uint16_t  m_19_non_refittable_cargo_classes{};
+    Date      m_1A_long_introduction_date{};
+    uint16_t  m_1B_sort_purchase_list{};
+    uint8_t   m_1C_visual_effect{};
+    uint16_t  m_1D_custom_cargo_aging_period{};
+    CargoList m_1E_always_refittable_cargos{};
+    CargoList m_1F_never_refittable_cargos{};
 };
 
 

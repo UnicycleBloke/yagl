@@ -44,9 +44,7 @@ constexpr const char* str_callback_flags_mask          = "callback_flags_mask";
 constexpr const char* str_coeff_of_tractive_effort     = "coeff_of_tractive_effort";
 constexpr const char* str_coeff_of_air_drag            = "coeff_of_air_drag";
 constexpr const char* str_shorten_vehicle              = "shorten_vehicle";
-constexpr const char* str_visual_effect_position       = "visual_effect_position";
-constexpr const char* str_visual_effect_enum           = "visual_effect_enum";
-constexpr const char* str_visual_effect_disable_wagons = "visual_effect_disable_wagons";
+constexpr const char* str_visual_effect                = "visual_effect";
 constexpr const char* str_weight_from_wagons           = "weight_from_wagons";
 constexpr const char* str_weight_high_byte             = "weight_high_byte";
 constexpr const char* str_mask_for_var_42              = "mask_for_var_42";
@@ -87,9 +85,7 @@ const std::map<std::string, uint16_t> g_indices =
     { str_coeff_of_tractive_effort,     0x1F'00 },
     { str_coeff_of_air_drag,            0x20'00 },
     { str_shorten_vehicle,              0x21'00 },
-    { str_visual_effect_position,       0x22'00 },
-    { str_visual_effect_enum,           0x22'01 },
-    { str_visual_effect_disable_wagons, 0x22'02 },
+    { str_visual_effect,                0x22'00 },
     { str_weight_from_wagons,           0x23'00 },
     { str_weight_high_byte,             0x24'00 },
     { str_mask_for_var_42,              0x25'00 },
@@ -132,9 +128,7 @@ constexpr IntegerDescriptorT<uint8_t>  desc_1E  = { 0x1E, str_callback_flags_mas
 constexpr IntegerDescriptorT<uint8_t>  desc_1F  = { 0x1F, str_coeff_of_tractive_effort,     PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_20  = { 0x20, str_coeff_of_air_drag,            PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_21  = { 0x21, str_shorten_vehicle,              PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_220 = { 0x22, str_visual_effect_position,       PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_221 = { 0x22, str_visual_effect_enum,           PropFormat::Hex };
-constexpr BooleanDescriptor            desc_222 = { 0x22, str_visual_effect_disable_wagons };
+constexpr IntegerDescriptorT<uint8_t>  desc_22  = { 0x22, str_visual_effect,                PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_23  = { 0x23, str_weight_from_wagons,           PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_24  = { 0x24, str_weight_high_byte,             PropFormat::Hex };
 constexpr IntegerDescriptorT<uint8_t>  desc_25  = { 0x25, str_mask_for_var_42,              PropFormat::Hex };
@@ -182,10 +176,7 @@ bool Action00Trains::read_property(std::istream& is, uint8_t property)
         case 0x1F: m_1F_coeff_of_tractive_effort     = read_uint8(is); break;
         case 0x20: m_20_coeff_of_air_drag            = read_uint8(is); break;
         case 0x21: m_21_shorten_vehicle              = read_uint8(is); break;
-        case 0x22: m_22_visual_effect_position       = read_uint8(is);
-                   m_22_visual_effect_enum           = (m_22_visual_effect_position & 0x70);
-                   m_22_visual_effect_disable_wagons = ((m_22_visual_effect_position & 0x80) != 0x00);
-                   m_22_visual_effect_position      &= 0x0F; break;
+        case 0x22: m_22_visual_effect                = read_uint8(is); break;
         case 0x23: m_23_weight_from_wagons           = read_uint8(is); break;
         case 0x24: m_24_weight_high_byte             = read_uint8(is); break;
         case 0x25: m_25_mask_for_var_42              = read_uint8(is); break;
@@ -235,9 +226,7 @@ bool Action00Trains::write_property(std::ostream& os, uint8_t property) const
         case 0x1F: write_uint8(os, m_1F_coeff_of_tractive_effort); break;
         case 0x20: write_uint8(os, m_20_coeff_of_air_drag); break;
         case 0x21: write_uint8(os, m_21_shorten_vehicle); break;
-        case 0x22: write_uint8(os, m_22_visual_effect_position | 
-                                   m_22_visual_effect_enum | 
-                                   (m_22_visual_effect_disable_wagons ? 0x80 : 0x00)); break;
+        case 0x22: write_uint8(os, m_22_visual_effect); break;
         case 0x23: write_uint8(os, m_23_weight_from_wagons); break;
         case 0x24: write_uint8(os, m_24_weight_high_byte); break;
         case 0x25: write_uint8(os, m_25_mask_for_var_42); break;
@@ -287,9 +276,7 @@ bool Action00Trains::print_property(std::ostream& os, uint8_t property, uint16_t
         case 0x1F: desc_1F.print(m_1F_coeff_of_tractive_effort, os, indent); break;
         case 0x20: desc_20.print(m_20_coeff_of_air_drag, os, indent); break;
         case 0x21: desc_21.print(m_21_shorten_vehicle, os, indent); break;
-        case 0x22: desc_220.print(m_22_visual_effect_position, os, indent);
-                   desc_221.print(m_22_visual_effect_enum, os, indent); 
-                   desc_222.print(m_22_visual_effect_disable_wagons, os, indent); break;
+        case 0x22: desc_22.print(m_22_visual_effect, os, indent); break;
         case 0x23: desc_23.print(m_23_weight_from_wagons, os, indent); break;
         case 0x24: desc_24.print(m_24_weight_high_byte, os, indent); break;
         case 0x25: desc_25.print(m_25_mask_for_var_42, os, indent); break;
@@ -344,9 +331,7 @@ bool Action00Trains::parse_property(TokenStream& is, const std::string& name, ui
             case 0x1F'00: desc_1F.parse(m_1F_coeff_of_tractive_effort, is); break;
             case 0x20'00: desc_20.parse(m_20_coeff_of_air_drag, is); break;
             case 0x21'00: desc_21.parse(m_21_shorten_vehicle, is); break;
-            case 0x22'00: desc_220.parse(m_22_visual_effect_position, is); break;
-            case 0x22'01: desc_221.parse(m_22_visual_effect_enum, is); break;
-            case 0x22'02: desc_222.parse(m_22_visual_effect_disable_wagons, is); break;
+            case 0x22'00: desc_22.parse(m_22_visual_effect, is); break;
             case 0x23'00: desc_23.parse(m_23_weight_from_wagons, is); break;
             case 0x24'00: desc_24.parse(m_24_weight_high_byte, is); break;
             case 0x25'00: desc_25.parse(m_25_mask_for_var_42, is); break;

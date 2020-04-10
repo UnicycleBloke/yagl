@@ -34,24 +34,24 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    GRFLabel     m_08_roadtype_label;
-    uint16_t     m_09_toolbar_caption_id;
-    uint16_t     m_0A_dropdown_text_id;
-    uint16_t     m_0B_window_caption_id;
-    uint16_t     m_0C_autoreplace_text_id;
-    uint16_t     m_0D_new_engine_text_id;
-    GRFLabelList m_0F_compatible_roadtypes;
-    uint8_t      m_10_roadtype_flags;
-    uint16_t     m_13_construction_costs;
-    uint16_t     m_14_speed_limit;
-    uint8_t      m_16_minimap_colour;
-    Date         m_17_introduction_date;
-    GRFLabelList m_18_required_roadtypes;
-    GRFLabelList m_19_introduced_roadtypes;
-    uint8_t      m_1A_sort_order;
-    uint16_t     m_1B_road_type_name_id;
-    uint16_t     m_1C_maintenance_cost_factor;
-    GRFLabelList m_1D_alternate_roadtypes;
+    GRFLabel     m_08_roadtype_label{};
+    uint16_t     m_09_toolbar_caption_id{};
+    uint16_t     m_0A_dropdown_text_id{};
+    uint16_t     m_0B_window_caption_id{};
+    uint16_t     m_0C_autoreplace_text_id{};
+    uint16_t     m_0D_new_engine_text_id{};
+    GRFLabelList m_0F_compatible_roadtypes{};
+    uint8_t      m_10_roadtype_flags{};
+    uint16_t     m_13_construction_costs{};
+    uint16_t     m_14_speed_limit{};
+    uint8_t      m_16_minimap_colour{};
+    Date         m_17_introduction_date{};
+    GRFLabelList m_18_required_roadtypes{};
+    GRFLabelList m_19_introduced_roadtypes{};
+    uint8_t      m_1A_sort_order{};
+    uint16_t     m_1B_road_type_name_id{};
+    uint16_t     m_1C_maintenance_cost_factor{};
+    GRFLabelList m_1D_alternate_roadtypes{};
 };
 
 

@@ -58,14 +58,12 @@ constexpr const char* str_cost_base_multipliers      = "cost_base_multipliers";
 constexpr const char* str_cargo_translation_table    = "cargo_translation_table";
 constexpr const char* str_currency_display_names     = "currency_display_names";
 constexpr const char* str_currency_multipliers       = "currency_multipliers";
-constexpr const char* str_currency_separator         = "currency_separator";
-constexpr const char* str_currency_is_postfix        = "currency_is_postfix";
+constexpr const char* str_currency_options           = "currency_options";
 constexpr const char* str_currency_symbols_prefix    = "currency_symbols_prefix";
 constexpr const char* str_currency_symbols_suffix    = "currency_symbols_suffix";
 constexpr const char* str_euro_introduction_dates    = "euro_introduction_dates";
 constexpr const char* str_snow_line_table            = "snow_line_table";
-constexpr const char* str_grf_overrides_source       = "grf_overrides_source";
-constexpr const char* str_grf_overrides_target       = "grf_overrides_target";
+constexpr const char* str_grf_overrides              = "grf_overrides";
 constexpr const char* str_railtype_translation_table = "railtype_translation_table";
 constexpr const char* str_gender_translation_table   = "gender_translation_table";
 constexpr const char* str_case_translation_table     = "case_translation_table";
@@ -81,14 +79,12 @@ const std::map<std::string, uint16_t> g_indices =
     { str_cargo_translation_table,    0x09'00 },
     { str_currency_display_names,     0x0A'00 },
     { str_currency_multipliers,       0x0B'00 },
-    { str_currency_separator,         0x0C'00 },
-    { str_currency_is_postfix,        0x0C'01 },
+    { str_currency_options,           0x0C'00 },
     { str_currency_symbols_prefix,    0x0D'00 },
     { str_currency_symbols_suffix,    0x0E'00 },
     { str_euro_introduction_dates,    0x0F'00 },
     { str_snow_line_table,            0x10'00 },
-    { str_grf_overrides_source,       0x11'00 },
-    { str_grf_overrides_target,       0x11'01 },
+    { str_grf_overrides,              0x11'00 },
     { str_railtype_translation_table, 0x12'00 },
     { str_gender_translation_table,   0x13'00 },
     { str_case_translation_table,     0x14'00 },
@@ -100,14 +96,12 @@ constexpr IntegerDescriptorT<uint8_t>  desc_08  = { 0x08, str_cost_base_multipli
 constexpr GRFLabelDescriptor           desc_09  = { 0x09, str_cargo_translation_table };
 constexpr IntegerDescriptorT<uint16_t> desc_0A  = { 0x0A, str_currency_display_names,   PropFormat::Hex };
 constexpr IntegerDescriptorT<uint32_t> desc_0B  = { 0x0B, str_currency_multipliers,     PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_0C0 = { 0x0C, str_currency_separator,       PropFormat::Hex };
-constexpr BooleanDescriptor            desc_0C1 = { 0x0C, str_currency_is_postfix };
+constexpr IntegerDescriptorT<uint16_t> desc_0C  = { 0x0C, str_currency_options,         PropFormat::Hex };
 constexpr GRFLabelDescriptor           desc_0D  = { 0x0D, str_currency_symbols_prefix };
 constexpr GRFLabelDescriptor           desc_0E  = { 0x0E, str_currency_symbols_suffix };
 constexpr IntegerDescriptorT<uint16_t> desc_0F  = { 0x0F, str_euro_introduction_dates,  PropFormat::Hex };
 constexpr SnowLineDescriptor           desc_10  = { 0x10, str_snow_line_table };
-constexpr GRFLabelDescriptor           desc_110 = { 0x11, str_grf_overrides_source };
-constexpr GRFLabelDescriptor           desc_111 = { 0x11, str_grf_overrides_target };
+constexpr GRFLabelPairDescriptor       desc_11  = { 0x11, str_grf_overrides };
 constexpr GRFLabelDescriptor           desc_12  = { 0x12, str_railtype_translation_table };
 constexpr GenderCaseDescriptor         desc_13  = { 0x13, str_gender_translation_table };
 constexpr GenderCaseDescriptor         desc_14  = { 0x14, str_case_translation_table };
@@ -119,24 +113,18 @@ constexpr IntegerDescriptorT<uint8_t>  desc_15  = { 0x15, str_plural_form,      
 
 void Action00GlobalSettings::SnowLine::read(std::istream& is)
 {
-    for (uint8_t month = 0; month < 12; ++month)
+    for (auto& value: m_snow_heights)
     {
-        for (uint8_t day = 0; day < 32; ++day)
-        {
-            m_snow_heights[month*32 + day] = read_uint8(is);
-        }
+        value = read_uint8(is);
     }
 }
 
 
 void Action00GlobalSettings::SnowLine::write(std::ostream& os) const
 {
-    for (uint8_t month = 0; month < 12; ++month)
+    for (auto value : m_snow_heights)
     {
-        for (uint8_t day = 0; day < 32; ++day)
-        {
-            write_uint8(os, m_snow_heights[month*32 + day]);
-        }
+        write_uint8(os, value);
     }
 }
 
@@ -145,12 +133,13 @@ void Action00GlobalSettings::SnowLine::print(std::ostream& os, uint16_t indent) 
 {
     os << "\n" << pad(indent) << "[\n";
 
+    uint16_t index = 0;
     for (uint8_t month = 0; month < 12; ++month)
     {
         os << pad(indent + 4);
         for (uint8_t day = 0; day < 32; ++day)
         {
-            os << to_hex(m_snow_heights[month*32 + day]) << " ";
+            os << to_hex(m_snow_heights[index++]) << " ";
         }
         os << "\n";
     }
@@ -165,13 +154,9 @@ void Action00GlobalSettings::SnowLine::parse(TokenStream& is)
 
     // This is a bit crude - assumes that we have the correct 
     // number of values. Throws exception if we don't.
-    for (uint8_t month = 0; month < 12; ++month)
+    for (auto& value : m_snow_heights)
     {
-        for (uint8_t day = 0; day < 32; ++day)
-        {
-            uint8_t value = is.match_uint8(); 
-            m_snow_heights[month*32 + day] = value;
-        }
+        value = is.match_uint8();
     }
 
     is.match(TokenType::CloseBracket);
@@ -244,14 +229,12 @@ bool Action00GlobalSettings::read_property(std::istream& is, uint8_t property)
         case 0x09: m_09_cargo_translation_table.read(is);             break;
         case 0x0A: m_0A_currency_display_names     = read_uint16(is); break;
         case 0x0B: m_0B_currency_multipliers       = read_uint32(is); break;
-        case 0x0C: m_0C_currency_separator         = read_uint8(is);
-                   m_0C_currency_is_postfix        = (read_uint8(is) == 0x01); break;
+        case 0x0C: m_0C_currency_options           = read_uint16(is); break;
         case 0x0D: m_0D_currency_symbols_prefix.read(is);             break;
         case 0x0E: m_0E_currency_symbols_suffix.read(is);             break;
         case 0x0F: m_0F_euro_introduction_dates    = read_uint16(is); break;
         case 0x10: m_10_snow_line_table.read(is);                     break;
-        case 0x11: m_11_grf_overrides_source.read(is);                
-                   m_11_grf_overrides_target.read(is);                break;
+        case 0x11: desc_11.read(m_11_grf_overrides, is); break;
         case 0x12: m_12_railtype_translation_table.read(is);          break;
         case 0x13: m_13_gender_translation_table.read(is);            break;
         case 0x14: m_14_case_translation_table.read(is);              break;
@@ -271,14 +254,12 @@ bool Action00GlobalSettings::write_property(std::ostream& os, uint8_t property) 
         case 0x09: m_09_cargo_translation_table.write(os); break;
         case 0x0A: write_uint16(os, m_0A_currency_display_names); break;
         case 0x0B: write_uint32(os, m_0B_currency_multipliers); break;
-        case 0x0C: write_uint8(os, m_0C_currency_separator);
-                   write_uint8(os, m_0C_currency_is_postfix ? 0x01 : 0x00); break;
+        case 0x0C: write_uint16(os, m_0C_currency_options); break;
         case 0x0D: m_0D_currency_symbols_prefix.write(os); break;
         case 0x0E: m_0E_currency_symbols_suffix.write(os); break;
         case 0x0F: write_uint16(os,m_0F_euro_introduction_dates); break;
         case 0x10: m_10_snow_line_table.write(os); break;
-        case 0x11: m_11_grf_overrides_source.write(os);                
-                   m_11_grf_overrides_target.write(os); break;
+        case 0x11: desc_11.write(m_11_grf_overrides, os); break;
         case 0x12: m_12_railtype_translation_table.write(os); break;
         case 0x13: m_13_gender_translation_table.write(os); break;
         case 0x14: m_14_case_translation_table.write(os); break;
@@ -298,14 +279,12 @@ bool Action00GlobalSettings::print_property(std::ostream& os, uint8_t property, 
         case 0x09: desc_09.print(m_09_cargo_translation_table, os, indent); break;
         case 0x0A: desc_0A.print(m_0A_currency_display_names, os, indent); break;
         case 0x0B: desc_0B.print(m_0B_currency_multipliers, os, indent); break;
-        case 0x0C: desc_0C0.print(m_0C_currency_separator, os, indent); 
-                   desc_0C1.print(m_0C_currency_is_postfix, os, indent); break;
+        case 0x0C: desc_0C.print(m_0C_currency_options, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_currency_symbols_prefix, os, indent); break;
         case 0x0E: desc_0E.print(m_0E_currency_symbols_suffix, os, indent); break;
         case 0x0F: desc_0F.print(m_0F_euro_introduction_dates, os, indent); break;
         case 0x10: desc_10.print(m_10_snow_line_table, os, indent); break;
-        case 0x11: desc_110.print(m_11_grf_overrides_source, os, indent); 
-                   desc_111.print(m_11_grf_overrides_source, os, indent); break;
+        case 0x11: desc_11.print(m_11_grf_overrides, os, indent); break;
         case 0x12: desc_12.print(m_12_railtype_translation_table, os, indent); break;
         case 0x13: desc_13.print(m_13_gender_translation_table, os, indent); break;
         case 0x14: desc_14.print(m_14_case_translation_table, os, indent); break;
@@ -330,14 +309,12 @@ bool Action00GlobalSettings::parse_property(TokenStream& is, const std::string& 
             case 0x09'00: desc_09.parse(m_09_cargo_translation_table, is); break;
             case 0x0A'00: desc_0A.parse(m_0A_currency_display_names, is); break;
             case 0x0B'00: desc_0B.parse(m_0B_currency_multipliers, is); break;
-            case 0x0C'00: desc_0C0.parse(m_0C_currency_separator, is); break;
-            case 0x0C'01: desc_0C1.parse(m_0C_currency_is_postfix, is); break;
+            case 0x0C'00: desc_0C.parse(m_0C_currency_options, is); break;
             case 0x0D'00: desc_0D.parse(m_0D_currency_symbols_prefix, is); break;
             case 0x0E'00: desc_0E.parse(m_0E_currency_symbols_suffix, is); break;
             case 0x0F'00: desc_0F.parse(m_0F_euro_introduction_dates, is); break;
             case 0x10'00: desc_10.parse(m_10_snow_line_table, is); break;
-            case 0x11'00: desc_110.parse(m_11_grf_overrides_source, is); break;
-            case 0x11'01: desc_111.parse(m_11_grf_overrides_source, is); break;
+            case 0x11'00: desc_11.parse(m_11_grf_overrides, is); break;
             case 0x12'00: desc_12.parse(m_12_railtype_translation_table, is); break;
             case 0x13'00: desc_13.parse(m_13_gender_translation_table, is); break;
             case 0x14'00: desc_14.parse(m_14_case_translation_table, is); break;

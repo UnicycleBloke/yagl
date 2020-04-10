@@ -34,27 +34,27 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    uint8_t   m_08_sprite_id;
-    bool      m_09_is_helicopter;
-    bool      m_0A_is_large;
-    uint8_t   m_0B_cost_factor;
-    uint8_t   m_0C_speed_8_mph;
-    uint8_t   m_0D_acceleration;
-    uint8_t   m_0E_running_cost_factor;
-    uint16_t  m_0F_passenger_capacity;
-    uint8_t   m_11_mail_capacity;
-    uint8_t   m_12_sound_effect_type;
-    uint32_t  m_13_refit_cargo_types;   // GRFv >= 6
-    uint8_t   m_14_callback_flags_mask; // GRFv >= 6
-    uint8_t   m_15_refit_cost;
-    uint8_t   m_16_retire_vehicle_early;
-    uint8_t   m_17_miscellaneous_flags;
-    uint16_t  m_18_refittable_cargo_classes;
-    uint16_t  m_19_non_refittable_cargo_classes;
-    Date      m_1A_long_introduction_date;
-    uint16_t  m_1B_sort_purchase_list;
-    uint16_t  m_1C_custom_cargo_aging_period;
-    CargoList m_1D_always_refittable_cargos;
-    CargoList m_1E_never_refittable_cargos;
-    uint16_t  m_1F_aircraft_range;
+    uint8_t   m_08_sprite_id{};
+    bool      m_09_is_helicopter{};
+    bool      m_0A_is_large{};
+    uint8_t   m_0B_cost_factor{};
+    uint8_t   m_0C_speed_8_mph{};
+    uint8_t   m_0D_acceleration{};
+    uint8_t   m_0E_running_cost_factor{};
+    uint16_t  m_0F_passenger_capacity{};
+    uint8_t   m_11_mail_capacity{};
+    uint8_t   m_12_sound_effect_type{};
+    uint32_t  m_13_refit_cargo_types{};   // GRFv >= 6
+    uint8_t   m_14_callback_flags_mask{}; // GRFv >= 6
+    uint8_t   m_15_refit_cost{};
+    uint8_t   m_16_retire_vehicle_early{};
+    uint8_t   m_17_miscellaneous_flags{};
+    uint16_t  m_18_refittable_cargo_classes{};
+    uint16_t  m_19_non_refittable_cargo_classes{};
+    Date      m_1A_long_introduction_date{};
+    uint16_t  m_1B_sort_purchase_list{};
+    uint16_t  m_1C_custom_cargo_aging_period{};
+    CargoList m_1D_always_refittable_cargos{};
+    CargoList m_1E_never_refittable_cargos{};
+    uint16_t  m_1F_aircraft_range{};
 };
