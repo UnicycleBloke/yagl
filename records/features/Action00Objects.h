@@ -40,8 +40,8 @@ private:
     uint8_t  m_0B_climate_availability{};
     uint8_t  m_0C_size_xy{};
     uint8_t  m_0D_cost_factor{};
-    Date     m_0E_introduction_date{};
-    Date     m_0F_end_of_life_date{};
+    LongDate m_0E_introduction_date{};
+    LongDate m_0F_end_of_life_date{};
     uint16_t m_10_object_flags{};
     uint16_t m_11_animation_info{};
     uint8_t  m_12_animation_speed{};

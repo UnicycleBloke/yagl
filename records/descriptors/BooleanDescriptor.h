@@ -20,23 +20,63 @@
 #include "DescriptorBase.h"
 
 
-struct BooleanDescriptor : PropertyDescriptor
+template <uint8_t TRUE, uint8_t FALSE>
+class BoolT
 {
-    void print(bool value, std::ostream& os, uint16_t indent) const;
-    void parse(bool& value, TokenStream& is) const;
+public:
+    void print(std::ostream& os) const
+    {
+        os << std::boolalpha << (m_value == TRUE); 
+    }
+
+    void parse(TokenStream& is)
+    {
+        m_value = is.match_bool();
+    }
+
+    void read(std::istream& is)
+    {
+        uint8_t value = read_uint8(is);
+        if ((value != TRUE) && (value != FALSE))
+        {
+
+        }
+        m_value = (value == TRUE);
+    }
+
+    void write(std::ostream& os) const
+    {        
+        write_uint8(os, m_value ? TRUE : FALSE);
+    }
+  
+private:
+    bool m_value{};
 };
 
 
-inline void BooleanDescriptor::print(bool value, std::ostream& os, uint16_t indent) const
-{
-    prefix(os, indent);
-    os << std::boolalpha << value << ";\n"; 
-}
+// Regular boolean values where false is zero and true is 1.
+using Bool     = BoolT<1, 0>;
+// Special case for helicopters, for reasons.
+using BoolHeli = BoolT<0, 2>;
+
+using BoolDescriptor     = GenericDescriptor<Bool>;
+using BoolHeliDescriptor = GenericDescriptor<BoolHeli>;
 
 
-inline void BooleanDescriptor::parse(bool& value, TokenStream& is) const
+
+
+struct BooleanDescriptor : PropertyDescriptor
 {
-    value = is.match_bool();
-}
+    void print(bool value, std::ostream& os, uint16_t indent) const
+    {
+        prefix(os, indent);
+        os << std::boolalpha << value << ";\n"; 
+    }
+
+    void parse(bool& value, TokenStream& is) const
+    {
+        value = is.match_bool();
+    }
+};
 
 

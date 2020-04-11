@@ -35,10 +35,10 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    Date     m_00_introduction_date{};
-    uint8_t  m_02_reliability_decay_speed{};
-    uint8_t  m_03_vehicle_life_years{};
-    uint8_t  m_04_model_life_years{};
-    uint8_t  m_06_climate_availability{};
-    uint8_t  m_07_loading_speed{};
+    ShortDate m_00_introduction_date{};
+    UInt8     m_02_reliability_decay_speed{};
+    UInt8     m_03_vehicle_life_years{};
+    UInt8     m_04_model_life_years{};
+    UInt8     m_06_climate_availability{};
+    UInt8     m_07_loading_speed{};
 };

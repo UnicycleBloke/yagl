@@ -80,29 +80,29 @@ const std::map<std::string, uint16_t> g_indices =
 };
 
 
-constexpr UInt8Descriptor               desc_08 = { 0x08, str_sprite_id,                     PropFormat::Hex };
-constexpr BooleanDescriptor             desc_09 = { 0x09, str_is_helicopter };
-constexpr BooleanDescriptor             desc_0A = { 0x0A, str_is_large };
-constexpr IntegerDescriptorT<uint8_t>   desc_0B = { 0x0B, str_cost_factor,                   PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>   desc_0C = { 0x0C, str_speed_8_mph,                   PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>   desc_0D = { 0x0D, str_acceleration,                  PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>   desc_0E = { 0x0E, str_running_cost_factor,           PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t>  desc_0F = { 0x0F, str_passenger_capacity,            PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>   desc_11 = { 0x11, str_mail_capacity,                 PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>   desc_12 = { 0x12, str_sound_effect_type,             PropFormat::Hex };
-constexpr IntegerDescriptorT<uint32_t>  desc_13 = { 0x13, str_refit_cargo_types,             PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>   desc_14 = { 0x14, str_callback_flags_mask,           PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>   desc_15 = { 0x15, str_refit_cost,                    PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>   desc_16 = { 0x16, str_retire_vehicle_early,          PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>   desc_17 = { 0x17, str_miscellaneous_flags,           PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t>  desc_18 = { 0x18, str_refittable_cargo_classes,      PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t>  desc_19 = { 0x19, str_non_refittable_cargo_classes,  PropFormat::Hex };
-constexpr LongDateDescriptor            desc_1A = { 0x1A, str_long_introduction_date };
-constexpr IntegerDescriptorT<uint16_t>  desc_1B = { 0x1B, str_sort_purchase_list,            PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t>  desc_1C = { 0x1C, str_custom_cargo_aging_period,     PropFormat::Hex };
-constexpr CargoListDescriptor           desc_1D = { 0x1D, str_always_refittable_cargos };
-constexpr CargoListDescriptor           desc_1E = { 0x1E, str_never_refittable_cargos };
-constexpr IntegerDescriptorT<uint16_t>  desc_1F = { 0x1F, str_aircraft_range,                PropFormat::Hex };
+constexpr UInt8Descriptor      desc_08 = { 0x08, str_sprite_id,                     PropFormat::Hex };
+constexpr BoolHeliDescriptor   desc_09 = { 0x09, str_is_helicopter };
+constexpr BoolDescriptor       desc_0A = { 0x0A, str_is_large };
+constexpr UInt8Descriptor      desc_0B = { 0x0B, str_cost_factor,                   PropFormat::Hex };
+constexpr UInt8Descriptor      desc_0C = { 0x0C, str_speed_8_mph,                   PropFormat::Hex };
+constexpr UInt8Descriptor      desc_0D = { 0x0D, str_acceleration,                  PropFormat::Hex };
+constexpr UInt8Descriptor      desc_0E = { 0x0E, str_running_cost_factor,           PropFormat::Hex };
+constexpr UInt16Descriptor     desc_0F = { 0x0F, str_passenger_capacity,            PropFormat::Hex };
+constexpr UInt8Descriptor      desc_11 = { 0x11, str_mail_capacity,                 PropFormat::Hex };
+constexpr UInt8Descriptor      desc_12 = { 0x12, str_sound_effect_type,             PropFormat::Hex };
+constexpr UInt32Descriptor     desc_13 = { 0x13, str_refit_cargo_types,             PropFormat::Hex };
+constexpr UInt8Descriptor      desc_14 = { 0x14, str_callback_flags_mask,           PropFormat::Hex };
+constexpr UInt8Descriptor      desc_15 = { 0x15, str_refit_cost,                    PropFormat::Hex };
+constexpr UInt8Descriptor      desc_16 = { 0x16, str_retire_vehicle_early,          PropFormat::Hex };
+constexpr UInt8Descriptor      desc_17 = { 0x17, str_miscellaneous_flags,           PropFormat::Hex };
+constexpr UInt16Descriptor     desc_18 = { 0x18, str_refittable_cargo_classes,      PropFormat::Hex };
+constexpr UInt16Descriptor     desc_19 = { 0x19, str_non_refittable_cargo_classes,  PropFormat::Hex };
+constexpr LongDateDescriptor   desc_1A = { 0x1A, str_long_introduction_date };
+constexpr UInt8ExtDescriptor   desc_1B = { 0x1B, str_sort_purchase_list,            PropFormat::Hex };
+constexpr UInt16Descriptor     desc_1C = { 0x1C, str_custom_cargo_aging_period,     PropFormat::Hex };
+constexpr CargoListDescriptor  desc_1D = { 0x1D, str_always_refittable_cargos };
+constexpr CargoListDescriptor  desc_1E = { 0x1E, str_never_refittable_cargos };
+constexpr UInt16Descriptor     desc_1F = { 0x1F, str_aircraft_range,                PropFormat::Hex };
 
 
 } // namespace
@@ -118,28 +118,28 @@ bool Action00Aircraft::read_property(std::istream& is, uint8_t property)
     switch (property)
     {
         case 0x08: m_08_sprite_id.read(is); break;
-        case 0x09: m_09_is_helicopter                = (read_uint8(is) == 0x00); break; // 2 means no
-        case 0x0A: m_0A_is_large                     = (read_uint8(is) == 0x01); break; // 0 means no
-        case 0x0B: m_0B_cost_factor                  = read_uint8(is); break;
-        case 0x0C: m_0C_speed_8_mph                  = read_uint8(is); break;
-        case 0x0D: m_0D_acceleration                 = read_uint8(is); break;
-        case 0x0E: m_0E_running_cost_factor          = read_uint8(is); break;
-        case 0x0F: m_0F_passenger_capacity           = read_uint16(is); break;
-        case 0x11: m_11_mail_capacity                = read_uint8(is); break;
-        case 0x12: m_12_sound_effect_type            = read_uint8(is); break;
-        case 0x13: m_13_refit_cargo_types            = read_uint32(is); break;
-        case 0x14: m_14_callback_flags_mask          = read_uint8(is); break;
-        case 0x15: m_15_refit_cost                   = read_uint8(is); break;
-        case 0x16: m_16_retire_vehicle_early         = read_uint8(is); break;
-        case 0x17: m_17_miscellaneous_flags          = read_uint8(is); break;
-        case 0x18: m_18_refittable_cargo_classes     = read_uint16(is); break;
-        case 0x19: m_19_non_refittable_cargo_classes = read_uint16(is); break;
-        case 0x1A: desc_1A.read(m_1A_long_introduction_date, is); break;
-        case 0x1B: m_1B_sort_purchase_list           = read_uint8_ext(is); break;
-        case 0x1C: m_1C_custom_cargo_aging_period    = read_uint16(is); break;
+        case 0x09: m_09_is_helicopter.read(is); break;
+        case 0x0A: m_0A_is_large.read(is); break; 
+        case 0x0B: m_0B_cost_factor.read(is); break;
+        case 0x0C: m_0C_speed_8_mph.read(is); break;
+        case 0x0D: m_0D_acceleration.read(is); break;
+        case 0x0E: m_0E_running_cost_factor.read(is); break;
+        case 0x0F: m_0F_passenger_capacity.read(is); break;
+        case 0x11: m_11_mail_capacity.read(is); break;
+        case 0x12: m_12_sound_effect_type.read(is); break;
+        case 0x13: m_13_refit_cargo_types.read(is); break;
+        case 0x14: m_14_callback_flags_mask.read(is); break;
+        case 0x15: m_15_refit_cost.read(is); break;
+        case 0x16: m_16_retire_vehicle_early.read(is); break;
+        case 0x17: m_17_miscellaneous_flags.read(is); break;
+        case 0x18: m_18_refittable_cargo_classes.read(is); break;
+        case 0x19: m_19_non_refittable_cargo_classes.read(is); break;
+        case 0x1A: m_1A_long_introduction_date.read(is); break;
+        case 0x1B: m_1B_sort_purchase_list.read(is); break;
+        case 0x1C: m_1C_custom_cargo_aging_period.read(is); break;
         case 0x1D: m_1D_always_refittable_cargos.read(is); break;
         case 0x1E: m_1E_never_refittable_cargos.read(is); break;
-        case 0x1F: m_1F_aircraft_range               = read_uint16(is); break;
+        case 0x1F: m_1F_aircraft_range.read(is); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -157,28 +157,28 @@ bool Action00Aircraft::write_property(std::ostream& os, uint8_t property) const
     switch (property)
     {
         case 0x08: m_08_sprite_id.write(os); break;
-        case 0x09: write_uint8(os, m_09_is_helicopter ? 0x00 : 0x02); break; // 2 means no
-        case 0x0A: write_uint8(os, m_0A_is_large ? 0x01 : 0x00); break;
-        case 0x0B: write_uint8(os, m_0B_cost_factor); break;
-        case 0x0C: write_uint8(os, m_0C_speed_8_mph); break;
-        case 0x0D: write_uint8(os, m_0D_acceleration); break;
-        case 0x0E: write_uint8(os, m_0E_running_cost_factor); break;
-        case 0x0F: write_uint16(os, m_0F_passenger_capacity); break;
-        case 0x11: write_uint8(os, m_11_mail_capacity); break;
-        case 0x12: write_uint8(os, m_12_sound_effect_type); break;
-        case 0x13: write_uint32(os, m_13_refit_cargo_types); break;
-        case 0x14: write_uint8(os, m_14_callback_flags_mask); break;
-        case 0x15: write_uint8(os, m_15_refit_cost); break;
-        case 0x16: write_uint8(os, m_16_retire_vehicle_early); break;
-        case 0x17: write_uint8(os, m_17_miscellaneous_flags); break;
-        case 0x18: write_uint16(os, m_18_refittable_cargo_classes); break;
-        case 0x19: write_uint16(os, m_19_non_refittable_cargo_classes); break;
-        case 0x1A: desc_1A.write(m_1A_long_introduction_date, os); break;
-        case 0x1B: write_uint8_ext(os, m_1B_sort_purchase_list); break;
-        case 0x1C: write_uint16(os, m_1C_custom_cargo_aging_period); break;
+        case 0x09: m_09_is_helicopter.write(os); break;
+        case 0x0A: m_0A_is_large.write(os); break;
+        case 0x0B: m_0B_cost_factor.write(os); break;
+        case 0x0C: m_0C_speed_8_mph.write(os); break;
+        case 0x0D: m_0D_acceleration.write(os); break;
+        case 0x0E: m_0E_running_cost_factor.write(os); break;
+        case 0x0F: m_0F_passenger_capacity.write(os); break;
+        case 0x11: m_11_mail_capacity.write(os); break;
+        case 0x12: m_12_sound_effect_type.write(os); break;
+        case 0x13: m_13_refit_cargo_types.write(os); break;
+        case 0x14: m_14_callback_flags_mask.write(os); break;
+        case 0x15: m_15_refit_cost.write(os); break;
+        case 0x16: m_16_retire_vehicle_early.write(os); break;
+        case 0x17: m_17_miscellaneous_flags.write(os); break;
+        case 0x18: m_18_refittable_cargo_classes.write(os); break;
+        case 0x19: m_19_non_refittable_cargo_classes.write(os); break;
+        case 0x1A: m_1A_long_introduction_date.write(os); break;
+        case 0x1B: m_1B_sort_purchase_list.write(os); break;
+        case 0x1C: m_1C_custom_cargo_aging_period.write(os); break;
         case 0x1D: m_1D_always_refittable_cargos.write(os); break;
         case 0x1E: m_1E_never_refittable_cargos.write(os); break;
-        case 0x1F: write_uint16(os, m_1F_aircraft_range); break;
+        case 0x1F: m_1F_aircraft_range.write(os); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 

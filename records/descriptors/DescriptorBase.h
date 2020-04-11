@@ -37,36 +37,24 @@ struct PropertyDescriptor
 };
 
 
-// struct StringDescriptor : PropertyDescriptor
-// {
-//     void print(const std::string& value, std::ostream& os, uint16_t indent) const
-//     {
-//         prefix(os, indent);
-//         // Do we always want readable strings here?
-//         os << "\"" << grf_string_to_readable_utf8(value) << "\";\n"; 
-//     }
-
-//     void parse(std::string& value, TokenStream& is) const
-//     {
-//         // TODO convert string *from* readable format.
-//         value = is.match(TokenType::String);
-
-//     }
-// };
-
-
-struct GRFStringDescriptor : PropertyDescriptor
+template <typename T>
+struct GenericDescriptor : PropertyDescriptor
 {
-    void print(const GRFString& value, std::ostream& os, uint16_t indent) const
+    void print(const T& value, std::ostream& os, uint16_t indent) const
     {
+        // This is the name of the property.
         prefix(os, indent);
         value.print(os);
-        os << ";\n"; 
+        os << ";\n";
     }
 
-    void parse(GRFString& value, TokenStream& is) const
+    void parse(T& value, TokenStream& is) const
     {
         value.parse(is);
     }
 };
+
+
+using GRFStringDescriptor = GenericDescriptor<GRFString>;
+
 

@@ -46,12 +46,12 @@ const std::map<std::string, uint16_t> g_indices =
 
 
 constexpr ShortDateDescriptor          desc_00 = { 0x00, str_introduction_date };
-constexpr IntegerDescriptorT<uint8_t>  desc_02 = { 0x02, str_reliability_decay_speed, PropFormat::Dec };
-constexpr IntegerDescriptorT<uint8_t>  desc_03 = { 0x03, str_vehicle_life_years,      PropFormat::Dec };
-constexpr IntegerDescriptorT<uint8_t>  desc_04 = { 0x04, str_model_life_years,        PropFormat::Dec };
-const     BitfieldDescriptorT<uint8_t> desc_06 = { 0x06, str_climate_availability,    
+constexpr UInt8Descriptor              desc_02 = { 0x02, str_reliability_decay_speed, PropFormat::Dec };
+constexpr UInt8Descriptor              desc_03 = { 0x03, str_vehicle_life_years,      PropFormat::Dec };
+constexpr UInt8Descriptor              desc_04 = { 0x04, str_model_life_years,        PropFormat::Dec };
+const     BitfieldDescriptorT<UInt8>   desc_06 = { 0x06, str_climate_availability,    
     { {1, "Temperate"}, {2, "Arctic"}, {4, "Tropical"}, {8, "Toyland"} } };
-constexpr IntegerDescriptorT<uint8_t>  desc_07 = { 0x07, str_loading_speed,           PropFormat::Hex };
+constexpr UInt8Descriptor              desc_07 = { 0x07, str_loading_speed,           PropFormat::Hex };
 
 
 } // namespace {
@@ -61,12 +61,12 @@ bool Action00Common::read_property(std::istream& is, uint8_t property)
 {
     switch (property)
     {
-        case 0x00: desc_00.read(m_00_introduction_date, is); break;
-        case 0x02: m_02_reliability_decay_speed = read_uint8(is);  break;
-        case 0x03: m_03_vehicle_life_years      = read_uint8(is);  break;
-        case 0x04: m_04_model_life_years        = read_uint8(is);  break;
-        case 0x06: m_06_climate_availability    = read_uint8(is);  break;
-        case 0x07: m_07_loading_speed           = read_uint8(is);  break;
+        case 0x00: m_00_introduction_date.read(is); break;
+        case 0x02: m_02_reliability_decay_speed.read(is);  break;
+        case 0x03: m_03_vehicle_life_years.read(is);  break;
+        case 0x04: m_04_model_life_years.read(is);  break;
+        case 0x06: m_06_climate_availability.read(is);  break;
+        case 0x07: m_07_loading_speed.read(is);  break;
         default:   return false;
     }
 
@@ -78,12 +78,12 @@ bool Action00Common::write_property(std::ostream& os, uint8_t property) const
 {
     switch (property)
     {
-        case 0x00: desc_00.write(m_00_introduction_date, os); break;
-        case 0x02: write_uint8(os, m_02_reliability_decay_speed); break;
-        case 0x03: write_uint8(os, m_03_vehicle_life_years); break;
-        case 0x04: write_uint8(os, m_04_model_life_years); break;
-        case 0x06: write_uint8(os, m_06_climate_availability); break;
-        case 0x07: write_uint8(os, m_07_loading_speed); break;
+        case 0x00: m_00_introduction_date.write(os); break;
+        case 0x02: m_02_reliability_decay_speed.write(os); break;
+        case 0x03: m_03_vehicle_life_years.write(os); break;
+        case 0x04: m_04_model_life_years.write(os); break;
+        case 0x06: m_06_climate_availability.write(os); break;
+        case 0x07: m_07_loading_speed.write(os); break;
         default:   return false;
     }
 

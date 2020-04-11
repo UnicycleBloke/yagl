@@ -51,7 +51,7 @@ public:
     void read(std::istream& is)
     {
         // Read the binary in one of three formats.
-        m_year = read_uint<T>(is);
+        m_year = read_uint<T, false>(is);
         if constexpr (std::is_same_v<T, uint8_t>)
         {
             m_year += 1920;

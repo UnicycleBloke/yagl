@@ -165,9 +165,13 @@ std::string to_string(T value, PropFormat format)
 // Should help to avoid errors by internalising the size of reads and 
 // writes.
 // TODO what about signed types?
-template <typename T>
+template <typename T, bool EXT = false>
 class UInt
 {
+public:
+    using Type = T;
+    static constexpr bool Ext = EXT;    
+
 public:
     void print(std::ostream& os, PropFormat format) const
     {
@@ -181,13 +185,17 @@ public:
 
     void read(std::istream& is)
     {
-        m_value = read_uint<T>(is);
+        m_value = read_uint<T, EXT>(is);
     }
 
     void write(std::ostream& os) const
     {        
-        write_uint<T>(os, m_value);
+        write_uint<T, EXT>(os, m_value);
     }
+
+    // Work around for BitFieldDescriptor. For now.
+    UInt(T value = 0) : m_value{value} {}
+    operator T() const { return m_value; }
   
 private:
     T m_value{};
@@ -197,9 +205,7 @@ private:
 template <typename T>
 struct UIntDescriptor : PropertyDescriptor
 {
-    PropFormat format;
-
-    void print(const UInt<T>& value, std::ostream& os, uint16_t indent) const
+    void print(const T& value, std::ostream& os, uint16_t indent) const
     {
         // This is the name of the property.
         prefix(os, indent);
@@ -207,17 +213,21 @@ struct UIntDescriptor : PropertyDescriptor
         os << ";\n";
     }
 
-    void parse(UInt<T>& value, TokenStream& is) const
+    void parse(T& value, TokenStream& is) const
     {
         value.parse(is);
     }
+
+    PropFormat format;
 };
 
 
-using UInt8  = UInt<uint8_t>;
-using UInt16 = UInt<uint16_t>;
-using UInt32 = UInt<uint32_t>;
+using UInt8    = UInt<uint8_t>;
+using UInt8Ext = UInt<uint16_t, true>;
+using UInt16   = UInt<uint16_t>;
+using UInt32   = UInt<uint32_t>;
 
-using UInt8Descriptor  = UIntDescriptor<uint8_t>;
-using UInt16Descriptor = UIntDescriptor<uint16_t>;
-using UInt32Descriptor = UIntDescriptor<uint32_t>;
+using UInt8Descriptor    = UIntDescriptor<UInt8>;
+using UInt8ExtDescriptor = UIntDescriptor<UInt8Ext>;
+using UInt16Descriptor   = UIntDescriptor<UInt16>;
+using UInt32Descriptor   = UIntDescriptor<UInt32>;

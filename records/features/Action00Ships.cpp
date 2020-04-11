@@ -133,7 +133,7 @@ bool Action00Ships::read_property(std::istream& is, uint8_t property)
         case 0x17: m_17_miscellaneous_flags          = read_uint8(is);  break;
         case 0x18: m_18_refittable_cargo_classes     = read_uint16(is); break;
         case 0x19: m_19_non_refittable_cargo_classes = read_uint16(is); break;
-        case 0x1A: desc_1A.read(m_1A_long_introduction_date, is); break;
+        case 0x1A: m_1A_long_introduction_date.read(is); break;
         case 0x1B: m_1B_sort_purchase_list           = read_uint8_ext(is); break;
         case 0x1C: m_1C_visual_effect                = read_uint8(is); break;
         case 0x1D: m_1D_custom_cargo_aging_period    = read_uint16(is); break;
@@ -172,7 +172,7 @@ bool Action00Ships::write_property(std::ostream& os, uint8_t property) const
         case 0x17: write_uint8(os, m_17_miscellaneous_flags); break;
         case 0x18: write_uint16(os, m_18_refittable_cargo_classes); break;
         case 0x19: write_uint16(os, m_19_non_refittable_cargo_classes); break;
-        case 0x1A: desc_1A.write(m_1A_long_introduction_date, os); break;
+        case 0x1A: m_1A_long_introduction_date.write(os); break;
         case 0x1B: write_uint8_ext(os, m_1B_sort_purchase_list); break;
         case 0x1C: write_uint8(os, m_1C_visual_effect); break;
         case 0x1D: write_uint16(os, m_1D_custom_cargo_aging_period); break;

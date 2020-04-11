@@ -100,8 +100,8 @@ bool Action00Objects::read_property(std::istream& is, uint8_t property)
         case 0x0B: m_0B_climate_availability   = read_uint8(is); break;
         case 0x0C: m_0C_size_xy                = read_uint8(is); break;
         case 0x0D: m_0D_cost_factor            = read_uint8(is); break;
-        case 0x0E: desc_0E.read(m_0E_introduction_date, is); break;
-        case 0x0F: desc_0F.read(m_0F_end_of_life_date, is); break;
+        case 0x0E: m_0E_introduction_date.read(is); break;
+        case 0x0F: m_0F_end_of_life_date.read(is); break;
         case 0x10: m_10_object_flags           = read_uint16(is); break;
         case 0x11: m_11_animation_info         = read_uint16(is); break;
         case 0x12: m_12_animation_speed        = read_uint8(is); break;
@@ -128,8 +128,8 @@ bool Action00Objects::write_property(std::ostream& os, uint8_t property) const
         case 0x0B: write_uint8(os, m_0B_climate_availability); break;
         case 0x0C: write_uint8(os, m_0C_size_xy); break;
         case 0x0D: write_uint8(os, m_0D_cost_factor); break;
-        case 0x0E: desc_0E.write(m_0E_introduction_date, os); break;
-        case 0x0F: desc_0F.write(m_0F_end_of_life_date, os); break;
+        case 0x0E: m_0E_introduction_date.write(os); break;
+        case 0x0F: m_0F_end_of_life_date.write(os); break;
         case 0x10: write_uint16(os, m_10_object_flags); break;
         case 0x11: write_uint16(os, m_11_animation_info); break;
         case 0x12: write_uint8(os, m_12_animation_speed); break;

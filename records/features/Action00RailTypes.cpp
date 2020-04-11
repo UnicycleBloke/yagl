@@ -123,7 +123,7 @@ bool Action00RailTypes::read_property(std::istream& is, uint8_t property)
         case 0x14: m_14_speed_limit             = read_uint16(is); break;
         case 0x15: m_15_acceleration_model      = read_uint8(is);  break;
         case 0x16: m_16_minimap_colour          = read_uint8(is);  break;
-        case 0x17: desc_17.read(m_17_introduction_date, is); break;
+        case 0x17: m_17_introduction_date.read(is); break;
         case 0x18: m_18_required_railtypes.read(is);               break;
         case 0x19: m_19_introduced_railtypes.read(is);             break;
         case 0x1A: m_1A_sort_order              = read_uint8(is);  break;
@@ -156,7 +156,7 @@ bool Action00RailTypes::write_property(std::ostream& os, uint8_t property) const
         case 0x14: write_uint16(os, m_14_speed_limit); break;
         case 0x15: write_uint8(os, m_15_acceleration_model); break;
         case 0x16: write_uint8(os, m_16_minimap_colour); break;
-        case 0x17: desc_17.write(m_17_introduction_date, os); break;
+        case 0x17: m_17_introduction_date.write(os); break;
         case 0x18: m_18_required_railtypes.write(os); break;
         case 0x19: m_19_introduced_railtypes.write(os); break;
         case 0x1A: write_uint8(os, m_1A_sort_order); break;

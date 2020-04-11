@@ -38,7 +38,7 @@ struct BitfieldDescriptor : PropertyDescriptor
 template <typename T>
 struct BitfieldDescriptorT : BitfieldDescriptor
 {
-    void print(T bits, std::ostream& os, uint16_t indent) const
+    void print(const T& bits, std::ostream& os, uint16_t indent) const
     {
         uint32_t temp = bits;
         print_impl(temp, os, indent);
@@ -48,6 +48,8 @@ struct BitfieldDescriptorT : BitfieldDescriptor
     {
         uint32_t temp;
         parse_impl(temp, is);
+        // TODO assert that the value is within the range of the type.
         bits = temp;
     }
 };
+

@@ -38,37 +38,58 @@ void write_uint8_ext(std::ostream& os, uint16_t value, ExtByteFormat format = Ex
 void write_uint16(std::ostream& os, uint16_t value);
 void write_uint32(std::ostream& os, uint32_t value);
 
-// Useful aliases for inside templates.
+
 template <typename T>
+constexpr bool is_uint_v = std::is_same_v<T, uint8_t> || std::is_same_v<T, uint16_t> || std::is_same_v<T, uint32_t>;
+
+
+// Useful alias for inside templates.
+template <typename T, bool EXT>
 T read_uint(std::istream& is)
 {
-    if constexpr (std::is_same_v<T, uint8_t>)
-        return read_uint8(is);
-    else if constexpr (std::is_same_v<T, uint16_t>)
-        return read_uint16(is);
-    else if constexpr (std::is_same_v<T, uint32_t>)
-        return read_uint32(is);
+    static_assert(is_uint_v<T>);
+    static_assert(EXT == false || std::is_same_v<T, uint16_t>);
 
-    static_assert(
-        std::is_same_v<T, uint8_t> || 
-        std::is_same_v<T, uint16_t> || 
-        std::is_same_v<T, uint32_t>);
+    if constexpr (std::is_same_v<T, uint8_t>)
+    {
+        return read_uint8(is);
+    }
+    else if constexpr (std::is_same_v<T, uint16_t>)
+    {
+        if constexpr (EXT)
+            return read_uint8_ext(is);
+        else
+            return read_uint16(is);
+    }
+    else // if constexpr (std::is_same_v<T, uint32_t>)
+    {
+        return read_uint32(is);
+    }
 }
 
-template <typename T>
+
+// Useful alias for inside templates.
+template <typename T, bool EXT>
 void write_uint(std::ostream& os, T value)
 {
-    if constexpr (std::is_same_v<T, uint8_t>)
-        write_uint8(os, value);
-    else if constexpr (std::is_same_v<T, uint16_t>)
-        write_uint16(os, value);
-    else if constexpr (std::is_same_v<T, uint32_t>)
-        write_uint32(os, value);
+    static_assert(is_uint_v<T>);
+    static_assert(EXT == false || std::is_same_v<T, uint16_t>);
 
-    static_assert(
-        std::is_same_v<T, uint8_t> || 
-        std::is_same_v<T, uint16_t> || 
-        std::is_same_v<T, uint32_t>);
+    if constexpr (std::is_same_v<T, uint8_t>)
+    {
+        if constexpr (EXT)
+            write_uint8_ext(os, value);
+        else
+            write_uint8(os, value);
+    }
+    else if constexpr (std::is_same_v<T, uint16_t>)
+    {
+       write_uint16(os, value);
+    }
+    else //if constexpr (std::is_same_v<T, uint32_t>)
+    {
+        write_uint32(os, value);
+    }
 }
 
 
