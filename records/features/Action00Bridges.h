@@ -19,6 +19,7 @@
 #pragma once
 #include "Action00Feature.h"
 #include "YearDescriptor.h"
+#include "IntegerDescriptor.h"
 #include "StreamHelpers.h"
 #include <vector>
 #include <array>
@@ -64,19 +65,19 @@ public:
     };
 
 private:
-    uint8_t        m_00_fallback_type_id{};
+    UInt8          m_00_fallback_type_id{};
     Year<uint8_t>  m_08_year_available{};
-    uint8_t        m_09_minimum_length{};
-    uint8_t        m_0A_maximum_length{};
-    uint8_t        m_0B_cost_factor{};
-    uint16_t       m_0C_maximum_speed{};
+    UInt8          m_09_minimum_length{};
+    UInt8          m_0A_maximum_length{};
+    UInt8          m_0B_cost_factor{};
+    UInt16         m_0C_maximum_speed{};
     BridgeLayout   m_0D_bridge_layout{};
-    uint8_t        m_0E_various_flags{};
+    UInt8          m_0E_various_flags{};
     Year<uint32_t> m_0F_long_year_available{};
-    uint16_t       m_10_purchase_text{};
-    uint16_t       m_11_description_rail{};
-    uint16_t       m_12_description_road{};
-    uint16_t       m_13_cost_factor_word{};
+    UInt16         m_10_purchase_text{};
+    UInt16         m_11_description_rail{};
+    UInt16         m_12_description_road{};
+    UInt16         m_13_cost_factor_word{};
 };
 
 

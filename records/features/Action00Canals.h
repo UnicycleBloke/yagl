@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
+#include "IntegerDescriptor.h"
 
 
 class Action00Canals : public Action00Feature
@@ -33,8 +34,8 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    uint8_t m_08_callback_flags{};
-    uint8_t m_09_graphics_flags{};
+    UInt8 m_08_callback_flags{};
+    UInt8 m_09_graphics_flags{};
 };
 
 

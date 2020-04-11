@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
+#include "IntegerDescriptor.h"
 
 
 class Action00SoundEffects : public Action00Feature
@@ -35,9 +36,9 @@ public:
 private:
     // These are properties of the sound effect defined in Action11 with the matching instance ID.
     // Seems a bit convoluted, but I think I get it.
-    uint8_t m_08_relative_volume{};
-    uint8_t m_09_priority{};
-    uint8_t m_0A_override_old_sound{};
+    UInt8 m_08_relative_volume{};
+    UInt8 m_09_priority{};
+    UInt8 m_0A_override_old_sound{};
 };
 
 

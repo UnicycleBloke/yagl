@@ -98,23 +98,23 @@ const std::map<std::string, uint16_t> g_indices =
 };
 
 
-constexpr IntegerDescriptorT<uint32_t> desc_08  = { 0x08, str_class_id,                  PropFormat::Hex };
-constexpr SpriteLayoutsDescriptor      desc_09  = { 0x09, str_sprite_layout };
-constexpr IntegerDescriptorT<uint8_t>  desc_0A  = { 0x0A, str_copy_sprite_layout_id,     PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_0B  = { 0x0B, str_callback_flags,            PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_0C  = { 0x0C, str_disabled_platform_numbers, PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_0D  = { 0x0D, str_disabled_platform_lengths, PropFormat::Hex };
-constexpr CustomStationsDescriptor     desc_0E  = { 0x0E, str_custom_layout };
-constexpr IntegerDescriptorT<uint8_t>  desc_0F  = { 0x0F, str_copy_custom_layout_id,     PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_10  = { 0x10, str_little_lots_threshold,     PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_11  = { 0x11, str_pylon_placement,           PropFormat::Hex };
-constexpr IntegerDescriptorT<uint32_t> desc_12  = { 0x12, str_cargo_type_triggers,       PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_13  = { 0x13, str_general_flags,             PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_14  = { 0x14, str_overhead_wire_placement,   PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_15  = { 0x15, str_can_train_enter_tile,      PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_16  = { 0x16, str_animation_info,            PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_17  = { 0x17, str_animation_speed,           PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_18  = { 0x18, str_animation_triggers,        PropFormat::Hex };
+constexpr UInt32Descriptor          desc_08  = { 0x08, str_class_id,                  PropFormat::Hex };
+constexpr SpriteLayoutsDescriptor   desc_09  = { 0x09, str_sprite_layout };
+constexpr UInt8Descriptor           desc_0A  = { 0x0A, str_copy_sprite_layout_id,     PropFormat::Hex };
+constexpr UInt8Descriptor           desc_0B  = { 0x0B, str_callback_flags,            PropFormat::Hex };
+constexpr UInt8Descriptor           desc_0C  = { 0x0C, str_disabled_platform_numbers, PropFormat::Hex };
+constexpr UInt8Descriptor           desc_0D  = { 0x0D, str_disabled_platform_lengths, PropFormat::Hex };
+constexpr CustomStationsDescriptor  desc_0E  = { 0x0E, str_custom_layout };
+constexpr UInt8Descriptor           desc_0F  = { 0x0F, str_copy_custom_layout_id,     PropFormat::Hex };
+constexpr UInt16Descriptor          desc_10  = { 0x10, str_little_lots_threshold,     PropFormat::Hex };
+constexpr UInt8Descriptor           desc_11  = { 0x11, str_pylon_placement,           PropFormat::Hex };
+constexpr UInt32Descriptor          desc_12  = { 0x12, str_cargo_type_triggers,       PropFormat::Hex };
+constexpr UInt8Descriptor           desc_13  = { 0x13, str_general_flags,             PropFormat::Hex };
+constexpr UInt8Descriptor           desc_14  = { 0x14, str_overhead_wire_placement,   PropFormat::Hex };
+constexpr UInt8Descriptor           desc_15  = { 0x15, str_can_train_enter_tile,      PropFormat::Hex };
+constexpr UInt16Descriptor          desc_16  = { 0x16, str_animation_info,            PropFormat::Hex };
+constexpr UInt8Descriptor           desc_17  = { 0x17, str_animation_speed,           PropFormat::Hex };
+constexpr UInt16Descriptor          desc_18  = { 0x18, str_animation_triggers,        PropFormat::Hex };
 
 
 } // namespace {
@@ -397,23 +397,23 @@ bool Action00Stations::read_property(std::istream& is, uint8_t property)
 {
     switch (property)
     {
-        case 0x08: m_08_class_id                  = read_uint32(is); break;
-        case 0x09: m_09_sprite_layout.read(is);                      break;
-        case 0x0A: m_0A_copy_sprite_layout_id     = read_uint8(is);  break;
-        case 0x0B: m_0B_callback_flags            = read_uint8(is);  break;
-        case 0x0C: m_0C_disabled_platform_numbers = read_uint8(is);  break;
-        case 0x0D: m_0D_disabled_platform_lengths = read_uint8(is);  break;
-        case 0x0E: m_0E_custom_layout.read(is);                      break;
-        case 0x0F: m_0F_copy_custom_layout_id     = read_uint8(is);  break;
-        case 0x10: m_10_little_lots_threshold     = read_uint16(is); break;
-        case 0x11: m_11_pylon_placement           = read_uint8(is);  break;
-        case 0x12: m_12_cargo_type_triggers       = read_uint32(is); break;
-        case 0x13: m_13_general_flags             = read_uint8(is);  break;
-        case 0x14: m_14_overhead_wire_placement   = read_uint8(is);  break;
-        case 0x15: m_15_can_train_enter_tile      = read_uint8(is);  break;
-        case 0x16: m_16_animation_info            = read_uint16(is);  break;
-        case 0x17: m_17_animation_speed           = read_uint8(is);  break;
-        case 0x18: m_18_animation_triggers        = read_uint16(is); break;
+        case 0x08: m_08_class_id.read(is);                  break;
+        case 0x09: m_09_sprite_layout.read(is);             break;
+        case 0x0A: m_0A_copy_sprite_layout_id.read(is);     break;
+        case 0x0B: m_0B_callback_flags.read(is);            break;
+        case 0x0C: m_0C_disabled_platform_numbers.read(is); break;
+        case 0x0D: m_0D_disabled_platform_lengths.read(is); break;
+        case 0x0E: m_0E_custom_layout.read(is);             break;
+        case 0x0F: m_0F_copy_custom_layout_id.read(is);     break;
+        case 0x10: m_10_little_lots_threshold.read(is);     break;
+        case 0x11: m_11_pylon_placement.read(is);           break;
+        case 0x12: m_12_cargo_type_triggers.read(is);       break;
+        case 0x13: m_13_general_flags.read(is);             break;
+        case 0x14: m_14_overhead_wire_placement.read(is);   break;
+        case 0x15: m_15_can_train_enter_tile.read(is);      break;
+        case 0x16: m_16_animation_info.read(is);            break;
+        case 0x17: m_17_animation_speed.read(is);           break;
+        case 0x18: m_18_animation_triggers.read(is);        break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -425,23 +425,23 @@ bool Action00Stations::write_property(std::ostream& os, uint8_t property) const
 {
     switch (property)
     {
-        case 0x08: write_uint32(os, m_08_class_id); break;
-        case 0x09: m_09_sprite_layout.write(os); break;
-        case 0x0A: write_uint8(os, m_0A_copy_sprite_layout_id); break;
-        case 0x0B: write_uint8(os, m_0B_callback_flags); break;
-        case 0x0C: write_uint8(os, m_0C_disabled_platform_numbers); break;
-        case 0x0D: write_uint8(os, m_0D_disabled_platform_lengths); break;
-        case 0x0E: m_0E_custom_layout.write(os); break;
-        case 0x0F: write_uint8(os, m_0F_copy_custom_layout_id); break;
-        case 0x10: write_uint16(os, m_10_little_lots_threshold); break;
-        case 0x11: write_uint8(os, m_11_pylon_placement); break;
-        case 0x12: write_uint32(os, m_12_cargo_type_triggers); break;
-        case 0x13: write_uint8(os, m_13_general_flags); break;
-        case 0x14: write_uint8(os, m_14_overhead_wire_placement); break;
-        case 0x15: write_uint8(os, m_15_can_train_enter_tile); break;
-        case 0x16: write_uint16(os, m_16_animation_info); break;
-        case 0x17: write_uint8(os, m_17_animation_speed); break;
-        case 0x18: write_uint16(os, m_18_animation_triggers); break;
+        case 0x08: m_08_class_id.write(os);                  break;
+        case 0x09: m_09_sprite_layout.write(os);             break;
+        case 0x0A: m_0A_copy_sprite_layout_id.write(os);     break;
+        case 0x0B: m_0B_callback_flags.write(os);            break;
+        case 0x0C: m_0C_disabled_platform_numbers.write(os); break;
+        case 0x0D: m_0D_disabled_platform_lengths.write(os); break;
+        case 0x0E: m_0E_custom_layout.write(os);             break;
+        case 0x0F: m_0F_copy_custom_layout_id.write(os);     break;
+        case 0x10: m_10_little_lots_threshold.write(os);     break;
+        case 0x11: m_11_pylon_placement.write(os);           break;
+        case 0x12: m_12_cargo_type_triggers.write(os);       break;
+        case 0x13: m_13_general_flags.write(os);             break;
+        case 0x14: m_14_overhead_wire_placement.write(os);   break;
+        case 0x15: m_15_can_train_enter_tile.write(os);      break;
+        case 0x16: m_16_animation_info.write(os);            break;
+        case 0x17: m_17_animation_speed.write(os);           break;
+        case 0x18: m_18_animation_triggers.write(os);        break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -453,23 +453,23 @@ bool Action00Stations::print_property(std::ostream& os, uint8_t property, uint16
 {
     switch (property)
     {
-        case 0x08: desc_08.print(m_08_class_id, os, indent); break;
-        case 0x09: desc_09.print(m_09_sprite_layout, os, indent); break;
-        case 0x0A: desc_0A.print(m_0A_copy_sprite_layout_id, os, indent); break;
-        case 0x0B: desc_0B.print(m_0B_callback_flags, os, indent); break;
+        case 0x08: desc_08.print(m_08_class_id, os, indent);                  break;
+        case 0x09: desc_09.print(m_09_sprite_layout, os, indent);             break;
+        case 0x0A: desc_0A.print(m_0A_copy_sprite_layout_id, os, indent);     break;
+        case 0x0B: desc_0B.print(m_0B_callback_flags, os, indent);            break;
         case 0x0C: desc_0C.print(m_0C_disabled_platform_numbers, os, indent); break;
         case 0x0D: desc_0D.print(m_0D_disabled_platform_lengths, os, indent); break;
-        case 0x0E: desc_0E.print(m_0E_custom_layout, os, indent); break;
-        case 0x0F: desc_0F.print(m_0F_copy_custom_layout_id, os, indent); break;
-        case 0x10: desc_10.print(m_10_little_lots_threshold, os, indent); break;
-        case 0x11: desc_11.print(m_11_pylon_placement, os, indent); break;
-        case 0x12: desc_12.print(m_12_cargo_type_triggers, os, indent); break;
-        case 0x13: desc_13.print(m_13_general_flags, os, indent); break;
-        case 0x14: desc_14.print(m_14_overhead_wire_placement, os, indent); break;
-        case 0x15: desc_15.print(m_15_can_train_enter_tile, os, indent); break;
-        case 0x16: desc_16.print(m_16_animation_info, os, indent); break;
-        case 0x17: desc_17.print(m_17_animation_speed, os, indent); break;
-        case 0x18: desc_18.print(m_18_animation_triggers, os, indent); break;
+        case 0x0E: desc_0E.print(m_0E_custom_layout, os, indent);             break;
+        case 0x0F: desc_0F.print(m_0F_copy_custom_layout_id, os, indent);     break;
+        case 0x10: desc_10.print(m_10_little_lots_threshold, os, indent);     break;
+        case 0x11: desc_11.print(m_11_pylon_placement, os, indent);           break;
+        case 0x12: desc_12.print(m_12_cargo_type_triggers, os, indent);       break;
+        case 0x13: desc_13.print(m_13_general_flags, os, indent);             break;
+        case 0x14: desc_14.print(m_14_overhead_wire_placement, os, indent);   break;
+        case 0x15: desc_15.print(m_15_can_train_enter_tile, os, indent);      break;
+        case 0x16: desc_16.print(m_16_animation_info, os, indent);            break;
+        case 0x17: desc_17.print(m_17_animation_speed, os, indent);           break;
+        case 0x18: desc_18.print(m_18_animation_triggers, os, indent);        break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -486,23 +486,23 @@ bool Action00Stations::parse_property(TokenStream& is, const std::string& name, 
         property = (index >> 8); // The property index is in the high byte.
         switch (index)
         {
-            case 0x08'00: desc_08.parse(m_08_class_id, is); break;
-            case 0x09'00: desc_09.parse(m_09_sprite_layout, is); break;
-            case 0x0A'00: desc_0A.parse(m_0A_copy_sprite_layout_id, is); break;
-            case 0x0B'00: desc_0B.parse(m_0B_callback_flags, is); break;
+            case 0x08'00: desc_08.parse(m_08_class_id, is);                  break;
+            case 0x09'00: desc_09.parse(m_09_sprite_layout, is);             break;
+            case 0x0A'00: desc_0A.parse(m_0A_copy_sprite_layout_id, is);     break;
+            case 0x0B'00: desc_0B.parse(m_0B_callback_flags, is);            break;
             case 0x0C'00: desc_0C.parse(m_0C_disabled_platform_numbers, is); break;
             case 0x0D'00: desc_0D.parse(m_0D_disabled_platform_lengths, is); break;
-            case 0x0E'00: desc_0E.parse(m_0E_custom_layout, is); break;
-            case 0x0F'00: desc_0F.parse(m_0F_copy_custom_layout_id, is); break;
-            case 0x10'00: desc_10.parse(m_10_little_lots_threshold, is); break;
-            case 0x11'00: desc_11.parse(m_11_pylon_placement, is); break;
-            case 0x12'00: desc_12.parse(m_12_cargo_type_triggers, is); break;
-            case 0x13'00: desc_13.parse(m_13_general_flags, is); break;
-            case 0x14'00: desc_14.parse(m_14_overhead_wire_placement, is); break;
-            case 0x15'00: desc_15.parse(m_15_can_train_enter_tile, is); break;
-            case 0x16'00: desc_16.parse(m_16_animation_info, is); break;
-            case 0x17'00: desc_17.parse(m_17_animation_speed, is); break;
-            case 0x18'00: desc_18.parse(m_18_animation_triggers, is); break;
+            case 0x0E'00: desc_0E.parse(m_0E_custom_layout, is);             break;
+            case 0x0F'00: desc_0F.parse(m_0F_copy_custom_layout_id, is);     break;
+            case 0x10'00: desc_10.parse(m_10_little_lots_threshold, is);     break;
+            case 0x11'00: desc_11.parse(m_11_pylon_placement, is);           break;
+            case 0x12'00: desc_12.parse(m_12_cargo_type_triggers, is);       break;
+            case 0x13'00: desc_13.parse(m_13_general_flags, is);             break;
+            case 0x14'00: desc_14.parse(m_14_overhead_wire_placement, is);   break;
+            case 0x15'00: desc_15.parse(m_15_can_train_enter_tile, is);      break;
+            case 0x16'00: desc_16.parse(m_16_animation_info, is);            break;
+            case 0x17'00: desc_17.parse(m_17_animation_speed, is);           break;
+            case 0x18'00: desc_18.parse(m_18_animation_triggers, is);        break;
             default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 

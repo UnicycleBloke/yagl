@@ -52,4 +52,3 @@ struct BitfieldDescriptorT : BitfieldDescriptor
         bits = temp;
     }
 };
-

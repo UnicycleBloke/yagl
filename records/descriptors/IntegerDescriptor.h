@@ -202,6 +202,52 @@ private:
 };
 
 
+template <typename T, uint16_t SIZE>
+class UIntArray
+{
+public:    
+    void print(std::ostream& os, PropFormat format) const
+    {
+        os << "[";
+        for (const auto& value: m_values)
+        {
+            os << " ";
+            value.print(os, format);
+        }
+        os << " ]";
+    }
+
+    void parse(TokenStream& is)
+    {
+        is.match(TokenType::OpenBracket);
+        for (auto& value: m_values)
+        {
+            value.parse(is);
+        }
+        is.match(TokenType::CloseBracket);
+    }
+
+    void read(std::istream& is)
+    {
+        for (auto& value: m_values)
+        {
+            value.read(is);
+        }
+    }
+
+    void write(std::ostream& os) const
+    {        
+        for (const auto& value: m_values)
+        {
+            value.write(os);
+        }
+    }
+
+private:
+    std::array<T, SIZE> m_values;
+};
+
+
 template <typename T>
 struct UIntDescriptor : PropertyDescriptor
 {

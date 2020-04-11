@@ -38,8 +38,8 @@ const std::map<std::string, uint16_t> g_indices =
 };
 
 
-constexpr IntegerDescriptorT<uint8_t>  desc_08 = { 0x08, str_callback_flags, PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_09 = { 0x09, str_graphics_flags, PropFormat::Hex };
+constexpr UInt8Descriptor  desc_08 = { 0x08, str_callback_flags, PropFormat::Hex };
+constexpr UInt8Descriptor  desc_09 = { 0x09, str_graphics_flags, PropFormat::Hex };
 
 
 } // namespace {
@@ -49,8 +49,8 @@ bool Action00Canals::read_property(std::istream& is, uint8_t property)
 {
     switch (property)
     {
-        case 0x08: m_08_callback_flags = read_uint8(is); break;
-        case 0x09: m_09_graphics_flags = read_uint8(is); break;
+        case 0x08: m_08_callback_flags.read(is); break;
+        case 0x09: m_09_graphics_flags.read(is); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -62,8 +62,8 @@ bool Action00Canals::write_property(std::ostream& os, uint8_t property) const
 {
     switch (property)
     {
-        case 0x08: write_uint8(os, m_08_callback_flags); break;
-        case 0x09: write_uint8(os, m_09_graphics_flags); break;
+        case 0x08: m_08_callback_flags.write(os); break;
+        case 0x09: m_09_graphics_flags.write(os); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 

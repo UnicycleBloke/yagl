@@ -32,6 +32,12 @@ void GRFLabel::write(std::ostream& os) const
 }
 
 
+void GRFLabel::print(std::ostream& os) const
+{
+    os << "\"" << to_string() << "\""; 
+}
+
+
 static uint8_t hex_to_dec(uint8_t h)
 {
     if ((h >= '0') && (h <= '9'))

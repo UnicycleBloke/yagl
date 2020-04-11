@@ -34,23 +34,23 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    uint32_t m_08_class_label{};
-    uint16_t m_09_class_text_id{};
-    uint16_t m_0A_object_text_id{};
-    uint8_t  m_0B_climate_availability{};
-    uint8_t  m_0C_size_xy{};
-    uint8_t  m_0D_cost_factor{};
+    UInt32   m_08_class_label{};
+    UInt16   m_09_class_text_id{};
+    UInt16   m_0A_object_text_id{};
+    UInt8    m_0B_climate_availability{};
+    UInt8    m_0C_size_xy{};
+    UInt8    m_0D_cost_factor{};
     LongDate m_0E_introduction_date{};
     LongDate m_0F_end_of_life_date{};
-    uint16_t m_10_object_flags{};
-    uint16_t m_11_animation_info{};
-    uint8_t  m_12_animation_speed{};
-    uint16_t m_13_animation_triggers{};
-    uint8_t  m_14_removal_cost_factor{};
-    uint16_t m_15_callback_flags{};
-    uint8_t  m_16_building_height{};
-    uint8_t  m_17_number_of_views{};
-    uint8_t  m_18_number_on_creation{};
+    UInt16   m_10_object_flags{};
+    UInt16   m_11_animation_info{};
+    UInt8    m_12_animation_speed{};
+    UInt16   m_13_animation_triggers{};
+    UInt8    m_14_removal_cost_factor{};
+    UInt16   m_15_callback_flags{};
+    UInt8    m_16_building_height{};
+    UInt8    m_17_number_of_views{};
+    UInt8    m_18_number_on_creation{};
 };
 
 

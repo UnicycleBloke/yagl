@@ -20,6 +20,40 @@
 #include "StreamHelpers.h"
 
 
+void GRFLabelPair::read(std::istream& is)
+{
+    m_source.read(is);
+    m_target.read(is);
+}
+
+
+void GRFLabelPair::write(std::ostream& os) const
+{
+    m_source.write(os);
+    m_target.write(os);
+}
+
+
+void GRFLabelPair::print(std::ostream& os) const
+{
+    os << "[ ";
+    os << "\"" << m_source.to_string() << "\";\n"; 
+    os << ", ";
+    os << "\"" << m_target.to_string() << "\";\n"; 
+    os << " ]";
+}
+
+
+void GRFLabelPair::parse(TokenStream& is)
+{
+    is.match(TokenType::OpenBracket);
+    m_source.parse(is);
+    is.match(TokenType::Comma);
+    m_target.parse(is);
+    is.match(TokenType::CloseBracket);
+}
+
+
 void GRFLabelList::read(std::istream& is)
 {
     uint8_t num_labels = read_uint8(is);

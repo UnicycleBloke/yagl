@@ -157,3 +157,6 @@ struct YearPairDescriptor : PropertyDescriptor
     }
 };
 
+
+//using ShortYear = Year<uint8_t>;
+//using LongYear  = Year<uint16_t>;

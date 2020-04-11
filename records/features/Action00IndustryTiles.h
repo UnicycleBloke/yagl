@@ -34,17 +34,17 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    uint8_t             m_08_substitute_building_id{};
-    uint8_t             m_09_industry_tile_override{};
-    uint16_t            m_0A_tile_acceptance1{};
-    uint16_t            m_0B_tile_acceptance2{};
-    uint16_t            m_0C_tile_acceptance3{};
-    uint8_t             m_0D_land_shape_flags{};
-    uint8_t             m_0E_callback_flags{};
-    uint16_t            m_0F_animation_info{};
-    uint8_t             m_10_animation_speed{};
-    uint8_t             m_11_callback_25_triggers{};
-    uint8_t             m_12_special_flags{};
+    UInt8               m_08_substitute_building_id{};
+    UInt8               m_09_industry_tile_override{};
+    UInt16              m_0A_tile_acceptance1{};
+    UInt16              m_0B_tile_acceptance2{};
+    UInt16              m_0C_tile_acceptance3{};
+    UInt8               m_0D_land_shape_flags{};
+    UInt8               m_0E_callback_flags{};
+    UInt16              m_0F_animation_info{};
+    UInt8               m_10_animation_speed{};
+    UInt8               m_11_callback_25_triggers{};
+    UInt8               m_12_special_flags{};
     CargoAcceptanceList m_13_cargo_acceptance_list{};
 };
 

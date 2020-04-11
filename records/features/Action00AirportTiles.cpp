@@ -46,12 +46,12 @@ const std::map<std::string, uint16_t> g_indices =
 };
 
 
-constexpr IntegerDescriptorT<uint8_t>  desc_08 = { 0x08, str_substitute_tile_id,   PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_09 = { 0x09, str_aiport_tile_override, PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_0E = { 0x0E, str_callback_flags,       PropFormat::Hex };
-constexpr IntegerDescriptorT<uint16_t> desc_0F = { 0x0F, str_animation_info,       PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_10 = { 0x10, str_animation_speed,      PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t>  desc_11 = { 0x11, str_animation_triggers,   PropFormat::Hex };
+constexpr UInt8Descriptor  desc_08 = { 0x08, str_substitute_tile_id,   PropFormat::Hex };
+constexpr UInt8Descriptor  desc_09 = { 0x09, str_aiport_tile_override, PropFormat::Hex };
+constexpr UInt8Descriptor  desc_0E = { 0x0E, str_callback_flags,       PropFormat::Hex };
+constexpr UInt16Descriptor desc_0F = { 0x0F, str_animation_info,       PropFormat::Hex };
+constexpr UInt8Descriptor  desc_10 = { 0x10, str_animation_speed,      PropFormat::Hex };
+constexpr UInt8Descriptor  desc_11 = { 0x11, str_animation_triggers,   PropFormat::Hex };
 
 
 } // namespace {
@@ -61,18 +61,18 @@ bool Action00AirportTiles::read_property(std::istream& is, uint8_t property)
 {
     switch (property)
     {
-        case 0x08: m_08_substitute_tile_id    = read_uint8(is); break;
-        case 0x09: m_09_aiport_tile_override  = read_uint8(is); break;
-        case 0x0E: m_0E_callback_flags        = read_uint8(is); break;
+        case 0x08: m_08_substitute_tile_id.read(is);   break;
+        case 0x09: m_09_aiport_tile_override.read(is); break;
+        case 0x0E: m_0E_callback_flags.read(is);       break;
         // The low byte specifies the number of animation frames minus one, so 00 means 1 frame, 
         // 01 means 2 frames etc. The maximum number of frames is 256, although you can have some 
         // problems if your animation exceeds FD (253) frames. The high byte must be 0 for 
         // on-looping animations and 01 for looping animations. Every other value is reserved for 
         // future use. In addition, if the whole word contains FFFF, animation is turned off for 
         // this tile (this is the default value). 
-        case 0x0F: m_0F_animation_info        = read_uint16(is); break;
-        case 0x10: m_10_animation_speed       = read_uint8(is); break;
-        case 0x11: m_11_animation_triggers    = read_uint8(is); break;
+        case 0x0F: m_0F_animation_info.read(is);       break;
+        case 0x10: m_10_animation_speed.read(is);      break;
+        case 0x11: m_11_animation_triggers.read(is);   break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -84,12 +84,12 @@ bool Action00AirportTiles::write_property(std::ostream& os, uint8_t property) co
 {
     switch (property)
     {
-        case 0x08: write_uint8(os, m_08_substitute_tile_id); break;
-        case 0x09: write_uint8(os, m_09_aiport_tile_override); break;
-        case 0x0E: write_uint8(os, m_0E_callback_flags); break;
-        case 0x0F: write_uint16(os, m_0F_animation_info); break;
-        case 0x10: write_uint8(os, m_10_animation_speed); break;
-        case 0x11: write_uint8(os, m_11_animation_triggers); break;
+        case 0x08: m_08_substitute_tile_id.write(os);   break;
+        case 0x09: m_09_aiport_tile_override.write(os); break;
+        case 0x0E: m_0E_callback_flags.write(os);       break;
+        case 0x0F: m_0F_animation_info.write(os);       break;
+        case 0x10: m_10_animation_speed.write(os);      break;
+        case 0x11: m_11_animation_triggers.write(os);   break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -101,12 +101,12 @@ bool Action00AirportTiles::print_property(std::ostream& os, uint8_t property, ui
 {
     switch (property)
     {
-        case 0x08: desc_08.print(m_08_substitute_tile_id, os, indent); break;
+        case 0x08: desc_08.print(m_08_substitute_tile_id, os, indent);   break;
         case 0x09: desc_09.print(m_09_aiport_tile_override, os, indent); break;
-        case 0x0E: desc_0E.print(m_0E_callback_flags, os, indent); break;
-        case 0x0F: desc_0F.print(m_0F_animation_info, os, indent); break;
-        case 0x10: desc_10.print(m_10_animation_speed, os, indent); break;
-        case 0x11: desc_11.print(m_11_animation_triggers, os, indent); break;
+        case 0x0E: desc_0E.print(m_0E_callback_flags, os, indent);       break;
+        case 0x0F: desc_0F.print(m_0F_animation_info, os, indent);       break;
+        case 0x10: desc_10.print(m_10_animation_speed, os, indent);      break;
+        case 0x11: desc_11.print(m_11_animation_triggers, os, indent);   break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -123,12 +123,12 @@ bool Action00AirportTiles::parse_property(TokenStream& is, const std::string& na
         property = (index >> 8); // The property index is in the high byte.
         switch (index)
         {
-            case 0x08'00: desc_08.parse(m_08_substitute_tile_id, is); break;
+            case 0x08'00: desc_08.parse(m_08_substitute_tile_id, is);   break;
             case 0x09'00: desc_09.parse(m_09_aiport_tile_override, is); break;
-            case 0x0E'00: desc_0E.parse(m_0E_callback_flags, is); break;
-            case 0x0F'00: desc_0F.parse(m_0F_animation_info, is); break;
-            case 0x10'00: desc_10.parse(m_10_animation_speed, is); break;
-            case 0x11'00: desc_11.parse(m_11_animation_triggers, is); break;
+            case 0x0E'00: desc_0E.parse(m_0E_callback_flags, is);       break;
+            case 0x0F'00: desc_0F.parse(m_0F_animation_info, is);       break;
+            case 0x10'00: desc_10.parse(m_10_animation_speed, is);      break;
+            case 0x11'00: desc_11.parse(m_11_animation_triggers, is);   break;
             default:      throw PROPERTY_ERROR("Unknown property", property);
         }
 

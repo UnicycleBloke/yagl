@@ -40,9 +40,9 @@ const std::map<std::string, uint16_t> g_indices =
 };
 
 
-constexpr IntegerDescriptorT<uint8_t> desc_08 = { 0x08, str_relative_volume,    PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t> desc_09 = { 0x09, str_priority,           PropFormat::Hex };
-constexpr IntegerDescriptorT<uint8_t> desc_0A = { 0x0A, str_override_old_sound, PropFormat::Hex };
+constexpr UInt8Descriptor desc_08 = { 0x08, str_relative_volume,    PropFormat::Hex };
+constexpr UInt8Descriptor desc_09 = { 0x09, str_priority,           PropFormat::Hex };
+constexpr UInt8Descriptor desc_0A = { 0x0A, str_override_old_sound, PropFormat::Hex };
 
 
 } // namespace {
@@ -52,9 +52,9 @@ bool Action00SoundEffects::read_property(std::istream& is, uint8_t property)
 {
     switch (property)
     {
-        case 0x08: m_08_relative_volume    = read_uint8(is); break;
-        case 0x09: m_09_priority           = read_uint8(is); break;
-        case 0x0A: m_0A_override_old_sound = read_uint8(is); break;
+        case 0x08: m_08_relative_volume.read(is);    break;
+        case 0x09: m_09_priority.read(is);           break;
+        case 0x0A: m_0A_override_old_sound.read(is); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -66,9 +66,9 @@ bool Action00SoundEffects::write_property(std::ostream& os, uint8_t property) co
 {
     switch (property)
     {
-        case 0x08: write_uint8(os, m_08_relative_volume); break;
-        case 0x09: write_uint8(os, m_09_priority); break;
-        case 0x0A: write_uint8(os, m_0A_override_old_sound); break;
+        case 0x08: m_08_relative_volume.write(os);    break;
+        case 0x09: m_09_priority.write(os);           break;
+        case 0x0A: m_0A_override_old_sound.write(os); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -80,8 +80,8 @@ bool Action00SoundEffects::print_property(std::ostream& os, uint8_t property, ui
 {
     switch (property)
     {
-        case 0x08: desc_08.print(m_08_relative_volume, os, indent); break;
-        case 0x09: desc_09.print(m_09_priority, os, indent); break;
+        case 0x08: desc_08.print(m_08_relative_volume, os, indent);    break;
+        case 0x09: desc_09.print(m_09_priority, os, indent);           break;
         case 0x0A: desc_0A.print(m_0A_override_old_sound, os, indent); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
@@ -99,8 +99,8 @@ bool Action00SoundEffects::parse_property(TokenStream& is, const std::string& na
         property = (index >> 8); // The property index is in the high byte.
         switch (index)
         {
-            case 0x08'00: desc_08.parse(m_08_relative_volume, is); break;
-            case 0x09'00: desc_09.parse(m_09_priority, is); break;
+            case 0x08'00: desc_08.parse(m_08_relative_volume, is);    break;
+            case 0x09'00: desc_09.parse(m_09_priority, is);           break;
             case 0x0A'00: desc_0A.parse(m_0A_override_old_sound, is); break;
             default:      throw PROPERTY_ERROR("Unknown property", property);
         }
