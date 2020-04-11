@@ -61,12 +61,12 @@ bool Action00Common::read_property(std::istream& is, uint8_t property)
 {
     switch (property)
     {
-        case 0x00: m_00_introduction_date.read(is); break;
-        case 0x02: m_02_reliability_decay_speed.read(is);  break;
-        case 0x03: m_03_vehicle_life_years.read(is);  break;
-        case 0x04: m_04_model_life_years.read(is);  break;
-        case 0x06: m_06_climate_availability.read(is);  break;
-        case 0x07: m_07_loading_speed.read(is);  break;
+        case 0x00: m_00_introduction_date.read(is);       break;
+        case 0x02: m_02_reliability_decay_speed.read(is); break;
+        case 0x03: m_03_vehicle_life_years.read(is);      break;
+        case 0x04: m_04_model_life_years.read(is);        break;
+        case 0x06: m_06_climate_availability.read(is);    break;
+        case 0x07: m_07_loading_speed.read(is);           break;
         default:   return false;
     }
 
@@ -78,12 +78,12 @@ bool Action00Common::write_property(std::ostream& os, uint8_t property) const
 {
     switch (property)
     {
-        case 0x00: m_00_introduction_date.write(os); break;
+        case 0x00: m_00_introduction_date.write(os);       break;
         case 0x02: m_02_reliability_decay_speed.write(os); break;
-        case 0x03: m_03_vehicle_life_years.write(os); break;
-        case 0x04: m_04_model_life_years.write(os); break;
-        case 0x06: m_06_climate_availability.write(os); break;
-        case 0x07: m_07_loading_speed.write(os); break;
+        case 0x03: m_03_vehicle_life_years.write(os);      break;
+        case 0x04: m_04_model_life_years.write(os);        break;
+        case 0x06: m_06_climate_availability.write(os);    break;
+        case 0x07: m_07_loading_speed.write(os);           break;
         default:   return false;
     }
 
@@ -95,12 +95,12 @@ bool Action00Common::print_property(std::ostream& os, uint8_t property, uint16_t
 {
     switch (property)
     {
-        case 0x00: desc_00.print(m_00_introduction_date, os, indent); break;
+        case 0x00: desc_00.print(m_00_introduction_date, os, indent);       break;
         case 0x02: desc_02.print(m_02_reliability_decay_speed, os, indent); break;
-        case 0x03: desc_03.print(m_03_vehicle_life_years, os, indent); break;
-        case 0x04: desc_04.print(m_04_model_life_years, os, indent); break;
-        case 0x06: desc_06.print(m_06_climate_availability, os, indent); break;
-        case 0x07: desc_07.print(m_07_loading_speed, os, indent); break;
+        case 0x03: desc_03.print(m_03_vehicle_life_years, os, indent);      break;
+        case 0x04: desc_04.print(m_04_model_life_years, os, indent);        break;
+        case 0x06: desc_06.print(m_06_climate_availability, os, indent);    break;
+        case 0x07: desc_07.print(m_07_loading_speed, os, indent);           break;
         default:   return false;
     }    
 
@@ -117,12 +117,12 @@ bool Action00Common::parse_property(TokenStream& is, const std::string& name, ui
         property = (index >> 8); // The property index is in the high byte.
         switch (index)
         {
-            case 0x00'00: desc_00.parse(m_00_introduction_date, is); break;
+            case 0x00'00: desc_00.parse(m_00_introduction_date, is);       break;
             case 0x02'00: desc_02.parse(m_02_reliability_decay_speed, is); break;
-            case 0x03'00: desc_03.parse(m_03_vehicle_life_years, is); break;
-            case 0x04'00: desc_04.parse(m_04_model_life_years, is); break;
-            case 0x06'00: desc_06.parse(m_06_climate_availability, is); break;
-            case 0x07'00: desc_07.parse(m_07_loading_speed, is); break;
+            case 0x03'00: desc_03.parse(m_03_vehicle_life_years, is);      break;
+            case 0x04'00: desc_04.parse(m_04_model_life_years, is);        break;
+            case 0x06'00: desc_06.parse(m_06_climate_availability, is);    break;
+            case 0x07'00: desc_07.parse(m_07_loading_speed, is);           break;
             default:      throw PROPERTY_ERROR("Unknown property", property);
         }
     

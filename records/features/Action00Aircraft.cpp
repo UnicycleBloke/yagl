@@ -117,29 +117,29 @@ bool Action00Aircraft::read_property(std::istream& is, uint8_t property)
 
     switch (property)
     {
-        case 0x08: m_08_sprite_id.read(is); break;
-        case 0x09: m_09_is_helicopter.read(is); break;
-        case 0x0A: m_0A_is_large.read(is); break; 
-        case 0x0B: m_0B_cost_factor.read(is); break;
-        case 0x0C: m_0C_speed_8_mph.read(is); break;
-        case 0x0D: m_0D_acceleration.read(is); break;
-        case 0x0E: m_0E_running_cost_factor.read(is); break;
-        case 0x0F: m_0F_passenger_capacity.read(is); break;
-        case 0x11: m_11_mail_capacity.read(is); break;
-        case 0x12: m_12_sound_effect_type.read(is); break;
-        case 0x13: m_13_refit_cargo_types.read(is); break;
-        case 0x14: m_14_callback_flags_mask.read(is); break;
-        case 0x15: m_15_refit_cost.read(is); break;
-        case 0x16: m_16_retire_vehicle_early.read(is); break;
-        case 0x17: m_17_miscellaneous_flags.read(is); break;
-        case 0x18: m_18_refittable_cargo_classes.read(is); break;
+        case 0x08: m_08_sprite_id.read(is);                    break;
+        case 0x09: m_09_is_helicopter.read(is);                break;
+        case 0x0A: m_0A_is_large.read(is);                     break; 
+        case 0x0B: m_0B_cost_factor.read(is);                  break;
+        case 0x0C: m_0C_speed_8_mph.read(is);                  break;
+        case 0x0D: m_0D_acceleration.read(is);                 break;
+        case 0x0E: m_0E_running_cost_factor.read(is);          break;
+        case 0x0F: m_0F_passenger_capacity.read(is);           break;
+        case 0x11: m_11_mail_capacity.read(is);                break;
+        case 0x12: m_12_sound_effect_type.read(is);            break;
+        case 0x13: m_13_refit_cargo_types.read(is);            break;
+        case 0x14: m_14_callback_flags_mask.read(is);          break;
+        case 0x15: m_15_refit_cost.read(is);                   break;
+        case 0x16: m_16_retire_vehicle_early.read(is);         break;
+        case 0x17: m_17_miscellaneous_flags.read(is);          break;
+        case 0x18: m_18_refittable_cargo_classes.read(is);     break;
         case 0x19: m_19_non_refittable_cargo_classes.read(is); break;
-        case 0x1A: m_1A_long_introduction_date.read(is); break;
-        case 0x1B: m_1B_sort_purchase_list.read(is); break;
-        case 0x1C: m_1C_custom_cargo_aging_period.read(is); break;
-        case 0x1D: m_1D_always_refittable_cargos.read(is); break;
-        case 0x1E: m_1E_never_refittable_cargos.read(is); break;
-        case 0x1F: m_1F_aircraft_range.read(is); break;
+        case 0x1A: m_1A_long_introduction_date.read(is);       break;
+        case 0x1B: m_1B_sort_purchase_list.read(is);           break;
+        case 0x1C: m_1C_custom_cargo_aging_period.read(is);    break;
+        case 0x1D: m_1D_always_refittable_cargos.read(is);     break;
+        case 0x1E: m_1E_never_refittable_cargos.read(is);      break;
+        case 0x1F: m_1F_aircraft_range.read(is);               break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -156,29 +156,29 @@ bool Action00Aircraft::write_property(std::ostream& os, uint8_t property) const
 
     switch (property)
     {
-        case 0x08: m_08_sprite_id.write(os); break;
-        case 0x09: m_09_is_helicopter.write(os); break;
-        case 0x0A: m_0A_is_large.write(os); break;
-        case 0x0B: m_0B_cost_factor.write(os); break;
-        case 0x0C: m_0C_speed_8_mph.write(os); break;
-        case 0x0D: m_0D_acceleration.write(os); break;
-        case 0x0E: m_0E_running_cost_factor.write(os); break;
-        case 0x0F: m_0F_passenger_capacity.write(os); break;
-        case 0x11: m_11_mail_capacity.write(os); break;
-        case 0x12: m_12_sound_effect_type.write(os); break;
-        case 0x13: m_13_refit_cargo_types.write(os); break;
-        case 0x14: m_14_callback_flags_mask.write(os); break;
-        case 0x15: m_15_refit_cost.write(os); break;
-        case 0x16: m_16_retire_vehicle_early.write(os); break;
-        case 0x17: m_17_miscellaneous_flags.write(os); break;
-        case 0x18: m_18_refittable_cargo_classes.write(os); break;
+        case 0x08: m_08_sprite_id.write(os);                    break;
+        case 0x09: m_09_is_helicopter.write(os);                break;
+        case 0x0A: m_0A_is_large.write(os);                     break;
+        case 0x0B: m_0B_cost_factor.write(os);                  break;
+        case 0x0C: m_0C_speed_8_mph.write(os);                  break;
+        case 0x0D: m_0D_acceleration.write(os);                 break;
+        case 0x0E: m_0E_running_cost_factor.write(os);          break;
+        case 0x0F: m_0F_passenger_capacity.write(os);           break;
+        case 0x11: m_11_mail_capacity.write(os);                break;
+        case 0x12: m_12_sound_effect_type.write(os);            break;
+        case 0x13: m_13_refit_cargo_types.write(os);            break;
+        case 0x14: m_14_callback_flags_mask.write(os);          break;
+        case 0x15: m_15_refit_cost.write(os);                   break;
+        case 0x16: m_16_retire_vehicle_early.write(os);         break;
+        case 0x17: m_17_miscellaneous_flags.write(os);          break;
+        case 0x18: m_18_refittable_cargo_classes.write(os);     break;
         case 0x19: m_19_non_refittable_cargo_classes.write(os); break;
-        case 0x1A: m_1A_long_introduction_date.write(os); break;
-        case 0x1B: m_1B_sort_purchase_list.write(os); break;
-        case 0x1C: m_1C_custom_cargo_aging_period.write(os); break;
-        case 0x1D: m_1D_always_refittable_cargos.write(os); break;
-        case 0x1E: m_1E_never_refittable_cargos.write(os); break;
-        case 0x1F: m_1F_aircraft_range.write(os); break;
+        case 0x1A: m_1A_long_introduction_date.write(os);       break;
+        case 0x1B: m_1B_sort_purchase_list.write(os);           break;
+        case 0x1C: m_1C_custom_cargo_aging_period.write(os);    break;
+        case 0x1D: m_1D_always_refittable_cargos.write(os);     break;
+        case 0x1E: m_1E_never_refittable_cargos.write(os);      break;
+        case 0x1F: m_1F_aircraft_range.write(os);               break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -195,29 +195,29 @@ bool Action00Aircraft::print_property(std::ostream& os, uint8_t property, uint16
 
     switch (property)
     {
-        case 0x08: desc_08.print(m_08_sprite_id, os, indent); break;
-        case 0x09: desc_09.print(m_09_is_helicopter, os, indent); break;
-        case 0x0A: desc_0A.print(m_0A_is_large, os, indent); break;
-        case 0x0B: desc_0B.print(m_0B_cost_factor, os, indent); break;
-        case 0x0C: desc_0C.print(m_0C_speed_8_mph, os, indent); break;
-        case 0x0D: desc_0D.print(m_0D_acceleration, os, indent); break;
-        case 0x0E: desc_0E.print(m_0E_running_cost_factor, os, indent); break;
-        case 0x0F: desc_0F.print(m_0F_passenger_capacity, os, indent); break;
-        case 0x11: desc_11.print(m_11_mail_capacity, os, indent); break;
-        case 0x12: desc_12.print(m_12_sound_effect_type, os, indent); break;
-        case 0x13: desc_13.print(m_13_refit_cargo_types, os, indent); break;
-        case 0x14: desc_14.print(m_14_callback_flags_mask, os, indent); break;
-        case 0x15: desc_15.print(m_15_refit_cost, os, indent); break;
-        case 0x16: desc_16.print(m_16_retire_vehicle_early, os, indent); break;
-        case 0x17: desc_17.print(m_17_miscellaneous_flags, os, indent); break;
-        case 0x18: desc_18.print(m_18_refittable_cargo_classes, os, indent); break;
+        case 0x08: desc_08.print(m_08_sprite_id, os, indent);                    break;
+        case 0x09: desc_09.print(m_09_is_helicopter, os, indent);                break;
+        case 0x0A: desc_0A.print(m_0A_is_large, os, indent);                     break;
+        case 0x0B: desc_0B.print(m_0B_cost_factor, os, indent);                  break;
+        case 0x0C: desc_0C.print(m_0C_speed_8_mph, os, indent);                  break;
+        case 0x0D: desc_0D.print(m_0D_acceleration, os, indent);                 break;
+        case 0x0E: desc_0E.print(m_0E_running_cost_factor, os, indent);          break;
+        case 0x0F: desc_0F.print(m_0F_passenger_capacity, os, indent);           break;
+        case 0x11: desc_11.print(m_11_mail_capacity, os, indent);                break;
+        case 0x12: desc_12.print(m_12_sound_effect_type, os, indent);            break;
+        case 0x13: desc_13.print(m_13_refit_cargo_types, os, indent);            break;
+        case 0x14: desc_14.print(m_14_callback_flags_mask, os, indent);          break;
+        case 0x15: desc_15.print(m_15_refit_cost, os, indent);                   break;
+        case 0x16: desc_16.print(m_16_retire_vehicle_early, os, indent);         break;
+        case 0x17: desc_17.print(m_17_miscellaneous_flags, os, indent);          break;
+        case 0x18: desc_18.print(m_18_refittable_cargo_classes, os, indent);     break;
         case 0x19: desc_19.print(m_19_non_refittable_cargo_classes, os, indent); break;
-        case 0x1A: desc_1A.print(m_1A_long_introduction_date, os, indent); break;
-        case 0x1B: desc_1B.print(m_1B_sort_purchase_list, os, indent); break;
-        case 0x1C: desc_1C.print(m_1C_custom_cargo_aging_period, os, indent); break;
-        case 0x1D: desc_1D.print(m_1D_always_refittable_cargos, os, indent); break;
-        case 0x1E: desc_1E.print(m_1E_never_refittable_cargos, os, indent); break;
-        case 0x1F: desc_1F.print(m_1F_aircraft_range, os, indent); break;
+        case 0x1A: desc_1A.print(m_1A_long_introduction_date, os, indent);       break;
+        case 0x1B: desc_1B.print(m_1B_sort_purchase_list, os, indent);           break;
+        case 0x1C: desc_1C.print(m_1C_custom_cargo_aging_period, os, indent);    break;
+        case 0x1D: desc_1D.print(m_1D_always_refittable_cargos, os, indent);     break;
+        case 0x1E: desc_1E.print(m_1E_never_refittable_cargos, os, indent);      break;
+        case 0x1F: desc_1F.print(m_1F_aircraft_range, os, indent);               break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -239,29 +239,29 @@ bool Action00Aircraft::parse_property(TokenStream& is, const std::string& name, 
         property = (index >> 8); // The property index is in the high byte.
         switch (index)
         {
-            case 0x08: desc_08.parse(m_08_sprite_id, is); break;
-            case 0x09: desc_09.parse(m_09_is_helicopter, is); break;
-            case 0x0A: desc_0A.parse(m_0A_is_large, is); break;
-            case 0x0B: desc_0B.parse(m_0B_cost_factor, is); break;
-            case 0x0C: desc_0C.parse(m_0C_speed_8_mph, is); break;
-            case 0x0D: desc_0D.parse(m_0D_acceleration, is); break;
-            case 0x0E: desc_0E.parse(m_0E_running_cost_factor, is); break;
-            case 0x0F: desc_0F.parse(m_0F_passenger_capacity, is); break;
-            case 0x11: desc_11.parse(m_11_mail_capacity, is); break;
-            case 0x12: desc_12.parse(m_12_sound_effect_type, is); break;
-            case 0x13: desc_13.parse(m_13_refit_cargo_types, is); break;
-            case 0x14: desc_14.parse(m_14_callback_flags_mask, is); break;
-            case 0x15: desc_15.parse(m_15_refit_cost, is); break;
-            case 0x16: desc_16.parse(m_16_retire_vehicle_early, is); break;
-            case 0x17: desc_17.parse(m_17_miscellaneous_flags, is); break;
-            case 0x18: desc_18.parse(m_18_refittable_cargo_classes, is); break;
+            case 0x08: desc_08.parse(m_08_sprite_id, is);                    break;
+            case 0x09: desc_09.parse(m_09_is_helicopter, is);                break;
+            case 0x0A: desc_0A.parse(m_0A_is_large, is);                     break;
+            case 0x0B: desc_0B.parse(m_0B_cost_factor, is);                  break;
+            case 0x0C: desc_0C.parse(m_0C_speed_8_mph, is);                  break;
+            case 0x0D: desc_0D.parse(m_0D_acceleration, is);                 break;
+            case 0x0E: desc_0E.parse(m_0E_running_cost_factor, is);          break;
+            case 0x0F: desc_0F.parse(m_0F_passenger_capacity, is);           break;
+            case 0x11: desc_11.parse(m_11_mail_capacity, is);                break;
+            case 0x12: desc_12.parse(m_12_sound_effect_type, is);            break;
+            case 0x13: desc_13.parse(m_13_refit_cargo_types, is);            break;
+            case 0x14: desc_14.parse(m_14_callback_flags_mask, is);          break;
+            case 0x15: desc_15.parse(m_15_refit_cost, is);                   break;
+            case 0x16: desc_16.parse(m_16_retire_vehicle_early, is);         break;
+            case 0x17: desc_17.parse(m_17_miscellaneous_flags, is);          break;
+            case 0x18: desc_18.parse(m_18_refittable_cargo_classes, is);     break;
             case 0x19: desc_19.parse(m_19_non_refittable_cargo_classes, is); break;
-            case 0x1A: desc_1A.parse(m_1A_long_introduction_date, is); break;
-            case 0x1B: desc_1B.parse(m_1B_sort_purchase_list, is); break;
-            case 0x1C: desc_1C.parse(m_1C_custom_cargo_aging_period, is); break;
-            case 0x1D: desc_1D.parse(m_1D_always_refittable_cargos, is); break;
-            case 0x1E: desc_1E.parse(m_1E_never_refittable_cargos, is); break;
-            case 0x1F: desc_1F.parse(m_1F_aircraft_range, is); break;
+            case 0x1A: desc_1A.parse(m_1A_long_introduction_date, is);       break;
+            case 0x1B: desc_1B.parse(m_1B_sort_purchase_list, is);           break;
+            case 0x1C: desc_1C.parse(m_1C_custom_cargo_aging_period, is);    break;
+            case 0x1D: desc_1D.parse(m_1D_always_refittable_cargos, is);     break;
+            case 0x1E: desc_1E.parse(m_1E_never_refittable_cargos, is);      break;
+            case 0x1F: desc_1F.parse(m_1F_aircraft_range, is);               break;
             default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
