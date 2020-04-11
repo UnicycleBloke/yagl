@@ -35,28 +35,19 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 public:
-    struct VectorU8
+    class Multipliers
     {
-        std::vector<uint8_t> items;
-
+    public:
         void read(std::istream& is);
         void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
+        void print(std::ostream& os) const;
         void parse(TokenStream& is);
-    };    
 
-public:
-    struct Multipliers
-    {
-        uint8_t               num_inputs;
-        uint8_t               num_outputs;
-        std::vector<uint16_t> items;
-
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-    };    
+    private:
+        uint8_t               m_num_inputs;
+        uint8_t               m_num_outputs;
+        std::vector<uint16_t> m_items;
+    };
 
 private:
     UInt8                  m_08_substitute_industry_id{};
@@ -72,7 +63,7 @@ private:
     UInt8                  m_12_production_multipliers_1{};
     UInt8                  m_13_production_multipliers_2{};
     UInt8                  m_14_minimum_distributed{};
-    VectorU8               m_15_sound_effects{};
+    UIntVector<UInt8>      m_15_sound_effects{};
     UIntArray<UInt8, 3>    m_16_conflicting_industries{};
     UInt8                  m_17_random_probability{};
     UInt8                  m_18_gameplay_probability{};
@@ -88,9 +79,9 @@ private:
     UInt8                  m_22_callback_flags_2{};
     UInt32                 m_23_destruction_cost_multiplier{};
     UInt16                 m_24_nearby_station_text_id{};
-    VectorU8               m_25_production_cargo_list{};
-    VectorU8               m_26_acceptance_cargo_list{};
-    VectorU8               m_27_production_multipliers{};
+    UIntVector<UInt8>      m_25_production_cargo_list{};
+    UIntVector<UInt8>      m_26_acceptance_cargo_list{};
+    UIntVector<UInt8>      m_27_production_multipliers{};
     Multipliers            m_28_input_cargo_multipliers{};
 };
 

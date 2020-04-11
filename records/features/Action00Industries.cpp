@@ -24,36 +24,6 @@
 namespace {
 
 
-struct VectorU8Descriptor : PropertyDescriptor
-{
-    void print(const Action00Industries::VectorU8& items, std::ostream& os, uint16_t indent) const
-    {
-        prefix(os, indent);
-        items.print(os, indent);
-    }
-
-    void parse(Action00Industries::VectorU8& items, TokenStream& is) const
-    {
-        items.parse(is);
-    }
-};
-
-
-struct MultipliersDescriptor : PropertyDescriptor
-{
-    void print(const Action00Industries::Multipliers& items, std::ostream& os, uint16_t indent) const
-    {
-        prefix(os, indent);
-        items.print(os, indent);
-    }
-
-    void parse(Action00Industries::Multipliers& items, TokenStream& is) const
-    {
-        items.parse(is);
-    }
-};
-
-
 constexpr const char* str_substitute_industry_id      = "substitute_industry_id";
 constexpr const char* str_industry_type_override      = "industry_type_override";
 constexpr const char* str_industry_layout             = "industry_layout";
@@ -130,130 +100,88 @@ const std::map<std::string, uint16_t> g_indices =
 };
 
 
-using UInt8ArrayDescriptor2 = UIntDescriptor<UIntArray<UInt8, 2>>;
-using UInt8ArrayDescriptor3 = UIntDescriptor<UIntArray<UInt8, 3>>;
-using UInt8ArrayDescriptor4 = UIntDescriptor<UIntArray<UInt8, 4>>;
+using UInt8Array2Descriptor = UIntDescriptor<UIntArray<UInt8, 2>>;
+using UInt8Array3Descriptor = UIntDescriptor<UIntArray<UInt8, 3>>;
+using UInt8Array4Descriptor = UIntDescriptor<UIntArray<UInt8, 4>>;
+using UInt8VectorDescriptor = UIntDescriptor<UIntVector<UInt8>>;
+using MultipliersDescriptor = GenericDescriptor<Action00Industries::Multipliers>;
 
 
-constexpr UInt8Descriptor              desc_08  = { 0x08, str_substitute_industry_id,      PropFormat::Hex };
-constexpr UInt8Descriptor              desc_09  = { 0x09, str_industry_type_override,      PropFormat::Hex };
-constexpr IndustryLayoutsDescriptor    desc_0A  = { 0x0A, str_industry_layout };
-constexpr UInt8Descriptor              desc_0B  = { 0x0B, str_production_flags,            PropFormat::Hex };
-constexpr UInt16Descriptor             desc_0C  = { 0x0C, str_closure_msg_id,              PropFormat::Hex };
-constexpr UInt16Descriptor             desc_0D  = { 0x0D, str_production_up_id,            PropFormat::Hex };
-constexpr UInt16Descriptor             desc_0E  = { 0x0E, str_production_down_id,          PropFormat::Hex };
-constexpr UInt8Descriptor              desc_0F  = { 0x0F, str_fund_cost_multiplier,        PropFormat::Hex };
-constexpr UInt8ArrayDescriptor2        desc_10  = { 0x10, str_production_cargo_types,      PropFormat::Hex };
-constexpr UInt8ArrayDescriptor4        desc_11  = { 0x11, str_acceptance_cargo_types,      PropFormat::Hex };
-constexpr UInt8Descriptor              desc_12  = { 0x12, str_production_multipliers_1,    PropFormat::Hex };
-constexpr UInt8Descriptor              desc_13  = { 0x13, str_production_multipliers_2,    PropFormat::Hex };
-constexpr UInt8Descriptor              desc_14  = { 0x14, str_minimum_distributed,         PropFormat::Hex };
-constexpr VectorU8Descriptor           desc_15  = { 0x15, str_sound_effects };
-constexpr UInt8ArrayDescriptor3        desc_16  = { 0x16, str_conflicting_industries,      PropFormat::Hex };
-constexpr UInt8Descriptor              desc_17  = { 0x17, str_random_probability,          PropFormat::Hex };
-constexpr UInt8Descriptor              desc_18  = { 0x18, str_gameplay_probability,        PropFormat::Hex };
-constexpr UInt8Descriptor              desc_19  = { 0x19, str_map_colour,                  PropFormat::Hex };
-constexpr UInt32Descriptor             desc_1A  = { 0x1A, str_special_flags,               PropFormat::Hex };
-constexpr UInt16Descriptor             desc_1B  = { 0x1B, str_new_industry_text_id,        PropFormat::Hex };
-constexpr UInt32Descriptor             desc_1C  = { 0x1C, str_input_multipliers1,          PropFormat::Hex };
-constexpr UInt32Descriptor             desc_1D  = { 0x1D, str_input_multipliers2,          PropFormat::Hex };
-constexpr UInt32Descriptor             desc_1E  = { 0x1E, str_input_multipliers3,          PropFormat::Hex };
-constexpr UInt16Descriptor             desc_1F  = { 0x1F, str_industry_name_id,            PropFormat::Hex };
-constexpr UInt32Descriptor             desc_20  = { 0x20, str_prospecting_probability,     PropFormat::Hex };
-constexpr UInt8Descriptor              desc_21  = { 0x21, str_callback_flags_1,            PropFormat::Hex };
-constexpr UInt8Descriptor              desc_22  = { 0x22, str_callback_flags_2,            PropFormat::Hex };
-constexpr UInt32Descriptor             desc_23  = { 0x23, str_destruction_cost_multiplier, PropFormat::Hex };
-constexpr UInt16Descriptor             desc_24  = { 0x24, str_nearby_station_text_id,      PropFormat::Hex };
-constexpr VectorU8Descriptor           desc_25  = { 0x25, str_production_cargo_list };
-constexpr VectorU8Descriptor           desc_26  = { 0x26, str_acceptance_cargo_list };
-constexpr VectorU8Descriptor           desc_27  = { 0x27, str_production_multipliers };
-constexpr MultipliersDescriptor        desc_28  = { 0x28, str_input_cargo_multipliers };
+constexpr UInt8Descriptor                desc_08  = { 0x08, str_substitute_industry_id,      PropFormat::Hex };
+constexpr UInt8Descriptor                desc_09  = { 0x09, str_industry_type_override,      PropFormat::Hex };
+constexpr IndustryLayoutsDescriptor      desc_0A  = { 0x0A, str_industry_layout };
+constexpr UInt8Descriptor                desc_0B  = { 0x0B, str_production_flags,            PropFormat::Hex };
+constexpr UInt16Descriptor               desc_0C  = { 0x0C, str_closure_msg_id,              PropFormat::Hex };
+constexpr UInt16Descriptor               desc_0D  = { 0x0D, str_production_up_id,            PropFormat::Hex };
+constexpr UInt16Descriptor               desc_0E  = { 0x0E, str_production_down_id,          PropFormat::Hex };
+constexpr UInt8Descriptor                desc_0F  = { 0x0F, str_fund_cost_multiplier,        PropFormat::Hex };
+constexpr UInt8Array2Descriptor          desc_10  = { 0x10, str_production_cargo_types,      PropFormat::Hex };
+constexpr UInt8Array4Descriptor          desc_11  = { 0x11, str_acceptance_cargo_types,      PropFormat::Hex };
+constexpr UInt8Descriptor                desc_12  = { 0x12, str_production_multipliers_1,    PropFormat::Hex };
+constexpr UInt8Descriptor                desc_13  = { 0x13, str_production_multipliers_2,    PropFormat::Hex };
+constexpr UInt8Descriptor                desc_14  = { 0x14, str_minimum_distributed,         PropFormat::Hex };
+constexpr UInt8VectorDescriptor          desc_15  = { 0x15, str_sound_effects };
+constexpr UInt8Array3Descriptor          desc_16  = { 0x16, str_conflicting_industries,      PropFormat::Hex };
+constexpr UInt8Descriptor                desc_17  = { 0x17, str_random_probability,          PropFormat::Hex };
+constexpr UInt8Descriptor                desc_18  = { 0x18, str_gameplay_probability,        PropFormat::Hex };
+constexpr UInt8Descriptor                desc_19  = { 0x19, str_map_colour,                  PropFormat::Hex };
+constexpr UInt32Descriptor               desc_1A  = { 0x1A, str_special_flags,               PropFormat::Hex };
+constexpr UInt16Descriptor               desc_1B  = { 0x1B, str_new_industry_text_id,        PropFormat::Hex };
+constexpr UInt32Descriptor               desc_1C  = { 0x1C, str_input_multipliers1,          PropFormat::Hex };
+constexpr UInt32Descriptor               desc_1D  = { 0x1D, str_input_multipliers2,          PropFormat::Hex };
+constexpr UInt32Descriptor               desc_1E  = { 0x1E, str_input_multipliers3,          PropFormat::Hex };
+constexpr UInt16Descriptor               desc_1F  = { 0x1F, str_industry_name_id,            PropFormat::Hex };
+constexpr UInt32Descriptor               desc_20  = { 0x20, str_prospecting_probability,     PropFormat::Hex };
+constexpr UInt8Descriptor                desc_21  = { 0x21, str_callback_flags_1,            PropFormat::Hex };
+constexpr UInt8Descriptor                desc_22  = { 0x22, str_callback_flags_2,            PropFormat::Hex };
+constexpr UInt32Descriptor               desc_23  = { 0x23, str_destruction_cost_multiplier, PropFormat::Hex };
+constexpr UInt16Descriptor               desc_24  = { 0x24, str_nearby_station_text_id,      PropFormat::Hex };
+constexpr UInt8VectorDescriptor          desc_25  = { 0x25, str_production_cargo_list };
+constexpr UInt8VectorDescriptor          desc_26  = { 0x26, str_acceptance_cargo_list };
+constexpr UInt8VectorDescriptor          desc_27  = { 0x27, str_production_multipliers };
+constexpr MultipliersDescriptor          desc_28  = { 0x28, str_input_cargo_multipliers };
 
 
 } // namespace {
 
 
-void Action00Industries::VectorU8::read(std::istream& is)
-{
-    uint8_t num_items = read_uint8(is);
-    for (uint8_t i = 0; i < num_items; ++i)
-    {
-        items.push_back(read_uint8(is));
-    }
-}
-
-
-void Action00Industries::VectorU8::write(std::ostream& os) const
-{
-    write_uint8(os, uint8_t(items.size()));
-    for (uint8_t item: items)
-    {
-        write_uint8(os, item);
-    }
-}
-
-
-void Action00Industries::VectorU8::print(std::ostream& os, uint16_t indent) const
-{
-    os << "[";
-    for (const auto& item: items)
-    {
-        os << " " << to_hex(item);
-    }
-    os << " ];\n";
-}
-
-
-void Action00Industries::VectorU8::parse(TokenStream& is)
-{
-    is.match(TokenType::OpenBracket);
-    while (is.peek().type != TokenType::CloseBracket)
-    {
-        uint8_t value = is.match_uint8();
-        items.push_back(value);
-    }
-
-    is.match(TokenType::CloseBracket);
-}
-
-
 void Action00Industries::Multipliers::read(std::istream& is)
 {
-    num_inputs  = read_uint8(is);
-    num_outputs = read_uint8(is);
-    uint16_t num_items = num_inputs * num_outputs;
+    m_num_inputs  = read_uint8(is);
+    m_num_outputs = read_uint8(is);
+    uint16_t num_items = m_num_inputs * m_num_outputs;
     for (uint16_t i = 0; i < num_items; ++i)
     {
-        items.push_back(read_uint16(is));
+        m_items.push_back(read_uint16(is));
     }
 }
 
 
 void Action00Industries::Multipliers::write(std::ostream& os) const
 {
-    write_uint8(os, num_inputs);
-    write_uint8(os, num_outputs);
+    write_uint8(os, m_num_inputs);
+    write_uint8(os, m_num_outputs);
     // TODO assert size of vector matches.
-    for (uint16_t item: items)
+    for (uint16_t item: m_items)
     {
         write_uint16(os, item);
     }
 }
 
 
-void Action00Industries::Multipliers::print(std::ostream& os, uint16_t indent) const
+void Action00Industries::Multipliers::print(std::ostream& os) const
 {
     os << "[";
-    for (uint8_t i = 0; i < num_inputs; ++i)
+    for (uint8_t i = 0; i < m_num_inputs; ++i)
     {
         os << " [";
-        for (uint8_t o = 0; o < num_outputs; ++o)
+        for (uint8_t o = 0; o < m_num_outputs; ++o)
         {
-            os << " " << to_hex(items[i * num_outputs + o]);
+            os << " " << to_hex(m_items[i * m_num_outputs + o]);
         }
         os << " ]";
     }
-    os << " ];\n";
+    os << " ]";
 }
 
 
@@ -271,14 +199,14 @@ void Action00Industries::Multipliers::parse(TokenStream& is)
         {
             ++outputs;
             uint8_t value = is.match_uint8();
-            items.push_back(value);
+            m_items.push_back(value);
         }
         is.match(TokenType::CloseBracket);
     }
     is.match(TokenType::CloseBracket);
 
-    num_inputs  = static_cast<uint8_t>(inputs);
-    num_outputs = static_cast<uint8_t>(outputs / inputs);
+    m_num_inputs  = static_cast<uint8_t>(inputs);
+    m_num_outputs = static_cast<uint8_t>(outputs / inputs);
     // TODO Assert values < 256. Assert that outputs % inputs == 0.
 }
 

@@ -249,6 +249,59 @@ private:
 
 
 template <typename T>
+class UIntVector
+{
+public:    
+    void print(std::ostream& os, PropFormat format) const
+    {
+        os << "[";
+        for (const auto& value: m_values)
+        {
+            os << " ";
+            value.print(os, format);
+        }
+        os << " ]";
+    }
+
+    void parse(TokenStream& is)
+    {
+        is.match(TokenType::OpenBracket);
+        while (is.peek().type != TokenType::CloseBracket)
+        {
+            T value;
+            value.parse(is);
+            m_values.push_back(value);
+        }
+
+        is.match(TokenType::CloseBracket);
+    }
+
+    void read(std::istream& is)
+    {
+        uint8_t num_items = read_uint8(is);
+        for (uint8_t i = 0; i < num_items; ++i)
+        {
+            T value;
+            value.read(is);
+            m_values.push_back(value);
+        }
+    }
+
+    void write(std::ostream& os) const
+    {        
+        write_uint8(os, uint8_t(m_values.size()));
+        for (const auto& value: m_values)
+        {
+            value.write(os);
+        }
+    }
+
+private:
+    std::vector<T> m_values;
+};
+
+
+template <typename T>
 struct UIntDescriptor : PropertyDescriptor
 {
     void print(const T& value, std::ostream& os, uint16_t indent) const
