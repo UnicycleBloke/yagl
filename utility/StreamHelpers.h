@@ -77,18 +77,18 @@ void write_uint(std::ostream& os, T value)
 
     if constexpr (std::is_same_v<T, uint8_t>)
     {
-        if constexpr (EXT)
-            write_uint8_ext(os, value);
-        else
-            write_uint8(os, value);
+        write_uint8(os, value);
     }
     else if constexpr (std::is_same_v<T, uint16_t>)
     {
-       write_uint16(os, value);
+        if constexpr (EXT)
+            write_uint8_ext(os, value);
+        else
+            write_uint16(os, value);
     }
-    else //if constexpr (std::is_same_v<T, uint32_t>)
+    else // if constexpr (std::is_same_v<T, uint32_t>)
     {
-        write_uint32(os, value);
+        return write_uint32(os, value);
     }
 }
 
