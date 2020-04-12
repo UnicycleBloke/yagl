@@ -66,15 +66,14 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     records/actions/ActionFFRecord.cpp # Binary sound effects
 
     # Descriptors used to print and parse feature properties (Action00). 
-    #records/descriptors/Descriptors.cpp
     records/descriptors/DescriptorBase.cpp
-    records/descriptors/GRFLabelDescriptor.cpp
     records/descriptors/BitfieldDescriptor.cpp
     records/descriptors/EnumDescriptor.cpp
     records/descriptors/AirportLayoutDescriptor.cpp
     records/descriptors/IndustryLayoutDescriptor.cpp
     records/descriptors/CargoAcceptanceDescriptor.cpp
     records/descriptors/DateDescriptor.cpp
+    records/descriptors/GRFLabel.cpp
 
     # Handle properties for each different kind of feature (Action00).
     records/features/Action00Common.cpp
@@ -113,7 +112,6 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     # General utilities.
     utility/StreamHelpers.cpp
     utility/GRFStrings.cpp
-    utility/GRFLabel.cpp
     utility/Exceptions.cpp
     utility/Languages.cpp
 )

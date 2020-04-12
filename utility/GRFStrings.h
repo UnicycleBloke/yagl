@@ -21,7 +21,7 @@
 #include <string>
 #include "Languages.h"
 #include "Record.h"
-#include "GRFLabel.h"
+#include "DescriptorBase.h"
 
 
 //std::string grf_string_to_readable_utf8(const std::string& str);
@@ -60,5 +60,8 @@ std::string read_string(std::istream& is);
 void write_string(std::ostream& os, const std::string& value, StringTerm term);
 void write_string(std::ostream& os, const std::string& value);
 std::string grf_string_to_readable_utf8(const std::string& value);
+
+
+using GRFStringDescriptor = GenericDescriptor<GRFString>;
 
 

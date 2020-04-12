@@ -36,7 +36,7 @@ public:
 private:
     UInt8                 m_08_substitute_building_id{};
     UInt8                 m_09_building_flags{};
-    YearPair<uint8_t>     m_0A_years_available{};
+    Year8Pair             m_0A_years_available{};
     UInt8                 m_0B_population{};
     UInt8                 m_0C_mail_multiplier{};
     UInt8                 m_0D_passenger_acceptance{};
@@ -59,8 +59,8 @@ private:
     UIntArray<UInt8, 4>   m_1E_accepted_cargo_types{};
     UInt16                m_1F_minimum_life_years{};
     CargoList             m_20_accepted_cargo_list{};
-    Year<uint16_t>        m_21_long_minimum_year{};
-    Year<uint16_t>        m_22_long_maximum_year{};
+    Year16                m_21_long_minimum_year{};
+    Year16                m_22_long_maximum_year{};
     CargoAcceptanceList   m_23_tile_acceptance_list{};
 };
 

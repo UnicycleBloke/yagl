@@ -20,6 +20,9 @@
 #include "DescriptorBase.h"
 
 
+enum class PropFormat { Dec, Hex, Bool, String };
+
+
 template <typename T>
 struct IntegerDescriptorT : PropertyDescriptor
 {
@@ -115,8 +118,6 @@ void IntegerListDescriptorT<T>::parse(std::vector<T>& values, TokenStream& is) c
     }
     is.match(TokenType::CloseBracket);
 }
-
-
 
 
 

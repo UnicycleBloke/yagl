@@ -17,41 +17,42 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include <cstdint>
+#include <iostream>
+#include <string>
+#include "TokenStream.h"
 #include "DescriptorBase.h"
-#include "GRFLabel.h"
-#include <array>
 
 
-class GRFLabelPair
+class GRFLabel
 {
 public:
+    // This is uses non-default in only one place - Action07Record::print().
+    explicit GRFLabel(uint32_t label = 0) : m_label{label} {}
+
+    // Binary serialisation
     void read(std::istream& is);
     void write(std::ostream& os) const;
-    void print(std::ostream& os) const;
+    // Text serialisation
+    void print(std::ostream& os) const; // Quoted version of to_string().
     void parse(TokenStream& is);
 
+    // Not used in many places - phase out.
+    std::string to_string() const;        // Not quoted: ABCD or ABC\x01
+    // Used in only one place - phase out.
+    std::string to_string_or_hex() const; // If any character is not printable.
+
+    uint32_t value() const { return m_label; }
+
 private:
-    GRFLabel m_source;
-    GRFLabel m_target;
+    uint32_t m_label{};    
 };
 
 
-class GRFLabelList
-{
-public:
-    void read(std::istream& is);
-    void write(std::ostream& os) const;
-    void print(std::ostream& os) const;
-    void parse(TokenStream& is);
-
-private:
-    // This is a list of indices into the (presumably global) cargo table.
-    std::vector<GRFLabel> m_labels;
-};
-
+using GRFLabelPair           = Array<GRFLabel, 2>;
+using GRFLabelList           = Vector<GRFLabel>;
 
 using GRFLabelDescriptor     = GenericDescriptor<GRFLabel>;
-using GRFLabelListDescriptor = GenericDescriptor<GRFLabelList>;
 using GRFLabelPairDescriptor = GenericDescriptor<GRFLabelPair>;
-
+using GRFLabelListDescriptor = GenericDescriptor<GRFLabelList>;
 

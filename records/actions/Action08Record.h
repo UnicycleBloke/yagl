@@ -18,7 +18,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Record.h"
-#include "GRFStrings.h"
 
 
 class Action08Record : public ActionRecord

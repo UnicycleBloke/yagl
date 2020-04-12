@@ -21,7 +21,6 @@
 #include "BitfieldDescriptor.h"
 #include "BooleanDescriptor.h"
 #include "EnumDescriptor.h"
-#include "GRFLabelDescriptor.h"
 #include "IntegerDescriptor.h"
 #include "RangeDescriptor.h"
 #include "AirportLayoutDescriptor.h"
@@ -29,3 +28,6 @@
 #include "CargoAcceptanceDescriptor.h"
 #include "DateDescriptor.h"
 #include "YearDescriptor.h"
+#include "GRFLabel.h"
+
+

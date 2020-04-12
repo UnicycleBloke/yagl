@@ -17,15 +17,11 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Lexer.h"
-#include "GRFStrings.h"
+#include "TokenStream.h"
 #include <cstdint>
 #include <iostream>
-
-
-enum class PropType   { Integer, Enumeration, BitField, Date };
-enum class PropSize   { Byte, Word, DWord };
-enum class PropFormat { Dec, Hex, Bool, String };
+#include <array>
+#include <vector>
 
 
 struct PropertyDescriptor
@@ -55,6 +51,112 @@ struct GenericDescriptor : PropertyDescriptor
 };
 
 
-using GRFStringDescriptor = GenericDescriptor<GRFString>;
+// Useful for any array of objects with the standard interface: 
+// print(), parse(), read(), write(). Integers have an additional
+// format parameter passed to print(), so there is a different Array 
+// for these.
+template <typename T, uint16_t SIZE>
+class Array
+{
+public:    
+    void print(std::ostream& os) const
+    {
+        os << "[";
+        for (const auto& value: m_values)
+        {
+            os << " ";
+            value.print(os);
+        }
+        os << " ]";
+    }
+
+    void parse(TokenStream& is)
+    {
+        is.match(TokenType::OpenBracket);
+        for (auto& value: m_values)
+        {
+            value.parse(is);
+        }
+        is.match(TokenType::CloseBracket);
+    }
+
+    void read(std::istream& is)
+    {
+        for (auto& value: m_values)
+        {
+            value.read(is);
+        }
+    }
+
+    void write(std::ostream& os) const
+    {        
+        for (const auto& value: m_values)
+        {
+            value.write(os);
+        }
+    }
+
+private:
+    std::array<T, SIZE> m_values;
+};
+
+
+// Useful for any vector of objects with the standard interface: 
+// print(), parse(), read(), write(). Integers have an additional
+// format parameter passed to print(), so there is a different Array 
+// for these. We assume that the binary format includes a uint8_t
+// length before the items.
+template <typename T>
+class Vector
+{
+public:    
+    void print(std::ostream& os) const
+    {
+        os << "[";
+        for (const auto& value: m_values)
+        {
+            os << " ";
+            value.print(os);
+        }
+        os << " ]";
+    }
+
+    void parse(TokenStream& is)
+    {
+        is.match(TokenType::OpenBracket);
+        while (is.peek().type != TokenType::CloseBracket)
+        {
+            T value;
+            value.parse(is);
+            m_values.push_back(value);
+        }
+
+        is.match(TokenType::CloseBracket);
+    }
+
+    void read(std::istream& is)
+    {
+        uint8_t num_items = read_uint8(is);
+        for (uint8_t i = 0; i < num_items; ++i)
+        {
+            T value;
+            value.read(is);
+            m_values.push_back(value);
+        }
+    }
+
+    void write(std::ostream& os) const
+    {        
+        write_uint8(os, uint8_t(m_values.size()));
+        for (const auto& value: m_values)
+        {
+            value.write(os);
+        }
+    }
+
+private:
+    std::vector<T> m_values;
+};
+
 
 

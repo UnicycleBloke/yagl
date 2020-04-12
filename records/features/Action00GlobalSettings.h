@@ -18,7 +18,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "GRFLabelDescriptor.h"
 #include "IntegerDescriptor.h"
 #include "GRFStrings.h"
 #include <array>

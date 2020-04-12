@@ -18,6 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once 
 #include "TokenStream.h"
+#include "GRFStrings.h"
+#include "GRFLabel.h"
 #include <cstdint>
 #include <iostream>
 #include <vector>

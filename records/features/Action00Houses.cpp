@@ -94,7 +94,7 @@ using UInt8ArrayDescriptor4 = UIntDescriptor<UIntArray<UInt8, 4>>;
 
 constexpr UInt8Descriptor              desc_08  = { 0x08, str_substitute_building_id, PropFormat::Hex };
 constexpr UInt8Descriptor              desc_09  = { 0x09, str_building_flags,         PropFormat::Hex };
-constexpr YearPairDescriptor<uint8_t>  desc_0A  = { 0x0A, str_years_available };
+constexpr Year8PairDescriptor          desc_0A  = { 0x0A, str_years_available };
 constexpr UInt8Descriptor              desc_0B  = { 0x0B, str_population,             PropFormat::Hex };
 constexpr UInt8Descriptor              desc_0C  = { 0x0C, str_mail_multiplier,        PropFormat::Hex };
 constexpr UInt8Descriptor              desc_0D  = { 0x0D, str_passenger_acceptance,   PropFormat::Hex };
@@ -117,8 +117,8 @@ constexpr UInt8Descriptor              desc_1D  = { 0x1D, str_callback_flags_2, 
 constexpr UInt8ArrayDescriptor4        desc_1E  = { 0x1E, str_accepted_cargo_types,   PropFormat::Hex };
 constexpr UInt16Descriptor             desc_1F  = { 0x1F, str_minimum_life_years,     PropFormat::Hex };
 constexpr CargoListDescriptor          desc_20  = { 0x20, str_accepted_cargo_list };
-constexpr YearDescriptor<uint16_t>     desc_21  = { 0x21, str_long_minimum_year };
-constexpr YearDescriptor<uint16_t>     desc_22  = { 0x22, str_long_maximum_year };
+constexpr Year16Descriptor             desc_21  = { 0x21, str_long_minimum_year };
+constexpr Year16Descriptor             desc_22  = { 0x22, str_long_maximum_year };
 constexpr CargoAcceptanceDescriptor    desc_23  = { 0x23, str_tile_acceptance_list };
 
 

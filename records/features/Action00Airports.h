@@ -37,7 +37,7 @@ public:
 private:
     UInt8               m_08_airport_override_id{};
     AirportLayouts      m_0A_airport_layouts{};
-    YearPair<uint16_t>  m_0C_years_available{};
+    Year16Pair          m_0C_years_available{};
     UInt8               m_0D_compatible_ttd_airport{};
     UInt8               m_0E_catchment_area{};
     UInt8               m_0F_noise_level{};

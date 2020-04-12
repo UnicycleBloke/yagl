@@ -82,81 +82,18 @@ private:
 };
 
 
-template <typename T>
-class YearPair
-{
-public:
-    void print(std::ostream& os) const
-    {
-        os << "[ ";
-        m_first.print(os);
-        os << ", ";
-        m_last.print(os);
-        os << " ]";
-    }
+using Year8  = Year<uint8_t>;
+using Year16 = Year<uint16_t>;
+using Year32 = Year<uint32_t>;
 
-    void parse(TokenStream& is)
-    {
-        is.match(TokenType::OpenBracket);
-        m_first.parse(is);
-        is.match(TokenType::Comma);
-        m_last.parse(is);
-        is.match(TokenType::CloseBracket);
-    }
+using Year8Descriptor  = GenericDescriptor<Year8>;
+using Year16Descriptor = GenericDescriptor<Year16>;
+using Year32Descriptor = GenericDescriptor<Year32>;
 
-    void read(std::istream& is)
-    {
-        m_first.read(is);
-        m_last.read(is);
-    }
+using Year8Pair  = Array<Year8,  2>;
+using Year16Pair = Array<Year16, 2>;
+using Year32Pair = Array<Year32, 2>;
 
-    void write(std::ostream& os) const
-    {
-        m_first.write(os);
-        m_last.write(os);
-    }
-
-private:
-    Year<T> m_first;
-    Year<T> m_last;
-};
-
-
-template <typename T>
-struct YearDescriptor : PropertyDescriptor
-{
-    void print(const Year<T>& year, std::ostream& os, uint16_t indent) const
-    {
-        // This is the name of the property.
-        prefix(os, indent);
-        year.print(os);
-        os << ";\n";
-    }
-
-    void parse(Year<T>& year, TokenStream& is) const
-    {
-        year.parse(is);
-    }
-};
-
-
-template <typename T>
-struct YearPairDescriptor : PropertyDescriptor
-{
-    void print(const YearPair<T>& years, std::ostream& os, uint16_t indent) const
-    {
-        // This is the name of the property.
-        prefix(os, indent);
-        years.print(os);
-        os << ";\n";
-    }
-
-    void parse(YearPair<T>& years, TokenStream& is) const
-    {
-        years.parse(is);
-    }
-};
-
-
-//using ShortYear = Year<uint8_t>;
-//using LongYear  = Year<uint16_t>;
+using Year8PairDescriptor  = GenericDescriptor<Year8Pair>;
+using Year16PairDescriptor = GenericDescriptor<Year16Pair>;
+using Year32PairDescriptor = GenericDescriptor<Year32Pair>;
