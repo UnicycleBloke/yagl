@@ -21,21 +21,14 @@
 #include <vector>
 
 
-// Industry layouts and Airport layouts almost identical - the only difference 
-// appears to be the rotation value that is included with Airports. Rather than
-// templatise this lot, we pass a parameter to indicate whether we are dealing 
-// with an Airport or an Industry.
-enum class AirportType { Airport, Industry };
-
-
 struct AirportTile
 {
     enum class Type { OldTile, NewTile, Clearance };
 
     int8_t   x_off;  // 0x00 is terminator part 1
     int8_t   y_off;  // 0x80 is terminator part 2
-    Type     type;
     uint16_t tile;
+    Type     type;
 
     void read(std::istream& is);
     void write(std::ostream& os) const;
@@ -51,11 +44,10 @@ struct AirportLayout
     Rotation rotation;
     std::vector<AirportTile> tiles;
 
-    void read(std::istream& is, AirportType type);
-    void write(std::ostream& os, AirportType type) const;
-    void print(std::ostream& os, uint16_t indent, AirportType type) const;
-    void parse(TokenStream& is, AirportType type);
-    const char* rotation_name(Rotation rotation) const;
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
 };
 
 
@@ -63,25 +55,12 @@ struct AirportLayouts
 {
     std::vector<AirportLayout> layouts;
 
-    void read(std::istream& is, AirportType type);
-    void write(std::ostream& os, AirportType type) const;
-    void print(std::ostream& os, uint16_t indent, AirportType type) const;
-    void parse(TokenStream& is, AirportType type);
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
 };
 
 
-struct AirportLayoutsDescriptor : PropertyDescriptor
-{
-    void print(const AirportLayouts& layouts, std::ostream& os, uint16_t indent, AirportType type) const
-    {
-        prefix(os, indent);
-        layouts.print(os, indent, type);
-    }
-
-    void parse(AirportLayouts& layouts, TokenStream& is, AirportType type) const
-    {
-        layouts.parse(is, type);
-    }
-};
-
+using AirportLayoutsDescriptor = GenericDescriptor<AirportLayouts, true>;
 

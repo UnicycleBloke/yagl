@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "IndustryLayoutDescriptor.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
+#include "EnumDescriptor.h"
 
 
 namespace {
@@ -37,9 +37,9 @@ const EnumDescriptorT<IndustryTile::Type> desc_type
 { 
     0x03, "type", 
     {
-        { 0, str_old_tile },  // OldTile     
-        { 1, str_new_tile },  // NewTile
-        { 2, str_clearance }, // Clearance
+        { static_cast<uint8_t>(IndustryTile::Type::OldTile),   str_old_tile },       
+        { static_cast<uint8_t>(IndustryTile::Type::NewTile),   str_new_tile },  
+        { static_cast<uint8_t>(IndustryTile::Type::Clearance), str_clearance }, 
     }
 };
 
@@ -55,7 +55,8 @@ const std::map<std::string, uint16_t> g_indices =
 } // namespace {
 
 
-// This is the same as an industry tile. I think.
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void IndustryTile::read(std::istream& is)
 {
     x_off = read_uint8(is);
@@ -75,7 +76,6 @@ void IndustryTile::read(std::istream& is)
         case 0xFE:
             type = Type::NewTile;
             tile = read_uint16(is);
-            // TODO offset adjustment required depending on GRF version.
             break;
         default:
             type = Type::OldTile;
@@ -87,9 +87,6 @@ void IndustryTile::write(std::ostream& os) const
 {
     write_uint8(os, x_off);
     write_uint8(os, y_off);
- 
-    //if (x_off == 0x00 && uint8_t(y_off) == 0x80)
-    //    return;
  
     switch (type)
     {
@@ -128,7 +125,6 @@ void IndustryTile::print(std::ostream& os, uint16_t indent) const
 
 void IndustryTile::parse(TokenStream& is)
 {
-    // Enum descriptor needed...
     desc_type.parse(type, is);
     is.match(TokenType::OpenParen);
 
@@ -155,6 +151,8 @@ void IndustryTile::parse(TokenStream& is)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void IndustryLayout::read(std::istream& is)
 {
     is_reference = (is.peek() == 0xFE);
@@ -244,7 +242,7 @@ void IndustryLayout::parse(TokenStream& is)
                 is_reference = false;
                 while (is.peek().type != TokenType::CloseBrace)
                 {
-                    IndustryTile tile = {};
+                    IndustryTile tile{};
                     tile.parse(is);
                     tiles.push_back(tile);
                 }
@@ -259,11 +257,15 @@ void IndustryLayout::parse(TokenStream& is)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void IndustryLayouts::read(std::istream& is)
 {
     uint8_t num_layouts = read_uint8(is);
+
     // Size not used for anything.
     read_uint32(is);
+
     layouts.resize(num_layouts);
     for (uint8_t i = 0; i < num_layouts; ++i)
     {
@@ -282,8 +284,8 @@ void IndustryLayouts::write(std::ostream& os) const
     {
         layout.write(ss);
     }
-
     write_uint32(os, uint32_t(ss.str().length()));
+    
     for (const auto& layout: layouts)
     {
         layout.write(os);
@@ -293,7 +295,6 @@ void IndustryLayouts::write(std::ostream& os) const
 
 void IndustryLayouts::print(std::ostream& os, uint16_t indent) const
 {
-    //os << pad(indent) << "layouts\n"; 
     os << "\n" << pad(indent) << "{\n"; 
     for (const auto& layout: layouts)
     {

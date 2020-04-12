@@ -68,18 +68,5 @@ struct IndustryLayouts
 };
 
 
-struct IndustryLayoutsDescriptor : PropertyDescriptor
-{
-    void print(const IndustryLayouts& layouts, std::ostream& os, uint16_t indent) const
-    {
-        prefix(os, indent);
-        layouts.print(os, indent);
-    }
-
-    void parse(IndustryLayouts& layouts, TokenStream& is) const
-    {
-        layouts.parse(is);
-    }
-};
-
+using IndustryLayoutsDescriptor = GenericDescriptor<IndustryLayouts, true>;
 

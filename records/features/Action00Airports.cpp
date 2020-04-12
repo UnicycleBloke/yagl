@@ -68,14 +68,14 @@ bool Action00Airports::read_property(std::istream& is, uint8_t property)
 {
     switch (property)
     {
-        case 0x08: m_08_airport_override_id.read(is);                   break;
-        case 0x0A: m_0A_airport_layouts.read(is, AirportType::Airport); break;
-        case 0x0C: m_0C_years_available.read(is);                       break;
-        case 0x0D: m_0D_compatible_ttd_airport.read(is);                break;
-        case 0x0E: m_0E_catchment_area.read(is);                        break;
-        case 0x0F: m_0F_noise_level.read(is);                           break;
-        case 0x10: m_10_airport_name_id.read(is);                       break;
-        case 0x11: m_11_maintenance_cost_factor.read(is);               break;
+        case 0x08: m_08_airport_override_id.read(is);     break;
+        case 0x0A: m_0A_airport_layouts.read(is);         break;
+        case 0x0C: m_0C_years_available.read(is);         break;
+        case 0x0D: m_0D_compatible_ttd_airport.read(is);  break;
+        case 0x0E: m_0E_catchment_area.read(is);          break;
+        case 0x0F: m_0F_noise_level.read(is);             break;
+        case 0x10: m_10_airport_name_id.read(is);         break;
+        case 0x11: m_11_maintenance_cost_factor.read(is); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -87,14 +87,14 @@ bool Action00Airports::write_property(std::ostream& os, uint8_t property) const
 {
     switch (property)
     {
-        case 0x08: m_08_airport_override_id.write(os);                   break;
-        case 0x0A: m_0A_airport_layouts.write(os, AirportType::Airport); break;
-        case 0x0C: m_0C_years_available.write(os);                       break;
-        case 0x0D: m_0D_compatible_ttd_airport.write(os);                break;
-        case 0x0E: m_0E_catchment_area.write(os);                        break;
-        case 0x0F: m_0F_noise_level.write(os);                           break;
-        case 0x10: m_10_airport_name_id.write(os);                       break;
-        case 0x11: m_11_maintenance_cost_factor.write(os);               break;
+        case 0x08: m_08_airport_override_id.write(os);     break;
+        case 0x0A: m_0A_airport_layouts.write(os);         break;
+        case 0x0C: m_0C_years_available.write(os);         break;
+        case 0x0D: m_0D_compatible_ttd_airport.write(os);  break;
+        case 0x0E: m_0E_catchment_area.write(os);          break;
+        case 0x0F: m_0F_noise_level.write(os);             break;
+        case 0x10: m_10_airport_name_id.write(os);         break;
+        case 0x11: m_11_maintenance_cost_factor.write(os); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -106,14 +106,14 @@ bool Action00Airports::print_property(std::ostream& os, uint8_t property, uint16
 {
     switch (property)
     {
-        case 0x08: desc_08.print(m_08_airport_override_id, os, indent);                   break;
-        case 0x0A: desc_0A.print(m_0A_airport_layouts, os, indent, AirportType::Airport); break;
-        case 0x0C: desc_0C.print(m_0C_years_available, os, indent);                       break;
-        case 0x0D: desc_0D.print(m_0D_compatible_ttd_airport, os, indent);                break;
-        case 0x0E: desc_0E.print(m_0E_catchment_area, os, indent);                        break;
-        case 0x0F: desc_0F.print(m_0F_noise_level, os, indent);                           break;
-        case 0x10: desc_10.print(m_10_airport_name_id, os, indent);                       break;
-        case 0x11: desc_11.print(m_11_maintenance_cost_factor, os, indent);               break;
+        case 0x08: desc_08.print(m_08_airport_override_id, os, indent);     break;
+        case 0x0A: desc_0A.print(m_0A_airport_layouts, os, indent);         break;
+        case 0x0C: desc_0C.print(m_0C_years_available, os, indent);         break;
+        case 0x0D: desc_0D.print(m_0D_compatible_ttd_airport, os, indent);  break;
+        case 0x0E: desc_0E.print(m_0E_catchment_area, os, indent);          break;
+        case 0x0F: desc_0F.print(m_0F_noise_level, os, indent);             break;
+        case 0x10: desc_10.print(m_10_airport_name_id, os, indent);         break;
+        case 0x11: desc_11.print(m_11_maintenance_cost_factor, os, indent); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -129,14 +129,14 @@ bool Action00Airports::parse_property(TokenStream& is, const std::string& name, 
         property = it->second;
         switch (property)
         {
-            case 0x08: desc_08.parse(m_08_airport_override_id, is);                   break;
-            case 0x0A: desc_0A.parse(m_0A_airport_layouts, is, AirportType::Airport); break;
-            case 0x0C: desc_0C.parse(m_0C_years_available, is);                       break;
-            case 0x0D: desc_0D.parse(m_0D_compatible_ttd_airport, is);                break;
-            case 0x0E: desc_0E.parse(m_0E_catchment_area, is);                        break;
-            case 0x0F: desc_0F.parse(m_0F_noise_level, is);                           break;
-            case 0x10: desc_10.parse(m_10_airport_name_id, is);                       break;
-            case 0x11: desc_11.parse(m_11_maintenance_cost_factor, is);               break;
+            case 0x08: desc_08.parse(m_08_airport_override_id, is);     break;
+            case 0x0A: desc_0A.parse(m_0A_airport_layouts, is);         break;
+            case 0x0C: desc_0C.parse(m_0C_years_available, is);         break;
+            case 0x0D: desc_0D.parse(m_0D_compatible_ttd_airport, is);  break;
+            case 0x0E: desc_0E.parse(m_0E_catchment_area, is);          break;
+            case 0x0F: desc_0F.parse(m_0F_noise_level, is);             break;
+            case 0x10: desc_10.parse(m_10_airport_name_id, is);         break;
+            case 0x11: desc_11.parse(m_11_maintenance_cost_factor, is); break;
             default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
