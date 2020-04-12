@@ -22,6 +22,21 @@
 #include <vector>
 
 
+class Multipliers
+{
+public:
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os) const;
+    void parse(TokenStream& is);
+
+private:
+    uint8_t               m_num_inputs{};
+    uint8_t               m_num_outputs{};
+    std::vector<uint16_t> m_items;
+};
+
+
 class Action00Industries : public Action00Feature
 {
 public:
@@ -33,21 +48,6 @@ public:
     // Text serialisation
     bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
-public:
-    class Multipliers
-    {
-    public:
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os) const;
-        void parse(TokenStream& is);
-
-    private:
-        uint8_t               m_num_inputs;
-        uint8_t               m_num_outputs;
-        std::vector<uint16_t> m_items;
-    };
 
 private:
     UInt8                  m_08_substitute_industry_id{};

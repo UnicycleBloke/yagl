@@ -18,8 +18,33 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "AirportLayoutDescriptor.h"
 #include "StreamHelpers.h"
+#include "EnumDescriptor.h"
 
 
+namespace {
+
+using Rotation = AirportLayout::Rotation;
+const EnumDescriptorT<Rotation> desc_rotation 
+{
+    0x00, "rotation", 
+    {
+        { static_cast<uint8_t>(Rotation::North), "North" },
+        { static_cast<uint8_t>(Rotation::South), "South" },
+        { static_cast<uint8_t>(Rotation::East),  "East" },
+        { static_cast<uint8_t>(Rotation::West),  "West" },
+    }    
+};
+
+constexpr const char* str_layout    = "layout";
+constexpr const char* str_clearance = "clearance";
+constexpr const char* str_new_tile  = "new_tile";
+constexpr const char* str_old_tile  = "old_tile";
+
+} // namespace {
+
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 // This is the same as an industry tile. I think.
 void AirportTile::read(std::istream& is)
 {
@@ -75,21 +100,58 @@ void AirportTile::print(std::ostream& os, uint16_t indent) const
     switch (type)
     {
         case Type::Clearance: 
-            os << pad(indent) << "clearance("; 
+            os << pad(indent) << str_clearance << "("; 
             os << to_hex(x_off) << ", " << to_hex(y_off) << ");\n"; 
             break; 
         case Type::NewTile:   
-            os << pad(indent) << "new_tile(";
+            os << pad(indent) << str_new_tile << "(";
             os << to_hex(x_off) << ", " << to_hex(y_off) << ", " << to_hex(tile) << ");\n"; 
             break;
         case Type::OldTile:          
-            os << pad(indent) << "old_tile(";
+            os << pad(indent) << str_old_tile << "(";
             os << to_hex(x_off) << ", " << to_hex(y_off) << ", " << to_hex(tile) << ");\n"; 
             break;
     }
 }
 
 
+void AirportTile::parse(TokenStream& is)
+{
+    std::string ident = is.match(TokenType::Ident);
+    is.match(TokenType::OpenParen);
+    if (ident == str_clearance)
+    {
+        type = Type::Clearance;
+        x_off = is.match_uint8();
+        is.match(TokenType::Comma);
+        y_off = is.match_uint8();
+    }
+    else if (ident == str_new_tile)
+    {
+        type = Type::NewTile;
+        x_off = is.match_uint8();
+        is.match(TokenType::Comma);
+        y_off = is.match_uint8();
+        is.match(TokenType::Comma);
+        tile  = is.match_uint16();
+
+    }
+    else if (ident == str_old_tile)
+    {
+        type = Type::OldTile;
+        x_off = is.match_uint8();
+        is.match(TokenType::Comma);
+        y_off = is.match_uint8();
+        is.match(TokenType::Comma);
+        tile  = is.match_uint16();
+    }
+    is.match(TokenType::CloseParen);
+    is.match(TokenType::SemiColon);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void AirportLayout::read(std::istream& is, AirportType type)
 {
     if (type == AirportType::Airport)
@@ -130,44 +192,52 @@ void AirportLayout::print(std::ostream& os, uint16_t indent, AirportType type) c
 {
     if (type == AirportType::Airport)
     {
-        os << pad(indent) << "layout<" << rotation_name(rotation) << ">\n"; 
+        os << pad(indent) << str_layout << "<" << desc_rotation.value(rotation) << ">\n"; 
     }
     else
     {
-        os << pad(indent) << "layout\n"; 
+        os << pad(indent) << str_layout << "\n"; 
     }
     
     os << pad(indent) << "{\n"; 
-
     for (const auto& tile: tiles)
     {
         tile.print(os, indent + 4);
     }
-
     os << pad(indent) << "}\n"; 
 }
 
 
-const char* AirportLayout::rotation_name(Rotation rotation) const
+void AirportLayout::parse(TokenStream& is, AirportType type)
 {
-    switch (rotation)
+    is.match_ident(str_layout);
+    if (type == AirportType::Airport)
     {
-        case Rotation::North: return "North";
-        case Rotation::South: return "South";
-        case Rotation::East:  return "East";
-        case Rotation::West:  return "West";
+        is.match(TokenType::OpenAngle);
+        desc_rotation.parse(rotation, is);
+        is.match(TokenType::CloseAngle);
     }
 
-    // Should never get here.
-    return "<unknown>";
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        AirportTile tile;
+        tile.parse(is);
+        tiles.push_back(tile);
+    }
+    is.match(TokenType::CloseBrace);
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void AirportLayouts::read(std::istream& is, AirportType type)
 {
     uint8_t num_layouts = read_uint8(is);
+
     // Size not used for anything.
     read_uint32(is);
+    
     layouts.resize(num_layouts);
     for (uint8_t i = 0; i < num_layouts; ++i)
     {
@@ -186,8 +256,8 @@ void AirportLayouts::write(std::ostream& os, AirportType type) const
     {
         layout.write(ss, type);
     }
-
     write_uint32(os, uint32_t(ss.str().length()));
+    
     for (const auto& layout: layouts)
     {
         layout.write(os, type);
@@ -202,13 +272,20 @@ void AirportLayouts::print(std::ostream& os, uint16_t indent, AirportType type) 
     {
         layout.print(os, indent + 4, type);
     }
-    os << pad(indent) << "};\n"; 
+    os << pad(indent) << "}"; 
 }
 
 
 void AirportLayouts::parse(TokenStream& is, AirportType type)
 {
-    throw RUNTIME_ERROR("AirportLayouts::parse not implemented");
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        AirportLayout layout;
+        layout.parse(is, type);
+        layouts.push_back(layout);
+    }
+    is.match(TokenType::CloseBrace);
 }
 
 

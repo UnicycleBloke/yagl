@@ -24,14 +24,15 @@ const TokenValue& TokenStream::peek(uint16_t lookahead)
 {
     static const TokenValue terminator{TokenType::Terminator, NumberType::None, ""}; 
 
-    if ((m_index + lookahead) >= m_tokens.size())
+    uint32_t index = m_index + lookahead;
+    if (index >= static_cast<uint32_t>(m_tokens.size()))
         return terminator;
 
-    return m_tokens[m_index + lookahead]; 
+    return m_tokens[index];
 }
 
 
-std::string TokenStream::match(TokenType type) 
+const std::string& TokenStream::match(TokenType type)
 {
     const TokenValue& token = peek();
     if (type != token.type)

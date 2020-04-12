@@ -40,6 +40,7 @@ struct AirportTile
     void read(std::istream& is);
     void write(std::ostream& os) const;
     void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
 };
 
 
@@ -53,6 +54,7 @@ struct AirportLayout
     void read(std::istream& is, AirportType type);
     void write(std::ostream& os, AirportType type) const;
     void print(std::ostream& os, uint16_t indent, AirportType type) const;
+    void parse(TokenStream& is, AirportType type);
     const char* rotation_name(Rotation rotation) const;
 };
 

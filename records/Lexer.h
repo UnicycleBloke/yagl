@@ -71,11 +71,11 @@ enum class NumberType
 // Lexeme extracted from the input stream with its associated value and position in the file.
 struct TokenValue
 {
-    TokenType      type;
-    NumberType     num_type;
-    std::string    value;
-    uint32_t       line;
-    uint32_t       column;
+    TokenType      type{};
+    NumberType     num_type{};
+    std::string    value{};
+    uint32_t       line{};
+    uint32_t       column{};
 };
 
 

@@ -24,36 +24,6 @@
 namespace {
 
 
-struct SnowLineDescriptor : PropertyDescriptor
-{
-    void print(const Action00GlobalSettings::SnowLine& snow_line, std::ostream& os, uint16_t indent) const
-    {
-        prefix(os, indent);
-        snow_line.print(os, indent);
-    }
-
-    void parse(Action00GlobalSettings::SnowLine& snow_line, TokenStream& is) const
-    {
-        snow_line.parse(is);
-    }
-};
-
-
-struct GenderCaseDescriptor : PropertyDescriptor
-{
-    void print(const Action00GlobalSettings::GenderCase& gender_case, std::ostream& os, uint16_t indent) const
-    {
-        prefix(os, indent);
-        gender_case.print(os, indent);
-    }
-
-    void parse(Action00GlobalSettings::GenderCase& gender_case, TokenStream& is) const
-    {
-        gender_case.parse(is);
-    }
-};
-
-
 constexpr const char* str_cost_base_multipliers      = "cost_base_multipliers";
 constexpr const char* str_cargo_translation_table    = "cargo_translation_table";
 constexpr const char* str_currency_display_names     = "currency_display_names";
@@ -92,6 +62,10 @@ const std::map<std::string, uint8_t> g_indices =
 };      
 
 
+using SnowLineDescriptor   = GenericDescriptor<SnowLine, true>; // Forward the indent
+using GenderCaseDescriptor = GenericDescriptor<GenderCase>;
+
+
 constexpr UInt8Descriptor        desc_08  = { 0x08, str_cost_base_multipliers,    PropFormat::Hex };
 constexpr GRFLabelDescriptor     desc_09  = { 0x09, str_cargo_translation_table };
 constexpr UInt16Descriptor       desc_0A  = { 0x0A, str_currency_display_names,   PropFormat::Hex };
@@ -111,7 +85,7 @@ constexpr UInt8Descriptor        desc_15  = { 0x15, str_plural_form,            
 } // namespace {
 
 
-void Action00GlobalSettings::SnowLine::read(std::istream& is)
+void SnowLine::read(std::istream& is)
 {
     for (auto& value: m_snow_heights)
     {
@@ -120,7 +94,7 @@ void Action00GlobalSettings::SnowLine::read(std::istream& is)
 }
 
 
-void Action00GlobalSettings::SnowLine::write(std::ostream& os) const
+void SnowLine::write(std::ostream& os) const
 {
     for (auto value : m_snow_heights)
     {
@@ -129,7 +103,7 @@ void Action00GlobalSettings::SnowLine::write(std::ostream& os) const
 }
 
 
-void Action00GlobalSettings::SnowLine::print(std::ostream& os, uint16_t indent) const
+void SnowLine::print(std::ostream& os, uint16_t indent) const
 {
     os << "\n" << pad(indent) << "[\n";
 
@@ -144,11 +118,11 @@ void Action00GlobalSettings::SnowLine::print(std::ostream& os, uint16_t indent) 
         os << "\n";
     }
 
-    os << pad(indent) << "];\n";
+    os << pad(indent) << "]";
 }
 
 
-void Action00GlobalSettings::SnowLine::parse(TokenStream& is)
+void SnowLine::parse(TokenStream& is)
 {
     is.match(TokenType::OpenBracket);
 
@@ -163,7 +137,7 @@ void Action00GlobalSettings::SnowLine::parse(TokenStream& is)
 }
 
 
-void Action00GlobalSettings::GenderCase::read(std::istream& is)
+void GenderCase::read(std::istream& is)
 {
     while (is.peek() != 0x00)
     {
@@ -176,7 +150,7 @@ void Action00GlobalSettings::GenderCase::read(std::istream& is)
 }
 
 
-void Action00GlobalSettings::GenderCase::write(std::ostream& os) const
+void GenderCase::write(std::ostream& os) const
 {
     for (const auto& item: m_items)
     {
@@ -187,7 +161,7 @@ void Action00GlobalSettings::GenderCase::write(std::ostream& os) const
 }
 
 
-void Action00GlobalSettings::GenderCase::print(std::ostream& os, uint16_t indent) const
+void GenderCase::print(std::ostream& os) const
 {
     os << "[ ";
 
@@ -196,11 +170,11 @@ void Action00GlobalSettings::GenderCase::print(std::ostream& os, uint16_t indent
         os << "{" << to_hex(item.id) << ": \"" << item.name << "\"} ";
     }
 
-    os << " ];\n";
+    os << " ]";
 }
 
 
-void Action00GlobalSettings::GenderCase::parse(TokenStream& is)
+void GenderCase::parse(TokenStream& is)
 {
     is.match(TokenType::OpenBracket);
 

@@ -65,7 +65,7 @@ private:
     std::string m_what;
 };
 #define RUNTIME_ERROR(what) RuntimeError(what, __FILE__, __LINE__)
-
+#define RUNTIME_TEST(cond, what) if (!(cond)) { throw RUNTIME_ERROR(what); } else {}
 
 class PropertyError : public std::runtime_error 
 {

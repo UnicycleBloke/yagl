@@ -35,7 +35,7 @@ public:
     }
 
     const TokenValue& peek(uint16_t lookahead = 0); 
-    std::string match(TokenType type); 
+    const std::string& match(TokenType type);
 
     bool match_ident(const std::string& value);
 

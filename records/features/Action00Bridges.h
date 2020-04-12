@@ -25,6 +25,33 @@
 #include <array>
 
 
+class BridgeTable
+{
+public:
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
+
+private:
+    std::array<uint32_t, 32> m_sprites;
+};
+
+
+class BridgeLayout
+{
+public:    
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
+
+private:
+    uint8_t                  m_first_table_id;
+    std::vector<BridgeTable> m_tables;
+};
+
+
 class Action00Bridges : public Action00Feature
 {
 public:
@@ -36,33 +63,6 @@ public:
     // Text serialisation
     bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
-private:
-    class BridgeTable
-    {
-    public:
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-
-    private:
-        std::array<uint32_t, 32> m_sprites;
-    };
-
-public:
-    class BridgeLayout
-    {
-    public:    
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-
-    private:
-        uint8_t                  m_first_table_id;
-        std::vector<BridgeTable> m_tables;
-    };
 
 private:
     UInt8          m_00_fallback_type_id{};

@@ -23,21 +23,6 @@
 namespace {
 
 
-struct BridgeLayoutDescriptor : PropertyDescriptor
-{
-    void print(const Action00Bridges::BridgeLayout& layouts, std::ostream& os, uint16_t indent) const
-    {
-        prefix(os, indent);
-        layouts.print(os, indent);
-    }
-
-    void parse(Action00Bridges::BridgeLayout& layouts, TokenStream& is) const
-    {
-        layouts.parse(is);
-    }
-};
-
-
 constexpr const char* str_fallback_type_id    = "fallback_type_id";
 constexpr const char* str_year_available      = "year_available";
 constexpr const char* str_minimum_length      = "minimum_length";
@@ -76,6 +61,9 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
+using BridgeLayoutDescriptor = GenericDescriptor<BridgeLayout, true>;
+
+
 constexpr UInt8Descriptor            desc_00 = { 0x00, str_fallback_type_id,    PropFormat::Hex };
 constexpr Year8Descriptor            desc_08 = { 0x08, str_year_available };
 constexpr UInt8Descriptor            desc_09 = { 0x09, str_minimum_length,      PropFormat::Hex };
@@ -94,7 +82,7 @@ constexpr UInt16Descriptor           desc_13 = { 0x13, str_cost_factor_word,    
 } // namespace {
 
 
-void Action00Bridges::BridgeTable::read(std::istream& is)
+void BridgeTable::read(std::istream& is)
 {
     for (uint32_t& sprite: m_sprites)
     {
@@ -103,7 +91,7 @@ void Action00Bridges::BridgeTable::read(std::istream& is)
 }
 
 
-void Action00Bridges::BridgeTable::write(std::ostream& os) const
+void BridgeTable::write(std::ostream& os) const
 {
     for (const uint32_t& sprite: m_sprites)
     {
@@ -112,7 +100,7 @@ void Action00Bridges::BridgeTable::write(std::ostream& os) const
 }
 
 
-void Action00Bridges::BridgeTable::print(std::ostream& os, uint16_t indent) const
+void BridgeTable::print(std::ostream& os, uint16_t indent) const
 {
     os << pad(indent) << "{\n"; 
  
@@ -137,7 +125,7 @@ void Action00Bridges::BridgeTable::print(std::ostream& os, uint16_t indent) cons
 }
 
 
-void Action00Bridges::BridgeTable::parse(TokenStream& is)
+void BridgeTable::parse(TokenStream& is)
 {
     is.match(TokenType::OpenBrace);
     for (uint32_t& sprite: m_sprites)
@@ -151,7 +139,7 @@ void Action00Bridges::BridgeTable::parse(TokenStream& is)
 }
 
 
-void Action00Bridges::BridgeLayout::read(std::istream& is)
+void BridgeLayout::read(std::istream& is)
 {
     m_first_table_id = read_uint8(is);
 
@@ -164,7 +152,7 @@ void Action00Bridges::BridgeLayout::read(std::istream& is)
 }
 
 
-void Action00Bridges::BridgeLayout::write(std::ostream& os) const
+void BridgeLayout::write(std::ostream& os) const
 {
     write_uint8(os, m_first_table_id);
 
@@ -176,11 +164,10 @@ void Action00Bridges::BridgeLayout::write(std::ostream& os) const
 }
 
 
-void Action00Bridges::BridgeLayout::print(std::ostream& os, uint16_t indent) const
+void BridgeLayout::print(std::ostream& os, uint16_t indent) const
 {
     uint8_t table_id = m_first_table_id;
 
-    //os << pad(indent) << str_layout << "\n"; 
     os << "\n"; 
     os << pad(indent) << "{\n"; 
     for (const auto& table: m_tables)
@@ -188,11 +175,11 @@ void Action00Bridges::BridgeLayout::print(std::ostream& os, uint16_t indent) con
         os << pad(indent + 4) << str_table << "<" << to_hex(table_id++) << ">\n"; 
         table.print(os, indent + 4);
     }
-    os << pad(indent) << "};\n"; 
+    os << pad(indent) << "}"; 
 }
 
 
-void Action00Bridges::BridgeLayout::parse(TokenStream& is)
+void BridgeLayout::parse(TokenStream& is)
 {
     //is.match_ident(str_layout);
     is.match(TokenType::OpenBrace);

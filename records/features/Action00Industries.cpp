@@ -104,7 +104,7 @@ using UInt8Array2Descriptor = UIntDescriptor<UIntArray<UInt8, 2>>;
 using UInt8Array3Descriptor = UIntDescriptor<UIntArray<UInt8, 3>>;
 using UInt8Array4Descriptor = UIntDescriptor<UIntArray<UInt8, 4>>;
 using UInt8VectorDescriptor = UIntDescriptor<UIntVector<UInt8>>;
-using MultipliersDescriptor = GenericDescriptor<Action00Industries::Multipliers>;
+using MultipliersDescriptor = GenericDescriptor<Multipliers>;
 
 
 constexpr UInt8Descriptor                desc_08  = { 0x08, str_substitute_industry_id,      PropFormat::Hex };
@@ -145,7 +145,7 @@ constexpr MultipliersDescriptor          desc_28  = { 0x28, str_input_cargo_mult
 } // namespace {
 
 
-void Action00Industries::Multipliers::read(std::istream& is)
+void Multipliers::read(std::istream& is)
 {
     m_num_inputs  = read_uint8(is);
     m_num_outputs = read_uint8(is);
@@ -157,7 +157,7 @@ void Action00Industries::Multipliers::read(std::istream& is)
 }
 
 
-void Action00Industries::Multipliers::write(std::ostream& os) const
+void Multipliers::write(std::ostream& os) const
 {
     write_uint8(os, m_num_inputs);
     write_uint8(os, m_num_outputs);
@@ -169,15 +169,16 @@ void Action00Industries::Multipliers::write(std::ostream& os) const
 }
 
 
-void Action00Industries::Multipliers::print(std::ostream& os) const
+void Multipliers::print(std::ostream& os) const
 {
+    uint16_t index = 0; 
     os << "[";
     for (uint8_t i = 0; i < m_num_inputs; ++i)
     {
         os << " [";
         for (uint8_t o = 0; o < m_num_outputs; ++o)
         {
-            os << " " << to_hex(m_items[i * m_num_outputs + o]);
+            os << " " << to_hex(m_items[index++]);
         }
         os << " ]";
     }
@@ -185,7 +186,7 @@ void Action00Industries::Multipliers::print(std::ostream& os) const
 }
 
 
-void Action00Industries::Multipliers::parse(TokenStream& is)
+void Multipliers::parse(TokenStream& is)
 {
     uint16_t inputs  = 0;
     uint16_t outputs = 0;
@@ -207,7 +208,12 @@ void Action00Industries::Multipliers::parse(TokenStream& is)
 
     m_num_inputs  = static_cast<uint8_t>(inputs);
     m_num_outputs = static_cast<uint8_t>(outputs / inputs);
-    // TODO Assert values < 256. Assert that outputs % inputs == 0.
+
+    // TODO should refactor to check that all subgroups are the same size.
+    // TODO dimensions of this matrix should match properties 0x25 and 0x26
+    RUNTIME_TEST(inputs <= 0xFF, "Industry multipliers: too many inputs");
+    RUNTIME_TEST((outputs % inputs) == 0, "Industry multipliers: invalid counts");
+    RUNTIME_TEST((outputs / inputs) <= 0xFF, "Industry multipliers: too many outputs");
 }
 
 

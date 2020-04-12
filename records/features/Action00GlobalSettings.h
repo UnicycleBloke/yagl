@@ -24,6 +24,47 @@
 #include <vector>
 
 
+class SnowLine
+{
+public:
+    // Binary serialisation
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    // Text serialisation
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
+
+private:
+    static constexpr uint32_t SNOW_LINE_SIZE = 32U * 12U;
+    std::array<uint8_t, SNOW_LINE_SIZE> m_snow_heights;
+};
+
+
+class GenderCase
+{
+public:
+    // Binary serialisation
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    // Text serialisation
+    void print(std::ostream& os) const;
+    void parse(TokenStream& is);
+
+private:
+    // The ID used for these translation tables is the Action 4 (GRF version 7 or higher) 
+    // language-id, i.e. this mapping only works with GRF version 7 or higher. Language-id 7F 
+    // (any) is not allowed. You can can define an ID multiple times in which case the new 
+    // mappings are simply appended to the already known mappings.     
+    struct Item
+    {
+        uint8_t     id;
+        std::string name;
+    };
+
+    std::vector<Item> m_items;
+};
+
+
 class Action00GlobalSettings : public Action00Feature
 {
 public:
@@ -35,47 +76,6 @@ public:
     // Text serialisation
     bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
-public:
-    class SnowLine
-    {
-    public:
-        // Binary serialisation
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        // Text serialisation
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-
-    private:
-        static constexpr uint32_t SNOW_LINE_SIZE = 32U * 12;
-        std::array<uint8_t, SNOW_LINE_SIZE> m_snow_heights;
-    };
-
-public:
-    class GenderCase
-    {
-    public:
-        // Binary serialisation
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        // Text serialisation
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-
-    private:
-        // The ID used for these translation tables is the Action 4 (GRF version 7 or higher) 
-        // language-id, i.e. this mapping only works with GRF version 7 or higher. Language-id 7F 
-        // (any) is not allowed. You can can define an ID multiple times in which case the new 
-        // mappings are simply appended to the already known mappings.     
-        struct Item
-        {
-            uint8_t     id;
-            std::string name;
-        };
-
-        std::vector<Item> m_items;
-    };
 
 private:
     // The global properties are organised a little oddly in the GRF file. The 

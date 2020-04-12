@@ -33,14 +33,19 @@ struct PropertyDescriptor
 };
 
 
-template <typename T>
+// We optionally forward the indent to the value being printed. This is 
+// used for example by the SnowLine.
+template <typename T, bool INDENT = false>
 struct GenericDescriptor : PropertyDescriptor
 {
     void print(const T& value, std::ostream& os, uint16_t indent) const
     {
         // This is the name of the property.
         prefix(os, indent);
-        value.print(os);
+        if constexpr (INDENT)
+            value.print(os, indent);
+        else
+            value.print(os);
         os << ";\n";
     }
 
