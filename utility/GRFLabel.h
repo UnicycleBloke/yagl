@@ -26,22 +26,25 @@
 class GRFLabel
 {
 public:
-    GRFLabel(uint32_t label = 0) : m_label{label} {}
+    // This is uses non-default in only one place - Action07Record::print().
+    explicit GRFLabel(uint32_t label = 0) : m_label{label} {}
 
     // Binary serialisation
     void read(std::istream& is);
     void write(std::ostream& os) const;
     // Text serialisation
-    void print(std::ostream& os) const;
+    void print(std::ostream& os) const; // Quoted version of to_string().
     void parse(TokenStream& is);
 
-    uint32_t    to_integer() const; // 0x01020304
-    std::string to_string() const;  // "ABCD" or "ABC\x01"
-    std::string to_hex() const;     // "01020304"
+    // Not used in many places - phase out.
+    std::string to_string() const;        // Not quoted: ABCD or ABC\x01
+    // Used in only one place - phase out.
     std::string to_string_or_hex() const; // If any character is not printable.
 
+    uint32_t value() const { return m_label; }
+
 private:
-    uint32_t m_label;    
+    uint32_t m_label{};    
 };
 
 

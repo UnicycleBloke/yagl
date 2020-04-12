@@ -275,7 +275,7 @@ void Action07Record::parse(TokenStream& is)
         case Condition::GRFDisabled:
             label.parse(is);
             m_variable = 0x88; // Must be this value
-            m_value = label.to_integer();
+            m_value = label.value();
             is.match(TokenType::Comma);
             m_mask = is.match_uint32();
             break;
@@ -291,7 +291,7 @@ void Action07Record::parse(TokenStream& is)
         case Condition::TramTypeValid: 
             label.parse(is);
             m_variable = 0x00; // Ignored
-            m_value = label.to_integer();
+            m_value = label.value();
             m_mask = 0xFFFFFFFF;
             break;             
     }

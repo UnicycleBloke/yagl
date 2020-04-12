@@ -39,7 +39,7 @@ public:
         uint8_t value = read_uint8(is);
         if ((value != TRUE) && (value != FALSE))
         {
-
+            throw RUNTIME_ERROR("Unexpected value when reading boolean");
         }
         m_value = (value == TRUE);
     }

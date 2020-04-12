@@ -109,12 +109,6 @@ void GRFLabel::parse(TokenStream& is)
 }
 
 
-uint32_t GRFLabel::to_integer() const
-{
-    return m_label;
-}
-
-
 std::string GRFLabel::to_string() const
 {
     std::ostringstream os;
@@ -134,12 +128,6 @@ std::string GRFLabel::to_string() const
 }
 
 
-std::string GRFLabel::to_hex() const
-{
-    return ::to_hex(m_label);
-}
-
-
 std::string GRFLabel::to_string_or_hex() const
 {
     for (uint8_t i = 0; i < 4; ++i)
@@ -147,7 +135,7 @@ std::string GRFLabel::to_string_or_hex() const
         uint8_t c = (m_label >> (i * 8)) & 0xFF;
         if (!std::isprint(c))
         {
-            return to_hex(); 
+            return ::to_hex(m_label); 
         }
     }
 

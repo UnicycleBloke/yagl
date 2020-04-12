@@ -68,7 +68,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     # Descriptors used to print and parse feature properties (Action00). 
     #records/descriptors/Descriptors.cpp
     records/descriptors/DescriptorBase.cpp
-    records/descriptors/GRFLabelListDescriptor.cpp
+    records/descriptors/GRFLabelDescriptor.cpp
     records/descriptors/BitfieldDescriptor.cpp
     records/descriptors/EnumDescriptor.cpp
     records/descriptors/AirportLayoutDescriptor.cpp

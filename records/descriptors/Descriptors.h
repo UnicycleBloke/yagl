@@ -18,12 +18,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DescriptorBase.h"
-#include "ArrayDescriptor.h"
 #include "BitfieldDescriptor.h"
 #include "BooleanDescriptor.h"
-#include "CargoListDescriptor.h"
 #include "EnumDescriptor.h"
-#include "GRFLabelListDescriptor.h"
+#include "GRFLabelDescriptor.h"
 #include "IntegerDescriptor.h"
 #include "RangeDescriptor.h"
 #include "AirportLayoutDescriptor.h"

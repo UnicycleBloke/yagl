@@ -30,41 +30,29 @@ void Action02IndustryRecord::read(std::istream& is, const GRFInfo& info)
     if (m_format == Format::Version0)
     {
         // Subtract amounts
-        m_version0.sub_in_amounts[0] = read_uint16(is);
-        m_version0.sub_in_amounts[1] = read_uint16(is);
-        m_version0.sub_in_amounts[2] = read_uint16(is);
-
+        m_version0.sub_in_amounts.read(is);
         // Add amounts
-        m_version0.add_out_amounts[0] = read_uint16(is);
-        m_version0.add_out_amounts[1] = read_uint16(is);
-
+        m_version0.add_out_amounts.read(is);
         // Repeat flag
-        m_version0.repeat_flag = (read_uint8(is) != 0);
+        m_version0.repeat_flag.read(is);
     }
     else if (m_format == Format::Version1)
     {
         // Subtract amounts
-        m_version1.sub_in_regs[0] = read_uint8(is);
-        m_version1.sub_in_regs[1] = read_uint8(is);
-        m_version1.sub_in_regs[2] = read_uint8(is);
-
+        m_version1.sub_in_regs.read(is);
         // Add amounts
-        m_version1.add_out_regs[0] = read_uint8(is);
-        m_version1.add_out_regs[1] = read_uint8(is);
-
+        m_version1.add_out_regs.read(is);
         // Repeat flag
-        m_version1.repeat_reg = read_uint8(is);
+        m_version1.repeat_reg.read(is);
     }
     else if (m_format == Format::Version2)
     {
         // Subtract amounts
         m_version2.sub_in_cargos.read(is);
-
         // Add amounts
         m_version2.add_out_cargos.read(is);
-
         // Repeat flag
-        m_version2.repeat_reg = read_uint8(is);
+        m_version2.repeat_reg.read(is);
     }
     else
     {
@@ -84,56 +72,35 @@ void Action02IndustryRecord::write(std::ostream& os, const GRFInfo& info) const
     if (m_format == Format::Version0)
     {
         // Subtract amounts
-        write_uint16(os, m_version0.sub_in_amounts[0]);
-        write_uint16(os, m_version0.sub_in_amounts[1]);
-        write_uint16(os, m_version0.sub_in_amounts[2]);
-
+        m_version0.sub_in_amounts.write(os);
         // Add amounts
-        write_uint16(os, m_version0.add_out_amounts[0]);
-        write_uint16(os, m_version0.add_out_amounts[1]);
-
+        m_version0.add_out_amounts.write(os);
         // Repeat flag
-        write_uint8(os, m_version0.repeat_flag ? 0x01 : 0x00);
+        m_version0.repeat_flag.write(os);
     }
     else if (m_format == Format::Version1)
     {
         // Subtract amounts
-        write_uint8(os, m_version1.sub_in_regs[0]);
-        write_uint8(os, m_version1.sub_in_regs[1]);
-        write_uint8(os, m_version1.sub_in_regs[2]);
-
+        m_version1.sub_in_regs.write(os);
         // Add amounts
-        write_uint8(os, m_version1.add_out_regs[0]);
-        write_uint8(os, m_version1.add_out_regs[1]);
-
+        m_version1.add_out_regs.write(os);
         // Repeat flag
-        write_uint8(os, m_version1.repeat_reg);
+        m_version1.repeat_reg.write(os);
     }
     else if (m_format == Format::Version2)
     {
         // Subtract amounts
-        m_version2.sub_in_cargos.write(os);
-        
+        m_version2.sub_in_cargos.write(os);        
         // Add amounts
         m_version2.add_out_cargos.write(os);
-
         // Repeat flag
-        write_uint8(os, m_version2.repeat_reg);
+        m_version2.repeat_reg.write(os);
     }
     else
     {
         throw RUNTIME_ERROR("Action02IndustryRecord::write not implemented");
     }
 }  
-
-
-// Three different versions of this.
-// industry<Industries, 0xEF, Version1> // Action02 industry
-// {
-//     sub_in_registers: [ 0x80 0x81 0x82 ];
-//     add_out_registers: [ 0x8B 0x94 ];
-//     repeat_register: 0x9B;
-// }
 
 
 namespace {
@@ -246,13 +213,13 @@ const std::map<std::string, uint8_t> g_indices2 =
 };
 
 
-ArrayDescriptorT<uint16_t, 3> desc_sub_in_amounts { 0x01, str_sub_in_amounts,  PropFormat::Hex };
-ArrayDescriptorT<uint16_t, 2> desc_add_out_amounts{ 0x02, str_add_out_amounts, PropFormat::Hex };
-BooleanDescriptor             desc_repeat_flag    { 0x03, str_repeat_flag };
+UIntDescriptor<UIntArray<UInt16, 3>> desc_sub_in_amounts { 0x01, str_sub_in_amounts,  PropFormat::Hex };
+UIntDescriptor<UIntArray<UInt16, 2>> desc_add_out_amounts{ 0x02, str_add_out_amounts, PropFormat::Hex };
+BoolDescriptor                       desc_repeat_flag    { 0x03, str_repeat_flag };
 
-ArrayDescriptorT<uint8_t, 3> desc_sub_in_regs { 0x01, str_sub_in_regs,  PropFormat::Hex };
-ArrayDescriptorT<uint8_t, 2> desc_add_out_regs{ 0x02, str_add_out_regs, PropFormat::Hex };
-IntegerDescriptorT<uint8_t>  desc_repeat_reg  { 0x03, str_repeat_reg };
+UIntDescriptor<UIntArray<UInt8, 3>> desc_sub_in_regs { 0x01, str_sub_in_regs,  PropFormat::Hex };
+UIntDescriptor<UIntArray<UInt8, 2>> desc_add_out_regs{ 0x02, str_add_out_regs, PropFormat::Hex };
+UInt8Descriptor                     desc_repeat_reg  { 0x03, str_repeat_reg };
 
 
 } // namespace {

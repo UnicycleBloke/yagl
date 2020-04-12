@@ -18,6 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Record.h"
+#include "IntegerDescriptor.h"
+#include "BooleanDescriptor.h"
 #include <array>
 
 
@@ -66,11 +68,11 @@ private:
     {
         // Amounts to be subtracted from the incoming cargoes waiting to 
         // be processed. (Signed) 
-        std::array<uint16_t, 3> sub_in_amounts  = {};
+        UIntArray<UInt16, 3> sub_in_amounts{};
         // Amounts to be added to the produced cargoes. (Unsigned) 
-        std::array<uint16_t, 2> add_out_amounts = {};
+        UIntArray<UInt16, 2> add_out_amounts{};
         //Repeat callback if nonzero, do not repeat if 00. 
-        bool                    repeat_flag     = false;
+        Bool                 repeat_flag{};
     };
 
 private:
@@ -85,12 +87,12 @@ private:
     {
         // Numbers of registers that contain the amounts to be subtracted
         // from the incoming cargoes waiting to be processed. 
-        std::array<uint8_t, 3> sub_in_regs  = {};
+        UIntArray<UInt8, 3> sub_in_regs{};
         // Numbers of registers that hold the amounts to be added to the produced cargoes. 
-        std::array<uint8_t, 2> add_out_regs = {};
+        UIntArray<UInt8, 2> add_out_regs{};
         // Number of <again> register. Repeat callback if the value of the register  
         // isn't zero, do not repeat otherwise 
-        uint8_t                repeat_reg   = 0;
+        UInt8               repeat_reg{};
     }; 
 
 private:
@@ -121,7 +123,7 @@ private:
         CargoList add_out_cargos;
         // Number of <again> register. Repeat callback if the value of the register  
         // isn't zero, do not repeat otherwise 
-        uint8_t   repeat_reg = 0;
+        UInt8     repeat_reg{};
     };
 
 private:

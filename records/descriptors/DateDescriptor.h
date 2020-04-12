@@ -27,13 +27,14 @@ class Date
 {
 private:
     //static constexpr Date BASE_DATE{1920, 1, 1};
-    static constexpr uint32_t BASE_DAYS = 701265;
+    static constexpr uint32_t    BASE_DAYS = 701265;
+    static constexpr const char* str_date  = "date";
 
 public:
     void print(std::ostream& os) const
     {
         const IntegerDescriptorT<uint32_t> desc{0, "", PropFormat::Dec};
-        os << "date(";
+        os << str_date << "(";
         os << desc.to_string(m_year)  << "/";
         os << desc.to_string(m_month) << "/";
         os << desc.to_string(m_day)   << ")";
@@ -41,7 +42,7 @@ public:
 
     void parse(TokenStream& is)
     {
-        is.match_ident("date");
+        is.match_ident(str_date);
         is.match(TokenType::OpenParen);
         m_year  = is.match_uint32();
         is.match(TokenType::OpDivide);
