@@ -34,14 +34,14 @@ constexpr const char* str_loading_speed           = "loading_speed";
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
-const std::map<std::string, uint16_t> g_indices =
+const std::map<std::string, uint8_t> g_indices =
 {
-    { str_introduction_date,       0x00'00 },
-    { str_reliability_decay_speed, 0x02'00 },
-    { str_vehicle_life_years,      0x03'00 },
-    { str_model_life_years,        0x04'00 },
-    { str_climate_availability,    0x06'00 },
-    { str_loading_speed,           0x07'00 },
+    { str_introduction_date,       0x00 },
+    { str_reliability_decay_speed, 0x02 },
+    { str_vehicle_life_years,      0x03 },
+    { str_model_life_years,        0x04 },
+    { str_climate_availability,    0x06 },
+    { str_loading_speed,           0x07 },
 };
 
 
@@ -113,17 +113,16 @@ bool Action00Common::parse_property(TokenStream& is, const std::string& name, ui
     const auto& it = g_indices.find(name);
     if (it != g_indices.end())
     {
-        uint16_t index = it->second;
-        property = (index >> 8); // The property index is in the high byte.
-        switch (index)
+        property = it->second;
+        switch (property)
         {
-            case 0x00'00: desc_00.parse(m_00_introduction_date, is);       break;
-            case 0x02'00: desc_02.parse(m_02_reliability_decay_speed, is); break;
-            case 0x03'00: desc_03.parse(m_03_vehicle_life_years, is);      break;
-            case 0x04'00: desc_04.parse(m_04_model_life_years, is);        break;
-            case 0x06'00: desc_06.parse(m_06_climate_availability, is);    break;
-            case 0x07'00: desc_07.parse(m_07_loading_speed, is);           break;
-            default:      throw PROPERTY_ERROR("Unknown property", property);
+            case 0x00: desc_00.parse(m_00_introduction_date, is);       break;
+            case 0x02: desc_02.parse(m_02_reliability_decay_speed, is); break;
+            case 0x03: desc_03.parse(m_03_vehicle_life_years, is);      break;
+            case 0x04: desc_04.parse(m_04_model_life_years, is);        break;
+            case 0x06: desc_06.parse(m_06_climate_availability, is);    break;
+            case 0x07: desc_07.parse(m_07_loading_speed, is);           break;
+            default:   throw PROPERTY_ERROR("Unknown property", property);
         }
     
         return true;

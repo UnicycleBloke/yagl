@@ -52,31 +52,31 @@ constexpr const char* str_aircraft_range               = "aircraft_range";
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
-const std::map<std::string, uint16_t> g_indices =
+const std::map<std::string, uint8_t> g_indices =
 {
-    { str_sprite_id,                    0x08'00 },
-    { str_is_helicopter,                0x09'00 },
-    { str_is_large,                     0x0A'00 },
-    { str_cost_factor,                  0x0B'00 },
-    { str_speed_8_mph,                  0x0C'00 },
-    { str_acceleration,                 0x0D'00 },
-    { str_running_cost_factor,          0x0E'00 },
-    { str_passenger_capacity,           0x0F'00 },
-    { str_mail_capacity,                0x11'00 },
-    { str_sound_effect_type,            0x12'00 },
-    { str_refit_cargo_types,            0x13'00 },
-    { str_callback_flags_mask,          0x14'00 },
-    { str_refit_cost,                   0x15'00 },
-    { str_retire_vehicle_early,         0x16'00 },
-    { str_miscellaneous_flags,          0x17'00 },
-    { str_refittable_cargo_classes,     0x18'00 },
-    { str_non_refittable_cargo_classes, 0x19'00 },
-    { str_long_introduction_date,       0x1A'00 },
-    { str_sort_purchase_list,           0x1B'00 },
-    { str_custom_cargo_aging_period,    0x1C'00 },
-    { str_always_refittable_cargos,     0x1D'00 },
-    { str_never_refittable_cargos,      0x1E'00 },
-    { str_aircraft_range,               0x1F'00 },
+    { str_sprite_id,                    0x08 },
+    { str_is_helicopter,                0x09 },
+    { str_is_large,                     0x0A },
+    { str_cost_factor,                  0x0B },
+    { str_speed_8_mph,                  0x0C },
+    { str_acceleration,                 0x0D },
+    { str_running_cost_factor,          0x0E },
+    { str_passenger_capacity,           0x0F },
+    { str_mail_capacity,                0x11 },
+    { str_sound_effect_type,            0x12 },
+    { str_refit_cargo_types,            0x13 },
+    { str_callback_flags_mask,          0x14 },
+    { str_refit_cost,                   0x15 },
+    { str_retire_vehicle_early,         0x16 },
+    { str_miscellaneous_flags,          0x17 },
+    { str_refittable_cargo_classes,     0x18 },
+    { str_non_refittable_cargo_classes, 0x19 },
+    { str_long_introduction_date,       0x1A },
+    { str_sort_purchase_list,           0x1B },
+    { str_custom_cargo_aging_period,    0x1C },
+    { str_always_refittable_cargos,     0x1D },
+    { str_never_refittable_cargos,      0x1E },
+    { str_aircraft_range,               0x1F },
 };
 
 
@@ -235,9 +235,8 @@ bool Action00Aircraft::parse_property(TokenStream& is, const std::string& name, 
     const auto& it = g_indices.find(name);
     if (it != g_indices.end())
     {
-        uint16_t index = it->second;
-        property = (index >> 8); // The property index is in the high byte.
-        switch (index)
+        property = it->second;
+        switch (property)
         {
             case 0x08: desc_08.parse(m_08_sprite_id, is);                    break;
             case 0x09: desc_09.parse(m_09_is_helicopter, is);                break;

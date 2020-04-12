@@ -51,31 +51,31 @@ constexpr const char* str_never_refittable_cargos      = "never_refittable_cargo
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
-const std::map<std::string, uint16_t> g_indices =
+const std::map<std::string, uint8_t> g_indices =
 {
-    { str_sprite_id,                    0x08'00 },
-    { str_is_refittable,                0x09'00 },
-    { str_cost_factor,                  0x0A'00 },
-    { str_speed_2_kmh,                  0x0B'00 },
-    { str_cargo_type,                   0x0C'00 },
-    { str_cargo_capacity,               0x0D'00 },
-    { str_running_cost_factor,          0x0F'00 },
-    { str_sound_effect_type,            0x10'00 },
-    { str_refit_cargo_types,            0x11'00 },
-    { str_callback_flags_mask,          0x12'00 },
-    { str_refit_cost,                   0x13'00 },
-    { str_ocean_speed_fraction,         0x14'00 },
-    { str_canal_speed_fraction,         0x15'00 },
-    { str_retire_vehicle_early,         0x16'00 },
-    { str_miscellaneous_flags,          0x17'00 },
-    { str_refittable_cargo_classes,     0x18'00 },
-    { str_non_refittable_cargo_classes, 0x19'00 },
-    { str_long_introduction_date,       0x1A'00 },
-    { str_sort_purchase_list,           0x1B'00 },
-    { str_visual_effect,                0x1C'00 },
-    { str_custom_cargo_aging_period,    0x1D'00 },
-    { str_always_refittable_cargos,     0x1E'00 },
-    { str_never_refittable_cargos,      0x1F'00 },
+    { str_sprite_id,                    0x08 },
+    { str_is_refittable,                0x09 },
+    { str_cost_factor,                  0x0A },
+    { str_speed_2_kmh,                  0x0B },
+    { str_cargo_type,                   0x0C },
+    { str_cargo_capacity,               0x0D },
+    { str_running_cost_factor,          0x0F },
+    { str_sound_effect_type,            0x10 },
+    { str_refit_cargo_types,            0x11 },
+    { str_callback_flags_mask,          0x12 },
+    { str_refit_cost,                   0x13 },
+    { str_ocean_speed_fraction,         0x14 },
+    { str_canal_speed_fraction,         0x15 },
+    { str_retire_vehicle_early,         0x16 },
+    { str_miscellaneous_flags,          0x17 },
+    { str_refittable_cargo_classes,     0x18 },
+    { str_non_refittable_cargo_classes, 0x19 },
+    { str_long_introduction_date,       0x1A },
+    { str_sort_purchase_list,           0x1B },
+    { str_visual_effect,                0x1C },
+    { str_custom_cargo_aging_period,    0x1D },
+    { str_always_refittable_cargos,     0x1E },
+    { str_never_refittable_cargos,      0x1F },
 };
 
 
@@ -234,34 +234,33 @@ bool Action00Ships::parse_property(TokenStream& is, const std::string& name, uin
     const auto& it = g_indices.find(name);
     if (it != g_indices.end())
     {
-        uint16_t index = it->second;
-        property = (index >> 8); // The property index is in the high byte.
-        switch (index)
+        property = it->second;
+        switch (property)
         {
-            case 0x08'00: desc_08.parse(m_08_sprite_id, is);                    break;
-            case 0x09'00: desc_09.parse(m_09_is_refittable, is);                break;
-            case 0x0A'00: desc_0A.parse(m_0A_cost_factor, is);                  break;
-            case 0x0B'00: desc_0B.parse(m_0B_speed_2_kmh, is);                  break;
-            case 0x0C'00: desc_0C.parse(m_0C_cargo_type, is);                   break;
-            case 0x0D'00: desc_0D.parse(m_0D_cargo_capacity, is);               break;
-            case 0x0F'00: desc_0F.parse(m_0F_running_cost_factor, is);          break;
-            case 0x10'00: desc_10.parse(m_10_sound_effect_type, is);            break;
-            case 0x11'00: desc_11.parse(m_11_refit_cargo_types, is);            break;
-            case 0x12'00: desc_12.parse(m_12_callback_flags_mask, is);          break;
-            case 0x13'00: desc_13.parse(m_13_refit_cost, is);                   break;
-            case 0x14'00: desc_14.parse(m_14_ocean_speed_fraction, is);         break;
-            case 0x15'00: desc_15.parse(m_15_canal_speed_fraction, is);         break;
-            case 0x16'00: desc_16.parse(m_16_retire_vehicle_early, is);         break;
-            case 0x17'00: desc_17.parse(m_17_miscellaneous_flags, is);          break;
-            case 0x18'00: desc_18.parse(m_18_refittable_cargo_classes, is);     break;
-            case 0x19'00: desc_19.parse(m_19_non_refittable_cargo_classes, is); break;
-            case 0x1A'00: desc_1A.parse(m_1A_long_introduction_date, is);       break;
-            case 0x1B'00: desc_1B.parse(m_1B_sort_purchase_list, is);           break;
-            case 0x1C'00: desc_1C.parse(m_1C_visual_effect, is);                break;
-            case 0x1D'00: desc_1D.parse(m_1D_custom_cargo_aging_period, is);    break;
-            case 0x1E'00: desc_1E.parse(m_1E_always_refittable_cargos, is);     break;
-            case 0x1F'00: desc_1F.parse(m_1F_never_refittable_cargos, is);      break;
-            default:      throw PROPERTY_ERROR("Unknown property", property);
+            case 0x08: desc_08.parse(m_08_sprite_id, is);                    break;
+            case 0x09: desc_09.parse(m_09_is_refittable, is);                break;
+            case 0x0A: desc_0A.parse(m_0A_cost_factor, is);                  break;
+            case 0x0B: desc_0B.parse(m_0B_speed_2_kmh, is);                  break;
+            case 0x0C: desc_0C.parse(m_0C_cargo_type, is);                   break;
+            case 0x0D: desc_0D.parse(m_0D_cargo_capacity, is);               break;
+            case 0x0F: desc_0F.parse(m_0F_running_cost_factor, is);          break;
+            case 0x10: desc_10.parse(m_10_sound_effect_type, is);            break;
+            case 0x11: desc_11.parse(m_11_refit_cargo_types, is);            break;
+            case 0x12: desc_12.parse(m_12_callback_flags_mask, is);          break;
+            case 0x13: desc_13.parse(m_13_refit_cost, is);                   break;
+            case 0x14: desc_14.parse(m_14_ocean_speed_fraction, is);         break;
+            case 0x15: desc_15.parse(m_15_canal_speed_fraction, is);         break;
+            case 0x16: desc_16.parse(m_16_retire_vehicle_early, is);         break;
+            case 0x17: desc_17.parse(m_17_miscellaneous_flags, is);          break;
+            case 0x18: desc_18.parse(m_18_refittable_cargo_classes, is);     break;
+            case 0x19: desc_19.parse(m_19_non_refittable_cargo_classes, is); break;
+            case 0x1A: desc_1A.parse(m_1A_long_introduction_date, is);       break;
+            case 0x1B: desc_1B.parse(m_1B_sort_purchase_list, is);           break;
+            case 0x1C: desc_1C.parse(m_1C_visual_effect, is);                break;
+            case 0x1D: desc_1D.parse(m_1D_custom_cargo_aging_period, is);    break;
+            case 0x1E: desc_1E.parse(m_1E_always_refittable_cargos, is);     break;
+            case 0x1F: desc_1F.parse(m_1F_never_refittable_cargos, is);      break;
+            default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;

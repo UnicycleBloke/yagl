@@ -58,21 +58,21 @@ constexpr const char* str_table               = "table";
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
-const std::map<std::string, uint16_t> g_indices =
+const std::map<std::string, uint8_t> g_indices =
 {
-    { str_fallback_type_id,    0x00'00 },
-    { str_year_available,      0x08'00 },
-    { str_minimum_length,      0x09'00 },
-    { str_maximum_length,      0x0A'00 },
-    { str_cost_factor,         0x0B'00 },
-    { str_maximum_speed,       0x0C'00 },
-    { str_bridge_layout,       0x0D'00 },
-    { str_various_flags,       0x0E'00 },
-    { str_long_year_available, 0x0F'00 },
-    { str_purchase_text,       0x10'00 },
-    { str_description_rail,    0x11'00 },
-    { str_description_road,    0x12'00 },
-    { str_cost_factor_word,    0x13'00 },
+    { str_fallback_type_id,    0x00 },
+    { str_year_available,      0x08 },
+    { str_minimum_length,      0x09 },
+    { str_maximum_length,      0x0A },
+    { str_cost_factor,         0x0B },
+    { str_maximum_speed,       0x0C },
+    { str_bridge_layout,       0x0D },
+    { str_various_flags,       0x0E },
+    { str_long_year_available, 0x0F },
+    { str_purchase_text,       0x10 },
+    { str_description_rail,    0x11 },
+    { str_description_road,    0x12 },
+    { str_cost_factor_word,    0x13 },
 };
 
 
@@ -293,24 +293,23 @@ bool Action00Bridges::parse_property(TokenStream& is, const std::string& name, u
     const auto& it = g_indices.find(name);
     if (it != g_indices.end())
     {
-        uint16_t index = it->second;
-        property = (index >> 8); // The property index is in the high byte.
-        switch (index)
+        property = it->second;
+        switch (property)
         {
-            case 0x00'00: desc_00.parse(m_00_fallback_type_id, is);    break;
-            case 0x08'00: desc_08.parse(m_08_year_available, is);      break;
-            case 0x09'00: desc_09.parse(m_09_minimum_length, is);      break;
-            case 0x0A'00: desc_0A.parse(m_0A_maximum_length, is);      break;
-            case 0x0B'00: desc_0B.parse(m_0B_cost_factor, is);         break;
-            case 0x0C'00: desc_0C.parse(m_0C_maximum_speed, is);       break;
-            case 0x0D'00: desc_0D.parse(m_0D_bridge_layout, is);       break;
-            case 0x0E'00: desc_0E.parse(m_0E_various_flags, is);       break;
-            case 0x0F'00: desc_0F.parse(m_0F_long_year_available, is); break;
-            case 0x10'00: desc_10.parse(m_10_purchase_text, is);       break;
-            case 0x11'00: desc_11.parse(m_11_description_rail, is);    break;
-            case 0x12'00: desc_12.parse(m_12_description_road, is);    break;
-            case 0x13'00: desc_13.parse(m_13_cost_factor_word, is);    break;
-            default:      throw PROPERTY_ERROR("Unknown property", property);
+            case 0x00: desc_00.parse(m_00_fallback_type_id, is);    break;
+            case 0x08: desc_08.parse(m_08_year_available, is);      break;
+            case 0x09: desc_09.parse(m_09_minimum_length, is);      break;
+            case 0x0A: desc_0A.parse(m_0A_maximum_length, is);      break;
+            case 0x0B: desc_0B.parse(m_0B_cost_factor, is);         break;
+            case 0x0C: desc_0C.parse(m_0C_maximum_speed, is);       break;
+            case 0x0D: desc_0D.parse(m_0D_bridge_layout, is);       break;
+            case 0x0E: desc_0E.parse(m_0E_various_flags, is);       break;
+            case 0x0F: desc_0F.parse(m_0F_long_year_available, is); break;
+            case 0x10: desc_10.parse(m_10_purchase_text, is);       break;
+            case 0x11: desc_11.parse(m_11_description_rail, is);    break;
+            case 0x12: desc_12.parse(m_12_description_road, is);    break;
+            case 0x13: desc_13.parse(m_13_cost_factor_word, is);    break;
+            default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;

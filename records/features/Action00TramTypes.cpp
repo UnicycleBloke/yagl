@@ -46,26 +46,26 @@ constexpr const char* str_alternate_tramtypes     = "alternate_tramtypes";
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
-const std::map<std::string, uint16_t> g_indices =
+const std::map<std::string, uint8_t> g_indices =
 {
-    { str_tramtype_label,          0x08'00 },
-    { str_toolbar_caption_id,      0x09'00 },
-    { str_dropdown_text_id,        0x0A'00 },
-    { str_window_caption_id,       0x0B'00 },
-    { str_autoreplace_text_id,     0x0C'00 },
-    { str_new_engine_text_id,      0x0D'00 },
-    { str_compatible_tramtypes,    0x0F'00 },
-    { str_tramtype_flags,          0x10'00 },
-    { str_construction_costs,      0x13'00 },
-    { str_speed_limit,             0x14'00 },
-    { str_minimap_colour,          0x16'00 },
-    { str_introduction_date,       0x17'00 },
-    { str_required_tramtypes,      0x18'00 },
-    { str_introduced_tramtypes,    0x19'00 },
-    { str_sort_order,              0x1A'00 },
-    { str_tram_type_name_id,       0x1B'00 },
-    { str_maintenance_cost_factor, 0x1C'00 },
-    { str_alternate_tramtypes,     0x1D'00 },
+    { str_tramtype_label,          0x08 },
+    { str_toolbar_caption_id,      0x09 },
+    { str_dropdown_text_id,        0x0A },
+    { str_window_caption_id,       0x0B },
+    { str_autoreplace_text_id,     0x0C },
+    { str_new_engine_text_id,      0x0D },
+    { str_compatible_tramtypes,    0x0F },
+    { str_tramtype_flags,          0x10 },
+    { str_construction_costs,      0x13 },
+    { str_speed_limit,             0x14 },
+    { str_minimap_colour,          0x16 },
+    { str_introduction_date,       0x17 },
+    { str_required_tramtypes,      0x18 },
+    { str_introduced_tramtypes,    0x19 },
+    { str_sort_order,              0x1A },
+    { str_tram_type_name_id,       0x1B },
+    { str_maintenance_cost_factor, 0x1C },
+    { str_alternate_tramtypes,     0x1D },
 };
 
 
@@ -184,29 +184,28 @@ bool Action00TramTypes::parse_property(TokenStream& is, const std::string& name,
     const auto& it = g_indices.find(name);
     if (it != g_indices.end())
     {
-        uint16_t index = it->second;
-        property = (index >> 8); // The property index is in the high byte.
-        switch (index)
+        property = it->second;
+        switch (property)
         {
-            case 0x08'00: desc_08.parse(m_08_tramtype_label, is);          break;
-            case 0x09'00: desc_09.parse(m_09_toolbar_caption_id, is);      break;
-            case 0x0A'00: desc_0A.parse(m_0A_dropdown_text_id, is);        break;
-            case 0x0B'00: desc_0B.parse(m_0B_window_caption_id, is);       break;
-            case 0x0C'00: desc_0C.parse(m_0C_autoreplace_text_id, is);     break;
-            case 0x0D'00: desc_0D.parse(m_0D_new_engine_text_id, is);      break;
-            case 0x0F'00: desc_0F.parse(m_0F_compatible_tramtypes, is);    break;
-            case 0x10'00: desc_10.parse(m_10_tramtype_flags, is);          break;
-            case 0x13'00: desc_13.parse(m_13_construction_costs, is);      break;
-            case 0x14'00: desc_14.parse(m_14_speed_limit, is);             break;
-            case 0x16'00: desc_16.parse(m_16_minimap_colour, is);          break;
-            case 0x17'00: desc_17.parse(m_17_introduction_date, is);       break;
-            case 0x18'00: desc_18.parse(m_18_required_tramtypes, is);      break;
-            case 0x19'00: desc_19.parse(m_19_introduced_tramtypes, is);    break;
-            case 0x1A'00: desc_1A.parse(m_1A_sort_order, is);              break;
-            case 0x1B'00: desc_1B.parse(m_1B_tram_type_name_id, is);       break;
-            case 0x1C'00: desc_1C.parse(m_1C_maintenance_cost_factor, is); break;
-            case 0x1D'00: desc_1D.parse(m_1D_alternate_tramtypes, is);     break;
-            default:      throw PROPERTY_ERROR("Unknown property", property);
+            case 0x08: desc_08.parse(m_08_tramtype_label, is);          break;
+            case 0x09: desc_09.parse(m_09_toolbar_caption_id, is);      break;
+            case 0x0A: desc_0A.parse(m_0A_dropdown_text_id, is);        break;
+            case 0x0B: desc_0B.parse(m_0B_window_caption_id, is);       break;
+            case 0x0C: desc_0C.parse(m_0C_autoreplace_text_id, is);     break;
+            case 0x0D: desc_0D.parse(m_0D_new_engine_text_id, is);      break;
+            case 0x0F: desc_0F.parse(m_0F_compatible_tramtypes, is);    break;
+            case 0x10: desc_10.parse(m_10_tramtype_flags, is);          break;
+            case 0x13: desc_13.parse(m_13_construction_costs, is);      break;
+            case 0x14: desc_14.parse(m_14_speed_limit, is);             break;
+            case 0x16: desc_16.parse(m_16_minimap_colour, is);          break;
+            case 0x17: desc_17.parse(m_17_introduction_date, is);       break;
+            case 0x18: desc_18.parse(m_18_required_tramtypes, is);      break;
+            case 0x19: desc_19.parse(m_19_introduced_tramtypes, is);    break;
+            case 0x1A: desc_1A.parse(m_1A_sort_order, is);              break;
+            case 0x1B: desc_1B.parse(m_1B_tram_type_name_id, is);       break;
+            case 0x1C: desc_1C.parse(m_1C_maintenance_cost_factor, is); break;
+            case 0x1D: desc_1D.parse(m_1D_alternate_tramtypes, is);     break;
+            default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;

@@ -31,10 +31,10 @@ constexpr const char* str_graphics_flags = "graphics_flags";
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
-const std::map<std::string, uint16_t> g_indices =
+const std::map<std::string, uint8_t> g_indices =
 {
-    { str_callback_flags, 0x08'00 },
-    { str_graphics_flags, 0x09'00 },
+    { str_callback_flags, 0x08 },
+    { str_graphics_flags, 0x09 },
 };
 
 
@@ -89,13 +89,12 @@ bool Action00Canals::parse_property(TokenStream& is, const std::string& name, ui
     const auto& it = g_indices.find(name);
     if (it != g_indices.end())
     {
-        uint16_t index = it->second;
-        property = (index >> 8); // The property index is in the high byte.
-        switch (index)
+        property = it->second;
+        switch (property)
         {
-            case 0x08'00: desc_08.parse(m_08_callback_flags, is); break;
-            case 0x09'00: desc_09.parse(m_09_graphics_flags, is); break;
-            default:      throw PROPERTY_ERROR("Unknown property", property);
+            case 0x08: desc_08.parse(m_08_callback_flags, is); break;
+            case 0x09: desc_09.parse(m_09_graphics_flags, is); break;
+            default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;

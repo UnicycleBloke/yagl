@@ -61,42 +61,42 @@ constexpr const char* str_never_refittable_cargos      = "never_refittable_cargo
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
-const std::map<std::string, uint16_t> g_indices =
+const std::map<std::string, uint8_t> g_indices =
 {
-    { str_track_type,                   0x05'00 },
-    { str_ai_special_flag,              0x08'00 },
-    { str_speed_kmh,                    0x09'00 },
-    { str_power,                        0x0B'00 },
-    { str_running_cost_factor,          0x0D'00 },
-    { str_running_cost_base,            0x0E'00 },
-    { str_sprite_id,                    0x12'00 },
-    { str_is_dual_headed,               0x13'00 },
-    { str_cargo_capacity,               0x14'00 },
-    { str_cargo_type,                   0x15'00 },
-    { str_weight_tons,                  0x16'00 },
-    { str_cost_factor,                  0x17'00 },
-    { str_ai_engine_rank,               0x18'00 },
-    { str_engine_traction_type,         0x19'00 },
-    { str_sort_purchase_list,           0x1A'00 },
-    { str_power_from_each_wagon,        0x1B'00 },
-    { str_refit_cost,                   0x1C'00 },
-    { str_refit_cargo_types,            0x1D'00 },
-    { str_callback_flags_mask,          0x1E'00 },
-    { str_coeff_of_tractive_effort,     0x1F'00 },
-    { str_coeff_of_air_drag,            0x20'00 },
-    { str_shorten_vehicle,              0x21'00 },
-    { str_visual_effect,                0x22'00 },
-    { str_weight_from_wagons,           0x23'00 },
-    { str_weight_high_byte,             0x24'00 },
-    { str_mask_for_var_42,              0x25'00 },
-    { str_retire_vehicle_early,         0x26'00 },
-    { str_miscellaneous_flags,          0x27'00 },
-    { str_refittable_cargo_classes,     0x28'00 },
-    { str_non_refittable_cargo_classes, 0x29'00 },
-    { str_long_introduction_date,       0x2A'00 },
-    { str_custom_cargo_aging_period,    0x2B'00 },    
-    { str_always_refittable_cargos,     0x2C'00 },
-    { str_never_refittable_cargos,      0x2D'00 },
+    { str_track_type,                   0x05 },
+    { str_ai_special_flag,              0x08 },
+    { str_speed_kmh,                    0x09 },
+    { str_power,                        0x0B },
+    { str_running_cost_factor,          0x0D },
+    { str_running_cost_base,            0x0E },
+    { str_sprite_id,                    0x12 },
+    { str_is_dual_headed,               0x13 },
+    { str_cargo_capacity,               0x14 },
+    { str_cargo_type,                   0x15 },
+    { str_weight_tons,                  0x16 },
+    { str_cost_factor,                  0x17 },
+    { str_ai_engine_rank,               0x18 },
+    { str_engine_traction_type,         0x19 },
+    { str_sort_purchase_list,           0x1A },
+    { str_power_from_each_wagon,        0x1B },
+    { str_refit_cost,                   0x1C },
+    { str_refit_cargo_types,            0x1D },
+    { str_callback_flags_mask,          0x1E },
+    { str_coeff_of_tractive_effort,     0x1F },
+    { str_coeff_of_air_drag,            0x20 },
+    { str_shorten_vehicle,              0x21 },
+    { str_visual_effect,                0x22 },
+    { str_weight_from_wagons,           0x23 },
+    { str_weight_high_byte,             0x24 },
+    { str_mask_for_var_42,              0x25 },
+    { str_retire_vehicle_early,         0x26 },
+    { str_miscellaneous_flags,          0x27 },
+    { str_refittable_cargo_classes,     0x28 },
+    { str_non_refittable_cargo_classes, 0x29 },
+    { str_long_introduction_date,       0x2A },
+    { str_custom_cargo_aging_period,    0x2B },    
+    { str_always_refittable_cargos,     0x2C },
+    { str_never_refittable_cargos,      0x2D },
 };
 
 
@@ -305,45 +305,44 @@ bool Action00Trains::parse_property(TokenStream& is, const std::string& name, ui
     const auto& it = g_indices.find(name);
     if (it != g_indices.end())
     {
-        uint16_t index = it->second;
-        property = (index >> 8); // The property index is in the high byte.
-        switch (index)
+        property = it->second;
+        switch (property)
         {
-            case 0x05'00: desc_05.parse(m_05_track_type, is);                   break;
-            case 0x08'00: desc_08.parse(m_08_ai_special_flag, is);              break;
-            case 0x09'00: desc_09.parse(m_09_speed_kmh, is);                    break;
-            case 0x0B'00: desc_0B.parse(m_0B_power, is);                        break;
-            case 0x0D'00: desc_0D.parse(m_0D_running_cost_factor, is);          break;
-            case 0x0E'00: desc_0E.parse(m_0E_running_cost_base, is);            break;
-            case 0x12'00: desc_12.parse(m_12_sprite_id, is);                    break;
-            case 0x13'00: desc_13.parse(m_13_is_dual_headed, is);               break;
-            case 0x14'00: desc_14.parse(m_14_cargo_capacity, is);               break;
-            case 0x15'00: desc_15.parse(m_15_cargo_type, is);                   break;
-            case 0x16'00: desc_16.parse(m_16_weight_tons, is);                  break;
-            case 0x17'00: desc_17.parse(m_17_cost_factor, is);                  break;
-            case 0x18'00: desc_18.parse(m_18_ai_engine_rank, is);               break;
-            case 0x19'00: desc_19.parse(m_19_engine_traction_type, is);         break;
-            case 0x1A'00: desc_1A.parse(m_1A_sort_purchase_list, is);           break;
-            case 0x1B'00: desc_1B.parse(m_1B_power_from_each_wagon, is);        break;
-            case 0x1C'00: desc_1C.parse(m_1C_refit_cost, is);                   break;
-            case 0x1D'00: desc_1D.parse(m_1D_refit_cargo_types, is);            break;
-            case 0x1E'00: desc_1E.parse(m_1E_callback_flags_mask, is);          break;
-            case 0x1F'00: desc_1F.parse(m_1F_coeff_of_tractive_effort, is);     break;
-            case 0x20'00: desc_20.parse(m_20_coeff_of_air_drag, is);            break;
-            case 0x21'00: desc_21.parse(m_21_shorten_vehicle, is);              break;
-            case 0x22'00: desc_22.parse(m_22_visual_effect, is);                break;
-            case 0x23'00: desc_23.parse(m_23_weight_from_wagons, is);           break;
-            case 0x24'00: desc_24.parse(m_24_weight_high_byte, is);             break;
-            case 0x25'00: desc_25.parse(m_25_mask_for_var_42, is);              break;
-            case 0x26'00: desc_26.parse(m_26_retire_vehicle_early, is);         break;
-            case 0x27'00: desc_27.parse(m_27_miscellaneous_flags, is);          break;
-            case 0x28'00: desc_28.parse(m_28_refittable_cargo_classes, is);     break;
-            case 0x29'00: desc_29.parse(m_29_non_refittable_cargo_classes, is); break;
-            case 0x2A'00: desc_2A.parse(m_2A_long_introduction_date, is);       break;
-            case 0x2B'00: desc_2B.parse(m_2B_custom_cargo_aging_period, is);    break;
-            case 0x2C'00: desc_2C.parse(m_2C_always_refittable_cargos, is);     break;
-            case 0x2D'00: desc_2D.parse(m_2D_never_refittable_cargos, is);      break;
-            default:      throw PROPERTY_ERROR("Unknown property", property);
+            case 0x05: desc_05.parse(m_05_track_type, is);                   break;
+            case 0x08: desc_08.parse(m_08_ai_special_flag, is);              break;
+            case 0x09: desc_09.parse(m_09_speed_kmh, is);                    break;
+            case 0x0B: desc_0B.parse(m_0B_power, is);                        break;
+            case 0x0D: desc_0D.parse(m_0D_running_cost_factor, is);          break;
+            case 0x0E: desc_0E.parse(m_0E_running_cost_base, is);            break;
+            case 0x12: desc_12.parse(m_12_sprite_id, is);                    break;
+            case 0x13: desc_13.parse(m_13_is_dual_headed, is);               break;
+            case 0x14: desc_14.parse(m_14_cargo_capacity, is);               break;
+            case 0x15: desc_15.parse(m_15_cargo_type, is);                   break;
+            case 0x16: desc_16.parse(m_16_weight_tons, is);                  break;
+            case 0x17: desc_17.parse(m_17_cost_factor, is);                  break;
+            case 0x18: desc_18.parse(m_18_ai_engine_rank, is);               break;
+            case 0x19: desc_19.parse(m_19_engine_traction_type, is);         break;
+            case 0x1A: desc_1A.parse(m_1A_sort_purchase_list, is);           break;
+            case 0x1B: desc_1B.parse(m_1B_power_from_each_wagon, is);        break;
+            case 0x1C: desc_1C.parse(m_1C_refit_cost, is);                   break;
+            case 0x1D: desc_1D.parse(m_1D_refit_cargo_types, is);            break;
+            case 0x1E: desc_1E.parse(m_1E_callback_flags_mask, is);          break;
+            case 0x1F: desc_1F.parse(m_1F_coeff_of_tractive_effort, is);     break;
+            case 0x20: desc_20.parse(m_20_coeff_of_air_drag, is);            break;
+            case 0x21: desc_21.parse(m_21_shorten_vehicle, is);              break;
+            case 0x22: desc_22.parse(m_22_visual_effect, is);                break;
+            case 0x23: desc_23.parse(m_23_weight_from_wagons, is);           break;
+            case 0x24: desc_24.parse(m_24_weight_high_byte, is);             break;
+            case 0x25: desc_25.parse(m_25_mask_for_var_42, is);              break;
+            case 0x26: desc_26.parse(m_26_retire_vehicle_early, is);         break;
+            case 0x27: desc_27.parse(m_27_miscellaneous_flags, is);          break;
+            case 0x28: desc_28.parse(m_28_refittable_cargo_classes, is);     break;
+            case 0x29: desc_29.parse(m_29_non_refittable_cargo_classes, is); break;
+            case 0x2A: desc_2A.parse(m_2A_long_introduction_date, is);       break;
+            case 0x2B: desc_2B.parse(m_2B_custom_cargo_aging_period, is);    break;
+            case 0x2C: desc_2C.parse(m_2C_always_refittable_cargos, is);     break;
+            case 0x2D: desc_2D.parse(m_2D_never_refittable_cargos, is);      break;
+            default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;

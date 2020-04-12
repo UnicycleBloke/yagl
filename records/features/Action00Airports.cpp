@@ -38,16 +38,16 @@ constexpr const char* str_maintenance_cost_factor = "maintenance_cost_factor";
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
-const std::map<std::string, uint16_t> g_indices =
+const std::map<std::string, uint8_t> g_indices =
 {
-    { str_airport_override_id,       0x08'00 },
-    { str_airport_layouts,           0x0A'00 },
-    { str_years_available,           0x0C'00 },
-    { str_compatible_ttd_airport,    0x0D'00 },
-    { str_catchment_area,            0x0E'00 },
-    { str_noise_level,               0x0F'00 },
-    { str_airport_name_id,           0x10'00 },
-    { str_maintenance_cost_factor,   0x11'00 },
+    { str_airport_override_id,       0x08 },
+    { str_airport_layouts,           0x0A },
+    { str_years_available,           0x0C },
+    { str_compatible_ttd_airport,    0x0D },
+    { str_catchment_area,            0x0E },
+    { str_noise_level,               0x0F },
+    { str_airport_name_id,           0x10 },
+    { str_maintenance_cost_factor,   0x11 },
 };
 
 
@@ -126,19 +126,18 @@ bool Action00Airports::parse_property(TokenStream& is, const std::string& name, 
     const auto& it = g_indices.find(name);
     if (it != g_indices.end())
     {
-        uint16_t index = it->second;
-        property = (index >> 8); // The property index is in the high byte.
-        switch (index)
+        property = it->second;
+        switch (property)
         {
-            case 0x08'00: desc_08.parse(m_08_airport_override_id, is);                   break;
-            case 0x0A'00: desc_0A.parse(m_0A_airport_layouts, is, AirportType::Airport); break;
-            case 0x0C'00: desc_0C.parse(m_0C_years_available, is);                       break;
-            case 0x0D'00: desc_0D.parse(m_0D_compatible_ttd_airport, is);                break;
-            case 0x0E'00: desc_0E.parse(m_0E_catchment_area, is);                        break;
-            case 0x0F'00: desc_0F.parse(m_0F_noise_level, is);                           break;
-            case 0x10'00: desc_10.parse(m_10_airport_name_id, is);                       break;
-            case 0x11'00: desc_11.parse(m_11_maintenance_cost_factor, is);               break;
-            default:      throw PROPERTY_ERROR("Unknown property", property);
+            case 0x08: desc_08.parse(m_08_airport_override_id, is);                   break;
+            case 0x0A: desc_0A.parse(m_0A_airport_layouts, is, AirportType::Airport); break;
+            case 0x0C: desc_0C.parse(m_0C_years_available, is);                       break;
+            case 0x0D: desc_0D.parse(m_0D_compatible_ttd_airport, is);                break;
+            case 0x0E: desc_0E.parse(m_0E_catchment_area, is);                        break;
+            case 0x0F: desc_0F.parse(m_0F_noise_level, is);                           break;
+            case 0x10: desc_10.parse(m_10_airport_name_id, is);                       break;
+            case 0x11: desc_11.parse(m_11_maintenance_cost_factor, is);               break;
+            default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;

@@ -46,25 +46,25 @@ constexpr const char* str_number_on_creation   = "number_on_creation";
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
-const std::map<std::string, uint16_t> g_indices =
+const std::map<std::string, uint8_t> g_indices =
 {
-    { str_class_label,          0x08'00 },
-    { str_class_text_id,        0x09'00 },
-    { str_object_text_id,       0x0A'00 },
-    { str_climate_availability, 0x0B'00 },
-    { str_size_xy,              0x0C'00 },
-    { str_cost_factor,          0x0D'00 },
-    { str_introduction_date,    0x0E'00 },
-    { str_end_of_life_date,     0x0F'00 },
-    { str_object_flags,         0x10'00 },
-    { str_animation_info,       0x11'00 },
-    { str_animation_speed,      0x12'00 },
-    { str_animation_triggers,   0x13'00 },
-    { str_removal_cost_factor,  0x14'00 },
-    { str_callback_flags,       0x15'00 },
-    { str_building_height,      0x16'00 },
-    { str_number_of_views,      0x17'00 },
-    { str_number_on_creation,   0x18'00 },
+    { str_class_label,          0x08 },
+    { str_class_text_id,        0x09 },
+    { str_object_text_id,       0x0A },
+    { str_climate_availability, 0x0B },
+    { str_size_xy,              0x0C },
+    { str_cost_factor,          0x0D },
+    { str_introduction_date,    0x0E },
+    { str_end_of_life_date,     0x0F },
+    { str_object_flags,         0x10 },
+    { str_animation_info,       0x11 },
+    { str_animation_speed,      0x12 },
+    { str_animation_triggers,   0x13 },
+    { str_removal_cost_factor,  0x14 },
+    { str_callback_flags,       0x15 },
+    { str_building_height,      0x16 },
+    { str_number_of_views,      0x17 },
+    { str_number_on_creation,   0x18 },
 };
 
 
@@ -179,28 +179,27 @@ bool Action00Objects::parse_property(TokenStream& is, const std::string& name, u
     const auto& it = g_indices.find(name);
     if (it != g_indices.end())
     {
-        uint16_t index = it->second;
-        property = (index >> 8); // The property index is in the high byte.
-        switch (index)
+        property = it->second;
+        switch (property)
         {
-            case 0x08'00: desc_08.parse(m_08_class_label, is);          break;
-            case 0x09'00: desc_09.parse(m_09_class_text_id, is);        break;
-            case 0x0A'00: desc_0A.parse(m_0A_object_text_id, is);       break;
-            case 0x0B'00: desc_0B.parse(m_0B_climate_availability, is); break;
-            case 0x0C'00: desc_0C.parse(m_0C_size_xy, is);              break;
-            case 0x0D'00: desc_0D.parse(m_0D_cost_factor, is);          break;
-            case 0x0E'00: desc_0E.parse(m_0E_introduction_date, is);    break;
-            case 0x0F'00: desc_0F.parse(m_0F_end_of_life_date, is);     break;
-            case 0x10'00: desc_10.parse(m_10_object_flags, is);         break;
-            case 0x11'00: desc_11.parse(m_11_animation_info, is);       break;
-            case 0x12'00: desc_12.parse(m_12_animation_speed, is);      break;
-            case 0x13'00: desc_13.parse(m_13_animation_triggers, is);   break;
-            case 0x14'00: desc_14.parse(m_14_removal_cost_factor, is);  break;
-            case 0x15'00: desc_15.parse(m_15_callback_flags, is);       break;
-            case 0x16'00: desc_16.parse(m_16_building_height, is);      break;
-            case 0x17'00: desc_17.parse(m_17_number_of_views, is);      break;
-            case 0x18'00: desc_18.parse(m_18_number_on_creation, is);   break;
-            default:      throw PROPERTY_ERROR("Unknown property", property);
+            case 0x08: desc_08.parse(m_08_class_label, is);          break;
+            case 0x09: desc_09.parse(m_09_class_text_id, is);        break;
+            case 0x0A: desc_0A.parse(m_0A_object_text_id, is);       break;
+            case 0x0B: desc_0B.parse(m_0B_climate_availability, is); break;
+            case 0x0C: desc_0C.parse(m_0C_size_xy, is);              break;
+            case 0x0D: desc_0D.parse(m_0D_cost_factor, is);          break;
+            case 0x0E: desc_0E.parse(m_0E_introduction_date, is);    break;
+            case 0x0F: desc_0F.parse(m_0F_end_of_life_date, is);     break;
+            case 0x10: desc_10.parse(m_10_object_flags, is);         break;
+            case 0x11: desc_11.parse(m_11_animation_info, is);       break;
+            case 0x12: desc_12.parse(m_12_animation_speed, is);      break;
+            case 0x13: desc_13.parse(m_13_animation_triggers, is);   break;
+            case 0x14: desc_14.parse(m_14_removal_cost_factor, is);  break;
+            case 0x15: desc_15.parse(m_15_callback_flags, is);       break;
+            case 0x16: desc_16.parse(m_16_building_height, is);      break;
+            case 0x17: desc_17.parse(m_17_number_of_views, is);      break;
+            case 0x18: desc_18.parse(m_18_number_on_creation, is);   break;
+            default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
         return true;
