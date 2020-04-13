@@ -103,6 +103,7 @@ void write_uint32(std::ostream& os, uint32_t value)
 
 
 // Used for debugging to see what bytes are in the stream as sort of NFO. 
+/*
 void dump_hex(std::istream& is, uint16_t length)
 { 
     std::streamoff done = 0;
@@ -124,3 +125,4 @@ void dump_hex(std::istream& is, uint16_t length)
 
     is.seekg(done, std::istream::cur);
 }
+*/

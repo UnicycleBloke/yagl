@@ -28,7 +28,7 @@
 class CommandLineOptions
 {
     public: 
-        enum class Operation { Decode, Encode, HexDump };   
+        enum class Operation { Decode, Encode, HexDump, Test };   
 
     public: 
         void parse(int argc, char* argv[]);

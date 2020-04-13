@@ -20,44 +20,31 @@
 #include "StreamHelpers.h"
 
 
-void CargoAcceptanceList::read(std::istream& is)
+void CargoAcceptance::read(std::istream& is)
 {
-    uint8_t num_items = read_uint8(is);
-    for (uint8_t i = 0; i < num_items; ++i)
-    {
-        CargoAcceptance item;
-        item.cargo_type = read_uint8(is);
-        item.acceptance = read_uint8(is);
-        m_items.push_back(item);
-    }
+    m_cargo_type = read_uint8(is);
+    m_acceptance = read_uint8(is);
 }
 
 
-void CargoAcceptanceList::write(std::ostream& os) const
+void CargoAcceptance::write(std::ostream& os) const
 {
-    write_uint8(os, uint8_t(m_items.size()));
-    for (const auto& item: m_items)
-    {
-        write_uint8(os, item.cargo_type);
-        write_uint8(os, item.acceptance);
-    }
+    write_uint8(os, m_cargo_type);
+    write_uint8(os, m_acceptance);
 }
 
 
-void CargoAcceptanceList::print(std::ostream& os, uint16_t indent) const
+void CargoAcceptance::print(std::ostream& os) const
 {
-    os << "[";
-    for (const auto& item: m_items)
-    {
-        os << " {" << to_hex(item.cargo_type) << ": " << to_hex(item.acceptance) << "}";
-    }
-    os << " ];\n";
+    os << "{" << to_hex(m_cargo_type) << ": " << to_hex(m_acceptance) << "}";
 }
 
 
-void CargoAcceptanceList::parse(TokenStream& is)
+void CargoAcceptance::parse(TokenStream& is)
 {
-
+    is.match(TokenType::OpenBrace);
+    m_cargo_type = is.match_uint8();
+    is.match(TokenType::Colon);
+    m_acceptance = is.match_uint8();
+    is.match(TokenType::CloseBrace);
 }
-
-

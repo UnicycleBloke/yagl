@@ -114,6 +114,9 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     utility/GRFStrings.cpp
     utility/Exceptions.cpp
     utility/Languages.cpp
+
+    # Unit test.
+    tests/Test_StreamHelpers.cpp
 )
 
 # This appears to be the simplest way to create a pre-build step that
@@ -137,7 +140,8 @@ target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC
     utility
     application
 
-    # Header only third party libraries used for convenience.   
+    # Header only third party libraries used for convenience. 
+    third_party/catch2  
     third_party/png++
     third_party/cxxopts/include
 )

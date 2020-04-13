@@ -33,6 +33,7 @@ uint16_t    read_uint8_ext(std::istream& is);
 uint16_t    read_uint16(std::istream& is);
 uint32_t    read_uint32(std::istream& is);
 
+
 void write_uint8(std::ostream& os, uint8_t value);
 void write_uint8_ext(std::ostream& os, uint16_t value, ExtByteFormat format = ExtByteFormat::Long);
 void write_uint16(std::ostream& os, uint16_t value);
@@ -44,7 +45,7 @@ constexpr bool is_uint_v = std::is_same_v<T, uint8_t> || std::is_same_v<T, uint1
 
 
 // Useful alias for inside templates.
-template <typename T, bool EXT>
+template <typename T, bool EXT = false>
 T read_uint(std::istream& is)
 {
     static_assert(is_uint_v<T>);
@@ -69,7 +70,7 @@ T read_uint(std::istream& is)
 
 
 // Useful alias for inside templates.
-template <typename T, bool EXT>
+template <typename T, bool EXT = false>
 void write_uint(std::ostream& os, T value)
 {
     static_assert(is_uint_v<T>);
@@ -99,6 +100,7 @@ template <> struct HexFormat<uint16_t> { static constexpr uint8_t index = 1; };
 template <> struct HexFormat<char16_t> { static constexpr uint8_t index = 1; };
 template <> struct HexFormat<uint32_t> { static constexpr uint8_t index = 2; };
 
+
 template <typename T>
 std::string to_hex(T value, bool prefix = true)
 {
@@ -114,12 +116,6 @@ std::string to_hex(T value, bool prefix = true)
     }
     os << std::uppercase << std::hex << std::setfill('0') << std::setw(2*sizeof(T)) << static_cast<uint64_t>(unsigned_value);
     return os.str();
-}
-
-
-inline std::string to_bool(bool value)
-{
-    return value ? "true" : "false";
 }
 
 
@@ -139,6 +135,7 @@ private:
 };
 
 
+// Manipulator for use with output streams.
 inline std::ostream& operator<<(std::ostream& os, const Padding& padding)
 {
     padding.execute(os);
@@ -154,6 +151,7 @@ inline Padding pad(uint16_t len)
 }
 
 
+/*
 template <typename Enum>
 struct EnumNames
 {
@@ -183,8 +181,9 @@ struct EnumNames
 
     const std::map<Enum, std::string> names;
 };
+*/
 
 
 // Used for debugging to see what bytes are in the stream as sort of NFO. 
-void dump_hex(std::istream& is, uint16_t length);
+//void dump_hex(std::istream& is, uint16_t length);
 

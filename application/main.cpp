@@ -24,6 +24,10 @@
 #include "yagl_version.h" // Generated in a pre-build step.
 #include "FileSystem.h"
 
+// Unit testing framework
+#define CATCH_CONFIG_RUNNER
+#include "catch.hpp"
+
 
 static void decode()
 {
@@ -135,6 +139,28 @@ static void hex_dump()
 }
 
 
+int test(int argc, char* argv[])
+{
+    std::cout << "Performing unit tests...\n";
+    Catch::Session session; // There must be exactly one instance
+ 
+    // Writing to session.configData() here sets defaults
+    // this is the preferred way to set them.   
+    int result = session.applyCommandLine(argc, argv);
+    if( result != 0 ) // Indicates a command line error
+        return result;
+ 
+    // Writing to session.configData() or session.Config() here 
+    // overrides command line args. Only do this if you know you need to.
+
+    // num_failed is clamped to 255 as some unices only use the lower 8 bits.
+    // This clamping has already been applied, so just return it here.
+    // You can also do any post run clean-up here.
+    int num_failed = session.run();
+    return num_failed;
+}
+
+
 int main (int argc, char* argv[])
 {
     std::cout << "\n";
@@ -158,9 +184,12 @@ int main (int argc, char* argv[])
         case CommandLineOptions::Operation::HexDump:
             hex_dump();
             break;
+
+        case CommandLineOptions::Operation::Test:
+            test(1, argv);
+            //test(argc, argv);
+            break;
     }
 
     return 0;
 }
-
-

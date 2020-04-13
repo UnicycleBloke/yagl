@@ -21,41 +21,21 @@
 #include <vector>
 
 
-struct CargoAcceptance
-{
-    uint8_t cargo_type; // Index into cargo translation table
-    uint8_t acceptance; // In 1/8 units.
-};
-
-
-class CargoAcceptanceList
+class CargoAcceptance
 {
 public:
     // Binary serialisation
     void read(std::istream& is);
     void write(std::ostream& os) const;
     // Text serialisation
-    void print(std::ostream& os, uint16_t indent) const;
+    void print(std::ostream& os) const;
     void parse(TokenStream& is);
 
 private:
-    std::vector<CargoAcceptance> m_items;
+    uint8_t m_cargo_type{}; // Index into cargo translation table
+    uint8_t m_acceptance{}; // In 1/8 units.
 };
 
 
-struct CargoAcceptanceDescriptor : PropertyDescriptor
-{
-    void print(const CargoAcceptanceList& list, std::ostream& os, uint16_t indent) const
-    {
-        prefix(os, indent);
-        list.print(os, indent);
-    }
-
-    void parse(CargoAcceptanceList& list, TokenStream& is) const
-    {
-        list.parse(is);
-    }
-};
-
-
-
+using CargoAcceptanceList       = Vector<CargoAcceptance>;
+using CargoAcceptanceDescriptor = GenericDescriptor<CargoAcceptanceList>;

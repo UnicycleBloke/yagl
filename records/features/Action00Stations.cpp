@@ -24,36 +24,6 @@
 namespace {
 
 
-struct SpriteLayoutsDescriptor : PropertyDescriptor
-{
-    void print(const Action00Stations::SpriteLayout& layouts, std::ostream& os, uint16_t indent) const
-    {
-        prefix(os, indent);
-        layouts.print(os, indent);
-    }
-
-    void parse(Action00Stations::SpriteLayout& layouts, TokenStream& is) const
-    {
-        layouts.parse(is);
-    }
-};
-
-
-struct CustomStationsDescriptor : PropertyDescriptor
-{
-    void print(const Action00Stations::CustomStation& layouts, std::ostream& os, uint16_t indent) const
-    {
-        prefix(os, indent);
-        layouts.print(os, indent);
-    }
-
-    void parse(Action00Stations::CustomStation& layouts, TokenStream& is) const
-    {
-        layouts.parse(is);
-    }
-};
-
-
 constexpr const char* str_class_id                  = "class_id";
 constexpr const char* str_sprite_layout             = "sprite_layout";
 constexpr const char* str_copy_sprite_layout_id     = "copy_sprite_layout_id";
@@ -71,6 +41,11 @@ constexpr const char* str_can_train_enter_tile      = "can_train_enter_tile";
 constexpr const char* str_animation_info            = "animation_info";
 constexpr const char* str_animation_speed           = "animation_speed";
 constexpr const char* str_animation_triggers        = "animation_triggers";
+constexpr const char* str_tile                      = "tile";
+constexpr const char* str_layout                    = "layout"; 
+constexpr const char* str_layouts                   = "layouts";
+constexpr const char* str_ground_sprite             = "ground_sprite";
+constexpr const char* str_sprite_data               = "sprite_data";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
@@ -98,8 +73,12 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
+using StationLayoutDescriptor  = GenericDescriptor<StationLayout, true>;
+using CustomStationsDescriptor = GenericDescriptor<CustomStation, true>;
+
+
 constexpr UInt32Descriptor          desc_08  = { 0x08, str_class_id,                  PropFormat::Hex };
-constexpr SpriteLayoutsDescriptor   desc_09  = { 0x09, str_sprite_layout };
+constexpr StationLayoutDescriptor   desc_09  = { 0x09, str_sprite_layout };
 constexpr UInt8Descriptor           desc_0A  = { 0x0A, str_copy_sprite_layout_id,     PropFormat::Hex };
 constexpr UInt8Descriptor           desc_0B  = { 0x0B, str_callback_flags,            PropFormat::Hex };
 constexpr UInt8Descriptor           desc_0C  = { 0x0C, str_disabled_platform_numbers, PropFormat::Hex };
@@ -120,30 +99,32 @@ constexpr UInt16Descriptor          desc_18  = { 0x18, str_animation_triggers,  
 } // namespace {
 
 
-void Action00Stations::SpriteTileData::read(std::istream& is)
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void StationTileData::read(std::istream& is)
 {
-    x_off  = read_uint8(is);
-    y_off  = read_uint8(is);
-    z_off  = read_uint8(is);
-    x_ext  = read_uint8(is);
-    y_ext  = read_uint8(is);
-    z_ext  = read_uint8(is);
-    sprite = read_uint32(is);
+    m_x_off  = read_uint8(is);
+    m_y_off  = read_uint8(is);
+    m_z_off  = read_uint8(is);
+    m_x_ext  = read_uint8(is);
+    m_y_ext  = read_uint8(is);
+    m_z_ext  = read_uint8(is);
+    m_sprite = read_uint32(is);
 
-    new_bb = (z_off != 0x80);
+    m_new_bb = (m_z_off != 0x80);
 }
 
 
-void Action00Stations::SpriteTileData::write(std::ostream& os) const
+void StationTileData::write(std::ostream& os) const
 {
-    write_uint8(os, x_off);
-    write_uint8(os, y_off);
-    if (new_bb)
+    write_uint8(os, m_x_off);
+    write_uint8(os, m_y_off);
+    if (m_new_bb)
     {
-        write_uint8(os, z_off);
-        write_uint8(os, x_ext);
-        write_uint8(os, y_ext);
-        write_uint8(os, z_ext);
+        write_uint8(os, m_z_off);
+        write_uint8(os, m_x_ext);
+        write_uint8(os, m_y_ext);
+        write_uint8(os, m_z_ext);
     }
     else
     {
@@ -152,61 +133,85 @@ void Action00Stations::SpriteTileData::write(std::ostream& os) const
         write_uint8(os, 0x00);
         write_uint8(os, 0x00);
     }
-    write_uint32(os, sprite);
+    write_uint32(os, m_sprite);
 }
 
 
-void Action00Stations::SpriteTileData::print(std::ostream& os, uint16_t indent) const
+void StationTileData::print(std::ostream& os, uint16_t indent) const
 {
-    if (new_bb)
+    if (m_new_bb)
     {
-        os << pad(indent) << "tile(" << to_hex(sprite) << ", ";
-        os << to_hex(x_off) << ", " << to_hex(y_off) << ", " << to_hex(z_off) << ", "; 
-        os << to_hex(x_ext) << ", " << to_hex(y_ext) << ", " << to_hex(z_ext); 
+        os << pad(indent) << str_tile << "(" << to_hex(m_sprite) << ", ";
+        os << to_hex(m_x_off) << ", " << to_hex(m_y_off) << ", " << to_hex(m_z_off) << ", "; 
+        os << to_hex(m_x_ext) << ", " << to_hex(m_y_ext) << ", " << to_hex(m_z_ext); 
         os << ");\n"; 
     }
     else
     {
-        os << pad(indent) << "tile(" << to_hex(sprite) << ", ";
-        os << to_hex(x_off) << ", " << to_hex(y_off); 
+        os << pad(indent) << str_tile << "(" << to_hex(m_sprite) << ", ";
+        os << to_hex(m_x_off) << ", " << to_hex(m_y_off); 
         os << ");\n"; 
     }
 }
 
 
-void Action00Stations::SpriteTileData::parse(TokenStream& is)
+void StationTileData::parse(TokenStream& is)
 {
+    is.match_ident(str_tile);
+    is.match(TokenType::OpenParen);
+    m_sprite = is.match_uint32();
+    is.match(TokenType::Comma);
+    m_x_off = is.match_uint8();
+    is.match(TokenType::Comma);
+    m_y_off = is.match_uint8();
 
+    m_new_bb = (is.peek().type == TokenType::Comma);
+    if (m_new_bb)
+    {
+        is.match(TokenType::Comma);
+        m_z_off = is.match_uint8();
+        is.match(TokenType::Comma);
+        m_x_ext = is.match_uint8();
+        is.match(TokenType::Comma);
+        m_y_ext = is.match_uint8();
+        is.match(TokenType::Comma);
+        m_z_ext = is.match_uint8();
+    }
+
+    is.match(TokenType::CloseParen);
+    is.match(TokenType::SemiColon);
 }
 
 
-void Action00Stations::SpriteTile::read(std::istream& is)
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void StationTile::read(std::istream& is)
 {
-    ground_sprite = read_uint32(is);
-    if (ground_sprite == 0x00000000)
+    m_ground_sprite = read_uint32(is);
+    if (m_ground_sprite == 0x00000000)
     {
         return;
     }
 
     while (is.peek() != 0x80)
     {
-        SpriteTileData datum;
+        StationTileData datum;
         datum.read(is);
-        data.push_back(datum);
+        m_data.push_back(datum);
     }
     read_uint8(is);
 }
 
 
-void Action00Stations::SpriteTile::write(std::ostream& os) const
+void StationTile::write(std::ostream& os) const
 {
-    write_uint32(os, ground_sprite);
-    if (ground_sprite == 0x00000000)
+    write_uint32(os, m_ground_sprite);
+    if (m_ground_sprite == 0x00000000)
     {
         return;
     }
 
-    for (const auto& datum: data)
+    for (const auto& datum: m_data)
     {
         datum.write(os);
     }
@@ -214,19 +219,19 @@ void Action00Stations::SpriteTile::write(std::ostream& os) const
 }
 
 
-void Action00Stations::SpriteTile::print(std::ostream& os, uint16_t indent) const
+void StationTile::print(std::ostream& os, uint16_t indent) const
 {
-    os << pad(indent) << "layout\n"; 
+    os << pad(indent) << str_layout << "\n";
     os << pad(indent) << "{\n"; 
 
-    os << pad(indent + 4) << "ground_sprite: " << to_hex(ground_sprite) << "\n"; 
+    os << pad(indent + 4) << str_ground_sprite << ": " << to_hex(m_ground_sprite) << "\n";
 
-    if (ground_sprite != 0x00000000)
+    if (m_ground_sprite != 0x0000'0000)
     {
-        os << pad(indent + 4) << "sprite_data:\n"; 
+        os << pad(indent + 4) << str_sprite_data << ":\n";
         os << pad(indent + 4) << "{\n"; 
-     
-        for (const auto& datum: data)
+    
+        for (const auto& datum: m_data)
         {
             datum.print(os, indent + 8);
         }
@@ -239,39 +244,60 @@ void Action00Stations::SpriteTile::print(std::ostream& os, uint16_t indent) cons
 }
 
 
-void Action00Stations::SpriteTile::parse(TokenStream& is)
+void StationTile::parse(TokenStream& is)
 {
+    is.match_ident(str_layout);
+    is.match(TokenType::OpenBrace);
 
+    m_ground_sprite = is.match_uint32();
+    if (m_ground_sprite != 0x0000'0000)
+    {
+        is.match_ident(str_sprite_data);
+        is.match(TokenType::Colon);
+        is.match(TokenType::OpenBrace);
+
+        while (is.peek().type != TokenType::CloseBrace)
+        {
+            StationTileData datum{};
+            datum.parse(is);
+            m_data.push_back(datum);
+        }
+
+        is.match(TokenType::CloseBrace);
+    }
+
+    is.match(TokenType::CloseBrace);
 }
 
 
-void Action00Stations::SpriteLayout::read(std::istream& is)
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void StationLayout::read(std::istream& is)
 {
     uint16_t num_tiles = read_uint8_ext(is);
-    tiles.resize(num_tiles);
+    m_tiles.resize(num_tiles);
     for (uint16_t i = 0; i < num_tiles; ++i)
     {
-        tiles[i].read(is);
+        m_tiles[i].read(is);
     }
 }
 
 
-void Action00Stations::SpriteLayout::write(std::ostream& os) const
+void StationLayout::write(std::ostream& os) const
 {
-    write_uint8_ext(os, uint16_t(tiles.size()));
-    for (const auto& tile: tiles)
+    write_uint8_ext(os, uint16_t(m_tiles.size()));
+    for (const auto& tile: m_tiles)
     {
         tile.write(os);
     }
 }
 
 
-void Action00Stations::SpriteLayout::print(std::ostream& os, uint16_t indent) const
+void StationLayout::print(std::ostream& os, uint16_t indent) const
 {
-    //os << pad(indent) << "layouts\n"; 
-    os << "layouts\n"; 
+    os << str_layouts << "\n";
     os << pad(indent) << "{\n"; 
-    for (const auto& tile: tiles)
+    for (const auto& tile: m_tiles)
     {
         tile.print(os, indent + 4);
     }
@@ -279,49 +305,61 @@ void Action00Stations::SpriteLayout::print(std::ostream& os, uint16_t indent) co
 }
 
 
-void Action00Stations::SpriteLayout::parse(TokenStream& is)
+void StationLayout::parse(TokenStream& is)
 {
+    is.match_ident(str_layouts);
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        StationTile tile{};
+        tile.parse(is);
+        m_tiles.push_back(tile);
+    }
 
+    is.match(TokenType::CloseBrace);
 }
 
 
-void Action00Stations::CustomLayout::read(std::istream& is)
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void CustomLayout::read(std::istream& is)
 {
-    platform_length = read_uint8(is);
-    platform_count  = read_uint8(is);
-    for (uint16_t i = 0; i < platform_length * platform_count; ++i)
+    m_platform_length = read_uint8(is);
+    m_platform_count  = read_uint8(is);
+    for (uint16_t i = 0; i < m_platform_length * m_platform_count; ++i)
     {
         auto tile = static_cast<Platform>(read_uint8(is));
-        platform_tiles.push_back(tile);
+        m_platform_tiles.push_back(tile);
     }
 }
 
 
-void Action00Stations::CustomLayout::write(std::ostream& os) const
+void CustomLayout::write(std::ostream& os) const
 {
-    write_uint8(os, platform_length);
-    write_uint8(os, platform_count);
+    write_uint8(os, m_platform_length);
+    write_uint8(os, m_platform_count);
     // Assert that the vector has the correct length?
-    for (const auto tile: platform_tiles)
+    for (const auto tile: m_platform_tiles)
     {
         write_uint8(os, static_cast<uint8_t>(tile));
     }
 }
 
 
-void Action00Stations::CustomLayout::print(std::ostream& os, uint16_t indent) const
+void CustomLayout::print(std::ostream& os, uint16_t indent) const
 {
-    os << pad(indent) << "layout\n"; 
+    os << pad(indent) << str_layout << "\n"; 
     os << pad(indent) << "{\n"; 
     os << pad(indent + 4) << "// Platform: B=Building, P=Plain, L=RoofLeft, R=RoofRight \n"; 
 
-    for (uint8_t c = 0; c < platform_count; ++c)
+    uint16_t index{};
+    for (uint8_t c = 0; c < m_platform_count; ++c)
     {
         os << pad(indent + 4); 
-        for (uint8_t l = 0; l < platform_length; ++l)
+        for (uint8_t l = 0; l < m_platform_length; ++l)
         {
             // Assert that the vector has the correct length?
-            const auto tile = platform_tiles[c * platform_length + l];
+            const auto tile = m_platform_tiles[index++];
             os << " "; // << to_hex(static_cast<uint8_t>(tile));
             switch (tile)
             {
@@ -342,30 +380,32 @@ void Action00Stations::CustomLayout::print(std::ostream& os, uint16_t indent) co
 }
 
 
-void Action00Stations::CustomLayout::parse(TokenStream& is)
+void CustomLayout::parse(TokenStream& is)
 {
 
 }
 
 
-void Action00Stations::CustomStation::read(std::istream& is)
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void CustomStation::read(std::istream& is)
 {
     while (true)
     {
         CustomLayout layout;
         layout.read(is);
-        if (layout.platform_count == 0 && layout.platform_length == 0)
+        if (layout.terminator())
         {
             break;
         }
-        layouts.push_back(layout);
+        m_layouts.push_back(layout);
     }
 }
 
 
-void Action00Stations::CustomStation::write(std::ostream& os) const
+void CustomStation::write(std::ostream& os) const
 {
-    for (const auto& layout: layouts)
+    for (const auto& layout: m_layouts)
     {
         layout.write(os);
     }
@@ -374,12 +414,11 @@ void Action00Stations::CustomStation::write(std::ostream& os) const
 }
 
 
-void Action00Stations::CustomStation::print(std::ostream& os, uint16_t indent) const
+void CustomStation::print(std::ostream& os, uint16_t indent) const
 {
-    //os << pad(indent) << "layouts\n"; 
-    os << "layouts\n"; 
+    os << str_layouts << "\n"; 
     os << pad(indent) << "{\n"; 
-    for (const auto& layout: layouts)
+    for (const auto& layout: m_layouts)
     {
         layout.print(os, indent + 4);
     }
@@ -387,12 +426,14 @@ void Action00Stations::CustomStation::print(std::ostream& os, uint16_t indent) c
 }
 
 
-void Action00Stations::CustomStation::parse(TokenStream& is)
+void CustomStation::parse(TokenStream& is)
 {
 
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 bool Action00Stations::read_property(std::istream& is, uint8_t property)
 {
     switch (property)

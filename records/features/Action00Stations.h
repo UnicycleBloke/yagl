@@ -22,6 +22,92 @@
 #include <vector>
 
 
+class StationTileData
+{
+public:
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
+
+private:    
+    bool     m_new_bb; ///< Indicates that this sprite has its own bounding box
+    int8_t   m_x_off;
+    int8_t   m_y_off;
+    uint8_t  m_z_off;
+    uint8_t  m_x_ext;
+    uint8_t  m_y_ext;
+    uint8_t  m_z_ext;
+    uint32_t m_sprite;
+};
+
+
+class StationTile
+{
+public:
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
+
+private:    
+    uint32_t m_ground_sprite;
+    std::vector<StationTileData> m_data;
+};
+
+
+class StationLayout
+{
+public:
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
+
+private:
+    std::vector<StationTile> m_tiles;
+};
+
+
+class CustomLayout
+{
+public:
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
+
+    bool terminator() const { return (m_platform_count == 0) && (m_platform_length == 0); }
+
+private:    
+    enum class Platform 
+    {
+        Plain     = 0x00, 
+        Building  = 0x02, 
+        RoofLeft  = 0x04, 
+        RoofRight = 0x06
+    }; 
+
+    uint8_t m_platform_length;
+    uint8_t m_platform_count;
+    // length * count, All bytes 00, 02, 04 or 06
+    std::vector<Platform> m_platform_tiles; 
+};
+
+
+class CustomStation
+{
+public:
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
+
+private:
+    std::vector<CustomLayout> m_layouts;
+};
+
+
 class Action00Stations : public Action00Feature
 {
 public:
@@ -35,82 +121,8 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    struct SpriteTileData
-    {
-        bool     new_bb; ///< Indicates that this sprite has its own bounding box
-        int8_t   x_off;
-        int8_t   y_off;
-        uint8_t  z_off;
-        uint8_t  x_ext;
-        uint8_t  y_ext;
-        uint8_t  z_ext;
-        uint32_t sprite;
-
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-    };
-
-private:
-    struct SpriteTile
-    {
-        uint32_t ground_sprite;
-        std::vector<SpriteTileData> data;
-
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-    };
-
-public:
-    struct SpriteLayout
-    {
-        std::vector<SpriteTile> tiles;
-
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-    };
-
-private:
-    struct CustomLayout
-    {
-        enum class Platform 
-        {
-            Plain     = 0x00, 
-            Building  = 0x02, 
-            RoofLeft  = 0x04, 
-            RoofRight = 0x06
-        }; 
-
-        uint8_t platform_length;
-        uint8_t platform_count;
-        // length * count, All bytes 00, 02, 04 or 06
-        std::vector<Platform> platform_tiles; 
-
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-    };
-
-public:
-    struct CustomStation
-    {
-        std::vector<CustomLayout> layouts;
-
-        void read(std::istream& is);
-        void write(std::ostream& os) const;
-        void print(std::ostream& os, uint16_t indent) const;
-        void parse(TokenStream& is);
-    };
-
-private:
     UInt32         m_08_class_id{};
-    SpriteLayout   m_09_sprite_layout{};
+    StationLayout  m_09_sprite_layout{};
     UInt8          m_0A_copy_sprite_layout_id{};
     UInt8          m_0B_callback_flags{};
     UInt8          m_0C_disabled_platform_numbers{};
