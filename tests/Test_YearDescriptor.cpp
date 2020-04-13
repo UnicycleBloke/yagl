@@ -22,7 +22,7 @@
 #include <sstream>
 
 
-TEST_CASE("YearDescriptor", "[integers]")
+TEST_CASE("Year template", "[integers]")
 {
     SECTION("Year8")
     {
@@ -99,5 +99,39 @@ TEST_CASE("YearDescriptor", "[integers]")
             CHECK(uint8_t(os2.str()[2]) == ((y >> 16) & 0xFF));
             CHECK(uint8_t(os2.str()[3]) == ((y >> 24) & 0xFF));
         }
+    }
+}
+
+
+TEST_CASE("YearDescriptor", "[integers]")
+{
+    SECTION("Year8")
+    {
+        GenericDescriptor<Year8> desc{ 0, "name" };
+        Year8 value{1984};
+
+        std::ostringstream os;
+        desc.print(value, os, 5); // Indent
+        CHECK(os.str() == "     name: 1984;\n");
+    }
+
+    SECTION("Year16")
+    {
+        GenericDescriptor<Year16> desc{ 0, "name" };
+        Year16 value{1066};
+
+        std::ostringstream os;
+        desc.print(value, os, 5); // Indent
+        CHECK(os.str() == "     name: 1066;\n");
+    }
+
+    SECTION("Year32")
+    {
+        GenericDescriptor<Year16> desc{ 0, "name" };
+        Year16 value{3001};
+
+        std::ostringstream os;
+        desc.print(value, os, 5); // Indent
+        CHECK(os.str() == "     name: 3001;\n");
     }
 }
