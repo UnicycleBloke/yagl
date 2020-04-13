@@ -94,13 +94,6 @@ void write_uint(std::ostream& os, T value)
 }
 
 
-template <typename T> struct HexFormat {};
-template <> struct HexFormat<uint8_t>  { static constexpr uint8_t index = 0; };
-template <> struct HexFormat<uint16_t> { static constexpr uint8_t index = 1; };
-template <> struct HexFormat<char16_t> { static constexpr uint8_t index = 1; };
-template <> struct HexFormat<uint32_t> { static constexpr uint8_t index = 2; };
-
-
 template <typename T>
 std::string to_hex(T value, bool prefix = true)
 {

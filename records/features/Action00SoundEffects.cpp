@@ -40,9 +40,9 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-constexpr UInt8Descriptor desc_08 = { 0x08, str_relative_volume,    PropFormat::Hex };
-constexpr UInt8Descriptor desc_09 = { 0x09, str_priority,           PropFormat::Hex };
-constexpr UInt8Descriptor desc_0A = { 0x0A, str_override_old_sound, PropFormat::Hex };
+constexpr UInt8Descriptor desc_08 = { 0x08, str_relative_volume,    UIntFormat::Hex };
+constexpr UInt8Descriptor desc_09 = { 0x09, str_priority,           UIntFormat::Hex };
+constexpr UInt8Descriptor desc_0A = { 0x0A, str_override_old_sound, UIntFormat::Hex };
 
 
 } // namespace {

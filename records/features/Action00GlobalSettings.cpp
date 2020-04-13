@@ -66,20 +66,20 @@ using SnowLineDescriptor   = GenericDescriptor<SnowLine, true>; // Forward the i
 using GenderCaseDescriptor = GenericDescriptor<GenderCase>;
 
 
-constexpr UInt8Descriptor        desc_08  = { 0x08, str_cost_base_multipliers,    PropFormat::Hex };
+constexpr UInt8Descriptor        desc_08  = { 0x08, str_cost_base_multipliers,    UIntFormat::Hex };
 constexpr GRFLabelDescriptor     desc_09  = { 0x09, str_cargo_translation_table };
-constexpr UInt16Descriptor       desc_0A  = { 0x0A, str_currency_display_names,   PropFormat::Hex };
-constexpr UInt32Descriptor       desc_0B  = { 0x0B, str_currency_multipliers,     PropFormat::Hex };
-constexpr UInt16Descriptor       desc_0C  = { 0x0C, str_currency_options,         PropFormat::Hex };
+constexpr UInt16Descriptor       desc_0A  = { 0x0A, str_currency_display_names,   UIntFormat::Hex };
+constexpr UInt32Descriptor       desc_0B  = { 0x0B, str_currency_multipliers,     UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_0C  = { 0x0C, str_currency_options,         UIntFormat::Hex };
 constexpr GRFLabelDescriptor     desc_0D  = { 0x0D, str_currency_symbols_prefix };
 constexpr GRFLabelDescriptor     desc_0E  = { 0x0E, str_currency_symbols_suffix };
-constexpr UInt16Descriptor       desc_0F  = { 0x0F, str_euro_introduction_dates,  PropFormat::Hex };
+constexpr UInt16Descriptor       desc_0F  = { 0x0F, str_euro_introduction_dates,  UIntFormat::Hex };
 constexpr SnowLineDescriptor     desc_10  = { 0x10, str_snow_line_table };
 constexpr GRFLabelPairDescriptor desc_11  = { 0x11, str_grf_overrides };
 constexpr GRFLabelDescriptor     desc_12  = { 0x12, str_railtype_translation_table };
 constexpr GenderCaseDescriptor   desc_13  = { 0x13, str_gender_translation_table };
 constexpr GenderCaseDescriptor   desc_14  = { 0x14, str_case_translation_table };
-constexpr UInt8Descriptor        desc_15  = { 0x15, str_plural_form,              PropFormat::Hex };
+constexpr UInt8Descriptor        desc_15  = { 0x15, str_plural_form,              UIntFormat::Hex };
 
 
 } // namespace {

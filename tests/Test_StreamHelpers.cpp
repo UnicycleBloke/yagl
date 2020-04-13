@@ -27,16 +27,16 @@ TEST_CASE("Basic integer read/write tests", "[integers]")
     {
         for (uint16_t index = 0; index <=255; ++index)
         {
-            uint8_t value = index;
+            uint8_t value = static_cast<uint8_t>(index);
             std::ostringstream os;
             write_uint8(os, value);
             std::string str = os.str();
-            REQUIRE(str.size() == 1);
-            REQUIRE(uint8_t(str[0]) == index);
+            CHECK(str.size() == 1);
+            CHECK(uint8_t(str[0]) == index);
 
             std::istringstream is(str);
             value = read_uint8(is);
-            REQUIRE(value == index);
+            CHECK(value == index);
         }
     }
 
@@ -44,18 +44,18 @@ TEST_CASE("Basic integer read/write tests", "[integers]")
     {    
         for (uint32_t index = 0; index <=65535; index += 5)
         {
-            uint16_t value = index;
+            uint16_t value = static_cast<uint16_t>(index);
             std::ostringstream os;
             write_uint8_ext(os, value, ExtByteFormat::Long);
             std::string str = os.str();
-            REQUIRE(str.size() == 3);
-            REQUIRE(uint8_t(str[0]) == 0xFF);
-            REQUIRE(uint8_t(str[1]) == (index & 0xFF));
-            REQUIRE(uint8_t(str[2]) == (index >> 8));
+            CHECK(str.size() == 3);
+            CHECK(uint8_t(str[0]) == 0xFF);
+            CHECK(uint8_t(str[1]) == (index & 0xFF));
+            CHECK(uint8_t(str[2]) == (index >> 8));
 
             std::istringstream is(str);
             value = read_uint8_ext(is);
-            REQUIRE(value == index);
+            CHECK(value == index);
         }
     }
 
@@ -63,26 +63,26 @@ TEST_CASE("Basic integer read/write tests", "[integers]")
     {
         for (uint32_t index = 0; index <=65535; index += 5)
         {
-            uint16_t value = index;
+            uint16_t value = static_cast<uint16_t>(index);
             std::ostringstream os;
             write_uint8_ext(os, value, ExtByteFormat::Short);
             std::string str = os.str();
             if (value < 0xFF)
             {
-                REQUIRE(str.size() == 1);
-                REQUIRE(uint8_t(str[0]) == index);
+                CHECK(str.size() == 1);
+                CHECK(uint8_t(str[0]) == index);
             }
             else
             {
-                REQUIRE(str.size() == 3);
-                REQUIRE(uint8_t(str[0]) == 0xFF);
-                REQUIRE(uint8_t(str[1]) == (index & 0xFF));
-                REQUIRE(uint8_t(str[2]) == (index >> 8));
+                CHECK(str.size() == 3);
+                CHECK(uint8_t(str[0]) == 0xFF);
+                CHECK(uint8_t(str[1]) == (index & 0xFF));
+                CHECK(uint8_t(str[2]) == (index >> 8));
             }
             
             std::istringstream is(str);
             value = read_uint8_ext(is);
-            REQUIRE(value == index);
+            CHECK(value == index);
         }
     }
 
@@ -90,17 +90,17 @@ TEST_CASE("Basic integer read/write tests", "[integers]")
     {
         for (uint32_t index = 0; index <=65535; index += 5)
         {
-            uint16_t value = index;
+            uint16_t value = static_cast<uint16_t>(index);
             std::ostringstream os;
             write_uint16(os, value);
             std::string str = os.str();
-            REQUIRE(str.size() == 2);
-            REQUIRE(uint8_t(str[0]) == (index & 0xFF));
-            REQUIRE(uint8_t(str[1]) == (index >> 8));
+            CHECK(str.size() == 2);
+            CHECK(uint8_t(str[0]) == (index & 0xFF));
+            CHECK(uint8_t(str[1]) == (index >> 8));
 
             std::istringstream is(str);
             value = read_uint16(is);
-            REQUIRE(value == index);
+            CHECK(value == index);
         }
     }
 
@@ -108,19 +108,19 @@ TEST_CASE("Basic integer read/write tests", "[integers]")
     {
         for (uint64_t index = 0; index <= 0xFFFF'FFFF; index += 0x10101)
         {
-            uint32_t value = index;
+            uint32_t value = static_cast<uint32_t>(index);
             std::ostringstream os;
             write_uint32(os, value);
             std::string str = os.str();
-            REQUIRE(str.size() == 4);
-            REQUIRE(uint8_t(str[0]) == (index & 0xFF));
-            REQUIRE(uint8_t(str[1]) == ((index >> 8) & 0xFF));
-            REQUIRE(uint8_t(str[2]) == ((index >> 16) & 0xFF));
-            REQUIRE(uint8_t(str[3]) == (index >> 24));
+            CHECK(str.size() == 4);
+            CHECK(uint8_t(str[0]) == (index & 0xFF));
+            CHECK(uint8_t(str[1]) == ((index >> 8) & 0xFF));
+            CHECK(uint8_t(str[2]) == ((index >> 16) & 0xFF));
+            CHECK(uint8_t(str[3]) == (index >> 24));
 
             std::istringstream is(str);
             value = read_uint32(is);
-            REQUIRE(value == index);
+            CHECK(value == index);
         }
     }
 }
@@ -132,16 +132,16 @@ TEST_CASE("Template integer read/write tests", "[integers]")
     {
         for (uint16_t index = 0; index <=255; ++index)
         {
-            uint8_t value = index;
+            uint8_t value = static_cast<uint8_t>(index);
             std::ostringstream os;
             write_uint<uint8_t>(os, value);
             std::string str = os.str();
-            REQUIRE(str.size() == 1);
-            REQUIRE(uint8_t(str[0]) == index);
+            CHECK(str.size() == 1);
+            CHECK(uint8_t(str[0]) == index);
 
             std::istringstream is(str);
             value = read_uint<uint8_t>(is);
-            REQUIRE(value == index);
+            CHECK(value == index);
         }
     }
 
@@ -149,18 +149,18 @@ TEST_CASE("Template integer read/write tests", "[integers]")
     {    
         for (uint32_t index = 0; index <=65535; index += 5)
         {
-            uint16_t value = index;
+            uint16_t value = static_cast<uint16_t>(index);
             std::ostringstream os;
             write_uint<uint16_t, true>(os, value);
             std::string str = os.str();
-            REQUIRE(str.size() == 3);
-            REQUIRE(uint8_t(str[0]) == 0xFF);
-            REQUIRE(uint8_t(str[1]) == (index & 0xFF));
-            REQUIRE(uint8_t(str[2]) == (index >> 8));
+            CHECK(str.size() == 3);
+            CHECK(uint8_t(str[0]) == 0xFF);
+            CHECK(uint8_t(str[1]) == (index & 0xFF));
+            CHECK(uint8_t(str[2]) == (index >> 8));
 
             std::istringstream is(str);
             value = read_uint<uint16_t, true>(is);
-            REQUIRE(value == index);
+            CHECK(value == index);
         }
     }
 
@@ -168,17 +168,17 @@ TEST_CASE("Template integer read/write tests", "[integers]")
     {
         for (uint32_t index = 0; index <=65535; index += 5)
         {
-            uint16_t value = index;
+            uint16_t value = static_cast<uint16_t>(index);
             std::ostringstream os;
             write_uint<uint16_t>(os, value);
             std::string str = os.str();
-            REQUIRE(str.size() == 2);
-            REQUIRE(uint8_t(str[0]) == (index & 0xFF));
-            REQUIRE(uint8_t(str[1]) == (index >> 8));
+            CHECK(str.size() == 2);
+            CHECK(uint8_t(str[0]) == (index & 0xFF));
+            CHECK(uint8_t(str[1]) == (index >> 8));
 
             std::istringstream is(str);
             value = read_uint<uint16_t>(is);
-            REQUIRE(value == index);
+            CHECK(value == index);
         }
     }
 
@@ -186,19 +186,19 @@ TEST_CASE("Template integer read/write tests", "[integers]")
     {
         for (uint64_t index = 0; index <= 0xFFFF'FFFF; index += 0x10101)
         {
-            uint32_t value = index;
+            uint32_t value = static_cast<uint32_t>(index);
             std::ostringstream os;
             write_uint<uint32_t>(os, value);
             std::string str = os.str();
-            REQUIRE(str.size() == 4);
-            REQUIRE(uint8_t(str[0]) == (index & 0xFF));
-            REQUIRE(uint8_t(str[1]) == ((index >> 8) & 0xFF));
-            REQUIRE(uint8_t(str[2]) == ((index >> 16) & 0xFF));
-            REQUIRE(uint8_t(str[3]) == (index >> 24));
+            CHECK(str.size() == 4);
+            CHECK(uint8_t(str[0]) == (index & 0xFF));
+            CHECK(uint8_t(str[1]) == ((index >> 8) & 0xFF));
+            CHECK(uint8_t(str[2]) == ((index >> 16) & 0xFF));
+            CHECK(uint8_t(str[3]) == (index >> 24));
 
             std::istringstream is(str);
             value = read_uint<uint32_t>(is);
-            REQUIRE(value == index);
+            CHECK(value == index);
         }
     }
 }
@@ -209,21 +209,21 @@ TEST_CASE("to_hex() template", "[integers]")
     SECTION("to_hex<uint8_t>")
     {
         uint8_t value = 0x13;
-        REQUIRE(to_hex(value) == "0x13"); 
-        REQUIRE(to_hex(value, false) == "13"); // No prefix 
+        CHECK(to_hex(value) == "0x13"); 
+        CHECK(to_hex(value, false) == "13"); // No prefix 
     }
 
     SECTION("to_hex<uint16_t>")
     {
         uint16_t value = 0x1357;
-        REQUIRE(to_hex(value) == "0x1357"); 
-        REQUIRE(to_hex(value, false) == "1357"); // No prefix 
+        CHECK(to_hex(value) == "0x1357"); 
+        CHECK(to_hex(value, false) == "1357"); // No prefix 
     }
 
     SECTION("to_hex<uint32_t>")
     {
         uint32_t value = 0x1323'4567;
-        REQUIRE(to_hex(value) == "0x13234567"); 
-        REQUIRE(to_hex(value, false) == "13234567"); // No prefix 
+        CHECK(to_hex(value) == "0x13234567"); 
+        CHECK(to_hex(value, false) == "13234567"); // No prefix 
     }
 }

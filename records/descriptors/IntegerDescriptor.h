@@ -18,31 +18,34 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DescriptorBase.h"
+#include "StreamHelpers.h"
 
 
-enum class PropFormat { Dec, Hex, Bool, String };
+enum class UIntFormat { Dec, Hex, Bool };
 
 
 template <typename T>
-std::string to_string(T value, PropFormat format)
+std::string to_string(T value, UIntFormat format)
 {
-    char buffer[16];
+    char buffer[24];
     switch (format)
     {
-        case PropFormat::Hex:
-            switch (sizeof(T))
-            {
-                case 1: std::snprintf(buffer, 16, "0x%02X", value & 0xFF); break;
-                case 2: std::snprintf(buffer, 16, "0x%04X", value & 0xFFFF); break;
-                case 4: std::snprintf(buffer, 16, "0x%08X", value); break;
-            }
+        case UIntFormat::Hex:
+            if constexpr (sizeof(T) == 1)
+                std::snprintf(buffer, 16, "0x%02X", value & 0xFF); 
+            else if constexpr (sizeof(T) == 2)
+                std::snprintf(buffer, 16, "0x%04X", value & 0xFFFF); 
+            else if constexpr (sizeof(T) == 4)
+                std::snprintf(buffer, 16, "0x%08X", value & 0xFFFF'FFFF); 
+            else if constexpr (sizeof(T) == 8)
+                std::snprintf(buffer, 16, "0x%016X", value); 
             break;
 
-        case PropFormat::Dec:
+        case UIntFormat::Dec:
             std::snprintf(buffer, 16, "%u", value);
             break;
 
-        case PropFormat::Bool:
+        case UIntFormat::Bool:
             std::snprintf(buffer, 16, "%s", value != 0x00 ? "true" : "false");
             break;
   
@@ -61,7 +64,7 @@ std::string to_string(T value, PropFormat format)
 template <typename T>
 struct IntegerDescriptorT : PropertyDescriptor
 {
-    PropFormat format;
+    UIntFormat format;
 
     void print(T value, std::ostream& os, uint16_t indent) const
     {
@@ -81,7 +84,7 @@ struct IntegerDescriptorT : PropertyDescriptor
 template <typename T>
 struct IntegerListDescriptorT : PropertyDescriptor
 {
-    PropFormat format;
+    UIntFormat format;
 
     void print(const std::vector<T>& values, std::ostream& os, uint16_t indent) const
     {
@@ -116,7 +119,7 @@ struct IntegerListDescriptorT : PropertyDescriptor
 
 // Use this in place of naked uint8_t, uint16_t and uint32_t.
 // Should help to avoid errors by internalising the size of reads and 
-// writes. PropFormat is a print parameter, which is not true of all 
+// writes. UIntFormat is a print parameter, which is not true of all 
 // types with the read(), write(), parse(), print() interface.
 // TODO what about signed types?
 template <typename T, bool EXT = false>
@@ -127,7 +130,7 @@ public:
     static constexpr bool Ext = EXT;    
 
 public:
-    void print(std::ostream& os, PropFormat format) const
+    void print(std::ostream& os, UIntFormat format) const
     {
         os << to_string(m_value, format);
     }
@@ -150,19 +153,33 @@ public:
     // Work around for BitFieldDescriptor. For now.
     UInt(T value = 0) : m_value{value} {}
     operator T() const { return m_value; }
-  
+
+    T get() const     { return m_value; }
+    void set(T value) { m_value = value; }
+
+    // Only added for testing.
+    bool operator==(const UInt& other) const
+    {
+        return m_value == other.m_value;
+    }
+
 private:
     T m_value{};
 };
 
 
 // Fixed size array of any type with the standard read(), write(), 
-// parse(), print() interface, with PropFormat as a print parameter.
+// parse(), print() interface, with UIntFormat as a print parameter.
 template <typename T, uint16_t SIZE>
 class UIntArray
 {
 public:    
-    void print(std::ostream& os, PropFormat format) const
+    explicit UIntArray(std::array<T, SIZE> values = {})
+    : m_values{values}
+    {
+    }
+
+    void print(std::ostream& os, UIntFormat format) const
     {
         os << "[";
         for (const auto& value: m_values)
@@ -199,18 +216,30 @@ public:
         }
     }
 
+    // Only added for testing.
+    uint16_t size() const { return SIZE; }
+    bool operator==(const UIntArray& other) const
+    {
+        return m_values == other.m_values;
+    }
+
 private:
     std::array<T, SIZE> m_values;
 };
 
 
 // Variable size array of any type with the standard read(), write(), 
-// parse(), print() interface, with PropFormat as a print parameter.
+// parse(), print() interface, with UIntFormat as a print parameter.
 template <typename T>
 class UIntVector
 {
 public:    
-    void print(std::ostream& os, PropFormat format) const
+    explicit UIntVector(std::vector<T> values = {})
+    : m_values{values}
+    {
+    }
+
+    void print(std::ostream& os, UIntFormat format) const
     {
         os << "[";
         for (const auto& value: m_values)
@@ -254,11 +283,19 @@ public:
         }
     }
 
+    // Only added for testing.
+    uint16_t size() const { return static_cast<uint16_t>(m_values.size()); }
+    bool operator==(const UIntVector& other) const
+    {
+        return m_values == other.m_values;
+    }
+
 private:
     std::vector<T> m_values;
 };
 
 
+// TODO adding a print_property() member to the value would eliminate the need for this 
 template <typename T>
 struct UIntDescriptor : PropertyDescriptor
 {
@@ -275,7 +312,7 @@ struct UIntDescriptor : PropertyDescriptor
         value.parse(is);
     }
 
-    PropFormat format;
+    UIntFormat format;
 };
 
 

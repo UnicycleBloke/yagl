@@ -78,28 +78,28 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-constexpr UInt8Descriptor     desc_08 = { 0x08, str_bit_number,             PropFormat::Hex };
-constexpr UInt16Descriptor    desc_09 = { 0x09, str_cargo_type_name_id,     PropFormat::Hex };
-constexpr UInt16Descriptor    desc_0A = { 0x0A, str_single_unit_name_id,    PropFormat::Hex };
-constexpr UInt16Descriptor    desc_0B = { 0x0B, str_single_unit_id,         PropFormat::Hex };
-constexpr UInt16Descriptor    desc_0C = { 0x0C, str_multiple_units_id,      PropFormat::Hex };
-constexpr UInt16Descriptor    desc_0D = { 0x0D, str_cargo_type_abbrev_id,   PropFormat::Hex };
-constexpr UInt16Descriptor    desc_0E = { 0x0E, str_cargo_sprite_id,        PropFormat::Hex };
-constexpr UInt8Descriptor     desc_0F = { 0x0F, str_single_unit_weight,     PropFormat::Hex };
-constexpr UInt8Descriptor     desc_10 = { 0x10, str_penalty_time_1,         PropFormat::Hex };
-constexpr UInt8Descriptor     desc_11 = { 0x11, str_penalty_time_2,         PropFormat::Hex };
-constexpr UInt32Descriptor    desc_12 = { 0x12, str_base_price,             PropFormat::Hex };
-constexpr UInt8Descriptor     desc_13 = { 0x13, str_station_list_colour,    PropFormat::Hex };
-constexpr UInt8Descriptor     desc_14 = { 0x14, str_payment_list_colour,    PropFormat::Hex };
+constexpr UInt8Descriptor     desc_08 = { 0x08, str_bit_number,             UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_09 = { 0x09, str_cargo_type_name_id,     UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_0A = { 0x0A, str_single_unit_name_id,    UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_0B = { 0x0B, str_single_unit_id,         UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_0C = { 0x0C, str_multiple_units_id,      UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_0D = { 0x0D, str_cargo_type_abbrev_id,   UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_0E = { 0x0E, str_cargo_sprite_id,        UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_0F = { 0x0F, str_single_unit_weight,     UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_10 = { 0x10, str_penalty_time_1,         UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_11 = { 0x11, str_penalty_time_2,         UIntFormat::Hex };
+constexpr UInt32Descriptor    desc_12 = { 0x12, str_base_price,             UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_13 = { 0x13, str_station_list_colour,    UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_14 = { 0x14, str_payment_list_colour,    UIntFormat::Hex };
 constexpr BoolDescriptor      desc_15 = { 0x15, str_is_freight };
-constexpr UInt16Descriptor    desc_16 = { 0x16, str_cargo_classes,          PropFormat::Hex };
+constexpr UInt16Descriptor    desc_16 = { 0x16, str_cargo_classes,          UIntFormat::Hex };
 constexpr GRFLabelDescriptor  desc_17 = { 0x17, str_cargo_label };
-constexpr UInt8Descriptor     desc_18 = { 0x18, str_town_growth_effect,     PropFormat::Hex };
-constexpr UInt16Descriptor    desc_19 = { 0x19, str_town_growth_multiplier, PropFormat::Hex };
-constexpr UInt8Descriptor     desc_1A = { 0x1A, str_callback_flags,         PropFormat::Hex };
-constexpr UInt16Descriptor    desc_1B = { 0x1B, str_cargo_units_id,         PropFormat::Hex };
-constexpr UInt16Descriptor    desc_1C = { 0x1C, str_cargo_amount_id,        PropFormat::Hex };
-constexpr UInt16Descriptor    desc_1D = { 0x1D, str_capacity_multiplier,    PropFormat::Hex };
+constexpr UInt8Descriptor     desc_18 = { 0x18, str_town_growth_effect,     UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_19 = { 0x19, str_town_growth_multiplier, UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_1A = { 0x1A, str_callback_flags,         UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_1B = { 0x1B, str_cargo_units_id,         UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_1C = { 0x1C, str_cargo_amount_id,        UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_1D = { 0x1D, str_capacity_multiplier,    UIntFormat::Hex };
 
 
 } // namespace {

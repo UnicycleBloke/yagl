@@ -83,8 +83,8 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-const IntegerListDescriptorT<uint16_t> primary_desc  {0x00, str_primary_spritesets,   PropFormat::Hex };
-const IntegerListDescriptorT<uint16_t> secondary_desc{0x01, str_secondary_spritesets, PropFormat::Hex };
+const IntegerListDescriptorT<uint16_t> primary_desc  {0x00, str_primary_spritesets,   UIntFormat::Hex };
+const IntegerListDescriptorT<uint16_t> secondary_desc{0x01, str_secondary_spritesets, UIntFormat::Hex };
 
 
 } // namespace {

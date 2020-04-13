@@ -46,12 +46,12 @@ const std::map<std::string, uint8_t> g_indices =
 
 
 constexpr ShortDateDescriptor          desc_00 = { 0x00, str_introduction_date };
-constexpr UInt8Descriptor              desc_02 = { 0x02, str_reliability_decay_speed, PropFormat::Dec };
-constexpr UInt8Descriptor              desc_03 = { 0x03, str_vehicle_life_years,      PropFormat::Dec };
-constexpr UInt8Descriptor              desc_04 = { 0x04, str_model_life_years,        PropFormat::Dec };
+constexpr UInt8Descriptor              desc_02 = { 0x02, str_reliability_decay_speed, UIntFormat::Dec };
+constexpr UInt8Descriptor              desc_03 = { 0x03, str_vehicle_life_years,      UIntFormat::Dec };
+constexpr UInt8Descriptor              desc_04 = { 0x04, str_model_life_years,        UIntFormat::Dec };
 const     BitfieldDescriptorT<UInt8>   desc_06 = { 0x06, str_climate_availability,    
     { {1, "Temperate"}, {2, "Arctic"}, {4, "Tropical"}, {8, "Toyland"} } };
-constexpr UInt8Descriptor              desc_07 = { 0x07, str_loading_speed,           PropFormat::Hex };
+constexpr UInt8Descriptor              desc_07 = { 0x07, str_loading_speed,           UIntFormat::Hex };
 
 
 } // namespace {

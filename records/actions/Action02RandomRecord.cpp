@@ -135,8 +135,8 @@ const EnumDescriptorT<Action02RandomRecord::ConsistType> consist_desc =
     }
 };
 
-const IntegerDescriptorT<uint8_t> triggers_desc{ 0x02, str_triggers, PropFormat::Hex };
-const IntegerDescriptorT<uint8_t> randbit_desc { 0x03, str_rand_bit, PropFormat::Hex };
+const IntegerDescriptorT<uint8_t> triggers_desc{ 0x02, str_triggers, UIntFormat::Hex };
+const IntegerDescriptorT<uint8_t> randbit_desc { 0x03, str_rand_bit, UIntFormat::Hex };
 
 
 } // namespace {

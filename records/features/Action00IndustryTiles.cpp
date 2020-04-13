@@ -58,17 +58,17 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-constexpr UInt8Descriptor            desc_08  = { 0x08, str_substitute_building_id, PropFormat::Hex };
-constexpr UInt8Descriptor            desc_09  = { 0x09, str_industry_tile_override, PropFormat::Hex };
-constexpr UInt16Descriptor           desc_0A  = { 0x0A, str_tile_acceptance1,       PropFormat::Hex };
-constexpr UInt16Descriptor           desc_0B  = { 0x0B, str_tile_acceptance2,       PropFormat::Hex };
-constexpr UInt16Descriptor           desc_0C  = { 0x0C, str_tile_acceptance3,       PropFormat::Hex };
-constexpr UInt8Descriptor            desc_0D  = { 0x0D, str_land_shape_flags,       PropFormat::Hex };
-constexpr UInt8Descriptor            desc_0E  = { 0x0E, str_callback_flags,         PropFormat::Hex };
-constexpr UInt16Descriptor           desc_0F  = { 0x0F, str_animation_info,         PropFormat::Hex };
-constexpr UInt8Descriptor            desc_10  = { 0x10, str_animation_speed,        PropFormat::Hex };
-constexpr UInt8Descriptor            desc_11  = { 0x11, str_callback_25_triggers,   PropFormat::Hex };
-constexpr UInt8Descriptor            desc_12  = { 0x12, str_special_flags,          PropFormat::Hex };
+constexpr UInt8Descriptor            desc_08  = { 0x08, str_substitute_building_id, UIntFormat::Hex };
+constexpr UInt8Descriptor            desc_09  = { 0x09, str_industry_tile_override, UIntFormat::Hex };
+constexpr UInt16Descriptor           desc_0A  = { 0x0A, str_tile_acceptance1,       UIntFormat::Hex };
+constexpr UInt16Descriptor           desc_0B  = { 0x0B, str_tile_acceptance2,       UIntFormat::Hex };
+constexpr UInt16Descriptor           desc_0C  = { 0x0C, str_tile_acceptance3,       UIntFormat::Hex };
+constexpr UInt8Descriptor            desc_0D  = { 0x0D, str_land_shape_flags,       UIntFormat::Hex };
+constexpr UInt8Descriptor            desc_0E  = { 0x0E, str_callback_flags,         UIntFormat::Hex };
+constexpr UInt16Descriptor           desc_0F  = { 0x0F, str_animation_info,         UIntFormat::Hex };
+constexpr UInt8Descriptor            desc_10  = { 0x10, str_animation_speed,        UIntFormat::Hex };
+constexpr UInt8Descriptor            desc_11  = { 0x11, str_callback_25_triggers,   UIntFormat::Hex };
+constexpr UInt8Descriptor            desc_12  = { 0x12, str_special_flags,          UIntFormat::Hex };
 constexpr CargoAcceptanceDescriptor  desc_13  = { 0x13, str_cargo_acceptance_list };
 
 

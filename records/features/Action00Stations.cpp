@@ -77,23 +77,23 @@ using StationLayoutDescriptor  = GenericDescriptor<StationLayout, true>;
 using CustomStationsDescriptor = GenericDescriptor<CustomStation, true>;
 
 
-constexpr UInt32Descriptor          desc_08  = { 0x08, str_class_id,                  PropFormat::Hex };
+constexpr UInt32Descriptor          desc_08  = { 0x08, str_class_id,                  UIntFormat::Hex };
 constexpr StationLayoutDescriptor   desc_09  = { 0x09, str_sprite_layout };
-constexpr UInt8Descriptor           desc_0A  = { 0x0A, str_copy_sprite_layout_id,     PropFormat::Hex };
-constexpr UInt8Descriptor           desc_0B  = { 0x0B, str_callback_flags,            PropFormat::Hex };
-constexpr UInt8Descriptor           desc_0C  = { 0x0C, str_disabled_platform_numbers, PropFormat::Hex };
-constexpr UInt8Descriptor           desc_0D  = { 0x0D, str_disabled_platform_lengths, PropFormat::Hex };
+constexpr UInt8Descriptor           desc_0A  = { 0x0A, str_copy_sprite_layout_id,     UIntFormat::Hex };
+constexpr UInt8Descriptor           desc_0B  = { 0x0B, str_callback_flags,            UIntFormat::Hex };
+constexpr UInt8Descriptor           desc_0C  = { 0x0C, str_disabled_platform_numbers, UIntFormat::Hex };
+constexpr UInt8Descriptor           desc_0D  = { 0x0D, str_disabled_platform_lengths, UIntFormat::Hex };
 constexpr CustomStationsDescriptor  desc_0E  = { 0x0E, str_custom_layout };
-constexpr UInt8Descriptor           desc_0F  = { 0x0F, str_copy_custom_layout_id,     PropFormat::Hex };
-constexpr UInt16Descriptor          desc_10  = { 0x10, str_little_lots_threshold,     PropFormat::Hex };
-constexpr UInt8Descriptor           desc_11  = { 0x11, str_pylon_placement,           PropFormat::Hex };
-constexpr UInt32Descriptor          desc_12  = { 0x12, str_cargo_type_triggers,       PropFormat::Hex };
-constexpr UInt8Descriptor           desc_13  = { 0x13, str_general_flags,             PropFormat::Hex };
-constexpr UInt8Descriptor           desc_14  = { 0x14, str_overhead_wire_placement,   PropFormat::Hex };
-constexpr UInt8Descriptor           desc_15  = { 0x15, str_can_train_enter_tile,      PropFormat::Hex };
-constexpr UInt16Descriptor          desc_16  = { 0x16, str_animation_info,            PropFormat::Hex };
-constexpr UInt8Descriptor           desc_17  = { 0x17, str_animation_speed,           PropFormat::Hex };
-constexpr UInt16Descriptor          desc_18  = { 0x18, str_animation_triggers,        PropFormat::Hex };
+constexpr UInt8Descriptor           desc_0F  = { 0x0F, str_copy_custom_layout_id,     UIntFormat::Hex };
+constexpr UInt16Descriptor          desc_10  = { 0x10, str_little_lots_threshold,     UIntFormat::Hex };
+constexpr UInt8Descriptor           desc_11  = { 0x11, str_pylon_placement,           UIntFormat::Hex };
+constexpr UInt32Descriptor          desc_12  = { 0x12, str_cargo_type_triggers,       UIntFormat::Hex };
+constexpr UInt8Descriptor           desc_13  = { 0x13, str_general_flags,             UIntFormat::Hex };
+constexpr UInt8Descriptor           desc_14  = { 0x14, str_overhead_wire_placement,   UIntFormat::Hex };
+constexpr UInt8Descriptor           desc_15  = { 0x15, str_can_train_enter_tile,      UIntFormat::Hex };
+constexpr UInt16Descriptor          desc_16  = { 0x16, str_animation_info,            UIntFormat::Hex };
+constexpr UInt8Descriptor           desc_17  = { 0x17, str_animation_speed,           UIntFormat::Hex };
+constexpr UInt16Descriptor          desc_18  = { 0x18, str_animation_triggers,        UIntFormat::Hex };
 
 
 } // namespace {

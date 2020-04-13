@@ -64,19 +64,19 @@ const std::map<std::string, uint8_t> g_indices =
 using BridgeLayoutDescriptor = GenericDescriptor<BridgeLayout, true>;
 
 
-constexpr UInt8Descriptor            desc_00 = { 0x00, str_fallback_type_id,    PropFormat::Hex };
+constexpr UInt8Descriptor            desc_00 = { 0x00, str_fallback_type_id,    UIntFormat::Hex };
 constexpr Year8Descriptor            desc_08 = { 0x08, str_year_available };
-constexpr UInt8Descriptor            desc_09 = { 0x09, str_minimum_length,      PropFormat::Hex };
-constexpr UInt8Descriptor            desc_0A = { 0x0A, str_maximum_length,      PropFormat::Hex };
-constexpr UInt8Descriptor            desc_0B = { 0x0B, str_cost_factor,         PropFormat::Hex };
-constexpr UInt16Descriptor           desc_0C = { 0x0C, str_maximum_speed,       PropFormat::Hex };
+constexpr UInt8Descriptor            desc_09 = { 0x09, str_minimum_length,      UIntFormat::Hex };
+constexpr UInt8Descriptor            desc_0A = { 0x0A, str_maximum_length,      UIntFormat::Hex };
+constexpr UInt8Descriptor            desc_0B = { 0x0B, str_cost_factor,         UIntFormat::Hex };
+constexpr UInt16Descriptor           desc_0C = { 0x0C, str_maximum_speed,       UIntFormat::Hex };
 constexpr BridgeLayoutDescriptor     desc_0D = { 0x0D, str_bridge_layout };
-constexpr UInt8Descriptor            desc_0E = { 0x0E, str_various_flags,       PropFormat::Hex };
+constexpr UInt8Descriptor            desc_0E = { 0x0E, str_various_flags,       UIntFormat::Hex };
 constexpr Year32Descriptor           desc_0F = { 0x0F, str_long_year_available };
-constexpr UInt16Descriptor           desc_10 = { 0x10, str_purchase_text,       PropFormat::Hex };
-constexpr UInt16Descriptor           desc_11 = { 0x11, str_description_rail,    PropFormat::Hex };
-constexpr UInt16Descriptor           desc_12 = { 0x12, str_description_road,    PropFormat::Hex };
-constexpr UInt16Descriptor           desc_13 = { 0x13, str_cost_factor_word,    PropFormat::Hex };
+constexpr UInt16Descriptor           desc_10 = { 0x10, str_purchase_text,       UIntFormat::Hex };
+constexpr UInt16Descriptor           desc_11 = { 0x11, str_description_rail,    UIntFormat::Hex };
+constexpr UInt16Descriptor           desc_12 = { 0x12, str_description_road,    UIntFormat::Hex };
+constexpr UInt16Descriptor           desc_13 = { 0x13, str_cost_factor_word,    UIntFormat::Hex };
 
 
 } // namespace {

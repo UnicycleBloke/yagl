@@ -68,23 +68,23 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-constexpr UInt32Descriptor    desc_08  = { 0x08, str_class_label,          PropFormat::Hex };
-constexpr UInt16Descriptor    desc_09  = { 0x09, str_class_text_id,        PropFormat::Hex };
-constexpr UInt16Descriptor    desc_0A  = { 0x0A, str_object_text_id,       PropFormat::Hex };
-constexpr UInt8Descriptor     desc_0B  = { 0x0B, str_climate_availability, PropFormat::Hex };
-constexpr UInt8Descriptor     desc_0C  = { 0x0C, str_size_xy,              PropFormat::Hex };
-constexpr UInt8Descriptor     desc_0D  = { 0x0D, str_cost_factor,          PropFormat::Hex };
+constexpr UInt32Descriptor    desc_08  = { 0x08, str_class_label,          UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_09  = { 0x09, str_class_text_id,        UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_0A  = { 0x0A, str_object_text_id,       UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_0B  = { 0x0B, str_climate_availability, UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_0C  = { 0x0C, str_size_xy,              UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_0D  = { 0x0D, str_cost_factor,          UIntFormat::Hex };
 constexpr LongDateDescriptor  desc_0E  = { 0x0E, str_introduction_date };
 constexpr LongDateDescriptor  desc_0F  = { 0x0F, str_end_of_life_date };
-constexpr UInt16Descriptor    desc_10  = { 0x10, str_object_flags,         PropFormat::Hex };
-constexpr UInt16Descriptor    desc_11  = { 0x11, str_animation_info,       PropFormat::Hex };
-constexpr UInt8Descriptor     desc_12  = { 0x12, str_animation_speed,      PropFormat::Hex };
-constexpr UInt16Descriptor    desc_13  = { 0x13, str_animation_triggers,   PropFormat::Hex };
-constexpr UInt8Descriptor     desc_14  = { 0x14, str_removal_cost_factor,  PropFormat::Hex };
-constexpr UInt16Descriptor    desc_15  = { 0x15, str_callback_flags,       PropFormat::Hex };
-constexpr UInt8Descriptor     desc_16  = { 0x16, str_building_height,      PropFormat::Hex };
-constexpr UInt8Descriptor     desc_17  = { 0x17, str_number_of_views,      PropFormat::Hex };
-constexpr UInt8Descriptor     desc_18  = { 0x18, str_number_on_creation,   PropFormat::Hex };
+constexpr UInt16Descriptor    desc_10  = { 0x10, str_object_flags,         UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_11  = { 0x11, str_animation_info,       UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_12  = { 0x12, str_animation_speed,      UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_13  = { 0x13, str_animation_triggers,   UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_14  = { 0x14, str_removal_cost_factor,  UIntFormat::Hex };
+constexpr UInt16Descriptor    desc_15  = { 0x15, str_callback_flags,       UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_16  = { 0x16, str_building_height,      UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_17  = { 0x17, str_number_of_views,      UIntFormat::Hex };
+constexpr UInt8Descriptor     desc_18  = { 0x18, str_number_on_creation,   UIntFormat::Hex };
     
 
 } // namespace {

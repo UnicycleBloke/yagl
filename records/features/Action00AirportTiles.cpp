@@ -46,12 +46,12 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-constexpr UInt8Descriptor  desc_08 = { 0x08, str_substitute_tile_id,   PropFormat::Hex };
-constexpr UInt8Descriptor  desc_09 = { 0x09, str_aiport_tile_override, PropFormat::Hex };
-constexpr UInt8Descriptor  desc_0E = { 0x0E, str_callback_flags,       PropFormat::Hex };
-constexpr UInt16Descriptor desc_0F = { 0x0F, str_animation_info,       PropFormat::Hex };
-constexpr UInt8Descriptor  desc_10 = { 0x10, str_animation_speed,      PropFormat::Hex };
-constexpr UInt8Descriptor  desc_11 = { 0x11, str_animation_triggers,   PropFormat::Hex };
+constexpr UInt8Descriptor  desc_08 = { 0x08, str_substitute_tile_id,   UIntFormat::Hex };
+constexpr UInt8Descriptor  desc_09 = { 0x09, str_aiport_tile_override, UIntFormat::Hex };
+constexpr UInt8Descriptor  desc_0E = { 0x0E, str_callback_flags,       UIntFormat::Hex };
+constexpr UInt16Descriptor desc_0F = { 0x0F, str_animation_info,       UIntFormat::Hex };
+constexpr UInt8Descriptor  desc_10 = { 0x10, str_animation_speed,      UIntFormat::Hex };
+constexpr UInt8Descriptor  desc_11 = { 0x11, str_animation_triggers,   UIntFormat::Hex };
 
 
 } // namespace {

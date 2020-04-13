@@ -34,9 +34,9 @@ public:
     void print(std::ostream& os) const
     {
         os << str_date << "(";
-        os << to_string(m_year, PropFormat::Dec)  << "/";
-        os << to_string(m_month, PropFormat::Dec) << "/";
-        os << to_string(m_day, PropFormat::Dec)   << ")";
+        os << to_string(m_year, UIntFormat::Dec)  << "/";
+        os << to_string(m_month, UIntFormat::Dec) << "/";
+        os << to_string(m_day, UIntFormat::Dec)   << ")";
     }
 
     void parse(TokenStream& is)

@@ -34,7 +34,7 @@ class Year
 public:    
     void print(std::ostream& os) const
     {
-        os << to_string(m_year, PropFormat::Dec);
+        os << to_string(m_year, UIntFormat::Dec);
     }
 
     void parse(TokenStream& is)

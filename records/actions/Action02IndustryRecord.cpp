@@ -213,12 +213,12 @@ const std::map<std::string, uint8_t> g_indices2 =
 };
 
 
-UIntDescriptor<UIntArray<UInt16, 3>> desc_sub_in_amounts { 0x01, str_sub_in_amounts,  PropFormat::Hex };
-UIntDescriptor<UIntArray<UInt16, 2>> desc_add_out_amounts{ 0x02, str_add_out_amounts, PropFormat::Hex };
+UIntDescriptor<UIntArray<UInt16, 3>> desc_sub_in_amounts { 0x01, str_sub_in_amounts,  UIntFormat::Hex };
+UIntDescriptor<UIntArray<UInt16, 2>> desc_add_out_amounts{ 0x02, str_add_out_amounts, UIntFormat::Hex };
 BoolDescriptor                       desc_repeat_flag    { 0x03, str_repeat_flag };
 
-UIntDescriptor<UIntArray<UInt8, 3>> desc_sub_in_regs { 0x01, str_sub_in_regs,  PropFormat::Hex };
-UIntDescriptor<UIntArray<UInt8, 2>> desc_add_out_regs{ 0x02, str_add_out_regs, PropFormat::Hex };
+UIntDescriptor<UIntArray<UInt8, 3>> desc_sub_in_regs { 0x01, str_sub_in_regs,  UIntFormat::Hex };
+UIntDescriptor<UIntArray<UInt8, 2>> desc_add_out_regs{ 0x02, str_add_out_regs, UIntFormat::Hex };
 UInt8Descriptor                     desc_repeat_reg  { 0x03, str_repeat_reg };
 
 

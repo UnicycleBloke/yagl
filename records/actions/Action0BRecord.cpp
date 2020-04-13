@@ -137,11 +137,11 @@ const EnumDescriptorT<Action0BRecord::Severity> severity_desc =
     }
 };
 
-const IntegerDescriptorT<uint8_t> desc_message_id  { 0x01, str_message_id, PropFormat::Hex };
+const IntegerDescriptorT<uint8_t> desc_message_id  { 0x01, str_message_id, UIntFormat::Hex };
 const GRFStringDescriptor         desc_message     { 0x02, str_custom_message };
 const GRFStringDescriptor         desc_message_data{ 0x03, str_message_data };
-const IntegerDescriptorT<uint8_t> desc_param1      { 0x04, str_param1, PropFormat::Hex };
-const IntegerDescriptorT<uint8_t> desc_param2      { 0x05, str_param2, PropFormat::Hex };
+const IntegerDescriptorT<uint8_t> desc_param1      { 0x04, str_param1, UIntFormat::Hex };
+const IntegerDescriptorT<uint8_t> desc_param2      { 0x05, str_param2, UIntFormat::Hex };
 
 
 } // namespace {

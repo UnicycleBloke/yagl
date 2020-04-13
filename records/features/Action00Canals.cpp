@@ -38,8 +38,8 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-constexpr UInt8Descriptor  desc_08 = { 0x08, str_callback_flags, PropFormat::Hex };
-constexpr UInt8Descriptor  desc_09 = { 0x09, str_graphics_flags, PropFormat::Hex };
+constexpr UInt8Descriptor  desc_08 = { 0x08, str_callback_flags, UIntFormat::Hex };
+constexpr UInt8Descriptor  desc_09 = { 0x09, str_graphics_flags, UIntFormat::Hex };
 
 
 } // namespace {

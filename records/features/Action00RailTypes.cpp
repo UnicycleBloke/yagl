@@ -78,26 +78,26 @@ const std::map<std::string, uint8_t> g_indices =
 
 
 constexpr GRFLabelDescriptor     desc_08 = { 0x08, str_railtype_label };
-constexpr UInt16Descriptor       desc_09 = { 0x09, str_toolbar_caption_id,      PropFormat::Hex };
-constexpr UInt16Descriptor       desc_0A = { 0x0A, str_dropdown_text_id,        PropFormat::Hex };
-constexpr UInt16Descriptor       desc_0B = { 0x0B, str_window_caption_id,       PropFormat::Hex };
-constexpr UInt16Descriptor       desc_0C = { 0x0C, str_autoreplace_text_id,     PropFormat::Hex };
-constexpr UInt16Descriptor       desc_0D = { 0x0D, str_new_engine_text_id,      PropFormat::Hex };
+constexpr UInt16Descriptor       desc_09 = { 0x09, str_toolbar_caption_id,      UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_0A = { 0x0A, str_dropdown_text_id,        UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_0B = { 0x0B, str_window_caption_id,       UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_0C = { 0x0C, str_autoreplace_text_id,     UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_0D = { 0x0D, str_new_engine_text_id,      UIntFormat::Hex };
 constexpr GRFLabelListDescriptor desc_0E = { 0x0E, str_compatible_railtypes };
 constexpr GRFLabelListDescriptor desc_0F = { 0x0F, str_powered_railtypes };
-constexpr UInt8Descriptor        desc_10 = { 0x10, str_railtype_flags,          PropFormat::Hex };
-constexpr UInt8Descriptor        desc_11 = { 0x11, str_curve_speed_multiplier,  PropFormat::Hex };
-constexpr UInt8Descriptor        desc_12 = { 0x12, str_station_graphics,        PropFormat::Hex };
-constexpr UInt16Descriptor       desc_13 = { 0x13, str_construction_costs,      PropFormat::Hex };
-constexpr UInt16Descriptor       desc_14 = { 0x14, str_speed_limit,             PropFormat::Hex };
-constexpr UInt8Descriptor        desc_15 = { 0x15, str_acceleration_model,      PropFormat::Hex };
-constexpr UInt8Descriptor        desc_16 = { 0x16, str_minimap_colour,          PropFormat::Hex };
+constexpr UInt8Descriptor        desc_10 = { 0x10, str_railtype_flags,          UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_11 = { 0x11, str_curve_speed_multiplier,  UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_12 = { 0x12, str_station_graphics,        UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_13 = { 0x13, str_construction_costs,      UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_14 = { 0x14, str_speed_limit,             UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_15 = { 0x15, str_acceleration_model,      UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_16 = { 0x16, str_minimap_colour,          UIntFormat::Hex };
 constexpr LongDateDescriptor     desc_17 = { 0x17, str_introduction_date };
 constexpr GRFLabelListDescriptor desc_18 = { 0x18, str_required_railtypes };
 constexpr GRFLabelListDescriptor desc_19 = { 0x19, str_introduced_railtypes };
-constexpr UInt8Descriptor        desc_1A = { 0x1A, str_sort_order,              PropFormat::Hex };
-constexpr UInt16Descriptor       desc_1B = { 0x1B, str_rail_type_name_id,       PropFormat::Hex };
-constexpr UInt16Descriptor       desc_1C = { 0x1C, str_maintenance_cost_factor, PropFormat::Hex };
+constexpr UInt8Descriptor        desc_1A = { 0x1A, str_sort_order,              UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_1B = { 0x1B, str_rail_type_name_id,       UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_1C = { 0x1C, str_maintenance_cost_factor, UIntFormat::Hex };
 constexpr GRFLabelListDescriptor desc_1D = { 0x1D, str_alternate_railtypes };
 
 

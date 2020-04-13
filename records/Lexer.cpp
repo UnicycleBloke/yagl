@@ -22,16 +22,8 @@
 #include <stdexcept>
 
 
-Lexer::Lexer(const std::string& yagl_file)
-: m_yagl_file{yagl_file}
+std::vector<TokenValue> Lexer::lex(std::istream& is)
 {
-}
-
-
-std::vector<TokenValue> Lexer::lex()
-{
-    std::ifstream is(m_yagl_file, std::ios::binary);
-
     m_tokens.clear();
 
     while (!is.eof())

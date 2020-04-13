@@ -22,12 +22,10 @@
 #include "BooleanDescriptor.h"
 #include "EnumDescriptor.h"
 #include "IntegerDescriptor.h"
-#include "RangeDescriptor.h"
 #include "AirportLayoutDescriptor.h"
 #include "IndustryLayoutDescriptor.h"
 #include "CargoAcceptanceDescriptor.h"
 #include "DateDescriptor.h"
 #include "YearDescriptor.h"
 #include "GRFLabel.h"
-
 

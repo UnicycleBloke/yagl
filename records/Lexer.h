@@ -83,8 +83,7 @@ struct TokenValue
 class Lexer
 {
 public:
-    Lexer(const std::string& yagl_file); 
-    std::vector<TokenValue> lex(); 
+    std::vector<TokenValue> lex(std::istream& yagl_stream); 
 
 private:
     // These return true if the byte is consumed. In some cases, the state 

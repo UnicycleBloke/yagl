@@ -77,7 +77,8 @@ static void encode()
         // This file already checked for existence.
         // Will need to check for the sprite sheets as we go along.
         std::cout << "Lexing YAGL..." << std::endl;
-        TokenStream token_stream{options.yagl_file()};
+        std::ifstream is(options.yagl_file(), std::ios::binary);
+        TokenStream token_stream{is};
 
         // Parse the YAGL script ...
         std::cout << "Parsing YAGL..." << std::endl;

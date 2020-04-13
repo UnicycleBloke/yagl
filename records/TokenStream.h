@@ -27,11 +27,10 @@
 class TokenStream
 {
 public:
-    TokenStream(const std::string& yagl_file) //const std::vector<TokenValue> tokens)
-    : m_yagl_file{yagl_file} 
+    TokenStream(std::istream& is) //const std::vector<TokenValue> tokens)
     {
-        Lexer lexer{yagl_file};
-        m_tokens = lexer.lex();
+        Lexer lexer;
+        m_tokens = lexer.lex(is);
     }
 
     const TokenValue& peek(uint16_t lookahead = 0); 
@@ -81,15 +80,10 @@ public:
     // parsed again by that object. This gives a nicer exception...
     void unmatch() { if (m_index > 0) --m_index; }
 
-    const std::string& yagl_file() const { return m_yagl_file; }
-
 private:
     uint64_t match_uint64(TokenValue& token, DataType type);
 
 private:    
-    // Cached name of the script file that we are parsing. Used for error reporting.
-    std::string m_yagl_file;
-
     // List of all tokens found in the YAGL by the lexer, in order.
     std::vector<TokenValue> m_tokens;
     
