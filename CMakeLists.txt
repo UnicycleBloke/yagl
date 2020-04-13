@@ -118,6 +118,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     # Unit test.
     tests/Test_StreamHelpers.cpp
     tests/Test_IntegerDescriptor.cpp
+    tests/Test_YearDescriptor.cpp
 )
 
 # This appears to be the simplest way to create a pre-build step that

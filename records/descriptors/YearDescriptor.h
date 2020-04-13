@@ -31,7 +31,12 @@ class Year
     static constexpr uint32_t MIN_SHORT_YEAR = 1920; 
     static constexpr uint32_t MAX_SHORT_YEAR = MIN_SHORT_YEAR + 255; 
 
-public:    
+public:  
+    explicit Year(uint32_t year = 1920)
+    : m_year{year}
+    {        
+    }
+
     void print(std::ostream& os) const
     {
         os << to_string(m_year, UIntFormat::Dec);
@@ -75,6 +80,8 @@ public:
             write_uint32(os, m_year);
         }
     }
+
+    uint32_t get() const { return m_year; }
 
 private:
     uint32_t m_year;
