@@ -69,7 +69,7 @@ static void write_action(std::ostream& os, VarType type, uint32_t value)
 void Action02VariableRecord::read(std::istream& is, const GRFInfo& info)
 {
     m_feature  = static_cast<FeatureType>(read_uint8(is));
-    m_set_id   = read_uint8(is);
+    m_set_id.read(is);
     m_var_type = static_cast<VarType>(read_uint8(is));
 
     // It's a little involved, but basically a chain of variable operations 
@@ -146,7 +146,7 @@ void Action02VariableRecord::read(std::istream& is, const GRFInfo& info)
         m_ranges.push_back(range);
     }
 
-    m_default = read_uint16(is);
+    m_default.read(is);
 }
 
 
@@ -155,7 +155,7 @@ void Action02VariableRecord::write(std::ostream& os, const GRFInfo& info) const
     ActionRecord::write(os, info);
 
     write_uint8(os, static_cast<uint8_t>(m_feature));
-    write_uint8(os, m_set_id);
+    m_set_id.write(os);
     write_uint8(os, static_cast<uint8_t>(m_var_type));
 
     uint16_t num_actions = uint16_t(m_actions.size());
@@ -203,7 +203,7 @@ void Action02VariableRecord::write(std::ostream& os, const GRFInfo& info) const
         write_action(os, m_var_type, range.high_range);
     }
 
-    write_uint16(os, m_default);
+    m_default.write(os);
 }  
 
 
@@ -271,7 +271,7 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-const IntegerDescriptorT<uint16_t> desc_default { 0x03, str_default, PropFormat::Hex };
+const UIntDescriptor<UInt16> desc_default { 0x03, str_default, PropFormat::Hex };
 
 
 } // namespace {
@@ -325,7 +325,8 @@ std::string Action02VariableRecord::variable_expression(const VarAction& va) con
 void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
-    os << ", " << to_hex(m_set_id);
+    os << ", "; 
+    m_set_id.print(os, PropFormat::Hex);
     os << ", " << desc_var_type.value(m_var_type);
     os << "> // Action02 variable" << '\n';
     os << pad(indent) << "{" << '\n';
@@ -359,7 +360,7 @@ void Action02VariableRecord::parse(TokenStream& is)
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
-    m_set_id = is.match_uint8();
+    m_set_id.parse(is);
     is.match(TokenType::Comma);
     desc_var_type.parse(m_var_type, is);
     is.match(TokenType::CloseAngle);
@@ -378,7 +379,7 @@ void Action02VariableRecord::parse(TokenStream& is)
             {
                 case 0x01: parse_expression(is); break;
                 case 0x02: parse_ranges(is); break;
-                case 0x03: desc_default.parse(m_default, is); break;
+                case 0x03: m_default.parse(is); break;
             }
 
             is.match(TokenType::SemiColon);

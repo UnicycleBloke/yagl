@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Record.h"
+#include "IntegerDescriptor.h"
 
 
 class Action02VariableRecord : public ActionRecord
@@ -109,11 +110,11 @@ private:
 
 private:
     FeatureType m_feature;
-    uint8_t     m_set_id;
+    UInt8       m_set_id;
     VarType     m_var_type;
 
     std::vector<VarAction> m_actions;
     std::vector<VarRange>  m_ranges;
 
-    uint16_t m_default;
+    UInt16 m_default;
 };

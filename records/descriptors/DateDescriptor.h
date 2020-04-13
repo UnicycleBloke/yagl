@@ -33,11 +33,10 @@ private:
 public:
     void print(std::ostream& os) const
     {
-        const IntegerDescriptorT<uint32_t> desc{0, "", PropFormat::Dec};
         os << str_date << "(";
-        os << desc.to_string(m_year)  << "/";
-        os << desc.to_string(m_month) << "/";
-        os << desc.to_string(m_day)   << ")";
+        os << to_string(m_year, PropFormat::Dec)  << "/";
+        os << to_string(m_month, PropFormat::Dec) << "/";
+        os << to_string(m_day, PropFormat::Dec)   << ")";
     }
 
     void parse(TokenStream& is)
