@@ -18,7 +18,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action00Canals.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
 
 
 namespace {

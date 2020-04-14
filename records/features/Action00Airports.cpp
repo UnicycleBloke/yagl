@@ -17,7 +17,6 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action00Airports.h"
-#include "Descriptors.h"
 #include "StreamHelpers.h"
 
 

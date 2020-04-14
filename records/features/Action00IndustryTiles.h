@@ -18,7 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "Descriptors.h"
+#include "IntegerDescriptor.h"
+#include "CargoAcceptanceDescriptor.h"
 
 
 class Action00IndustryTiles : public Action00Feature

@@ -17,7 +17,7 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action00Common.h"
-#include "Descriptors.h"
+#include "BitfieldDescriptor.h"
 
 
 namespace {

@@ -18,7 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Common.h"
-#include "Descriptors.h"
+#include "BooleanDescriptor.h"
+#include "IntegerDescriptor.h"
 
 
 class Action00Aircraft : public Action00Common

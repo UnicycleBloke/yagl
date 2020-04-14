@@ -18,7 +18,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "Descriptors.h"
+#include "IntegerDescriptor.h"
+#include "CargoAcceptanceDescriptor.h"
+#include "YearDescriptor.h"
 
 
 class Action00Houses : public Action00Feature

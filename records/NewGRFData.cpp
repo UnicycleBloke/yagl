@@ -47,6 +47,7 @@
 #include "RealSpriteRecord.h"
 #include "SpriteIndexRecord.h"
 #include "StreamHelpers.h"
+#include "EnumDescriptor.h"
 #include "SpriteSheetGenerator.h"
 #include "CommandLineOptions.h"
 #include "Exceptions.h"

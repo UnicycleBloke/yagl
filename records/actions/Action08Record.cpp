@@ -19,7 +19,7 @@
 #include "Action08Record.h"
 #include "StreamHelpers.h"
 #include "GRFStrings.h"
-#include "Descriptors.h"
+#include "EnumDescriptor.h"
 
 
 void Action08Record::read(std::istream& is, const GRFInfo& info)

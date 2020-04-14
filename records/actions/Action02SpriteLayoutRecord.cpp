@@ -18,7 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action02SpriteLayoutRecord.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
+#include "IntegerDescriptor.h"
+#include "BooleanDescriptor.h"
 
 
 void Action02SpriteLayoutRecord::SpriteRegisters::read(std::istream& is, bool is_parent)

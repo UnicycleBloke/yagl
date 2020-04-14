@@ -19,7 +19,8 @@
 #include "Action0BRecord.h"
 #include "StreamHelpers.h"
 #include "GRFStrings.h"
-#include "Descriptors.h"
+#include "EnumDescriptor.h"
+#include "IntegerDescriptor.h"
 
 
 void Action0BRecord::read(std::istream& is, const GRFInfo& info)

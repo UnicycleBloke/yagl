@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action02IndustryRecord.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
+#include "EnumDescriptor.h"
 
 
 void Action02IndustryRecord::read(std::istream& is, const GRFInfo& info)

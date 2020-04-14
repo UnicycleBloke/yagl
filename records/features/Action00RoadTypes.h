@@ -18,7 +18,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "Descriptors.h"
+#include "IntegerDescriptor.h"
+#include "DateDescriptor.h"
+#include "GRFLabel.h"
 
 
 class Action00RoadTypes : public Action00Feature

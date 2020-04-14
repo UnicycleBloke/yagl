@@ -18,7 +18,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Common.h"
-#include "Descriptors.h"
+#include "BooleanDescriptor.h"
+#include "IntegerDescriptor.h"
+#include "DateDescriptor.h"
 
 
 class Action00Trains : public Action00Common

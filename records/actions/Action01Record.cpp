@@ -18,7 +18,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action01Record.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
 
 
 void Action01Record::read(std::istream& is, const GRFInfo& info)

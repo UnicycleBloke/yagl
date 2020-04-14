@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action02VariableRecord.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
+#include "EnumDescriptor.h"
 
 
 using VarType = Action02VariableRecord::VarType;

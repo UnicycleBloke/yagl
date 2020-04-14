@@ -19,7 +19,6 @@
 #pragma once
 #include "Record.h"
 #include "GRFStrings.h"
-#include "Descriptors.h"
 
 
 // Deactivate other graphics files or force activation of current file.

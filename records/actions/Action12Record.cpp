@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action12Record.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
+#include "EnumDescriptor.h"
 
 
 void Action12Record::read(std::istream& is, const GRFInfo& info)

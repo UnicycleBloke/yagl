@@ -18,7 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action03Record.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
+#include "IntegerDescriptor.h"
+#include "BooleanDescriptor.h"
 
 
 void Action03Record::read(std::istream& is, const GRFInfo& info)

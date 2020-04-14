@@ -18,7 +18,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action00SoundEffects.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
 
 
 namespace {

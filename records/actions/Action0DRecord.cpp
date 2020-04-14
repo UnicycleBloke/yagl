@@ -19,7 +19,8 @@
 #include "Action0DRecord.h"
 #include "StreamHelpers.h"
 #include "GRFStrings.h"
-#include "Descriptors.h"
+#include "EnumDescriptor.h"
+#include "BooleanDescriptor.h"
 #include <sstream>
 
 

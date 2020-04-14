@@ -18,7 +18,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action00IndustryTiles.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
 
 
 namespace {

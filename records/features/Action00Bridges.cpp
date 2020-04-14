@@ -17,7 +17,6 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action00Bridges.h"
-#include "Descriptors.h"
 
 
 namespace {

@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action02BasicRecord.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
+#include "IntegerDescriptor.h"
 
 
 void Action02BasicRecord::read(std::istream& is, const GRFInfo& info)

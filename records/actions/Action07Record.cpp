@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action07Record.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
+#include "EnumDescriptor.h"
 
 
 namespace{

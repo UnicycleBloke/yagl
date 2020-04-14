@@ -18,7 +18,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Common.h"
-#include "Descriptors.h"
+#include "IntegerDescriptor.h"
+#include "DateDescriptor.h"
+#include "BooleanDescriptor.h"
 
 
 class Action00Ships : public Action00Common

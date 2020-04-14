@@ -18,7 +18,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "Descriptors.h"
+#include "GRFLabel.h"
+#include "IntegerDescriptor.h"
+#include "DateDescriptor.h"
 
 
 class Action00RailTypes : public Action00Feature

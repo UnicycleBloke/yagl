@@ -18,7 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Common.h"
-#include "Descriptors.h"
+#include "IntegerDescriptor.h"
+#include "DateDescriptor.h"
 
 
 class Action00Vehicles : public Action00Common

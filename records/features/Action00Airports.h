@@ -18,7 +18,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "Descriptors.h"
+#include "IntegerDescriptor.h"
+#include "YearDescriptor.h"
+#include "AirportLayoutDescriptor.h"
 #include <vector>
 
 

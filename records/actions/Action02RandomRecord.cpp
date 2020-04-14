@@ -18,7 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action02RandomRecord.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
+#include "EnumDescriptor.h"
+#include "IntegerDescriptor.h"
 
 
 void Action02RandomRecord::read(std::istream& is, const GRFInfo& info)

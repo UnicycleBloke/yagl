@@ -18,7 +18,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "Descriptors.h"
+#include "IntegerDescriptor.h"
+#include "DateDescriptor.h"
+#include "GRFLabel.h"
 
 
 // Note that this is currently identical in content to the RoadTypes, which is 

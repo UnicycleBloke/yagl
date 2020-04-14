@@ -18,7 +18,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action00GlobalSettings.h"
 #include "StreamHelpers.h"
-#include "Descriptors.h"
 
 
 namespace {

@@ -20,7 +20,6 @@
 #include "SpriteSheetReader.h"
 #include "StreamHelpers.h"
 #include "ChunkEncoder.h"
-#include "Descriptors.h"
 #include <string>
 #include <sstream>
 #include <png.h>
@@ -29,6 +28,8 @@
 #include <algorithm>
 #include "FileSystem.h"
 #include "CommandLineOptions.h"
+#include "EnumDescriptor.h"
+#include "BitfieldDescriptor.h"
 
 
 
