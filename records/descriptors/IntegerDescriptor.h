@@ -57,8 +57,6 @@ std::string to_string(T value, UIntFormat format)
 }
 
 
-
-
 // TODO Can we retire this.
 // Used in Actions 0B, 02Random, 02SpriteLayout, 02Variable, 03. 
 template <typename T>
@@ -95,7 +93,7 @@ struct IntegerListDescriptorT : PropertyDescriptor
         {
             os << " " << to_string(value, format);
         }
-        os << " ];";
+        os << " ];\n";
     }
 
     void parse(std::vector<T>& values, TokenStream& is) const
@@ -109,12 +107,6 @@ struct IntegerListDescriptorT : PropertyDescriptor
         is.match(TokenType::CloseBracket);
     }
 };
-
-
-
-
-
-
 
 
 // Use this in place of naked uint8_t, uint16_t and uint32_t.

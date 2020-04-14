@@ -120,6 +120,8 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     tests/Test_IntegerDescriptor.cpp
     tests/Test_YearDescriptor.cpp
     tests/Test_DateDescriptor.cpp
+
+    tests/Test_Action03Record.cpp
 )
 
 # This appears to be the simplest way to create a pre-build step that
