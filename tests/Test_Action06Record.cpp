@@ -21,41 +21,32 @@
 #include <iostream>
 #include <array>
 #include "TokenStream.h"
-#include "Action03Record.h"
+#include "Action06Record.h"
 #include "StreamHelpers.h"
 
 
 namespace {
 
-using ActionXXRecord = Action03Record;
+using ActionXXRecord = Action06Record;
 
-static constexpr uint8_t     ACTION = 0x03;
-static constexpr const char* NAME   = "Action03";
+static constexpr uint8_t     ACTION = 0x06; 
+static constexpr const char* NAME   = "Action06";
 
 static constexpr const char* YAGL =
-    "feature_graphics<Trains> // Action03\n"
-    "{\n"
-    "    livery_override: false;\n"
-    "    default_set_id: 0x01F8;\n"
-    "    feature_ids: [ 0x0087 ];\n"
-    "    cargo_types:\n"
-    "    {\n"
-    "        // <cargo_type>: <cargo_id>;\n"
-    "        0x12: 0x02FE;\n"
-    "        0x13: 0x03FD;\n"
-    "    };\n"
-    "}\n";
+"modify_next // Action06\n"
+"{\n"
+"    // modification(value, num_bytes, offset, add?);\n"
+"    modification(parameter[0x6C], 1, 8, false);\n"
+"    modification(parameter[0x6B], 1, 9, false);\n"
+"}\n";
 
 // NFO matching the YAGL.
 static const std::string NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-    "03 "           // Action03
-    "00 "           // Trains
-    "01 87 "        // 1 train (87)
-    "02 "           // 2 cargo types
-    "12 FE 02 "     // Cargo 0
-    "13 FD 03 "     // Cargo 1
-    "F8 01 ";       // Default 
+    "06 "              // Action06
+    "6C 01 FF 08 00 "  // Parameter 6C, length 1, offset 8 (extended byte in long form)
+    "6B 01 FF 09 00 "  // Parameter 6B, length 1, offset 9 (extended byte in long form)
+    "FF ";             // Terminator
 
 } // namespace {
 
@@ -65,7 +56,7 @@ TEST_CASE(NAME, "[actions]")
     // Confirm that we print what we parse.
     // The sample is in the expected format.
     std::istringstream is(YAGL);
-    TokenStream ts{is};
+    TokenStream ts{ is };
     ActionXXRecord action;
     action.parse(ts);
 
@@ -93,4 +84,3 @@ TEST_CASE(NAME, "[actions]")
     action2.print(os, sprites, 0);
     CHECK(os.str() == YAGL);
 }
-

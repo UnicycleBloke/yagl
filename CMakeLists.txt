@@ -116,12 +116,15 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     utility/Languages.cpp
 
     # Unit test.
-    tests/Test_StreamHelpers.cpp
-    tests/Test_IntegerDescriptor.cpp
-    tests/Test_YearDescriptor.cpp
-    tests/Test_DateDescriptor.cpp
+    #tests/Test_StreamHelpers.cpp
+    #tests/Test_IntegerDescriptor.cpp
+    #tests/Test_YearDescriptor.cpp
+    #tests/Test_DateDescriptor.cpp
 
     tests/Test_Action03Record.cpp
+    tests/Test_Action04Record.cpp
+    #tests/Test_Action05Record.cpp // sprites
+    tests/Test_Action06Record.cpp
 )
 
 # This appears to be the simplest way to create a pre-build step that

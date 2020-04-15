@@ -126,3 +126,16 @@ void dump_hex(std::istream& is, uint16_t length)
     is.seekg(done, std::istream::cur);
 }
 */
+
+// Used for the unit tests.
+std::string hex_dump(const std::string& data)
+{
+    std::ostringstream os;
+    for (auto byte: data)
+    {
+        os << to_hex(byte, false) << " ";
+    }
+    return os.str();
+}
+
+

@@ -144,39 +144,6 @@ inline Padding pad(uint16_t len)
 }
 
 
-/*
-template <typename Enum>
-struct EnumNames
-{
-    std::string name_of(Enum e) const
-    {
-        const auto& it = names.find(e);
-        if (it != names.end())
-        {
-            return it->second;
-        }
-
-        throw RUNTIME_ERROR("EnumNames - name not found");
-    }
-
-    Enum value_of(const std::string& name) const
-    {
-        for (const auto& it: names)
-        {
-            if (it.second == name)
-            {
-                return it.first;
-            }
-        }
-
-        throw RUNTIME_ERROR("RecordFromName");
-    }
-
-    const std::map<Enum, std::string> names;
-};
-*/
-
-
-// Used for debugging to see what bytes are in the stream as sort of NFO. 
-//void dump_hex(std::istream& is, uint16_t length);
+// Used for the unit tests.
+std::string hex_dump(const std::string& data);
 

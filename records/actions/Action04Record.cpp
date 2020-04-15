@@ -33,8 +33,13 @@ void Action04Record::read(std::istream& is, const GRFInfo& info)
 
     uint8_t num_strings = read_uint8(is);
 
-    // Read the ID of the first string here. The format is bizarrely 
-    // conditional. 
+    // Read the ID of the first string here. The format is bizarrely conditional. From the specs:
+    // - When language - id bit 7 is clear, this is a byte value; For OpenTTD since r13482, where it is an extended byte 
+    //   value for vehicles.
+    // - When language - id bit 7 is set, this is a word value in little endian notation, e.g. 8134 becomes 34 81.
+    // - The 8 bit version is only allowed for vehicles to set their name, in which case the text ID is just the vehicle ID.
+    // - To replace original texts, or to define texts for usage in callbacks or properties of vehicles, stations, houses or 
+    //   industries you have to use the 16 bit version.
     if (m_uint16_ids)
     {
         m_first_string_id = read_uint16(is);
@@ -45,6 +50,7 @@ void Action04Record::read(std::istream& is, const GRFInfo& info)
     }
     else
     {
+        // "only allowed for vehicles to set their name" - but we have already dealt with vehicles above.
         m_first_string_id = read_uint8(is);
     }
 
@@ -74,15 +80,14 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
         write_uint16(os, m_first_string_id);
     }
     // OR vehicles have extended byte IDs
-    else if ((m_first_string_id > 0xFF) || 
-             // It's a vehicle
-             (static_cast<uint8_t>(m_feature) <= static_cast<uint8_t>(FeatureType::Aircraft))) 
+    else if ((m_first_string_id > 0xFF) || feature_is_vehicle(m_feature))
     {
         write_uint8_ext(os, m_first_string_id);
     }
     // OR we just have byte IDs.
     else
     {
+        // "only allowed for vehicles to set their name" - but we have already dealt with vehicles above.
         write_uint8(os, uint8_t(m_first_string_id));
     }
 
@@ -91,25 +96,6 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
         str.write(os);
     }
 }  
-
-
-// strings<Stations, en_US> // Action04, English (US)
-// {
-//     // Only the first ID is meaningful - others included as an aid.     
-//     0xC504: "Roofs";
-//     0xC505: "Platform";
-//     0xC506: "Benches";
-//     0xC507: "Parking lot (front)";
-//     0xC508: "Parking lot (back)";
-//     0xC509: "Flat roofs";
-//     0xC50A: "Glass roofs";
-//     0xC50B: "Overpass";
-//     0xC50C: "Station Hall (small)";
-//     0xC50D: "Station Hall (large)";
-//     0xC50E: "Underpass";
-//     0xC50F: "empty";
-//     0xC510: "void";
-// }
 
 
 void Action04Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const

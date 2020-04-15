@@ -21,41 +21,36 @@
 #include <iostream>
 #include <array>
 #include "TokenStream.h"
-#include "Action03Record.h"
+#include "Action04Record.h"
 #include "StreamHelpers.h"
 
 
 namespace {
 
-using ActionXXRecord = Action03Record;
+using ActionXXRecord = Action04Record;
 
-static constexpr uint8_t     ACTION = 0x03;
-static constexpr const char* NAME   = "Action03";
+static constexpr uint8_t     ACTION = 0x04; 
+static constexpr const char* NAME   = "Action04";
 
 static constexpr const char* YAGL =
-    "feature_graphics<Trains> // Action03\n"
-    "{\n"
-    "    livery_override: false;\n"
-    "    default_set_id: 0x01F8;\n"
-    "    feature_ids: [ 0x0087 ];\n"
-    "    cargo_types:\n"
-    "    {\n"
-    "        // <cargo_type>: <cargo_id>;\n"
-    "        0x12: 0x02FE;\n"
-    "        0x13: 0x03FD;\n"
-    "    };\n"
-    "}\n";
+"strings<Trains, en_GB, 0xD098*> // <feature, language, first_id> Action04, English (GB)\n"
+"{\n"
+"    /* 0xD098 */ \"{black}StringA\";\n"
+"    /* 0xD099 */ \"{black}StringB\";\n"
+"    /* 0xD09A */ \"{black}StringC\";\n"
+"}\n";
 
 // NFO matching the YAGL.
 static const std::string NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-    "03 "           // Action03
-    "00 "           // Trains
-    "01 87 "        // 1 train (87)
-    "02 "           // 2 cargo types
-    "12 FE 02 "     // Cargo 0
-    "13 FD 03 "     // Cargo 1
-    "F8 01 ";       // Default 
+    "04 "    // Action04
+    "00 "    // Trains
+    "81 "    // English (GB) (01) and first ID is a word (80)
+    "03 "    // 3 strings
+    "98 D0 " // First ID
+    "98 53 74 72 69 6E 67 41 00 "
+    "98 53 74 72 69 6E 67 42 00 "
+    "98 53 74 72 69 6E 67 43 00 ";
 
 } // namespace {
 
@@ -65,7 +60,7 @@ TEST_CASE(NAME, "[actions]")
     // Confirm that we print what we parse.
     // The sample is in the expected format.
     std::istringstream is(YAGL);
-    TokenStream ts{is};
+    TokenStream ts{ is };
     ActionXXRecord action;
     action.parse(ts);
 
@@ -93,4 +88,3 @@ TEST_CASE(NAME, "[actions]")
     action2.print(os, sprites, 0);
     CHECK(os.str() == YAGL);
 }
-
