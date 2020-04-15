@@ -121,10 +121,13 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     #tests/Test_YearDescriptor.cpp
     #tests/Test_DateDescriptor.cpp
 
-    tests/Test_Action03Record.cpp
-    tests/Test_Action04Record.cpp
-    #tests/Test_Action05Record.cpp // sprites
-    tests/Test_Action06Record.cpp
+    tests/Test_Action02BasicRecord.cpp  # Define graphics
+    tests/Test_Action03Record.cpp  # Assign graphics
+    tests/Test_Action04Record.cpp  # Strings
+    #tests/Test_Action05Record.cpp # Sprites
+    tests/Test_Action06Record.cpp  # Modify next
+    tests/Test_Action07Record.cpp  # Skip records
+    tests/Test_Action08Record.cpp  # GRF identification
 )
 
 # This appears to be the simplest way to create a pre-build step that

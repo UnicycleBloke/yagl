@@ -131,14 +131,6 @@ void Action07Record::write(std::ostream& os, const GRFInfo& info) const
     write_uint8(os, m_num_sprites);
 }  
 
-// Example output:
-// if2 (global_var[0x9D] != 0x00000000) // Action09
-// {
-//     skip_sprites: 0x02;
-//     // Or skip to the next label (Action10) with this value - search wraps at end of GRF.
-//     // 0x00 means skip to end of GRF file - may disable the GRF.
-// }
-
 
 void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
