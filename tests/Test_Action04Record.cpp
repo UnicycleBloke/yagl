@@ -17,22 +17,13 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "catch.hpp"
-#include <sstream>
-#include <iostream>
-#include <array>
-#include "TokenStream.h"
+#include "Test_Shared.h"
 #include "Action04Record.h"
-#include "StreamHelpers.h"
 
 
 namespace {
 
-using ActionXXRecord = Action04Record;
-
-static constexpr uint8_t     ACTION = 0x04; 
-static constexpr const char* NAME   = "Action04";
-
-static constexpr const char* YAGL =
+static constexpr const char* str_YAGL =
 "strings<Trains, en_GB, 0xD098*> // <feature, language, first_id> Action04, English (GB)\n"
 "{\n"
 "    /* 0xD098 */ \"{black}StringA\";\n"
@@ -41,7 +32,7 @@ static constexpr const char* YAGL =
 "}\n";
 
 // NFO matching the YAGL.
-static const std::string NFO =
+static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "04 "    // Action04
     "00 "    // Trains
@@ -55,36 +46,7 @@ static const std::string NFO =
 } // namespace {
 
 
-TEST_CASE(NAME, "[actions]")
+TEST_CASE("Action04Record", "[actions]")
 {
-    // Confirm that we print what we parse.
-    // The sample is in the expected format.
-    std::istringstream is(YAGL);
-    TokenStream ts{ is };
-    ActionXXRecord action;
-    action.parse(ts);
-
-    std::ostringstream os;
-    SpriteZoomMap sprites; // Empty set is fine for this record.
-    action.print(std::cout, sprites, 0);
-    action.print(os, sprites, 0);
-    CHECK(os.str() == YAGL);
-
-    // Confirm that the written binary matches the sample.
-    os.str("");
-    GRFInfo info; // Defaults to Container2 and GRF8.
-    action.write(os, info);
-    auto str = os.str();
-    CHECK(str.size() == (NFO.size() / 3));
-    CHECK(hex_dump(str) == NFO);
-
-    // Confirm that reading the binary and printing the 
-    // result gets us back to the example.
-    std::istringstream is2(str);
-    CHECK(uint8_t(is2.get()) == ACTION);
-    ActionXXRecord action2;
-    action2.read(is2, info);
-    os.str("");
-    action2.print(os, sprites, 0);
-    CHECK(os.str() == YAGL);
+    test_yagl<Action04Record, 0x04>(str_YAGL, str_NFO);
 }

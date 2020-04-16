@@ -121,6 +121,10 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     #tests/Test_YearDescriptor.cpp
     #tests/Test_DateDescriptor.cpp
 
+    # Properties for various features.
+    tests/Test_Action00_Trains.cpp   
+
+    tests/Test_Action01Record.cpp  # Define sprites
     tests/Test_Action02BasicRecord.cpp  # Define graphics
     tests/Test_Action03Record.cpp  # Assign graphics
     tests/Test_Action04Record.cpp  # Strings
