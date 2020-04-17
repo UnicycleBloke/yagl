@@ -18,29 +18,23 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "catch.hpp"
 #include "Test_Shared.h"
-#include "Action0ERecord.h"
+#include "Action00Record.h"
 
 
 namespace {
 
-static constexpr const char* str_YAGL =
-    "disable_grfs // Action0E\n"
-    "{\n"
-    "    grf_ids: [ \"ABCD\" \"ABC\\x01\" \"xV4\\x12\" ];\n"
-    "}\n";
-static constexpr const char* str_NFO = 
-//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-    "0E "           // Action0E
-    "03 "           // 3 items
-    "41 42 43 44 "  // ABCD
-    "41 42 43 01 "  // ABC\x01
-    "78 56 34 12 "; // 0x12345678 -> xV4\x12 
+// TODO Add all properties, even with silly values, so that we can confirm the 
+// formatting of each one if they are individually changed.
+static constexpr const char* str_YAGL = "";
 
-} // namespace {}
+// NFO matching the YAGL.
+static constexpr const char* str_NFO = "";
+
+} // namespace {
 
 
-TEST_CASE("Action0ERecord", "[actions]")
-{
-    test_yagl<Action0ERecord, 0x0E>(str_YAGL, str_NFO);
-}
+// TEST_CASE("Action00Trains", "[actions]")
+// {
+//     test_yagl<Action00Record, 0x00>(str_YAGL, str_NFO);
+// }
 

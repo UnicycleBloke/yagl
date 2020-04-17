@@ -219,6 +219,7 @@ void print_signed(Action0DRecord::Operation op, std::ostream& os)
 
 Action0DRecord::Operation parse_signed(Action0DRecord::Operation op, TokenStream& is)
 {
+    // The signed or unsigned marker is optional. Default is unsigned.
     if (is.peek().type != TokenType::Comma)
     {
         return op;

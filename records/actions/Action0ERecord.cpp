@@ -42,10 +42,10 @@ void Action0ERecord::write(std::ostream& os, const GRFInfo& info) const
 namespace {
 
 
-constexpr const char* str_grf_id = "grf_id";
+constexpr const char* str_grf_ids = "grf_ids";
 
 
-constexpr GRFLabelListDescriptor grf_desc = { 0x00, str_grf_id };
+constexpr GRFLabelListDescriptor grf_desc = { 0x00, str_grf_ids };
 
 
 } // namespace {
@@ -66,7 +66,7 @@ void Action0ERecord::parse(TokenStream& is)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenBrace);
-    is.match_ident(str_grf_id);
+    is.match_ident(str_grf_ids);
     is.match(TokenType::Colon);
     m_grf_ids.parse(is);
     is.match(TokenType::SemiColon);

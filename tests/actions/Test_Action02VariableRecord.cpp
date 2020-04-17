@@ -18,29 +18,34 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "catch.hpp"
 #include "Test_Shared.h"
-#include "Action0ERecord.h"
+#include "Action02BasicRecord.h"
 
 
 namespace {
 
 static constexpr const char* str_YAGL =
-    "disable_grfs // Action0E\n"
+    "sprite_groups<Trains, 0xFE> // Action02 basic\n"
     "{\n"
-    "    grf_ids: [ \"ABCD\" \"ABC\\x01\" \"xV4\\x12\" ];\n"
+    "    primary_spritesets: [ 0x0000 ];\n"
+    "    secondary_spritesets: [ 0x0000 ];\n"
     "}\n";
-static constexpr const char* str_NFO = 
+
+// NFO matching the YAGL.
+static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-    "0E "           // Action0E
-    "03 "           // 3 items
-    "41 42 43 44 "  // ABCD
-    "41 42 43 01 "  // ABC\x01
-    "78 56 34 12 "; // 0x12345678 -> xV4\x12 
+    "02 "     // Action02
+    "00 "     // Feature - Trains
+    "FE "     // Set ID
+    "01 "     // Number of entities 1
+    "01 "     // Number of entities 2
+    "00 00 "  // Entities 1 - 1 word
+    "00 00 "; // Entities 2 - 1 word
 
-} // namespace {}
+} // namespace {
 
 
-TEST_CASE("Action0ERecord", "[actions]")
+TEST_CASE("Action02Basic", "[actions]")
 {
-    test_yagl<Action0ERecord, 0x0E>(str_YAGL, str_NFO);
+    test_yagl<Action02BasicRecord, 0x02>(str_YAGL, str_NFO);
 }
 

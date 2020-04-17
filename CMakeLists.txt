@@ -116,13 +116,32 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     utility/Languages.cpp
 
     # Unit test.
-    tests/sundries/Test_StreamHelpers.cpp
-    tests/sundries/Test_IntegerDescriptor.cpp
-    tests/sundries/Test_YearDescriptor.cpp
-    tests/sundries/Test_DateDescriptor.cpp
+    #tests/sundries/Test_StreamHelpers.cpp
+    #tests/sundries/Test_IntegerDescriptor.cpp
+    #tests/sundries/Test_YearDescriptor.cpp
+    #tests/sundries/Test_DateDescriptor.cpp
 
     # Properties for various features.
-    tests/features/Test_Action00_Trains.cpp   
+    tests/features/Test_Action00_Aircraft.cpp
+    tests/features/Test_Action00_Airports.cpp
+    tests/features/Test_Action00_AirportTiles.cpp
+    tests/features/Test_Action00_Bridges.cpp
+    tests/features/Test_Action00_Canals.cpp
+    tests/features/Test_Action00_Cargos.cpp
+    tests/features/Test_Action00_Common.cpp
+    tests/features/Test_Action00_GlobalSettings.cpp
+    tests/features/Test_Action00_Houses.cpp
+    tests/features/Test_Action00_Industries.cpp
+    tests/features/Test_Action00_IndustryTiles.cpp
+    tests/features/Test_Action00_Objects.cpp
+    tests/features/Test_Action00_RailTypes.cpp
+    tests/features/Test_Action00_RoadTypes.cpp
+    tests/features/Test_Action00_Ships.cpp
+    tests/features/Test_Action00_SoundEffects.cpp
+    tests/features/Test_Action00_Stations.cpp
+    tests/features/Test_Action00_Trains.cpp
+    tests/features/Test_Action00_TramTypes.cpp
+    tests/features/Test_Action00_Vehicles.cpp
 
     # Other ActionXX records.
     tests/actions/Test_Action01Record.cpp       # Define sprites
@@ -136,7 +155,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     tests/actions/Test_Action0ARecord.cpp
     tests/actions/Test_Action0BRecord.cpp
     tests/actions/Test_Action0CRecord.cpp
-    tests/actions/Test_Action0DRecord.cpp
+    tests/actions/Test_Action0DRecord.cpp       # Set parameters
     tests/actions/Test_Action0ERecord.cpp
     tests/actions/Test_Action0FRecord.cpp
     tests/actions/Test_Action10Record.cpp

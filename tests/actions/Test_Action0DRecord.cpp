@@ -19,3 +19,74 @@
 #include "catch.hpp"
 #include "Test_Shared.h"
 #include "Action0DRecord.h"
+
+
+namespace {
+
+static constexpr const char* str_YAGL =
+    "set_parameter<Param> // Action0D\n"
+    "{\n"
+    "    expression: parameter[0x6B] = parameter[0x6A] & parameter[0x69];\n"
+    "    not_if_defined: false;\n"
+    "}\n";
+static constexpr const char* str_NFO = 
+//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+    "0D "  // Action0D
+    "6B "  // Target parameter = 6B
+    "07 "  // Operation = bitwise AND
+    "6A "  // First argument parameter = 6A
+    "69 "; // Second argument parameter = 69
+
+static constexpr const char* str_YAGL2 =
+    "set_parameter<Param> // Action0D\n"
+    "{\n"
+    "    expression: parameter[0x6B] = parameter[0x6A] | parameter[0x69];\n"
+    "    not_if_defined: true;\n"
+    "}\n";
+static constexpr const char* str_NFO2 = 
+//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+    "0D "  // Action0D
+    "6B "  // Target parameter = 6B
+    "88 "  // Operation = bitwise OR, do nothing if parameter defined already (80)
+    "6A "  // First argument parameter = 6A
+    "69 "; // Second argument parameter = 69
+
+static constexpr const char* str_YAGL3 =
+    "set_parameter<Param> // Action0D\n"
+    "{\n"
+    "    expression: parameter[0x6B] = parameter[0x6A] % parameter[0x69], signed;\n"
+    "    not_if_defined: false;\n"
+    "}\n";
+static constexpr const char* str_NFO3 = 
+//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+    "0D "  // Action0D
+    "6B "  // Target parameter = 6B
+    "0C "  // Operation = signed modulo
+    "6A "  // First argument parameter = 6A
+    "69 "; // Second argument parameter = 69
+
+static constexpr const char* str_YAGL4 =
+    "set_parameter<Param> // Action0D\n"
+    "{\n"
+    "    expression: parameter[0x6B] = parameter[0x6A] % parameter[0x69], unsigned;\n"
+    "    not_if_defined: false;\n"
+    "}\n";
+static constexpr const char* str_NFO4 = 
+//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+    "0D "  // Action0D
+    "6B "  // Target parameter = 6B
+    "0B "  // Operation = unsigned modulo
+    "6A "  // First argument parameter = 6A
+    "69 "; // Second argument parameter = 69
+
+} // namespace {}
+
+
+TEST_CASE("Action0DRecord", "[actions]")
+{
+    test_yagl<Action0DRecord, 0x0D>(str_YAGL, str_NFO);
+    test_yagl<Action0DRecord, 0x0D>(str_YAGL2, str_NFO2);
+    test_yagl<Action0DRecord, 0x0D>(str_YAGL3, str_NFO3);
+    test_yagl<Action0DRecord, 0x0D>(str_YAGL4, str_NFO4);
+}
+

@@ -23,7 +23,7 @@
 
 namespace {
 
-static constexpr const char* str_YAGL =
+static constexpr const char* str_YAGL7 =
 // param[0x6C] & <mask> 0xFF, 0xFFFF, 0xFFFF'FFFF or custom
 "if_act7 (is_bit_set(param[0x6C] & 0xFF, 1 << 0)) // Action07\n" 
 "{\n"
@@ -33,7 +33,7 @@ static constexpr const char* str_YAGL =
 "}\n";
 
 // NFO matching the YAGL.
-static constexpr const char* str_NFO =
+static constexpr const char* str_NFO7 =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
       "07 "  // Action07
       "6C "  // Parameter 6C
@@ -43,7 +43,7 @@ static constexpr const char* str_NFO =
       "01 "; // Number of records to skip - 00 means to end of file.
 
 
-static constexpr const char* str_YAGL2 =
+static constexpr const char* str_YAGL9 =
 // param[0x6C] & <mask> 0xFF, 0xFFFF, 0xFFFF'FFFF or custom
 "if_act9 (is_bit_set(param[0x6C] & 0xFF, 1 << 0)) // Action09\n" 
 "{\n"
@@ -53,7 +53,7 @@ static constexpr const char* str_YAGL2 =
 "}\n";
 
 // NFO matching the YAGL.
-static constexpr const char* str_NFO2 =
+static constexpr const char* str_NFO9 =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
       "09 "  // Action07
       "6C "  // Parameter 6C
@@ -103,6 +103,6 @@ void test_yagl_action07(const char* YAGL, const char* NFO)
 
 TEST_CASE("Action07Record", "[actions]")
 {
-    test_yagl_action07<RecordType::ACTION_07, 0x07>(str_YAGL, str_NFO);
-    test_yagl_action07<RecordType::ACTION_09, 0x09>(str_YAGL2, str_NFO2);
+    test_yagl_action07<RecordType::ACTION_07, 0x07>(str_YAGL7, str_NFO7);
+    test_yagl_action07<RecordType::ACTION_09, 0x09>(str_YAGL9, str_NFO9);
 }
