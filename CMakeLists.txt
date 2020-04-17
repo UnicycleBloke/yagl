@@ -116,22 +116,36 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     utility/Languages.cpp
 
     # Unit test.
-    #tests/Test_StreamHelpers.cpp
-    #tests/Test_IntegerDescriptor.cpp
-    #tests/Test_YearDescriptor.cpp
-    #tests/Test_DateDescriptor.cpp
+    tests/sundries/Test_StreamHelpers.cpp
+    tests/sundries/Test_IntegerDescriptor.cpp
+    tests/sundries/Test_YearDescriptor.cpp
+    tests/sundries/Test_DateDescriptor.cpp
 
     # Properties for various features.
-    tests/Test_Action00_Trains.cpp   
+    tests/features/Test_Action00_Trains.cpp   
 
-    tests/Test_Action01Record.cpp  # Define sprites
-    tests/Test_Action02BasicRecord.cpp  # Define graphics
-    tests/Test_Action03Record.cpp  # Assign graphics
-    tests/Test_Action04Record.cpp  # Strings
-    #tests/Test_Action05Record.cpp # Sprites
-    tests/Test_Action06Record.cpp  # Modify next
-    tests/Test_Action07Record.cpp  # Skip records
-    tests/Test_Action08Record.cpp  # GRF identification
+    # Other ActionXX records.
+    tests/actions/Test_Action01Record.cpp       # Define sprites
+    tests/actions/Test_Action02BasicRecord.cpp  # Define graphics
+    tests/actions/Test_Action03Record.cpp       # Assign graphics
+    tests/actions/Test_Action04Record.cpp       # Strings
+    tests/actions/Test_Action05Record.cpp       # Sprites
+    tests/actions/Test_Action06Record.cpp       # Modify next
+    tests/actions/Test_Action07Record.cpp       # Skip records
+    tests/actions/Test_Action08Record.cpp       # GRF identification
+    tests/actions/Test_Action0ARecord.cpp
+    tests/actions/Test_Action0BRecord.cpp
+    tests/actions/Test_Action0CRecord.cpp
+    tests/actions/Test_Action0DRecord.cpp
+    tests/actions/Test_Action0ERecord.cpp
+    tests/actions/Test_Action0FRecord.cpp
+    tests/actions/Test_Action10Record.cpp
+    tests/actions/Test_Action11Record.cpp
+    tests/actions/Test_Action12Record.cpp
+    tests/actions/Test_Action13Record.cpp
+    tests/actions/Test_Action14Record.cpp
+    tests/actions/Test_ActionFERecord.cpp
+    tests/actions/Test_ActionFFRecord.cpp
 )
 
 # This appears to be the simplest way to create a pre-build step that
@@ -154,6 +168,7 @@ target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC
     records/features
     utility
     application
+    tests
 
     # Header only third party libraries used for convenience. 
     third_party/catch2  
