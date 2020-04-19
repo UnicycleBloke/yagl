@@ -23,18 +23,41 @@
 
 namespace {
 
-// TODO Add all properties, even with silly values, so that we can confirm the 
+// Add all properties, even with silly values, so that we can confirm the 
 // formatting of each one if they are individually changed.
-static constexpr const char* str_YAGL = "";
+static constexpr const char* str_YAGL =
+    "properties<AirportTiles, 0x0023> // Action00\n"
+    "{\n"
+    "    // instance_id: 0x0023\n"
+    "    {\n"
+    "        substitute_tile_id: 0x12;\n"
+    "        aiport_tile_override: 0x34;\n"
+    "        callback_flags: 0x56;\n"
+    "        animation_info: 0x1357;\n"
+    "        animation_speed: 0x23;\n"
+    "        animation_triggers: 0x35;\n"
+    "    }\n"
+    "}\n";
 
 // NFO matching the YAGL.
-static constexpr const char* str_NFO = "";
+static constexpr const char* str_NFO =
+//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+    "00 "             // Action00
+    "11 "             // AirportTiles
+    "06 "             // 0x06 properties... 
+    "01 "             // ... for 0x01 item
+    "FF 23 00 "       // First ID 0x23 (extended byte)
+    "08 12 "
+    "09 34 "
+    "0E 56 "
+    "0F 57 13 "
+    "10 23 "
+    "11 35 ";
 
 } // namespace {
 
 
-// TEST_CASE("Action00Trains", "[actions]")
-// {
-//     test_yagl<Action00Record, 0x00>(str_YAGL, str_NFO);
-// }
-
+TEST_CASE("Action00AirportTiles", "[features]")
+{
+    test_yagl<Action00Record, 0x00>(str_YAGL, str_NFO);
+}

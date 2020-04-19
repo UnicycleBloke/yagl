@@ -35,6 +35,11 @@ void test_yagl(const char* YAGL, const char* NFO)
     //action.print(std::cout, sprites, 0);
     action.print(os, sprites, 0);
     CHECK(os.str() == YAGL);
+    if (os.str() != YAGL)
+    {
+        std::cout << hex_dump(os.str(), true) << "\n";
+        std::cout << hex_dump(YAGL, true) << "\n";
+    }
 
     // Confirm that the written binary matches the sample.
     os.str("");

@@ -145,5 +145,5 @@ inline Padding pad(uint16_t len)
 
 
 // Used for the unit tests.
-std::string hex_dump(const std::string& data);
+std::string hex_dump(const std::string& data, bool split_lines = false);
 

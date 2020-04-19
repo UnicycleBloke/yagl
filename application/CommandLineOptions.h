@@ -48,6 +48,7 @@ class CommandLineOptions
         uint8_t            chunk_gap()  const { return m_chunk_gap; }
 
         bool               debug()      const { return m_debug; }
+        const std::string& test_args()  const { return m_test_args; }
         
     private:
         CommandLineOptions() {}
@@ -56,6 +57,7 @@ class CommandLineOptions
         // Required arguments.
         Operation   m_operation{};
         std::string m_grf_file;
+        std::string m_test_args;
 
         // Optional arguments.
         uint16_t    m_width     = 800;                    // Max width of spritesheets

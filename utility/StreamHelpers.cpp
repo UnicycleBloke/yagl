@@ -128,12 +128,19 @@ void dump_hex(std::istream& is, uint16_t length)
 */
 
 // Used for the unit tests.
-std::string hex_dump(const std::string& data)
+std::string hex_dump(const std::string& data, bool split_lines)
 {
+    uint32_t index = 0;
     std::ostringstream os;
     for (auto byte: data)
     {
         os << to_hex(byte, false) << " ";
+        ++index;
+        if (split_lines)
+        {
+            if ((index % 16) == 0)
+                os << "\n";
+        }
     }
     return os.str();
 }

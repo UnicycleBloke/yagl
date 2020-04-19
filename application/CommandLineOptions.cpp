@@ -55,6 +55,7 @@ void CommandLineOptions::parse(int argc, char* argv[])
             ("e,encode",    "Encodes a GRF file from YAGL script and sprite sheets", cxxopts::value<bool>(encode))
             ("x,hexdump",   "Reads a GRF file and dumps it to hex somewhat like NFO", cxxopts::value<bool>(hexdump))
             ("t,test",      "Runs unit tests", cxxopts::value<bool>(test))
+            ("a,test_args", "Arguments to pass to the unit tests", cxxopts::value<std::string>(m_test_args))
 
             // Other options
             ("p,palette",   "Choose the initial palette for the GRF", cxxopts::value<uint16_t>(palette), "<idx>")
@@ -92,12 +93,12 @@ void CommandLineOptions::parse(int argc, char* argv[])
         uint16_t operation = decode + encode + hexdump + test;
         if (operation > 1)
         {
-            std::cout << "ERROR: The --encode,-e and --decode,-d and --hexdump,-x options are mutually exclusive\n";
+            std::cout << "ERROR: The --encode.-e, --decode,-d, --hexdump,-x and --test,-t options are mutually exclusive\n";
             exit(1);
         }
         if (operation == 0)
         {
-            std::cout << "ERROR: One of the --encode,-e and --decode,-d or --hexdump,-x options is required\n";
+            std::cout << "ERROR: One of the --encode.-e, --decode,-d, --hexdump,-x or --test,-t options is required\n";
             exit(1);
         }
         if (encode)  m_operation = Operation::Encode;

@@ -26,7 +26,7 @@ class BoolT
 public:
     void print(std::ostream& os) const
     {
-        os << std::boolalpha << (m_value == TRUE); 
+        os << std::boolalpha << m_value; 
     }
 
     void parse(TokenStream& is)
@@ -41,12 +41,14 @@ public:
         {
             throw RUNTIME_ERROR("Unexpected value when reading boolean");
         }
+
         m_value = (value == TRUE);
     }
 
     void write(std::ostream& os) const
-    {        
-        write_uint8(os, m_value ? TRUE : FALSE);
+    {     
+        uint8_t value = (m_value ? TRUE : FALSE);
+        write_uint8(os, value);
     }
   
 private:

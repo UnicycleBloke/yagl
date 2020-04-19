@@ -23,18 +23,33 @@
 
 namespace {
 
-// TODO Add all properties, even with silly values, so that we can confirm the 
+// Add all properties, even with silly values, so that we can confirm the 
 // formatting of each one if they are individually changed.
-static constexpr const char* str_YAGL = "";
+static constexpr const char* str_YAGL =
+    "properties<Canals, 0x0023> // Action00\n"
+    "{\n"
+    "    // instance_id: 0x0023\n"
+    "    {\n"
+    "        callback_flags: 0x12;\n"
+    "        graphics_flags: 0x34;\n"
+    "    }\n"
+    "}\n";
 
 // NFO matching the YAGL.
-static constexpr const char* str_NFO = "";
+static constexpr const char* str_NFO =
+//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+    "00 "             // Action00
+    "05 "             // Canals
+    "02 "             // 0x06 properties... 
+    "01 "             // ... for 0x01 item
+    "FF 23 00 "       // First ID 0x23 (extended byte)
+    "08 12 "
+    "09 34 ";
 
 } // namespace {
 
 
-// TEST_CASE("Action00Trains", "[actions]")
-// {
-//     test_yagl<Action00Record, 0x00>(str_YAGL, str_NFO);
-// }
-
+TEST_CASE("Action00Canals", "[features]")
+{
+    test_yagl<Action00Record, 0x00>(str_YAGL, str_NFO);
+}

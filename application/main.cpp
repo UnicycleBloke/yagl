@@ -140,14 +140,36 @@ static void hex_dump()
 }
 
 
-int test(int argc, char* argv[])
+std::vector<std::string> split(const std::string& str)
 {
+    std::vector<std::string> result;
+    std::istringstream is(str);
+    std::string token;
+    while (std::getline(is, token, ' ')) 
+    {
+        result.push_back(token);
+    }
+    return result;
+}
+
+
+int test(const char* arg0, const std::string str_args)
+{
+    // Recreate the command line for the benefit of the Catch2 tests.
+    auto split_args = split(str_args);
+    std::vector<const char*> ptr_args;
+    ptr_args.push_back(arg0);
+    for (const auto& arg: split_args)
+    {
+        ptr_args.push_back(&arg[0]);
+    } 
+ 
     std::cout << "Performing unit tests...\n";
     Catch::Session session; // There must be exactly one instance
  
     // Writing to session.configData() here sets defaults
     // this is the preferred way to set them.   
-    int result = session.applyCommandLine(argc, argv);
+    int result = session.applyCommandLine(int(ptr_args.size()), &ptr_args[0]);
     if( result != 0 ) // Indicates a command line error
         return result;
  
@@ -187,8 +209,7 @@ int main (int argc, char* argv[])
             break;
 
         case CommandLineOptions::Operation::Test:
-            test(1, argv);
-            //test(argc, argv);
+            test(argv[0], options.test_args());
             break;
     }
 

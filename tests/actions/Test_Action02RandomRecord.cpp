@@ -44,8 +44,8 @@ static constexpr const char* str_NFO =
 } // namespace {
 
 
-TEST_CASE("Action02Basic", "[actions]")
-{
-    test_yagl<Action02BasicRecord, 0x02>(str_YAGL, str_NFO);
-}
+// TEST_CASE("Action02RandomRecord", "[actions]")
+// {
+//     test_yagl<Action02BasicRecord, 0x02>(str_YAGL, str_NFO);
+// }
 
