@@ -135,9 +135,9 @@ constexpr UInt8Descriptor                desc_21  = { 0x21, str_callback_flags_1
 constexpr UInt8Descriptor                desc_22  = { 0x22, str_callback_flags_2,            UIntFormat::Hex };
 constexpr UInt32Descriptor               desc_23  = { 0x23, str_destruction_cost_multiplier, UIntFormat::Hex };
 constexpr UInt16Descriptor               desc_24  = { 0x24, str_nearby_station_text_id,      UIntFormat::Hex };
-constexpr UInt8VectorDescriptor          desc_25  = { 0x25, str_production_cargo_list };
-constexpr UInt8VectorDescriptor          desc_26  = { 0x26, str_acceptance_cargo_list };
-constexpr UInt8VectorDescriptor          desc_27  = { 0x27, str_production_multipliers };
+constexpr UInt8VectorDescriptor          desc_25  = { 0x25, str_production_cargo_list,       UIntFormat::Hex };
+constexpr UInt8VectorDescriptor          desc_26  = { 0x26, str_acceptance_cargo_list,       UIntFormat::Hex };
+constexpr UInt8VectorDescriptor          desc_27  = { 0x27, str_production_multipliers,      UIntFormat::Hex };
 constexpr MultipliersDescriptor          desc_28  = { 0x28, str_input_cargo_multipliers };
 
 
@@ -198,7 +198,7 @@ void Multipliers::parse(TokenStream& is)
         while (is.peek().type != TokenType::CloseBracket)
         {
             ++outputs;
-            uint8_t value = is.match_uint8();
+            uint16_t value = is.match_uint16();
             m_items.push_back(value);
         }
         is.match(TokenType::CloseBracket);

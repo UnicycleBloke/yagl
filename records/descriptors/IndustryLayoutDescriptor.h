@@ -21,50 +21,57 @@
 #include <vector>
 
 
-struct IndustryTile
+class IndustryTile
 {
+public:
     enum class Type { OldTile, NewTile, Clearance };
 
-    int8_t   x_off;  // 0x00 is terminator part 1
-    int8_t   y_off;  // 0x80 is terminator part 2
-    Type     type;
-    uint16_t tile;
-
-    void read(std::istream& is);
+public:
+    bool read(std::istream& is);
     void write(std::ostream& os) const;
     void print(std::ostream& os, uint16_t indent) const;
     void parse(TokenStream& is);
+
+private:
+    int8_t   m_x_off;  // 0x00 is terminator part 1
+    int8_t   m_y_off;  // 0x80 is terminator part 2
+    Type     m_type;
+    uint16_t m_tile;
 };
 
 
 struct IndustryLayout
 {
-    // The layout is a reference is the first byte is 0xFE.
-    bool is_reference;
-    
-    // These are used if this layout is a reference to another 
-    // industry layout, in which case there are zero tiles.
-    uint8_t industry_num;
-    uint8_t layout_num;
-
-    // List of tiles when this is not a reference to another layout.
-    std::vector<IndustryTile> tiles;
-
+public:
     void read(std::istream& is);
     void write(std::ostream& os) const;
     void print(std::ostream& os, uint16_t indent) const;
     void parse(TokenStream& is);
+
+private:    
+    // The layout is a reference is the first byte is 0xFE.
+    bool m_is_reference;
+    
+    // These are used if this layout is a reference to another 
+    // industry layout, in which case there are zero tiles.
+    uint8_t m_industry_num;
+    uint8_t m_layout_num;
+
+    // List of tiles when this is not a reference to another layout.
+    std::vector<IndustryTile> m_tiles;
 };
 
 
 struct IndustryLayouts
 {
-    std::vector<IndustryLayout> layouts;
-
+public:
     void read(std::istream& is);
     void write(std::ostream& os) const;
     void print(std::ostream& os, uint16_t indent) const;
     void parse(TokenStream& is);
+
+private:    
+    std::vector<IndustryLayout> m_layouts;
 };
 
 

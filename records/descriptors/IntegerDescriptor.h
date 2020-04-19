@@ -304,7 +304,7 @@ struct UIntDescriptor : PropertyDescriptor
         value.parse(is);
     }
 
-    UIntFormat format;
+    UIntFormat format = UIntFormat::Hex;
 };
 
 
