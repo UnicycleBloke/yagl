@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action00Stations.h"
 #include "StreamHelpers.h"
+#include "EnumDescriptor.h"
 
 
 namespace {
@@ -29,7 +30,7 @@ constexpr const char* str_copy_sprite_layout_id     = "copy_sprite_layout_id";
 constexpr const char* str_callback_flags            = "callback_flags";
 constexpr const char* str_disabled_platform_numbers = "disabled_platform_numbers";
 constexpr const char* str_disabled_platform_lengths = "disabled_platform_lengths";
-constexpr const char* str_custom_layout             = "custom_layout";
+constexpr const char* str_custom_layouts            = "custom_layouts";
 constexpr const char* str_copy_custom_layout_id     = "copy_custom_layout_id";
 constexpr const char* str_little_lots_threshold     = "little_lots_threshold";
 constexpr const char* str_pylon_placement           = "pylon_placement";
@@ -42,7 +43,6 @@ constexpr const char* str_animation_speed           = "animation_speed";
 constexpr const char* str_animation_triggers        = "animation_triggers";
 constexpr const char* str_tile                      = "tile";
 constexpr const char* str_layout                    = "layout"; 
-constexpr const char* str_layouts                   = "layouts";
 constexpr const char* str_ground_sprite             = "ground_sprite";
 constexpr const char* str_sprite_data               = "sprite_data";
 
@@ -58,7 +58,7 @@ const std::map<std::string, uint8_t> g_indices =
     { str_callback_flags,            0x0B },
     { str_disabled_platform_numbers, 0x0C },
     { str_disabled_platform_lengths, 0x0D },
-    { str_custom_layout,             0x0E },
+    { str_custom_layouts,            0x0E },
     { str_copy_custom_layout_id,     0x0F },
     { str_little_lots_threshold,     0x10 },
     { str_pylon_placement,           0x11 },
@@ -76,13 +76,13 @@ using StationLayoutDescriptor  = GenericDescriptor<StationLayout, true>;
 using CustomStationsDescriptor = GenericDescriptor<CustomStation, true>;
 
 
-constexpr UInt32Descriptor          desc_08  = { 0x08, str_class_id,                  UIntFormat::Hex };
+constexpr GRFLabelDescriptor        desc_08  = { 0x08, str_class_id };
 constexpr StationLayoutDescriptor   desc_09  = { 0x09, str_sprite_layout };
 constexpr UInt8Descriptor           desc_0A  = { 0x0A, str_copy_sprite_layout_id,     UIntFormat::Hex };
 constexpr UInt8Descriptor           desc_0B  = { 0x0B, str_callback_flags,            UIntFormat::Hex };
 constexpr UInt8Descriptor           desc_0C  = { 0x0C, str_disabled_platform_numbers, UIntFormat::Hex };
 constexpr UInt8Descriptor           desc_0D  = { 0x0D, str_disabled_platform_lengths, UIntFormat::Hex };
-constexpr CustomStationsDescriptor  desc_0E  = { 0x0E, str_custom_layout };
+constexpr CustomStationsDescriptor  desc_0E  = { 0x0E, str_custom_layouts };
 constexpr UInt8Descriptor           desc_0F  = { 0x0F, str_copy_custom_layout_id,     UIntFormat::Hex };
 constexpr UInt16Descriptor          desc_10  = { 0x10, str_little_lots_threshold,     UIntFormat::Hex };
 constexpr UInt8Descriptor           desc_11  = { 0x11, str_pylon_placement,           UIntFormat::Hex };
@@ -93,6 +93,18 @@ constexpr UInt8Descriptor           desc_15  = { 0x15, str_can_train_enter_tile,
 constexpr UInt16Descriptor          desc_16  = { 0x16, str_animation_info,            UIntFormat::Hex };
 constexpr UInt8Descriptor           desc_17  = { 0x17, str_animation_speed,           UIntFormat::Hex };
 constexpr UInt16Descriptor          desc_18  = { 0x18, str_animation_triggers,        UIntFormat::Hex };
+
+
+const EnumDescriptorT<CustomLayout::Platform> platform_desc = 
+{ 
+    0x00, "severity",                   
+    {
+        { 0, "P" }, // Platform::Plain },    
+        { 2, "B" }, // Platform::Building }, 
+        { 4, "L" }, // Platform::RoofLeft }, 
+        { 6, "R" }, // Platform::RoofRight }, 
+    }
+};
 
 
 } // namespace {
@@ -294,8 +306,7 @@ void StationLayout::write(std::ostream& os) const
 
 void StationLayout::print(std::ostream& os, uint16_t indent) const
 {
-    os << str_layouts << "\n";
-    os << pad(indent) << "{\n"; 
+    os << "\n" << pad(indent) << "{\n"; 
     for (const auto& tile: m_tiles)
     {
         tile.print(os, indent + 4);
@@ -306,7 +317,6 @@ void StationLayout::print(std::ostream& os, uint16_t indent) const
 
 void StationLayout::parse(TokenStream& is)
 {
-    is.match_ident(str_layouts);
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
@@ -337,11 +347,12 @@ void CustomLayout::write(std::ostream& os) const
 {
     write_uint8(os, m_platform_length);
     write_uint8(os, m_platform_count);
-    // Assert that the vector has the correct length?
     for (const auto tile: m_platform_tiles)
     {
         write_uint8(os, static_cast<uint8_t>(tile));
     }
+
+    // Assert that the vector has the correct length?
 }
 
 
@@ -349,7 +360,7 @@ void CustomLayout::print(std::ostream& os, uint16_t indent) const
 {
     os << pad(indent) << str_layout << "\n"; 
     os << pad(indent) << "{\n"; 
-    os << pad(indent + 4) << "// Platform: B=Building, P=Plain, L=RoofLeft, R=RoofRight \n"; 
+    os << pad(indent + 4) << "// Platform: B=Building, P=Plain, L=RoofLeft, R=RoofRight\n"; 
 
     uint16_t index{};
     for (uint8_t c = 0; c < m_platform_count; ++c)
@@ -359,29 +370,47 @@ void CustomLayout::print(std::ostream& os, uint16_t indent) const
         {
             // Assert that the vector has the correct length?
             const auto tile = m_platform_tiles[index++];
-            os << " "; // << to_hex(static_cast<uint8_t>(tile));
             switch (tile)
             {
                 // case Platform::Building:  os << "Building"; break;
                 // case Platform::Plain:     os << "Plain"; break;
                 // case Platform::RoofLeft:  os << "RoofLeft"; break;
                 // case Platform::RoofRight: os << "RoofRight"; break;
-                case Platform::Building:  os << "B"; break;
-                case Platform::Plain:     os << "P"; break;
-                case Platform::RoofLeft:  os << "L"; break;
-                case Platform::RoofRight: os << "R"; break;
+                case Platform::Building:  os << "B "; break;
+                case Platform::Plain:     os << "P "; break;
+                case Platform::RoofLeft:  os << "L "; break;
+                case Platform::RoofRight: os << "R "; break;
             }
         }
-        os << "\n"; 
+        os << ";\n"; 
     }
 
-    os << pad(indent) << " }\n"; 
+    os << pad(indent) << "}\n"; 
 }
 
 
 void CustomLayout::parse(TokenStream& is)
 {
+    is.match_ident(str_layout);
+    is.match(TokenType::OpenBrace);
 
+    m_platform_count = 0;
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        while (is.peek().type != TokenType::SemiColon)
+        {
+            Platform tile;
+            platform_desc.parse(tile, is);
+            m_platform_tiles.push_back(tile);
+        }
+        is.match(TokenType::SemiColon);
+        ++m_platform_count;
+    }
+    is.match(TokenType::CloseBrace);
+
+    m_platform_length = uint8_t(m_platform_tiles.size() / m_platform_count);
+    if ((m_platform_tiles.size() % m_platform_count) != 0)
+        throw PARSER_ERROR("Platform lengths do not match", is.peek());
 }
 
 
@@ -408,6 +437,8 @@ void CustomStation::write(std::ostream& os) const
     {
         layout.write(os);
     }
+
+    // Terminator
     write_uint8(os, 0x00);
     write_uint8(os, 0x00);
 }
@@ -415,19 +446,25 @@ void CustomStation::write(std::ostream& os) const
 
 void CustomStation::print(std::ostream& os, uint16_t indent) const
 {
-    os << str_layouts << "\n"; 
-    os << pad(indent) << "{\n"; 
+    os << "\n" << pad(indent) << "{\n"; 
     for (const auto& layout: m_layouts)
     {
         layout.print(os, indent + 4);
     }
-    os << pad(indent) << "};\n"; 
+    os << pad(indent) << "}"; 
 }
 
 
 void CustomStation::parse(TokenStream& is)
 {
-
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
+    {
+        CustomLayout layout;
+        layout.parse(is);
+        m_layouts.push_back(layout);
+    }
+    is.match(TokenType::CloseBrace);
 }
 
 

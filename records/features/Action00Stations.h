@@ -19,6 +19,7 @@
 #pragma once
 #include "Action00Feature.h"
 #include "IntegerDescriptor.h"
+#include "GRFLabel.h"
 #include <vector>
 
 
@@ -79,7 +80,7 @@ public:
 
     bool terminator() const { return (m_platform_count == 0) && (m_platform_length == 0); }
 
-private:    
+public:
     enum class Platform 
     {
         Plain     = 0x00, 
@@ -88,6 +89,7 @@ private:
         RoofRight = 0x06
     }; 
 
+private:    
     uint8_t m_platform_length;
     uint8_t m_platform_count;
     // length * count, All bytes 00, 02, 04 or 06
@@ -121,7 +123,7 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    UInt32         m_08_class_id{};
+    GRFLabel       m_08_class_id{};
     StationLayout  m_09_sprite_layout{};
     UInt8          m_0A_copy_sprite_layout_id{};
     UInt8          m_0B_callback_flags{};
