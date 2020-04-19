@@ -50,8 +50,8 @@ static constexpr const char* str_YAGL =
     "        long_introduction_date: date(2020/1/2);\n"
     "        sort_purchase_list: 0x0012;\n"
     "        custom_cargo_aging_period: 0x1223;\n"
-    "        always_refittable_cargos: [ 1 2 3 ];\n"
-    "        never_refittable_cargos: [ 4 5 6 ];\n"
+    "        always_refittable_cargos: [ 0x01 0x02 0x03 ];\n"
+    "        never_refittable_cargos: [ 0x04 0x05 0x06 ];\n"
     "        aircraft_range: 0x0000;\n"
     "    }\n"
     "}\n";

@@ -116,10 +116,10 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     utility/Languages.cpp
 
     # Unit test.
-    #tests/sundries/Test_StreamHelpers.cpp
-    #tests/sundries/Test_IntegerDescriptor.cpp
-    #tests/sundries/Test_YearDescriptor.cpp
-    #tests/sundries/Test_DateDescriptor.cpp
+    tests/sundries/Test_StreamHelpers.cpp
+    tests/sundries/Test_IntegerDescriptor.cpp
+    tests/sundries/Test_YearDescriptor.cpp
+    tests/sundries/Test_DateDescriptor.cpp
 
     # Properties for various features.
     tests/features/Test_Action00_Aircraft.cpp

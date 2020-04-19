@@ -45,7 +45,7 @@ static constexpr const char* str_YAGL =
     "        coeff_of_tractive_effort: 0x11;\n"
     "        coeff_of_air_drag: 0x00;\n"
     "        reliability_decay_speed: 20;\n"
-    "        always_refittable_cargos: [ 0 ];\n"
+    "        always_refittable_cargos: [ 0x00 ];\n"
     "        refit_cargo_types: 0x00000000;\n"
     "        miscellaneous_flags: 0x00;\n"
     "        refit_cost: 0x00;\n"
