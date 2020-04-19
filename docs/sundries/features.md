@@ -20,7 +20,7 @@
 | `Airports`        | 0x0D  |
 | `Signals`         | 0x0E  |
 | `Objects`         | 0x0F  |
-| `Railtypes`       | 0x10  |
+| `RailTypes`       | 0x10  |
 | `AirportTiles`    | 0x11  |
 | `RoadTypes`       | 0x12  |
 | `TramTypes`       | 0x13  |

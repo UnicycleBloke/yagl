@@ -19,6 +19,7 @@
 #pragma once
 #include "Action00Feature.h"
 #include "DateDescriptor.h"
+#include "GRFLabel.h"
 
 
 class Action00Objects : public Action00Feature
@@ -34,7 +35,7 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    UInt32   m_08_class_label{};
+    GRFLabel m_08_class_label{};
     UInt16   m_09_class_text_id{};
     UInt16   m_0A_object_text_id{};
     UInt8    m_0B_climate_availability{};

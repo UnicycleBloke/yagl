@@ -44,7 +44,7 @@ private:
     UInt16       m_0B_window_caption_id{};
     UInt16       m_0C_autoreplace_text_id{};
     UInt16       m_0D_new_engine_text_id{};
-    GRFLabelList m_0F_compatible_tramtypes{};
+    GRFLabelList m_0F_powered_tramtypes{};
     UInt8        m_10_tramtype_flags{};
     UInt16       m_13_construction_costs{};
     UInt16       m_14_speed_limit{};

@@ -167,7 +167,7 @@ std::shared_ptr<Action00Feature> Action00Record::make_feature(FeatureType featur
         case FeatureType::Airports:        return std::make_shared<Action00Airports>();
         case FeatureType::Signals:         return std::make_shared<Action00Signals>();
         case FeatureType::Objects:         return std::make_shared<Action00Objects>();
-        case FeatureType::Railtypes:       return std::make_shared<Action00RailTypes>();
+        case FeatureType::RailTypes:       return std::make_shared<Action00RailTypes>();
         case FeatureType::AirportTiles:    return std::make_shared<Action00AirportTiles>();
         case FeatureType::RoadTypes:       return std::make_shared<Action00RoadTypes>();
         case FeatureType::TramTypes:       return std::make_shared<Action00TramTypes>();
@@ -176,18 +176,6 @@ std::shared_ptr<Action00Feature> Action00Record::make_feature(FeatureType featur
 
     throw RUNTIME_ERROR("Action00Record::make_feature");
 }
-
-
-// properties<Trains> // Action00
-// {
-//     instance_id: 0x009C
-//     {
-//         reliability_decay_speed: 20;
-//         vehicle_life_years: 75;
-//         model_life_years: 158;
-//         track_type: Rail;
-//         climate_availability: Temperate | Arctic | Tropical | Toyland;
-//         loading_speed: 0x00;
 
 
 void Action00Record::parse(TokenStream& is)

@@ -23,7 +23,7 @@ Each type of feature has its own set of properties:
 - [SoundEffects](../features/action00_sound_effects.md)    
 - [Airports](../features/action00_airports.md)                
 - [Objects](../features/action00_objects.md)         
-- [Railtypes](../features/action00_railtypes.md)       
+- [RailTypes](../features/action00_rail_types.md)       
 - [AirportTiles](../features/action00_airport_tiles.md)    
 - [RoadTypes](../features/action00_road_types.md)       
 - [TramTypes](../features/action00_tram_types.md)       

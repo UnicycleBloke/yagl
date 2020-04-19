@@ -18,6 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Action00Objects.h"
 #include "StreamHelpers.h"
+#include "GRFLabel.h"
+#include "BitfieldDescriptor.h"
 
 
 namespace {
@@ -67,23 +69,26 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-constexpr UInt32Descriptor    desc_08  = { 0x08, str_class_label,          UIntFormat::Hex };
-constexpr UInt16Descriptor    desc_09  = { 0x09, str_class_text_id,        UIntFormat::Hex };
-constexpr UInt16Descriptor    desc_0A  = { 0x0A, str_object_text_id,       UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_0B  = { 0x0B, str_climate_availability, UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_0C  = { 0x0C, str_size_xy,              UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_0D  = { 0x0D, str_cost_factor,          UIntFormat::Hex };
-constexpr LongDateDescriptor  desc_0E  = { 0x0E, str_introduction_date };
-constexpr LongDateDescriptor  desc_0F  = { 0x0F, str_end_of_life_date };
-constexpr UInt16Descriptor    desc_10  = { 0x10, str_object_flags,         UIntFormat::Hex };
-constexpr UInt16Descriptor    desc_11  = { 0x11, str_animation_info,       UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_12  = { 0x12, str_animation_speed,      UIntFormat::Hex };
-constexpr UInt16Descriptor    desc_13  = { 0x13, str_animation_triggers,   UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_14  = { 0x14, str_removal_cost_factor,  UIntFormat::Hex };
-constexpr UInt16Descriptor    desc_15  = { 0x15, str_callback_flags,       UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_16  = { 0x16, str_building_height,      UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_17  = { 0x17, str_number_of_views,      UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_18  = { 0x18, str_number_on_creation,   UIntFormat::Hex };
+constexpr GRFLabelDescriptor          desc_08  = { 0x08, str_class_label };
+constexpr UInt16Descriptor            desc_09  = { 0x09, str_class_text_id,        UIntFormat::Hex };
+constexpr UInt16Descriptor            desc_0A  = { 0x0A, str_object_text_id,       UIntFormat::Hex };
+// TODO share this with Common.
+const     BitfieldDescriptorT<UInt8>  desc_0B = { 0x0B, str_climate_availability,    
+    { {1, "Temperate"}, {2, "Arctic"}, {4, "Tropical"}, {8, "Toyland"} } };
+//constexpr UInt8Descriptor             desc_0B  = { 0x0B, str_climate_availability, UIntFormat::Hex };
+constexpr UInt8Descriptor             desc_0C  = { 0x0C, str_size_xy,              UIntFormat::Hex };
+constexpr UInt8Descriptor             desc_0D  = { 0x0D, str_cost_factor,          UIntFormat::Hex };
+constexpr LongDateDescriptor          desc_0E  = { 0x0E, str_introduction_date };
+constexpr LongDateDescriptor          desc_0F  = { 0x0F, str_end_of_life_date };
+constexpr UInt16Descriptor            desc_10  = { 0x10, str_object_flags,         UIntFormat::Hex };
+constexpr UInt16Descriptor            desc_11  = { 0x11, str_animation_info,       UIntFormat::Hex };
+constexpr UInt8Descriptor             desc_12  = { 0x12, str_animation_speed,      UIntFormat::Hex };
+constexpr UInt16Descriptor            desc_13  = { 0x13, str_animation_triggers,   UIntFormat::Hex };
+constexpr UInt8Descriptor             desc_14  = { 0x14, str_removal_cost_factor,  UIntFormat::Hex };
+constexpr UInt16Descriptor            desc_15  = { 0x15, str_callback_flags,       UIntFormat::Hex };
+constexpr UInt8Descriptor             desc_16  = { 0x16, str_building_height,      UIntFormat::Hex };
+constexpr UInt8Descriptor             desc_17  = { 0x17, str_number_of_views,      UIntFormat::Hex };
+constexpr UInt8Descriptor             desc_18  = { 0x18, str_number_on_creation,   UIntFormat::Hex };
     
 
 } // namespace {

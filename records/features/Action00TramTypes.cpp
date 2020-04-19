@@ -29,7 +29,7 @@ constexpr const char* str_dropdown_text_id        = "dropdown_text_id";
 constexpr const char* str_window_caption_id       = "window_caption_id";
 constexpr const char* str_autoreplace_text_id     = "autoreplace_text_id";
 constexpr const char* str_new_engine_text_id      = "new_engine_text_id";
-constexpr const char* str_compatible_tramtypes    = "compatible_tramtypes";
+constexpr const char* str_powered_tramtypes       = "powered_tramtypes";
 constexpr const char* str_tramtype_flags          = "tramtype_flags";
 constexpr const char* str_construction_costs      = "construction_costs";
 constexpr const char* str_speed_limit             = "speed_limit";
@@ -54,7 +54,7 @@ const std::map<std::string, uint8_t> g_indices =
     { str_window_caption_id,       0x0B },
     { str_autoreplace_text_id,     0x0C },
     { str_new_engine_text_id,      0x0D },
-    { str_compatible_tramtypes,    0x0F },
+    { str_powered_tramtypes,       0x0F },
     { str_tramtype_flags,          0x10 },
     { str_construction_costs,      0x13 },
     { str_speed_limit,             0x14 },
@@ -75,7 +75,7 @@ constexpr UInt16Descriptor       desc_0A = { 0x0A, str_dropdown_text_id,        
 constexpr UInt16Descriptor       desc_0B = { 0x0B, str_window_caption_id,       UIntFormat::Hex };
 constexpr UInt16Descriptor       desc_0C = { 0x0C, str_autoreplace_text_id,     UIntFormat::Hex };
 constexpr UInt16Descriptor       desc_0D = { 0x0D, str_new_engine_text_id,      UIntFormat::Hex };
-constexpr GRFLabelListDescriptor desc_0F = { 0x0F, str_compatible_tramtypes };
+constexpr GRFLabelListDescriptor desc_0F = { 0x0F, str_powered_tramtypes };
 constexpr UInt8Descriptor        desc_10 = { 0x10, str_tramtype_flags,          UIntFormat::Hex };
 constexpr UInt16Descriptor       desc_13 = { 0x13, str_construction_costs,      UIntFormat::Hex };
 constexpr UInt16Descriptor       desc_14 = { 0x14, str_speed_limit,             UIntFormat::Hex };
@@ -102,7 +102,7 @@ bool Action00TramTypes::read_property(std::istream& is, uint8_t property)
         case 0x0B: m_0B_window_caption_id.read(is);       break;
         case 0x0C: m_0C_autoreplace_text_id.read(is);     break;
         case 0x0D: m_0D_new_engine_text_id.read(is);      break;
-        case 0x0E: m_0F_compatible_tramtypes.read(is);    break;
+        case 0x0F: m_0F_powered_tramtypes.read(is);       break;
         case 0x10: m_10_tramtype_flags.read(is);          break;
         case 0x13: m_13_construction_costs.read(is);      break;
         case 0x14: m_14_speed_limit.read(is);             break;
@@ -131,7 +131,7 @@ bool Action00TramTypes::write_property(std::ostream& os, uint8_t property) const
         case 0x0B: m_0B_window_caption_id.write(os);       break;
         case 0x0C: m_0C_autoreplace_text_id.write(os);     break;
         case 0x0D: m_0D_new_engine_text_id.write(os);      break;
-        case 0x0E: m_0F_compatible_tramtypes.write(os);    break;
+        case 0x0F: m_0F_powered_tramtypes.write(os);       break;
         case 0x10: m_10_tramtype_flags.write(os);          break;
         case 0x13: m_13_construction_costs.write(os);      break;
         case 0x14: m_14_speed_limit.write(os);             break;
@@ -160,7 +160,7 @@ bool Action00TramTypes::print_property(std::ostream& os, uint8_t property, uint1
         case 0x0B: desc_0B.print(m_0B_window_caption_id, os, indent);       break;
         case 0x0C: desc_0C.print(m_0C_autoreplace_text_id, os, indent);     break;
         case 0x0D: desc_0D.print(m_0D_new_engine_text_id, os, indent);      break;
-        case 0x0F: desc_0F.print(m_0F_compatible_tramtypes, os, indent);    break;
+        case 0x0F: desc_0F.print(m_0F_powered_tramtypes, os, indent);       break;
         case 0x10: desc_10.print(m_10_tramtype_flags, os, indent);          break;
         case 0x13: desc_13.print(m_13_construction_costs, os, indent);      break;
         case 0x14: desc_14.print(m_14_speed_limit, os, indent);             break;
@@ -193,7 +193,7 @@ bool Action00TramTypes::parse_property(TokenStream& is, const std::string& name,
             case 0x0B: desc_0B.parse(m_0B_window_caption_id, is);       break;
             case 0x0C: desc_0C.parse(m_0C_autoreplace_text_id, is);     break;
             case 0x0D: desc_0D.parse(m_0D_new_engine_text_id, is);      break;
-            case 0x0F: desc_0F.parse(m_0F_compatible_tramtypes, is);    break;
+            case 0x0F: desc_0F.parse(m_0F_powered_tramtypes, is);       break;
             case 0x10: desc_10.parse(m_10_tramtype_flags, is);          break;
             case 0x13: desc_13.parse(m_13_construction_costs, is);      break;
             case 0x14: desc_14.parse(m_14_speed_limit, is);             break;

@@ -68,7 +68,7 @@ sprite_sets<Canals, 0x0000> // <feature, first_set> Action01
         - `Cargos`          (value = 0x0B)
         - `Airports`        (value = 0x0D)
         - `Objects`         (value = 0x0F)
-        - `Railtypes`       (value = 0x10)
+        - `RailTypes`       (value = 0x10)
         - `AirportTiles`    (value = 0x11)
         - `RoadTypes`       (value = 0x12)
         - `TramTypes`       (value = 0x13)
