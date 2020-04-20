@@ -25,7 +25,7 @@ namespace {
 
 
 constexpr const char* str_class_id                  = "class_id";
-constexpr const char* str_sprite_layout             = "sprite_layout";
+constexpr const char* str_sprite_layouts            = "sprite_layouts";
 constexpr const char* str_copy_sprite_layout_id     = "copy_sprite_layout_id";
 constexpr const char* str_callback_flags            = "callback_flags";
 constexpr const char* str_disabled_platform_numbers = "disabled_platform_numbers";
@@ -41,10 +41,11 @@ constexpr const char* str_can_train_enter_tile      = "can_train_enter_tile";
 constexpr const char* str_animation_info            = "animation_info";
 constexpr const char* str_animation_speed           = "animation_speed";
 constexpr const char* str_animation_triggers        = "animation_triggers";
-constexpr const char* str_tile                      = "tile";
+constexpr const char* str_sprite                    = "sprite";
+constexpr const char* str_tile                      = "tile"; 
 constexpr const char* str_layout                    = "layout"; 
-constexpr const char* str_ground_sprite             = "ground_sprite";
-constexpr const char* str_sprite_data               = "sprite_data";
+//constexpr const char* str_ground_sprite             = "ground_sprite";
+//constexpr const char* str_sprite_data               = "sprite_data";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
@@ -53,7 +54,7 @@ constexpr const char* str_sprite_data               = "sprite_data";
 const std::map<std::string, uint8_t> g_indices =
 {
     { str_class_id,                  0x08 },
-    { str_sprite_layout,             0x09 },
+    { str_sprite_layouts,            0x09 },
     { str_copy_sprite_layout_id,     0x0A },
     { str_callback_flags,            0x0B },
     { str_disabled_platform_numbers, 0x0C },
@@ -77,7 +78,7 @@ using CustomStationsDescriptor = GenericDescriptor<CustomStation, true>;
 
 
 constexpr GRFLabelDescriptor        desc_08  = { 0x08, str_class_id };
-constexpr StationLayoutDescriptor   desc_09  = { 0x09, str_sprite_layout };
+constexpr StationLayoutDescriptor   desc_09  = { 0x09, str_sprite_layouts };
 constexpr UInt8Descriptor           desc_0A  = { 0x0A, str_copy_sprite_layout_id,     UIntFormat::Hex };
 constexpr UInt8Descriptor           desc_0B  = { 0x0B, str_callback_flags,            UIntFormat::Hex };
 constexpr UInt8Descriptor           desc_0C  = { 0x0C, str_disabled_platform_numbers, UIntFormat::Hex };
@@ -152,14 +153,14 @@ void StationTileData::print(std::ostream& os, uint16_t indent) const
 {
     if (m_new_bb)
     {
-        os << pad(indent) << str_tile << "(" << to_hex(m_sprite) << ", ";
+        os << pad(indent) << str_sprite << "(" << to_hex(m_sprite) << ", ";
         os << to_hex(m_x_off) << ", " << to_hex(m_y_off) << ", " << to_hex(m_z_off) << ", "; 
         os << to_hex(m_x_ext) << ", " << to_hex(m_y_ext) << ", " << to_hex(m_z_ext); 
         os << ");\n"; 
     }
     else
     {
-        os << pad(indent) << str_tile << "(" << to_hex(m_sprite) << ", ";
+        os << pad(indent) << str_sprite << "(" << to_hex(m_sprite) << ", ";
         os << to_hex(m_x_off) << ", " << to_hex(m_y_off); 
         os << ");\n"; 
     }
@@ -168,7 +169,7 @@ void StationTileData::print(std::ostream& os, uint16_t indent) const
 
 void StationTileData::parse(TokenStream& is)
 {
-    is.match_ident(str_tile);
+    is.match_ident(str_sprite);
     is.match(TokenType::OpenParen);
     m_sprite = is.match_uint32();
     is.match(TokenType::Comma);
@@ -232,22 +233,15 @@ void StationTile::write(std::ostream& os) const
 
 void StationTile::print(std::ostream& os, uint16_t indent) const
 {
-    os << pad(indent) << str_layout << "\n";
+    os << pad(indent) << str_tile << "<" << to_hex(m_ground_sprite) << ">\n";
     os << pad(indent) << "{\n"; 
-
-    os << pad(indent + 4) << str_ground_sprite << ": " << to_hex(m_ground_sprite) << "\n";
 
     if (m_ground_sprite != 0x0000'0000)
     {
-        os << pad(indent + 4) << str_sprite_data << ":\n";
-        os << pad(indent + 4) << "{\n"; 
-    
         for (const auto& datum: m_data)
         {
-            datum.print(os, indent + 8);
+            datum.print(os, indent + 4);
         }
-
-        os << pad(indent + 4) << "}\n"; 
     }
 
     os << pad(indent) << "}\n"; 
@@ -257,24 +251,17 @@ void StationTile::print(std::ostream& os, uint16_t indent) const
 
 void StationTile::parse(TokenStream& is)
 {
-    is.match_ident(str_layout);
-    is.match(TokenType::OpenBrace);
-
+    is.match_ident(str_tile);
+    is.match(TokenType::OpenAngle);
     m_ground_sprite = is.match_uint32();
-    if (m_ground_sprite != 0x0000'0000)
+    is.match(TokenType::CloseAngle);
+
+    is.match(TokenType::OpenBrace);
+    while (is.peek().type != TokenType::CloseBrace)
     {
-        is.match_ident(str_sprite_data);
-        is.match(TokenType::Colon);
-        is.match(TokenType::OpenBrace);
-
-        while (is.peek().type != TokenType::CloseBrace)
-        {
-            StationTileData datum{};
-            datum.parse(is);
-            m_data.push_back(datum);
-        }
-
-        is.match(TokenType::CloseBrace);
+        StationTileData datum{};
+        datum.parse(is);
+        m_data.push_back(datum);
     }
 
     is.match(TokenType::CloseBrace);
@@ -311,7 +298,7 @@ void StationLayout::print(std::ostream& os, uint16_t indent) const
     {
         tile.print(os, indent + 4);
     }
-    os << pad(indent) << "};\n"; 
+    os << pad(indent) << "}"; 
 }
 
 

@@ -31,7 +31,20 @@ static constexpr const char* str_YAGL =
     "    // instance_id: 0x0023\n"
     "    {\n"
     "        class_id: \"STNS\";\n"
-    //"        sprite_layout: ;\n"
+    "        sprite_layouts: \n"
+    "        {\n"
+    "            tile<0x13245768>\n"
+    "            {\n"
+    "                sprite(0x12345678, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06);\n"
+    "                sprite(0x12345678, 0x01, 0x02);\n"
+    "            }\n"
+    "            tile<0x13245769>\n"
+    "            {\n"
+    "                sprite(0x12345678, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06);\n"
+    "                sprite(0x12345678, 0x01, 0x02);\n"
+    "                sprite(0x12345678, 0x03, 0x04);\n"
+    "            }\n"
+    "        };\n"
     "        copy_sprite_layout_id: 0x12;\n"
     "        callback_flags: 0x13;\n"
     "        disabled_platform_numbers: 0x14;\n"
@@ -70,11 +83,20 @@ static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "00 "              // Action00
     "04 "              // Stations
-    "10 "              // 16 properties...
+    "11 "              // 16 properties...
     "01 "              // ... for 1 item
     "FF 23 00 "        // First ID 0x23 (extended byte)
     "08 53 54 4E 53 "  // class_id
-                       // sprite_layout
+    "09 FF 02 00 "     // sprite_layout
+       "68 57 24 13 "
+          "01 02 03 04 05 06 78 56 34 12 "
+          "01 02 80 00 00 00 78 56 34 12 "
+          "80 " 
+       "69 57 24 13 "
+          "01 02 03 04 05 06 78 56 34 12 "
+          "01 02 80 00 00 00 78 56 34 12 "
+          "03 04 80 00 00 00 78 56 34 12 "
+          "80 "
     "0A 12 "           // copy_sprite_layout_id
     "0B 13 "           // callback_flags
     "0C 14 "           // disabled_platform_numbers
