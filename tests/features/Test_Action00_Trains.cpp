@@ -30,77 +30,85 @@ static constexpr const char* str_YAGL =
     "{\n"
     "    // instance_id: 0x0086\n"
     "    {\n"
-    "        long_introduction_date: date(1883/1/1);\n"
-    "        model_life_years: 110;\n"
-    "        retire_vehicle_early: 0x3B;\n"
-    "        vehicle_life_years: 51;\n"
-    "        loading_speed: 0x05;\n"
-    "        cost_factor: 0x15;\n"
-    "        running_cost_factor: 0x14;\n"
-    "        speed_kmh: 90;\n"
-    "        power: 554;\n"
-    "        cargo_capacity: 1;\n"
-    "        weight_tons: 71;\n"
-    "        weight_high_byte: 0x00;\n"
-    "        coeff_of_tractive_effort: 0x11;\n"
-    "        coeff_of_air_drag: 0x00;\n"
-    "        reliability_decay_speed: 20;\n"
-    "        always_refittable_cargos: [ 0x00 ];\n"
-    "        refit_cargo_types: 0x00000000;\n"
-    "        miscellaneous_flags: 0x00;\n"
-    "        refit_cost: 0x00;\n"
-    "        track_type: 1;\n"
+    "        track_type: 18;\n"
     "        ai_special_flag: false;\n"
-    "        running_cost_base: 0x00004C30;\n"
-    "        engine_traction_type: 0x00;\n"
-    "        visual_effect: 0x98;\n"
-    "        climate_availability: Temperate | Arctic | Tropical | Toyland;\n"
-    "        sprite_id: 0xFD;\n"
+    "        speed_kmh: 4098;\n"
+    "        power: 4099;\n"
+    "        running_cost_factor: 0x31;\n"
+    "        running_cost_base: 0x12345678;\n"
+    "        sprite_id: 0x32;\n"
     "        is_dual_headed: false;\n"
-    "        shorten_vehicle: 0x00;\n"
-    "        power_from_each_wagon: 0x0000;\n"
-    "        mask_for_var_42: 0x00;\n"
+    "        cargo_capacity: 52;\n"
+    "        cargo_type: 0x35;\n"
+    "        weight_tons: 54;\n"
+    "        cost_factor: 0x37;\n"
+    "        ai_engine_rank: 0x38;\n"
+    "        engine_traction_type: 0x39;\n"
+    "        sort_purchase_list: 0x1001;\n"
+    "        power_from_each_wagon: 0x1003;\n"
+    "        refit_cost: 0x41;\n"
+    "        refit_cargo_types: 0x01020304;\n"
+    "        callback_flags_mask: 0x67;\n"
+    "        coeff_of_tractive_effort: 0x56;\n"
+    "        coeff_of_air_drag: 0x57;\n"
+    "        shorten_vehicle: 0x58;\n"
+    "        visual_effect: 0x59;\n"
+    "        weight_from_wagons: 0x5A;\n"
+    "        weight_high_byte: 0x5B;\n"
+    "        mask_for_var_42: 0x5C;\n"
+    "        retire_vehicle_early: 0x5D;\n"
+    "        miscellaneous_flags: 0x5E;\n"
+    "        refittable_cargo_classes: 0x2003;\n"
+    "        non_refittable_cargo_classes: 0x2004;\n"
+    "        long_introduction_date: date(3001/3/2);\n"
+    "        custom_cargo_aging_period: 0x1234;\n"
+    "        always_refittable_cargos: [ 0x02 0x04 0x16 ];\n"
+    "        never_refittable_cargos: [ 0x03 0x05 0x11 0x14 ];\n"
     "    }\n"
     "}\n";
 
 // NFO matching the YAGL.
 static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-    "00 "              // Action00
-    "00 "              // Trains
-    "1E "              // 30 properties ...
-    "01 "              // ... for 1 train
-    "FF 86 00 "        // First ID (extended byte)
-    "2A 88 7E 0A 00 "  // long_introduction_date
-    "04 6E "           // model_life_years
-    "26 3B "           // retire_vehicle_early
-    "03 33 "           // vehicle_life_years
-    "07 05 "           // loading_speed
-    "17 15 "           // cost_factor
-    "0D 14 "           // running_cost_factor
-    "09 5A 00 "        // speed_kmh
-    "0B 2A 02 "        // power
-    "14 01 "           // cargo_capacity
-    "16 47 "           // weight_tons
-    "24 00 "           // weight_high_byte
-    "1F 11 "           // coeff_of_tractive_effort
-    "20 00 "           // coeff_of_air_drag
-    "02 14 "           // reliability_decay_speed
-    "2C 01 00 "        // always_refittable_cargos
-    "1D 00 00 00 00 "  // refit_cargo_types
-    "27 00 "           // miscellaneous_flags
-    "1C 00 "           // refit_cost
-    "05 01 "           // track_type
-    "08 00 "           // ai_special_flag
-    "0E 30 4C 00 00 "  // running_cost_base
-    "19 00 "           // engine_traction_type
-    "22 98 "           // visual_effect
-    "06 0F "           // climate_availability
-    "12 FD "           // sprite_id
-    "13 00 "           // is_dual_headed
-    "21 00 "           // shorten_vehicle
-    "1B 00 00 "        // power_from_each_wagon
-    "25 00 ";          // mask_for_var_42
+    "00 "                 // Action00
+    "00 "                 // Trains
+    "22 "                 // 34 properties ...
+    "01 "                 // ... for 1 train
+    "FF 86 00 "           // First ID (extended byte)
+    "05 12 "              // track_type
+    "08 00 "              // ai_special_flag
+    "09 02 10 "           // speed_kmh
+    "0B 03 10 "           // power
+    "0D 31 "              // running_cost_factor
+    "0E 78 56 34 12 "     // running_cost_base
+    "12 32 "              // sprite_id
+    "13 00 "              // is_dual_headed
+    "14 34 "              // cargo_capacity
+    "15 35 "              // cargo_type
+    "16 36 "              // weight_tons
+    "17 37 "              // cost_factor
+    "18 38 "              // ai_engine_rank
+    "19 39 "              // engine_traction_type
+    "1A FF 01 10 "        // sort_purchase_list
+    "1B 03 10 "           // power_from_each_wagon
+    "1C 41 "              // refit_cost
+    "1D 04 03 02 01 "     // refit_cargo_types
+    "1E 67 "              // callback_flags_mask
+    "1F 56 "              // coeff_of_tractive_effort
+    "20 57 "              // coeff_of_air_drag
+    "21 58 "              // shorten_vehicle
+    "22 59 "              // visual_effect
+    "23 5A "              // weight_from_wagons
+    "24 5B "              // weight_high_byte
+    "25 5C "              // mask_for_var_42
+    "26 5D "              // retire_vehicle_early
+    "27 5E "              // miscellaneous_flags
+    "28 03 20 "           // refittable_cargo_classes
+    "29 04 20 "           // non_refittable_cargo_classes
+    "2A D9 B9 10 00 "     // long_introduction_date
+    "2B 34 12 "           // custom_cargo_aging_period
+    "2C 03 02 04 16 "     // always_refittable_cargos
+    "2D 04 03 05 11 14 "; // never_refittable_cargos
 
 static constexpr const char* str_YAGL2 =
     "properties<Trains, 0x0086> // Action00\n"

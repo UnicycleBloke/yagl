@@ -166,26 +166,23 @@ void GenderCase::print(std::ostream& os) const
 
     for (const auto& item: m_items)
     {
-        os << "{" << to_hex(item.id) << ": \"" << item.name << "\"} ";
+        os << to_hex(item.id) << ":\"" << item.name << "\" ";
     }
 
-    os << " ]";
+    os << "]";
 }
 
 
 void GenderCase::parse(TokenStream& is)
 {
     is.match(TokenType::OpenBracket);
-
-    while (is.peek().type == TokenType::OpenBrace)
+    while (is.peek().type != TokenType::CloseBracket)
     {
         GenderCase::Item item;
-
-        is.match(TokenType::OpenBrace);
+        
         item.id = is.match_uint8(); 
         is.match(TokenType::Colon);
         item.name = is.match(TokenType::String); 
-        is.match(TokenType::CloseBrace);
 
         m_items.push_back(item);
     }

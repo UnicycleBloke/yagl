@@ -94,7 +94,7 @@ const std::map<std::string, uint8_t> g_indices =
     { str_refittable_cargo_classes,     0x28 },
     { str_non_refittable_cargo_classes, 0x29 },
     { str_long_introduction_date,       0x2A },
-    { str_custom_cargo_aging_period,    0x2B },    
+    { str_custom_cargo_aging_period,    0x2B },
     { str_always_refittable_cargos,     0x2C },
     { str_never_refittable_cargos,      0x2D },
 };
