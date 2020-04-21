@@ -197,6 +197,7 @@ void Action0BRecord::parse(TokenStream& is)
     m_message_id = is.match_uint8();
     is.match(TokenType::CloseAngle);
 
+    m_num_params = 0;
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
@@ -211,8 +212,8 @@ void Action0BRecord::parse(TokenStream& is)
             {
                 case 0x02: desc_message.parse(m_message, is); break;
                 case 0x03: desc_data.parse(m_data, is); break;
-                case 0x04: desc_param1.parse(m_param1, is); break;
-                case 0x05: desc_param2.parse(m_param2, is); break;
+                case 0x04: desc_param1.parse(m_param1, is); ++m_num_params; break;
+                case 0x05: desc_param2.parse(m_param2, is); ++m_num_params; break;
             }
 
             is.match(TokenType::SemiColon);

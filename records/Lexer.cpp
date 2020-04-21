@@ -450,7 +450,24 @@ void Lexer::emit(TokenType type, NumberType num_type, std::string value)
         type = TokenType::OpMinus; 
     }
 
-    m_tokens.push_back({type, num_type, value, m_line, m_column});
+    // Concatenate adjacent strings.
+    if ((type == TokenType::String) && (m_tokens.size() > 0))
+    {        
+        TokenValue& prev_token = *m_tokens.rbegin();
+        if (prev_token.type == TokenType::String)
+        {
+            prev_token.value = prev_token.value + value;
+        }
+        else
+        {
+            m_tokens.push_back({ type, num_type, value, m_line, m_column });
+        }
+    }
+    else
+    {
+        m_tokens.push_back({ type, num_type, value, m_line, m_column });
+    }
+
     m_state = LexerState::None;
 }
 

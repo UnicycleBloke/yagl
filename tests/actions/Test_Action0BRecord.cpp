@@ -47,6 +47,8 @@ static constexpr const char* str_YAGL2 =
     "{\n"
     "    message: \"The cat sat on the {substring1}.\";\n"
     "    data: \"mat\";\n"
+    "    param1: 0x12;\n"
+    "    param2: 0x34;\n"
     "}\n";
 // NFO matching the YAGL.
 static constexpr const char* str_NFO2 =
@@ -56,7 +58,7 @@ static constexpr const char* str_NFO2 =
     "01 "  // Language = en_GB
     "FF "  // Message ID (from a table) - custom
     "54 68 65 20 63 61 74 20 73 61 74 20 6F 6E 20 74 68 65 20 80 2E 00 "
-    "6D 61 74 00 ";
+    "6D 61 74 00 12 34 ";
 
 
 } // namespace {

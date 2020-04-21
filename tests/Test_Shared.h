@@ -22,11 +22,48 @@
 
 
 template <typename ActionRecord, uint8_t ACTION>
-void test_yagl(const char* YAGL, const char* NFO)
+void test_yagl_matches(const char* YAGL_IN, const char* YAGL_OUT)
 {
+    SpriteZoomMap sprites; 
+
+    std::istringstream is(YAGL_IN);
+    TokenStream ts{is};
+    ActionRecord action;
+    action.parse(ts);
+    std::ostringstream os;
+    action.print(os, sprites, 0);
+
+    std::istringstream is2(YAGL_IN);
+    TokenStream ts2{is2};
+    ActionRecord action2;
+    action2.parse(ts2);
+    std::ostringstream os2;
+    action2.print(os2, sprites, 0);
+
+    CHECK(os.str() == os2.str());
+}
+
+
+// This parses some YAGL and ensures that printing it back out again matches. The 
+// second YAGL parameter can be used when we expect the printed output to be different
+// to the input (due to ordering differences). The parsed information is also written 
+// out as binary and read back in, and then printed again, to confirm that the binary 
+// works as expected.
+template <typename ActionRecord, uint8_t ACTION>
+void test_yagl(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = nullptr)
+{
+    if (YAGL_OUT == nullptr)
+    {
+        YAGL_OUT = YAGL_IN;
+    }
+    if (YAGL_OUT != YAGL_IN)
+    {
+        test_yagl_matches<ActionRecord, ACTION>(YAGL_OUT, YAGL_IN);
+    }
+
     // Confirm that we print what we parse.
     // The sample is in the expected format.
-    std::istringstream is(YAGL);
+    std::istringstream is(YAGL_IN);
     TokenStream ts{is};
     ActionRecord action;
     action.parse(ts);
@@ -35,11 +72,11 @@ void test_yagl(const char* YAGL, const char* NFO)
     SpriteZoomMap sprites; // Empty set is fine for this record.
     //action.print(std::cout, sprites, 0);
     action.print(os, sprites, 0);
-    CHECK(os.str() == YAGL);
-    if (os.str() != YAGL)
+    CHECK(os.str() == YAGL_OUT);
+    if (os.str() != YAGL_OUT)
     {
         std::cout << hex_dump(os.str(), true) << "\n";
-        std::cout << hex_dump(YAGL, true) << "\n";
+        std::cout << hex_dump(YAGL_OUT, true) << "\n";
     }
 
     // Confirm that the written binary matches the sample.
@@ -58,5 +95,5 @@ void test_yagl(const char* YAGL, const char* NFO)
     action2.read(is2, info);
     os.str("");
     action2.print(os, sprites, 0);
-    CHECK(os.str() == YAGL);
+    CHECK(os.str() == YAGL_OUT);
 }
