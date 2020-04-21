@@ -37,12 +37,6 @@ void Action10Record::write(std::ostream& os, const GRFInfo& info) const
 }  
 
 
-// label<0x10> // Action10
-// {
-//     "Optional comment goes here";
-// }
-
-
 void Action10Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << RecordName(record_type()) << "<" << to_hex(m_label) << "> // Action10 - target for Action07 or Action09\n";

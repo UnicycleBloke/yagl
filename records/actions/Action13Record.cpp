@@ -93,7 +93,7 @@ void Action13Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t string_id = m_first_string_id;
     for (const auto& str: m_strings)
     {
-        os << pad(indent + 4) << "/* " << to_hex(string_id++) << " */ "; 
+        os << pad(indent + 4) << "/*" << to_hex(string_id++) << "*/ "; 
         os << "\"" << str.readable() << "\";\n";
     }
 
