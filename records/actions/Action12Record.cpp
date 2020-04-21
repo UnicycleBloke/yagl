@@ -142,7 +142,7 @@ void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action12Record::parse(TokenStream& is)
+void Action12Record::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
 
@@ -161,7 +161,7 @@ void Action12Record::parse(TokenStream& is)
         is.match(TokenType::OpenBrace);
         while (is.peek().type != TokenType::CloseBrace)
         {
-            parse_sprite(is);
+            parse_sprite(is, sprites);
             ++range.num_chars;
         }
     

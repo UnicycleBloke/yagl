@@ -56,7 +56,7 @@ public:
     void write(std::ostream& os, const GRFInfo& info) const override;   
     // Text serialisation
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
-    void parse(TokenStream& is) override;
+    void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
 private:
     struct Chunk

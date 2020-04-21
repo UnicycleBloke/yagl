@@ -224,7 +224,7 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 // }
 
 
-void Action07Record::parse(TokenStream& is)
+void Action07Record::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenParen);

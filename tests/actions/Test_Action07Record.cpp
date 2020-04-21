@@ -68,15 +68,16 @@ static constexpr const char* str_NFO9 =
 template <RecordType TYPE, uint8_t ACTION>
 void test_yagl_action07(const char* YAGL, const char* NFO)
 {
+    SpriteZoomMap sprites; 
+
     // Confirm that we print what we parse.
     // The sample is in the expected format.
     std::istringstream is(YAGL);
     TokenStream ts{is};
     Action07Record action{TYPE};
-    action.parse(ts);
+    action.parse(ts, sprites);
 
     std::ostringstream os;
-    SpriteZoomMap sprites; // Empty set is fine for this record.
     //action.print(std::cout, sprites, 0);
     action.print(os, sprites, 0);
     CHECK(os.str() == YAGL);

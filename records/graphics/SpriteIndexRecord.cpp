@@ -65,7 +65,7 @@ void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, ui
 }
 
 
-void SpriteIndexRecord::parse(TokenStream& is)
+void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(str_sprite_id);
     is.match(TokenType::OpenAngle);
@@ -92,10 +92,17 @@ void SpriteIndexRecord::parse(TokenStream& is)
             record = std::make_shared<ActionFFRecord>();
         }
         
-        record->parse(is);
+        record->parse(is, sprites);
 
         // This adds the sprite to the m_sprites map inside NewGRFData.
-        append_real_sprite(m_sprite_id, record);
+        //append_real_sprite(m_sprite_id, record);
+        // Sprites with the same ID are stored in map indexed by zoom level. 
+        // These maps are stored in a map index by the sprite ID.
+        if (sprites.find(m_sprite_id) == sprites.end())
+        {
+            sprites[m_sprite_id] = SpriteZoomVector{};
+        }
+        sprites[m_sprite_id].push_back(record);
     }
 
     is.match(TokenType::CloseBrace);

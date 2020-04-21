@@ -148,7 +148,7 @@ void Action02IndustryRecord::print(std::ostream& os, const SpriteZoomMap& sprite
 }
 
 
-void Action02IndustryRecord::parse(TokenStream& is)
+void Action02IndustryRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));    
     is.match(TokenType::OpenAngle);

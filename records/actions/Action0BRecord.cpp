@@ -186,7 +186,7 @@ void Action0BRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action0BRecord::parse(TokenStream& is)
+void Action0BRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

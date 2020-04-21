@@ -71,7 +71,7 @@ void ActionFFRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void ActionFFRecord::parse(TokenStream& is)
+void ActionFFRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(str_binary);
     is.match(TokenType::OpenParen);

@@ -102,7 +102,7 @@ void Action13Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action13Record::parse(TokenStream& is)
+void Action13Record::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

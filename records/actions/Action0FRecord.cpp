@@ -267,7 +267,7 @@ void Action0FRecord::parse_part(TokenStream& is)
 }
 
 
-void Action0FRecord::parse(TokenStream& is)
+void Action0FRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

@@ -715,22 +715,22 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
 
 
 // This is used to append a sprite to the current NewGRFData::m_sprites during parsing.
-NewGRFData* g_new_grf_data = nullptr;
-void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite)
-{
-    // Assert not nullptr 
-    if (g_new_grf_data)
-    {
-        g_new_grf_data->append_sprite(sprite_id, sprite);
-    }
-}
+//NewGRFData* g_new_grf_data = nullptr;
+//void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite)
+//{
+//    // Assert not nullptr 
+//    if (g_new_grf_data)
+//    {
+//        g_new_grf_data->append_sprite(sprite_id, sprite);
+//    }
+//}
 
 
 void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std::string& image_file_base)
 {
     // A bit of a bodge, but provide the ability to append sprites from other classes as 
     // the objects are created. Probably only needed in SpriteIndexRecord.
-    g_new_grf_data = this;
+    //g_new_grf_data = this;
 
     // Read the actual version number.
     const TokenValue& token = is.peek();
@@ -783,7 +783,7 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
 
             std::shared_ptr<Record> record = make_record(type);
             m_records.push_back(record);
-            record->parse(is);
+            record->parse(is, m_sprites);
             update_version_info(record);
         }
         catch (const std::exception& e)

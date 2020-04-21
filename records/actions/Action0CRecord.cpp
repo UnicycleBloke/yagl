@@ -56,7 +56,7 @@ void Action0CRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action0CRecord::parse(TokenStream& is)
+void Action0CRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenBrace);

@@ -424,7 +424,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
 }
 
 
-void Action02SpriteLayoutRecord::parse(TokenStream& is)
+void Action02SpriteLayoutRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

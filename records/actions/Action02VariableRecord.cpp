@@ -354,7 +354,7 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
 }
 
 
-void Action02VariableRecord::parse(TokenStream& is)
+void Action02VariableRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

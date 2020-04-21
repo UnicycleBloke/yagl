@@ -441,7 +441,7 @@ void Action0DRecord::parse_resources(TokenStream& is)
 }
 
 
-void Action0DRecord::parse(TokenStream& is)
+void Action0DRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     Type operation_type;
     is.match_ident(RecordName(record_type()));

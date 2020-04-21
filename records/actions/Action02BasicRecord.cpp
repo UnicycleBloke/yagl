@@ -112,7 +112,7 @@ void Action02BasicRecord::print(std::ostream& os, const SpriteZoomMap& sprites, 
 
 
 // TODO convert this to using Descriptors...
-void Action02BasicRecord::parse(TokenStream& is)
+void Action02BasicRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));    
     is.match(TokenType::OpenAngle);

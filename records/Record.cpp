@@ -107,7 +107,7 @@ static const std::map<std::string, uint8_t> g_indices =
 // This function added to avoid duplication. Several containers can contain
 // either real sprites or recolour spites. This detects the type of each contained
 // record, and parses it from the stream.
-void ContainerRecord::parse_sprite(TokenStream& is)
+void ContainerRecord::parse_sprite(TokenStream& is, SpriteZoomMap& sprites)
 {
     TokenValue token = is.peek();
     if (token.type == TokenType::Ident)
@@ -128,7 +128,7 @@ void ContainerRecord::parse_sprite(TokenStream& is)
         } 
         
         append_sprite(record);
-        record->parse(is);
+        record->parse(is, sprites);
     }
     else
     {

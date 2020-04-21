@@ -178,7 +178,7 @@ std::shared_ptr<Action00Feature> Action00Record::make_feature(FeatureType featur
 }
 
 
-void Action00Record::parse(TokenStream& is)
+void Action00Record::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

@@ -25,20 +25,20 @@ template <typename ActionRecord, uint8_t ACTION>
 void test_yagl_matches(const char* YAGL_IN, const char* YAGL_OUT)
 {
     SpriteZoomMap sprites; 
-
     std::istringstream is(YAGL_IN);
     TokenStream ts{is};
     ActionRecord action;
-    action.parse(ts);
+    action.parse(ts, sprites);
     std::ostringstream os;
     action.print(os, sprites, 0);
 
+    SpriteZoomMap sprites2; 
     std::istringstream is2(YAGL_IN);
     TokenStream ts2{is2};
     ActionRecord action2;
-    action2.parse(ts2);
+    action2.parse(ts2, sprites2);
     std::ostringstream os2;
-    action2.print(os2, sprites, 0);
+    action2.print(os2, sprites2, 0);
 
     CHECK(os.str() == os2.str());
 }
@@ -61,15 +61,16 @@ void test_yagl(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = null
         test_yagl_matches<ActionRecord, ACTION>(YAGL_OUT, YAGL_IN);
     }
 
+    SpriteZoomMap sprites; 
+
     // Confirm that we print what we parse.
     // The sample is in the expected format.
     std::istringstream is(YAGL_IN);
     TokenStream ts{is};
     ActionRecord action;
-    action.parse(ts);
+    action.parse(ts, sprites);
 
     std::ostringstream os;
-    SpriteZoomMap sprites; // Empty set is fine for this record.
     //action.print(std::cout, sprites, 0);
     action.print(os, sprites, 0);
     CHECK(os.str() == YAGL_OUT);

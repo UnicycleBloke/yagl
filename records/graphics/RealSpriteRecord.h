@@ -80,7 +80,7 @@ public:
     void write(std::ostream& os, const GRFInfo& info) const override;   
     // Text serialisation
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
-    void parse(TokenStream& is) override;
+    void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
     uint32_t    sprite_id() const   { return m_sprite_id; }
     ZoomLevel   zoom() const        { return m_zoom; }

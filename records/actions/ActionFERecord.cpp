@@ -49,7 +49,7 @@ void ActionFERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void ActionFERecord::parse(TokenStream& is)
+void ActionFERecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(str_import);
     is.match(TokenType::OpenParen);

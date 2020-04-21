@@ -182,9 +182,9 @@ public:
     // Binary serialisation
     virtual void read(std::istream& is, const GRFInfo& info) {};
     virtual void write(std::ostream& os, const GRFInfo& info) const {}; 
-    // Text serialisation
+    // Text serialisation - sprites structure needed to hold sprites found in containers.
     virtual void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const {};
-    virtual void parse(TokenStream& is) {};
+    virtual void parse(TokenStream& is, SpriteZoomMap& sprites) {};
 
     // These methods are for adding sprites to a container action.
     virtual void append_sprite(std::shared_ptr<Record> record) { throw RUNTIME_ERROR("append_sprite"); }
@@ -238,7 +238,7 @@ public:
 protected:    
     void print_sprite(uint16_t index, std::ostream& os, 
         const SpriteZoomMap& sprites, uint16_t indent) const;
-    void parse_sprite(TokenStream& is);
+    void parse_sprite(TokenStream& is, SpriteZoomMap& sprites);
 
 private:
     std::vector<std::shared_ptr<Record>> m_sprites;            

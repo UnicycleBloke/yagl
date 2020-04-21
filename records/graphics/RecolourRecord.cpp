@@ -99,7 +99,7 @@ void RecolourRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void RecolourRecord::parse(TokenStream& is)
+void RecolourRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     // recolour_sprite
     // {

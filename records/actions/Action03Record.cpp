@@ -160,7 +160,7 @@ void Action03Record::parse_cargo_types(TokenStream& is)
 }
 
 
-void Action03Record::parse(TokenStream& is)
+void Action03Record::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

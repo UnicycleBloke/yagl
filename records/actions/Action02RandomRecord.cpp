@@ -174,7 +174,7 @@ void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites,
 }
 
 
-void Action02RandomRecord::parse(TokenStream& is)
+void Action02RandomRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));    
     is.match(TokenType::OpenAngle);

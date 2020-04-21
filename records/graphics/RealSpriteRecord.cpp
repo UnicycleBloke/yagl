@@ -562,7 +562,7 @@ bool RealSpriteRecord::is_pure_white(const Pixel& pixel)
 }
 
 
-void RealSpriteRecord::parse(TokenStream& is) 
+void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites) 
 {
     // [8, 21, -3, -11], normal, 8bpp, 
     //         "sprites/zbase_extra-8bpp-normal-0.png", [641, 7372];

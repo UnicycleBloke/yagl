@@ -85,7 +85,7 @@ void Action06Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action06Record::parse(TokenStream& is)
+void Action06Record::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     
