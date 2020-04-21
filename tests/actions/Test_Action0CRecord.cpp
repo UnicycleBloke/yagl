@@ -81,5 +81,6 @@ static constexpr const char* str_NFO2 =
 TEST_CASE("Action0CRecord", "[actions]")
 {
     test_yagl<Action0CRecord, 0x0C>(str_YAGL, str_NFO);
-    test_yagl<Action0CRecord, 0x0C>(str_YAGL2_IN, str_NFO2, str_YAGL2_OUT);
+    // This feature breaks others - namely we need lists of strings to be comma separated.
+    //test_yagl<Action0CRecord, 0x0C>(str_YAGL2_IN, str_NFO2, str_YAGL2_OUT);
 }
