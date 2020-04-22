@@ -343,7 +343,7 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
     if (m_format == Format::Advanced)
     {
         write_uint16(os, m_ground_regs.flags);
-        m_ground_regs.write(os, false);
+        m_ground_regs.write(os, true); // this is a parent sprite.
     }
 
     if (!extended_format)
@@ -396,7 +396,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
 
     os << pad(indent + 4) << str_ground_sprite << "<" << to_hex(m_ground_sprite) << ">\n";
     os << pad(indent + 4) << "{" << '\n';
-    m_ground_regs.print(os, true, indent + 8);
+    m_ground_regs.print(os, true, indent + 8); // true = is a parent
     os << pad(indent + 4) << "}" << '\n';
 
     for (const auto& sprite: m_building_sprites)
@@ -407,7 +407,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
             os << pad(indent + 4) << "{\n";
             os << pad(indent + 8) << str_offset << ": " << to_hex(sprite.xofs) << ", " << to_hex(sprite.yofs) << ", " << to_hex(sprite.zofs) << ";\n";
             os << pad(indent + 8) << str_extent << ": " << to_hex(sprite.xext) << ", " << to_hex(sprite.yext) << ", " << to_hex(sprite.zext) << ";\n";
-            sprite.regs.print(os, true, indent + 8);
+            sprite.regs.print(os, true, indent + 8); // true = is a parent
             os << pad(indent + 4) << "}\n";
         }
         else
@@ -415,7 +415,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
             os << pad(indent + 4) << str_child_sprite << "<" << to_hex(sprite.sprite) << ">\n";
             os << pad(indent + 4) << "{\n";
             os << pad(indent + 8) << str_offset << ": " << to_hex(sprite.xofs) << ", " << to_hex(sprite.yofs) << ";\n";
-            sprite.regs.print(os, true, indent + 8);
+            sprite.regs.print(os, false, indent + 8); // false = not a parent
             os << pad(indent + 4) << "}\n";
         }
     }
@@ -483,7 +483,7 @@ void Action02SpriteLayoutRecord::parse_ground_sprite(TokenStream& is)
             switch (it->second)
             {
                 case 0x03: 
-                    m_ground_regs.parse(is, true); 
+                    m_ground_regs.parse(is, true); // parent 
                     m_format = (m_ground_regs.flags != 0x00) ? Format::Advanced : m_format;
                     break;
 
@@ -540,7 +540,7 @@ void Action02SpriteLayoutRecord::parse_building_sprite(TokenStream& is)
                     break; // extent
 
                 case 0x03: 
-                    sprite.regs.parse(is, true); 
+                    sprite.regs.parse(is, true); // Parent
                     m_format = (sprite.regs.flags != 0x00) ? Format::Advanced : m_format;
                     break;
 
@@ -588,7 +588,7 @@ void Action02SpriteLayoutRecord::parse_child_sprite(TokenStream& is)
                     break; // offset
 
                 case 0x03: 
-                    sprite.regs.parse(is, false); 
+                    sprite.regs.parse(is, false); // Not a parent
                     m_format = (sprite.regs.flags != 0x00) ? Format::Advanced : m_format;
                     break;
 
