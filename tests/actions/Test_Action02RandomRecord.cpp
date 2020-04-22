@@ -18,34 +18,56 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "catch.hpp"
 #include "Test_Shared.h"
-#include "Action02BasicRecord.h"
+#include "Action02RandomRecord.h"
 
 
 namespace {
 
 static constexpr const char* str_YAGL =
-    "sprite_groups<Trains, 0xFE> // Action02 basic\n"
-    "{\n"
-    "    primary_spritesets: [ 0x0000 ];\n"
-    "    secondary_spritesets: [ 0x0000 ];\n"
-    "}\n";
-
+"random_switch<Trains, 0xFC, Object> // Action02 random\n"
+"{\n"
+"    triggers: 0x00;\n"
+"    rand_bit: 0x00;\n"
+"    set_ids: // set_id: probability;\n"
+"    {\n"
+"        0x00F5: 103;\n"
+"        0x00FA: 8;\n"
+"        0x00FD: 17;\n"
+"    };\n"
+"}\n";
 // NFO matching the YAGL.
 static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-    "02 "     // Action02
-    "00 "     // Feature - Trains
-    "FE "     // Set ID
-    "01 "     // Number of entities 1
-    "01 "     // Number of entities 2
-    "00 00 "  // Entities 1 - 1 word
-    "00 00 "; // Entities 2 - 1 word
-
+    "02 " // Action02
+    "00 " // Trains
+    "FC " // This set's ID
+    "80 " // Randomise the object itself (not related item)
+    "00 " // triggers
+    "00 " // rand_bit
+    "80 " // 128 items - must be a power of 2
+    // F5 probability is 103 / 128
+    "F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 "
+    "F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 "
+    "F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 "
+    "F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 "
+    "F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 "
+    "F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 "
+    "F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 "
+    "F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 "
+    "F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 "
+    "F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 F5 00 "
+    "F5 00 F5 00 F5 00 "
+    // FA probability is 8 / 128
+    "FA 00 FA 00 FA 00 FA 00 FA 00 FA 00 FA 00 FA 00 "
+    // FD probability is 17 / 128
+    "FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 "
+    "FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 ";
+    
 } // namespace {
 
 
-// TEST_CASE("Action02RandomRecord", "[actions]")
-// {
-//     test_yagl<Action02BasicRecord, 0x02>(str_YAGL, str_NFO);
-// }
+TEST_CASE("Action02RandomRecord", "[actions]")
+{
+    test_yagl<Action02RandomRecord, 0x02>(str_YAGL, str_NFO);
+}
 

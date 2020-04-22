@@ -18,34 +18,53 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "catch.hpp"
 #include "Test_Shared.h"
-#include "Action02BasicRecord.h"
+#include "Action02VariableRecord.h"
 
 
 namespace {
 
 static constexpr const char* str_YAGL =
-    "sprite_groups<Trains, 0xFE> // Action02 basic\n"
+    "switch<Trains, 0xFD, PrimaryDWord> // Action02 variable\n"
     "{\n"
-    "    primary_spritesets: [ 0x0000 ];\n"
-    "    secondary_spritesets: [ 0x0000 ];\n"
+    "    expression:\n"
+    "    {\n"
+    "        value1 = variable[0x0C] & 0x0000FFFF;\n"
+    "    };\n"
+    "    ranges:\n"
+    "    {\n"
+    "        0x00000000: 0x00FA;\n"
+    "        0x00000016: 0x00FE;\n"
+    "        0x00000023: 0x8000;\n"
+    "    };\n"
+    "    default: 0x00FD;\n"
     "}\n";
-
 // NFO matching the YAGL.
 static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-    "02 "     // Action02
-    "00 "     // Feature - Trains
-    "FE "     // Set ID
-    "01 "     // Number of entities 1
-    "01 "     // Number of entities 2
-    "00 00 "  // Entities 1 - 1 word
-    "00 00 "; // Entities 2 - 1 word
+    "02 "                // Action02
+    "00 "                // Trains
+    "FD "                // This set's ID
+    "89 "                // VarAction type - primary object, double word size
+    "0C "                // Variable  
+       "00 "             // Shift num
+       "FF FF 00 00 "    // AND mask
+    "03 "                // 3 ranges
+       "FA 00 "          // Value
+          "00 00 00 00 " // Range min
+          "00 00 00 00 " // Range max
+       "FE 00 "
+          "16 00 00 00 "
+          "16 00 00 00 "
+       "00 80 "
+          "23 00 00 00 "
+          "23 00 00 00 "
+    "FD 00 ";            // Default
 
 } // namespace {
 
 
 TEST_CASE("Action02VariableRecord", "[actions]")
 {
-    test_yagl<Action02BasicRecord, 0x02>(str_YAGL, str_NFO);
+    test_yagl<Action02VariableRecord, 0x02>(str_YAGL, str_NFO);
 }
 
