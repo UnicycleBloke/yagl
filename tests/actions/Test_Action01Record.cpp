@@ -32,22 +32,22 @@ static constexpr const char* str_YAGL =
     "    {\n"
     "        sprite_id<0x000001B2>\n"
     "        {\n"
-    "            [8, 8, -3, -8], normal, c8bpp, \"dutchtrains-8bpp-normal-0.png\", [10, 10];\n"
+    "            [8, 8, -3, -8], normal, c8bpp, \"test-8bpp-normal-0.png\", [10, 10];\n"
     "        }\n"
     "        sprite_id<0x000001B3>\n"
     "        {\n"
-    "            [9, 8, -1, -6], normal, c8bpp, \"dutchtrains-8bpp-normal-0.png\", [28, 10];\n"
+    "            [9, 8, -1, -6], normal, c8bpp, \"test-8bpp-normal-0.png\", [28, 10];\n"
     "        }\n"
     "    }\n"
     "    sprite_set // 0x0001\n"
     "    {\n"
     "        sprite_id<0x000001BA>\n"
     "        {\n"
-    "            [8, 12, -3, -10], normal, c8bpp, \"dutchtrains-8bpp-normal-0.png\", [158, 10];\n"
+    "            [8, 12, -3, -10], normal, c8bpp, \"test-8bpp-normal-0.png\", [158, 10];\n"
     "        }\n"
     "        sprite_id<0x000001BB>\n"
     "        {\n"
-    "            [12, 12, -4, -9], normal, c8bpp, \"dutchtrains-8bpp-normal-0.png\", [176, 10];\n"
+    "            [12, 12, -4, -9], normal, c8bpp, \"test-8bpp-normal-0.png\", [176, 10];\n"
     "        }\n"
     "    }\n"
     "}\n";
@@ -55,14 +55,15 @@ static constexpr const char* str_YAGL =
 // NFO matching the YAGL.
 static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
-    "01 "
-    "00 "
-    "02 FF 02 00 ";
+    "01 "        // Action01
+    "00 "        // Trains
+    "02 "        // 2 sprite sets ...
+    "FF 02 00 "; // ... each containing 2 sprites (extended byte)
  
 } // namespace {
 
 
 TEST_CASE("Action01Record", "[actions]")
 {
-    test_yagl<Action01Record, 0x01>(str_YAGL, str_NFO);
+    test_container<Action01Record, 0x01>(str_YAGL, str_NFO);
 }

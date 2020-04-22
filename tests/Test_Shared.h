@@ -98,3 +98,58 @@ void test_yagl(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = null
     action2.print(os, sprites, 0);
     CHECK(os.str() == YAGL_OUT);
 }
+
+
+template <typename ActionRecord, uint8_t ACTION>
+void test_container(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = nullptr)
+{
+    if (YAGL_OUT == nullptr)
+    {
+        YAGL_OUT = YAGL_IN;
+    }
+    if (YAGL_OUT != YAGL_IN)
+    {
+        test_yagl_matches<ActionRecord, ACTION>(YAGL_OUT, YAGL_IN);
+    }
+
+    SpriteZoomMap sprites; 
+
+    // Confirm that we print what we parse.
+    // The sample is in the expected format.
+    std::istringstream is(YAGL_IN);
+    TokenStream ts{is};
+    ActionRecord action;
+    action.parse(ts, sprites);
+
+    std::ostringstream os;
+    //action.print(std::cout, sprites, 0);
+    action.print(os, sprites, 0);
+    CHECK(os.str() == YAGL_OUT);
+    if (os.str() != YAGL_OUT)
+    {
+        std::cout << hex_dump(os.str(), true) << "\n";
+        std::cout << hex_dump(YAGL_OUT, true) << "\n";
+    }
+
+    // Confirm that the written binary matches the sample.
+    os.str("");
+    GRFInfo info; // Defaults to Container2 and GRF8.
+    action.write(os, info);
+    auto str = os.str();
+    CHECK(str.size() == (std::strlen(NFO) / 3));
+    CHECK(hex_dump(str) == NFO);
+
+    // Confirm that reading the binary and printing the 
+    // result gets us back to the example.
+    std::istringstream is2(str);
+    CHECK(uint8_t(is2.get()) == ACTION);
+
+    // Don't test that the read content matches. This is because we don't 
+    // read and write the child records which contain the actual sprites, nor
+    // the real sprite records themselves in the case of Container2 files.
+    //ActionRecord action2;
+    //action2.read(is2, info);
+    //os.str("");
+    //action2.print(os, sprites, 0);
+    //CHECK(os.str() == YAGL_OUT);
+}
