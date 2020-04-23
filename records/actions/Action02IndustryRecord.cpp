@@ -354,7 +354,7 @@ void Action02IndustryRecord::print_version2(std::ostream& os, uint16_t indent) c
     m_version2.sub_in_cargos.print(os, indent);
     
     // Add amounts
-    os << pad(indent) << str_add_out_cargos << ": [ ";
+    os << pad(indent) << str_add_out_cargos << ": ";
     m_version2.add_out_cargos.print(os, indent);
 
     // Repeat flag
@@ -365,8 +365,8 @@ void Action02IndustryRecord::print_version2(std::ostream& os, uint16_t indent) c
 void Action02IndustryRecord::parse_version2(TokenStream& is)
 {
     TokenValue token = is.peek();
-    const auto& it = g_indices1.find(token.value);
-    if (it != g_indices1.end())
+    const auto& it = g_indices2.find(token.value);
+    if (it != g_indices2.end())
     {
         is.match(TokenType::Ident);
         is.match(TokenType::Colon);
