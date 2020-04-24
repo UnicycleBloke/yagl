@@ -165,13 +165,13 @@ std::shared_ptr<Action00Feature> Action00Record::make_feature(FeatureType featur
         case FeatureType::Cargos:          return std::make_shared<Action00Cargos>();
         case FeatureType::SoundEffects:    return std::make_shared<Action00SoundEffects>();
         case FeatureType::Airports:        return std::make_shared<Action00Airports>();
-        case FeatureType::Signals:         return std::make_shared<Action00Signals>();
+        //case FeatureType::Signals:         return std::make_shared<Action00Signals>();
         case FeatureType::Objects:         return std::make_shared<Action00Objects>();
         case FeatureType::RailTypes:       return std::make_shared<Action00RailTypes>();
         case FeatureType::AirportTiles:    return std::make_shared<Action00AirportTiles>();
         case FeatureType::RoadTypes:       return std::make_shared<Action00RoadTypes>();
         case FeatureType::TramTypes:       return std::make_shared<Action00TramTypes>();
-        case FeatureType::OriginalStrings: return std::make_shared<Action00OriginalStrings>();
+        //case FeatureType::OriginalStrings: return std::make_shared<Action00OriginalStrings>();
     }
 
     throw RUNTIME_ERROR("Action00Record::make_feature");

@@ -91,13 +91,13 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     records/features/Action00Cargos.cpp
     records/features/Action00SoundEffects.cpp
     records/features/Action00Airports.cpp
-    records/features/Action00Signals.cpp
+    #records/features/Action00Signals.cpp - no properties
     records/features/Action00Objects.cpp
     records/features/Action00RailTypes.cpp
     records/features/Action00AirportTiles.cpp
     records/features/Action00RoadTypes.cpp
     records/features/Action00TramTypes.cpp
-    records/features/Action00OriginalStrings.cpp 
+    #records/features/Action00OriginalStrings.cpp - no properties 
 
     # Graphics related records and helper classes.
     records/graphics/RecolourRecord.cpp
