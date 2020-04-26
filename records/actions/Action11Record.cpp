@@ -86,32 +86,3 @@ void Action11Record::parse(TokenStream& is, SpriteZoomMap& sprites)
     }
     is.match(TokenType::CloseBrace);
 }
-
-
-// void Action11Record::write_binary_files(const std::map<uint32_t, SpriteZoomVector>& sprites, const std::string& binary_dir) const
-// {
-//     // for (uint16_t i = 0; i < num_sprites_to_write(); ++i)
-//     // {
-//     //     const auto record = get_sprite(i);
-//     //     switch (record->record_type())
-//     //     {
-//     //         case RecordType::ACTION_FF:
-//     //         {
-//     //             const auto actionFF = std::dynamic_pointer_cast<ActionFFRecord>(record);
-//     //             actionFF->write_binary_file(binary_dir);
-//     //             break;
-//     //         }
-
-//     //         case RecordType::SPRITE_INDEX:
-//     //         {
-//     //             const auto index = std::dynamic_pointer_cast<SpriteIndexRecord>(record);
-//     //             const auto& it = sprites.find(index->sprite_id()); 
-//     //             if (it != sprites.end())
-//     //             {
-//     //                 const auto actionFF = std::dynamic_pointer_cast<ActionFFRecord>(it->second[0]);
-//     //                 actionFF->write_binary_file(binary_dir);
-//     //             }
-//     //         }
-//     //     }
-//     // }
-// }

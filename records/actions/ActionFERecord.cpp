@@ -22,7 +22,7 @@
 
 void ActionFERecord::read(std::istream& is, const GRFInfo& info)
 {
-    m_import_code = read_uint8(is);
+    m_import_code = read_uint8(is); // Always 0
     m_grf_id.read(is);
     m_sound_index = read_uint16(is);
 }
