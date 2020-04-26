@@ -38,7 +38,7 @@ public:
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
 private:
-    uint8_t  m_import_code; // 0 for sounds
-    GRFLabel m_grf_id;      // GRFID of the GRF containing the sound we want to import.
-    uint16_t m_sound_index; // Index into the other GRFs Action11 record.
+    uint8_t  m_import_code{}; // 0 for sounds
+    GRFLabel m_grf_id{};      // GRFID of the GRF containing the sound we want to import.
+    uint16_t m_sound_index{}; // Index into the other GRFs Action11 record.
 };

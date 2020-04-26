@@ -20,3 +20,25 @@
 #include "Test_Shared.h"
 #include "ActionFFRecord.h"
 
+
+namespace {
+
+static constexpr const char* str_YAGL =
+    "binary(\"sprites\\test.wav\");\n";
+static constexpr const char* str_NFO = 
+//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+    "FF "  // ActionFF
+    "08 "  // Name length is 8
+    // Name of binary: test.wav
+    "74 65 73 74 2E 77 61 76 00 "
+    // Content of binary - this is actually just a short text file called test.wav
+    "54 68 69 73 20 69 73 20 61 20 70 72 65 74 65 6E "
+    "64 20 57 41 56 20 66 69 6C 65 2E ";
+
+} // namespace {}
+
+
+TEST_CASE("ActionFFRecord", "[actions]")
+{
+    test_yagl<ActionFFRecord, 0xFF>(str_YAGL, str_NFO);
+}
