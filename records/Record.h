@@ -233,7 +233,7 @@ public:
     void append_sprite(std::shared_ptr<Record> record) override;
     std::shared_ptr<Record> get_sprite(uint16_t index) const override 
         { return (index < num_sprites_to_write()) ? m_sprites[index] : nullptr; }
-    virtual uint16_t num_sprites_to_write() const { return uint16_t(m_sprites.size()); }
+    uint16_t num_sprites_to_write() const override { return uint16_t(m_sprites.size()); }
 
 protected:    
     void print_sprite(uint16_t index, std::ostream& os, 

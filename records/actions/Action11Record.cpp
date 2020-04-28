@@ -65,8 +65,7 @@ void Action11Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << pad(indent) << RecordName(record_type()) << " // Action11" << '\n';
     os << pad(indent) << "{" << '\n';
 
-    uint16_t num_binaries = num_sprites_to_write(); 
-    for (uint16_t index = 0; index < num_binaries; ++index)
+    for (uint16_t index = 0; index < m_num_binaries; ++index)
     {
         print_sprite(index, os, sprites, indent + 4);
     }
@@ -85,4 +84,6 @@ void Action11Record::parse(TokenStream& is, SpriteZoomMap& sprites)
         parse_sprite(is, sprites);
     }
     is.match(TokenType::CloseBrace);
+
+    m_num_binaries = num_sprites_to_write();
 }
