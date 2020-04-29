@@ -155,6 +155,7 @@ std::vector<std::string> split(const std::string& str)
 
 int test(const char* arg0, const std::string str_args)
 {
+#if (WITH_TESTS == 1)    
     // Recreate the command line for the benefit of the Catch2 tests.
     auto split_args = split(str_args);
     std::vector<const char*> ptr_args;
@@ -181,6 +182,9 @@ int test(const char* arg0, const std::string str_args)
     // You can also do any post run clean-up here.
     int num_failed = session.run();
     return num_failed;
+#else
+    return 0;    
+#endif    
 }
 
 

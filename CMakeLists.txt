@@ -126,6 +126,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
 # See Catch2 documentation for details.
 if (${WITH_TESTS} EQUAL 1)
     message("Including tests")
+    add_definitions(-DWITH_TESTS=1)
     target_sources(yagl PUBLIC
         # Unit test.
         tests/sundries/Test_StreamHelpers.cpp
@@ -184,6 +185,7 @@ if (${WITH_TESTS} EQUAL 1)
     )
 else()
     message("Excluding tests")
+    add_definitions(-DWITH_TESTS=0)
 endif()
 
 
