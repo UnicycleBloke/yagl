@@ -83,33 +83,6 @@ const EnumDescriptorT<Action12Record::Font> font_desc =
 };
 
 
-// unicode_glyphs // Action12
-// {
-//     range<NormalProp, 0x0E3F>:
-//     {
-//         sprite_id: 0x00000008
-//         {
-//             [8, 11, 0, -1], normal, 8bpp, "sprites/currency-8bpp-normal-0.png", [69, 10];
-//         }
-//         ... More sprites/glyphs 
-//     }
-//     range<SmallProp, 0x0E3F>:
-//     {
-//         sprite_id: 0x00000009
-//         {
-//             [5, 6, 0, 0], normal, 8bpp, "sprites/currency-8bpp-normal-0.png", [87, 10];
-//         }
-//     }
-//     range<LargeProp, 0x0E3F>:
-//     {
-//         sprite_id: 0x0000000A
-//         {
-//             [15, 16, 0, 0], normal, 8bpp, "sprites/currency-8bpp-normal-0.png", [102, 10];
-//         }
-//     }
-// }
-
-
 static constexpr const char* str_range = "range";
 
 

@@ -106,8 +106,12 @@ void ActionFFRecord::read_binary_file(const std::string& binary_dir)
     binary_path.append(m_filename);
 
     const std::string file_path = binary_path.make_preferred().string();
+    if (!fs::is_regular_file(file_path))
+    {
+        throw RUNTIME_ERROR(file_path + ": No such file");
+    } 
+
     std::cout << "Reading binary file: " << file_path << "..." << std::endl;
-    
     std::ifstream is(file_path, std::ios::binary);    
     while(is.peek() != EOF)
     {
