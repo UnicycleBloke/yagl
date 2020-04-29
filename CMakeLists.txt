@@ -91,13 +91,11 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     records/features/Action00Cargos.cpp
     records/features/Action00SoundEffects.cpp
     records/features/Action00Airports.cpp
-    #records/features/Action00Signals.cpp - no properties
     records/features/Action00Objects.cpp
     records/features/Action00RailTypes.cpp
     records/features/Action00AirportTiles.cpp
     records/features/Action00RoadTypes.cpp
     records/features/Action00TramTypes.cpp
-    #records/features/Action00OriginalStrings.cpp - no properties 
 
     # Graphics related records and helper classes.
     records/graphics/RecolourRecord.cpp
@@ -114,62 +112,80 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     utility/GRFStrings.cpp
     utility/Exceptions.cpp
     utility/Languages.cpp
-
-    # Unit test.
-    tests/sundries/Test_StreamHelpers.cpp
-    tests/sundries/Test_IntegerDescriptor.cpp
-    tests/sundries/Test_YearDescriptor.cpp
-    tests/sundries/Test_DateDescriptor.cpp
-
-    # Properties for various features.
-    tests/features/Test_Action00_Aircraft.cpp
-    tests/features/Test_Action00_Airports.cpp
-    tests/features/Test_Action00_AirportTiles.cpp
-    tests/features/Test_Action00_Bridges.cpp
-    tests/features/Test_Action00_Canals.cpp
-    tests/features/Test_Action00_Cargos.cpp
-    tests/features/Test_Action00_Common.cpp
-    tests/features/Test_Action00_GlobalSettings.cpp
-    tests/features/Test_Action00_Houses.cpp
-    tests/features/Test_Action00_Industries.cpp
-    tests/features/Test_Action00_IndustryTiles.cpp
-    tests/features/Test_Action00_Objects.cpp
-    tests/features/Test_Action00_RailTypes.cpp
-    tests/features/Test_Action00_RoadTypes.cpp
-    tests/features/Test_Action00_Ships.cpp
-    tests/features/Test_Action00_SoundEffects.cpp
-    tests/features/Test_Action00_Stations.cpp
-    tests/features/Test_Action00_Trains.cpp
-    tests/features/Test_Action00_TramTypes.cpp
-    tests/features/Test_Action00_Vehicles.cpp
-
-    # Other ActionXX records.
-    tests/actions/Test_Action01Record.cpp             # Define sprites
-    tests/actions/Test_Action02BasicRecord.cpp        # Define graphics
-    tests/actions/Test_Action02RandomRecord.cpp        
-    tests/actions/Test_Action02VariableRecord.cpp      
-    tests/actions/Test_Action02IndustryRecord.cpp      
-    tests/actions/Test_Action02SpriteLayoutRecord.cpp  
-    tests/actions/Test_Action03Record.cpp             # Assign graphics
-    tests/actions/Test_Action04Record.cpp             # Strings
-    tests/actions/Test_Action05Record.cpp             # Sprites
-    tests/actions/Test_Action06Record.cpp             # Modify next
-    tests/actions/Test_Action07Record.cpp             # Skip records
-    tests/actions/Test_Action08Record.cpp             # GRF identification
-    tests/actions/Test_Action0ARecord.cpp              
-    tests/actions/Test_Action0BRecord.cpp              
-    tests/actions/Test_Action0CRecord.cpp              
-    tests/actions/Test_Action0DRecord.cpp             # Set parameters
-    tests/actions/Test_Action0ERecord.cpp              
-    tests/actions/Test_Action0FRecord.cpp              
-    tests/actions/Test_Action10Record.cpp              
-    tests/actions/Test_Action11Record.cpp              
-    tests/actions/Test_Action12Record.cpp              
-    tests/actions/Test_Action13Record.cpp              
-    tests/actions/Test_Action14Record.cpp              
-    tests/actions/Test_ActionFERecord.cpp              
-    tests/actions/Test_ActionFFRecord.cpp              
 )
+
+
+# The unit tests are optionally built directly into the executable for both Debug and Release
+# builds. The tests are run by using the -t command line option. The tests are built with 
+# Catch2. Any Catch2 command line (e.g. to list or filter the tests) is passed with the -a 
+# command line option for example:
+#
+#    yagl -t -a "[actions]"  # Run tests with the [actions] attribute
+#    yagl -t -a "*Action01*" # Run tests with Action01 in their name
+#
+# See Catch2 documentation for details.
+if (${WITH_TESTS} EQUAL 1)
+    message("Including tests")
+    target_sources(yagl PUBLIC
+        # Unit test.
+        tests/sundries/Test_StreamHelpers.cpp
+        tests/sundries/Test_IntegerDescriptor.cpp
+        tests/sundries/Test_YearDescriptor.cpp
+        tests/sundries/Test_DateDescriptor.cpp
+
+        # Properties for various features.
+        tests/features/Test_Action00_Aircraft.cpp
+        tests/features/Test_Action00_Airports.cpp
+        tests/features/Test_Action00_AirportTiles.cpp
+        tests/features/Test_Action00_Bridges.cpp
+        tests/features/Test_Action00_Canals.cpp
+        tests/features/Test_Action00_Cargos.cpp
+        tests/features/Test_Action00_Common.cpp
+        tests/features/Test_Action00_GlobalSettings.cpp
+        tests/features/Test_Action00_Houses.cpp
+        tests/features/Test_Action00_Industries.cpp
+        tests/features/Test_Action00_IndustryTiles.cpp
+        tests/features/Test_Action00_Objects.cpp
+        tests/features/Test_Action00_RailTypes.cpp
+        tests/features/Test_Action00_RoadTypes.cpp
+        tests/features/Test_Action00_Ships.cpp
+        tests/features/Test_Action00_SoundEffects.cpp
+        tests/features/Test_Action00_Stations.cpp
+        tests/features/Test_Action00_Trains.cpp
+        tests/features/Test_Action00_TramTypes.cpp
+        tests/features/Test_Action00_Vehicles.cpp
+
+        # Other ActionXX records.
+        tests/actions/Test_Action01Record.cpp             # Define sprites
+        tests/actions/Test_Action02BasicRecord.cpp        # Define graphics
+        tests/actions/Test_Action02RandomRecord.cpp        
+        tests/actions/Test_Action02VariableRecord.cpp      
+        tests/actions/Test_Action02IndustryRecord.cpp      
+        tests/actions/Test_Action02SpriteLayoutRecord.cpp  
+        tests/actions/Test_Action03Record.cpp             # Assign graphics
+        tests/actions/Test_Action04Record.cpp             # Strings
+        tests/actions/Test_Action05Record.cpp             # Sprites
+        tests/actions/Test_Action06Record.cpp             # Modify next
+        tests/actions/Test_Action07Record.cpp             # Skip records
+        tests/actions/Test_Action08Record.cpp             # GRF identification
+        tests/actions/Test_Action0ARecord.cpp              
+        tests/actions/Test_Action0BRecord.cpp              
+        tests/actions/Test_Action0CRecord.cpp              
+        tests/actions/Test_Action0DRecord.cpp             # Set parameters
+        tests/actions/Test_Action0ERecord.cpp              
+        tests/actions/Test_Action0FRecord.cpp              
+        tests/actions/Test_Action10Record.cpp              
+        tests/actions/Test_Action11Record.cpp              
+        tests/actions/Test_Action12Record.cpp              
+        tests/actions/Test_Action13Record.cpp              
+        tests/actions/Test_Action14Record.cpp              
+        tests/actions/Test_ActionFERecord.cpp              
+        tests/actions/Test_ActionFFRecord.cpp              
+    )
+else()
+    message("Excluding tests")
+endif()
+
 
 # This appears to be the simplest way to create a pre-build step that
 # actually works. Create a fake target and make the real target depend on it.

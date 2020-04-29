@@ -32,13 +32,11 @@
 #include "Action00Cargos.h"
 #include "Action00SoundEffects.h"
 #include "Action00Airports.h"
-#include "Action00Signals.h"
 #include "Action00Objects.h"
 #include "Action00RailTypes.h"
 #include "Action00AirportTiles.h"
 #include "Action00RoadTypes.h"
 #include "Action00TramTypes.h"
-#include "Action00OriginalStrings.h" 
 #include "CommandLineOptions.h"
 
 
