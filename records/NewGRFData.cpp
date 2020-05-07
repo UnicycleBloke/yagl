@@ -45,7 +45,9 @@
 #include "ActionFFRecord.h"
 #include "RecolourRecord.h"
 #include "RealSpriteRecord.h"
+#include "FakeSpriteRecord.h"
 #include "SpriteIndexRecord.h"
+#include "SpriteWrapperRecord.h"
 #include "StreamHelpers.h"
 #include "EnumDescriptor.h"
 #include "SpriteSheetGenerator.h"
@@ -236,8 +238,9 @@ void NewGRFData::read(std::istream& is)
                 // Is this always a sound effect? What records followed the 
                 // Action11 in the data section? Sprite references. Size needs to be 
                 // reduced by one for some reason.
-                std::shared_ptr<Record> effect = read_record(is, size - 1, true, m_info);
-                append_sprite(sprite_id, effect);
+                std::shared_ptr<Record> effect  = read_record(is, size - 1, true, m_info);
+                std::shared_ptr<Record> wrapper = std::make_shared<SpriteWrapperRecord>(sprite_id, effect);
+                append_sprite(sprite_id, wrapper);
             }
             else
             {
@@ -476,7 +479,8 @@ std::shared_ptr<Record> NewGRFData::make_record(RecordType record_type)
         case RecordType::SPRITE_INDEX:            return std::make_shared<SpriteIndexRecord>(RecordType::ACTION_01);
 
         // Special case of an empty sprite used for absent image.
-        //case RecordType::FAKE_SPRITE:             return std::make_shared<FakeSpriteRecord>();
+        case RecordType::FAKE_SPRITE:             return std::make_shared<FakeSpriteRecord>();
+        
         default:                                  throw RUNTIME_ERROR("NewGRFData::create_action");
     }
 

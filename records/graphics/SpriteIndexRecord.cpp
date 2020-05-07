@@ -21,6 +21,7 @@
 #include "RecolourRecord.h"
 #include "StreamHelpers.h"
 #include "ActionFFRecord.h"
+#include "SpriteWrapperRecord.h"
 #include "NewGRFData.h"
 #include "CommandLineOptions.h"
 
@@ -85,14 +86,15 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
             // Need to create RealSpriteRecord     
             // Size and compression are place holder values to be read from the token stream.
             record = std::make_shared<RealSpriteRecord>(m_sprite_id, 0, 0);
+            record->parse(is, sprites);
         }
         else
         {
             // ActionFF is a sound effect.
-            record = std::make_shared<ActionFFRecord>();
+            std::shared_ptr<Record> effect = std::make_shared<ActionFFRecord>();
+            effect->parse(is, sprites);
+            record = std::make_shared<SpriteWrapperRecord>(m_sprite_id, effect);
         }
-        
-        record->parse(is, sprites);
 
         // This adds the sprite to the m_sprites map inside NewGRFData.
         //append_real_sprite(m_sprite_id, record);

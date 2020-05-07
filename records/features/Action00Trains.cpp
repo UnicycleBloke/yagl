@@ -100,44 +100,40 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-// This property also depends on whether a rail type table is installed, in which case it is the index into 
-// that table.    
-//const     EnumDescriptor    desc_05 = { 0x05, "track_type",                   
-//    {{0, "Rail"}, {1, "Monorail"}, {2, "Maglev"}} };
-constexpr UInt8Descriptor     desc_05  = { 0x08, str_track_type,                   UIntFormat::Dec };
-constexpr BoolDescriptor      desc_08  = { 0x08, str_ai_special_flag };
-constexpr UInt16Descriptor    desc_09  = { 0x09, str_speed_kmh,                    UIntFormat::Dec };
-constexpr UInt16Descriptor    desc_0B  = { 0x0B, str_power,                        UIntFormat::Dec };
-constexpr UInt8Descriptor     desc_0D  = { 0x0D, str_running_cost_factor,          UIntFormat::Hex };
-constexpr UInt32Descriptor    desc_0E  = { 0x0E, str_running_cost_base,            UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_12  = { 0x12, str_sprite_id,                    UIntFormat::Hex };
-constexpr BoolDescriptor      desc_13  = { 0x13, str_is_dual_headed };
-constexpr UInt8Descriptor     desc_14  = { 0x14, str_cargo_capacity,               UIntFormat::Dec };
-constexpr UInt8Descriptor     desc_15  = { 0x15, str_cargo_type,                   UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_16  = { 0x16, str_weight_tons,                  UIntFormat::Dec };
-constexpr UInt8Descriptor     desc_17  = { 0x17, str_cost_factor,                  UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_18  = { 0x18, str_ai_engine_rank,               UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_19  = { 0x19, str_engine_traction_type,         UIntFormat::Hex };
-constexpr UInt8ExtDescriptor  desc_1A  = { 0x1A, str_sort_purchase_list,           UIntFormat::Hex };
-constexpr UInt16Descriptor    desc_1B  = { 0x1B, str_power_from_each_wagon,        UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_1C  = { 0x1C, str_refit_cost,                   UIntFormat::Hex };
-constexpr UInt32Descriptor    desc_1D  = { 0x1D, str_refit_cargo_types,            UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_1E  = { 0x1E, str_callback_flags_mask,          UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_1F  = { 0x1F, str_coeff_of_tractive_effort,     UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_20  = { 0x20, str_coeff_of_air_drag,            UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_21  = { 0x21, str_shorten_vehicle,              UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_22  = { 0x22, str_visual_effect,                UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_23  = { 0x23, str_weight_from_wagons,           UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_24  = { 0x24, str_weight_high_byte,             UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_25  = { 0x25, str_mask_for_var_42,              UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_26  = { 0x26, str_retire_vehicle_early,         UIntFormat::Hex };
-constexpr UInt8Descriptor     desc_27  = { 0x27, str_miscellaneous_flags,          UIntFormat::Hex };
-constexpr UInt16Descriptor    desc_28  = { 0x28, str_refittable_cargo_classes,     UIntFormat::Hex };
-constexpr UInt16Descriptor    desc_29  = { 0x29, str_non_refittable_cargo_classes, UIntFormat::Hex };
-constexpr LongDateDescriptor  desc_2A  = { 0x2A, str_long_introduction_date };
-constexpr UInt16Descriptor    desc_2B  = { 0x2B, str_custom_cargo_aging_period,    UIntFormat::Hex };
-constexpr CargoListDescriptor desc_2C  = { 0x2C, str_always_refittable_cargos };
-constexpr CargoListDescriptor desc_2D  = { 0x2D, str_never_refittable_cargos };
+constexpr UInt8Descriptor         desc_05  = { 0x08, str_track_type,                   UIntFormat::Dec };
+constexpr BoolDescriptor          desc_08  = { 0x08, str_ai_special_flag };
+constexpr UInt16Descriptor        desc_09  = { 0x09, str_speed_kmh,                    UIntFormat::Dec };
+constexpr UInt16Descriptor        desc_0B  = { 0x0B, str_power,                        UIntFormat::Dec };
+constexpr UInt8Descriptor         desc_0D  = { 0x0D, str_running_cost_factor,          UIntFormat::Hex };
+constexpr UInt32Descriptor        desc_0E  = { 0x0E, str_running_cost_base,            UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_12  = { 0x12, str_sprite_id,                    UIntFormat::Hex };
+constexpr BoolDescriptor          desc_13  = { 0x13, str_is_dual_headed };
+constexpr UInt8Descriptor         desc_14  = { 0x14, str_cargo_capacity,               UIntFormat::Dec };
+constexpr UInt8Descriptor         desc_15  = { 0x15, str_cargo_type,                   UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_16  = { 0x16, str_weight_tons,                  UIntFormat::Dec };
+constexpr UInt8Descriptor         desc_17  = { 0x17, str_cost_factor,                  UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_18  = { 0x18, str_ai_engine_rank,               UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_19  = { 0x19, str_engine_traction_type,         UIntFormat::Hex };
+constexpr UInt8ExtDescriptor      desc_1A  = { 0x1A, str_sort_purchase_list,           UIntFormat::Hex };
+constexpr UInt16Descriptor        desc_1B  = { 0x1B, str_power_from_each_wagon,        UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_1C  = { 0x1C, str_refit_cost,                   UIntFormat::Hex };
+constexpr UInt32Descriptor        desc_1D  = { 0x1D, str_refit_cargo_types,            UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_1E  = { 0x1E, str_callback_flags_mask,          UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_1F  = { 0x1F, str_coeff_of_tractive_effort,     UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_20  = { 0x20, str_coeff_of_air_drag,            UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_21  = { 0x21, str_shorten_vehicle,              UIntFormat::Hex };
+constexpr VisualEffectDescriptor  desc_22  = { 0x22, str_visual_effect };
+constexpr UInt8Descriptor         desc_23  = { 0x23, str_weight_from_wagons,           UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_24  = { 0x24, str_weight_high_byte,             UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_25  = { 0x25, str_mask_for_var_42,              UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_26  = { 0x26, str_retire_vehicle_early,         UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_27  = { 0x27, str_miscellaneous_flags,          UIntFormat::Hex };
+constexpr UInt16Descriptor        desc_28  = { 0x28, str_refittable_cargo_classes,     UIntFormat::Hex };
+constexpr UInt16Descriptor        desc_29  = { 0x29, str_non_refittable_cargo_classes, UIntFormat::Hex };
+constexpr LongDateDescriptor      desc_2A  = { 0x2A, str_long_introduction_date };
+constexpr UInt16Descriptor        desc_2B  = { 0x2B, str_custom_cargo_aging_period,    UIntFormat::Hex };
+constexpr CargoListDescriptor     desc_2C  = { 0x2C, str_always_refittable_cargos };
+constexpr CargoListDescriptor     desc_2D  = { 0x2D, str_never_refittable_cargos };
 
 
 } // namespace {

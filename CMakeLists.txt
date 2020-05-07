@@ -74,6 +74,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     records/descriptors/CargoAcceptanceDescriptor.cpp
     records/descriptors/DateDescriptor.cpp
     records/descriptors/GRFLabel.cpp
+    records/descriptors/VisualEffect.cpp
 
     # Handle properties for each different kind of feature (Action00).
     records/features/Action00Common.cpp
@@ -100,6 +101,8 @@ add_executable(${NEWGRF_PROGRAM_NAME}
     # Graphics related records and helper classes.
     records/graphics/RecolourRecord.cpp
     records/graphics/RealSpriteRecord.cpp
+    records/graphics/FakeSpriteRecord.cpp
+    records/graphics/SpriteWrapperRecord.cpp
     records/graphics/SpriteIndexRecord.cpp
     records/graphics/ChunkEncoder.cpp       # For sprites with a lot of transparent pixels.
     records/graphics/Palettes.cpp

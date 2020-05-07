@@ -22,6 +22,7 @@
 #include "ActionFFRecord.h"
 #include "ActionFERecord.h"
 #include "SpriteIndexRecord.h"
+#include "FakeSpriteRecord.h"
 
 
 void ActionRecord::write(std::ostream& os, const GRFInfo& info) const
@@ -101,6 +102,8 @@ static const std::map<std::string, uint8_t> g_indices =
     // Only permitted in Action11 containers.
     { "binary",          0x02 }, // Binary sound effects directly included in the data section.
     { "import",          0x03 }, // Binary sound effects imported from other GRFs.
+
+    { "null_sprite",     0x04 }, // Null sprite used in place of an image when no image required.
 };
 
 
@@ -123,6 +126,7 @@ void ContainerRecord::parse_sprite(TokenStream& is, SpriteZoomMap& sprites)
                 case 0x01: record = std::make_shared<RecolourRecord>(); break;
                 case 0x02: record = std::make_shared<ActionFFRecord>(); break;
                 case 0x03: record = std::make_shared<ActionFERecord>(); break;
+                case 0x04: record = std::make_shared<FakeSpriteRecord>(); break;
                 default:   throw PARSER_ERROR("Unexpected container sub-record type", token);
             }
         } 
