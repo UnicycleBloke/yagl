@@ -90,7 +90,10 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
         }
         else
         {
-            // ActionFF is a sound effect.
+            // ActionFF is a sound effect. The SpriteWrapper is needed to write the sprite index value
+            // into the binary file, which the ActionFF does not do. This is only important for Container
+            // version 2 files. RealSprites this for themselves. ActionFF can also be used directly in the 
+            // data section, whether Container 2 or not.
             std::shared_ptr<Record> effect = std::make_shared<ActionFFRecord>();
             effect->parse(is, sprites);
             record = std::make_shared<SpriteWrapperRecord>(m_sprite_id, effect);
