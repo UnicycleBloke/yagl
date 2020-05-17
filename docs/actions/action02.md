@@ -9,5 +9,6 @@
 - [Sprite layout record](../actions/action02_sprite_layout.md)        
 
 ## Links
+
 - [Action02 NewGRF specifications](https://newgrf-specs.tt-wiki.net/wiki/Action2)
 - [Vehicles Action02 NewGRF specifications](https://newgrf-specs.tt-wiki.net/wiki/Action2/Vehicles)
