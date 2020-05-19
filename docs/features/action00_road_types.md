@@ -4,6 +4,7 @@
 # Action00 - RoadTypes
 
 ```c++
+// NOTE: These numbers are mostly made up rubbish for the sake of demonstrating the format of each property.
 properties<RoadTypes, 0x0000> // Action00
 {
     // instance_id: 0x0000

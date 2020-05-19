@@ -89,9 +89,16 @@ public:
         RoofRight = 0x06
     }; 
 
+    enum class Direction
+    {
+        NE_SW = 0x00,
+        NW_SE = 0x01
+    };
+
 private:    
-    uint8_t m_platform_length;
-    uint8_t m_platform_count;
+    uint8_t   m_platform_length;
+    uint8_t   m_platform_count;
+    Direction m_direction = Direction::NE_SW;
     // length * count, All bytes 00, 02, 04 or 06
     std::vector<Platform> m_platform_tiles; 
 };

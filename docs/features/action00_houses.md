@@ -74,10 +74,7 @@ The properties allowed inside the instance block are as follows (see [Houses](ht
 | `accepted_cargo_list`     | 0x20 | B n*B | An array of cargo types in the form `[ <cargo> <cargo> <cargo> ]`. |
 | `long_minimum_year`       | 0x21 | W     | Any year since 0000. |
 | `long_maximum_year`       | 0x22 | W     | Any year since 0000. |
-| `tile_acceptance_list`    | 0x23 | V     | See below. | 
-
-#### Tile acceptance list
-
+| `tile_acceptance_list`    | 0x23 | V     | An array of cargo acceptance pairs in the form `[ {<cargo>: <amount>}  {<cargo>: <amount>} ... ]`. | 
 
 ## Links
 

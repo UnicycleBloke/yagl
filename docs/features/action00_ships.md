@@ -5,6 +5,7 @@
 # Action00 - Ships
 
 ```c++
+// NOTE: These numbers are mostly made up rubbish for the sake of demonstrating the format of each property.
 properties<Ships, 0x008D> // Action00
 {
     // instance_id: 0x008D

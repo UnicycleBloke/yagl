@@ -98,12 +98,21 @@ constexpr UInt16Descriptor          desc_18  = { 0x18, str_animation_triggers,  
 
 const EnumDescriptorT<CustomLayout::Platform> platform_desc = 
 { 
-    0x00, "severity",                   
+    0x00, "platform",                   
     {
         { 0, "P" }, // Platform::Plain },    
         { 2, "B" }, // Platform::Building }, 
         { 4, "L" }, // Platform::RoofLeft }, 
         { 6, "R" }, // Platform::RoofRight }, 
+    }
+};
+
+const EnumDescriptorT<CustomLayout::Direction> direction_desc = 
+{ 
+    0x00, "direction",                   
+    {
+        { 0, "NE_SW" },     
+        { 1, "NW_SE" },  
     }
 };
 
@@ -322,11 +331,21 @@ void CustomLayout::read(std::istream& is)
 {
     m_platform_length = read_uint8(is);
     m_platform_count  = read_uint8(is);
-    for (uint16_t i = 0; i < m_platform_length * m_platform_count; ++i)
+    uint16_t dirs     = 0;
+    uint16_t size     = m_platform_length * m_platform_count;
+    for (uint16_t i = 0; i < size; ++i)
     {
-        auto tile = static_cast<Platform>(read_uint8(is));
+        uint8_t temp = read_uint8(is);
+        auto tile = static_cast<Platform>(temp & 0xFE);
         m_platform_tiles.push_back(tile);
+
+        dirs += (temp & 0x01);
     }
+
+    // Sum of directions should same as the number of platforms times length, or zero.
+    // TODO check this.
+    if (size > 0)
+        m_direction = static_cast<Direction>(dirs / size);
 }
 
 
@@ -336,7 +355,8 @@ void CustomLayout::write(std::ostream& os) const
     write_uint8(os, m_platform_count);
     for (const auto tile: m_platform_tiles)
     {
-        write_uint8(os, static_cast<uint8_t>(tile));
+        // Add back the orientation.
+        write_uint8(os, static_cast<uint8_t>(tile) + static_cast<uint8_t>(m_direction));
     }
 
     // Assert that the vector has the correct length?
@@ -345,7 +365,9 @@ void CustomLayout::write(std::ostream& os) const
 
 void CustomLayout::print(std::ostream& os, uint16_t indent) const
 {
-    os << pad(indent) << str_layout << "\n"; 
+    os << pad(indent) << str_layout << "<";
+    direction_desc.print_value(m_direction, os);
+    os << ">\n"; 
     os << pad(indent) << "{\n"; 
     os << pad(indent + 4) << "// Platform: B=Building, P=Plain, L=RoofLeft, R=RoofRight\n"; 
 
@@ -359,10 +381,6 @@ void CustomLayout::print(std::ostream& os, uint16_t indent) const
             const auto tile = m_platform_tiles[index++];
             switch (tile)
             {
-                // case Platform::Building:  os << "Building"; break;
-                // case Platform::Plain:     os << "Plain"; break;
-                // case Platform::RoofLeft:  os << "RoofLeft"; break;
-                // case Platform::RoofRight: os << "RoofRight"; break;
                 case Platform::Building:  os << "B "; break;
                 case Platform::Plain:     os << "P "; break;
                 case Platform::RoofLeft:  os << "L "; break;
@@ -379,9 +397,12 @@ void CustomLayout::print(std::ostream& os, uint16_t indent) const
 void CustomLayout::parse(TokenStream& is)
 {
     is.match_ident(str_layout);
-    is.match(TokenType::OpenBrace);
+    is.match(TokenType::OpenAngle);
+    direction_desc.parse(m_direction, is);
+    is.match(TokenType::CloseAngle);
 
     m_platform_count = 0;
+    is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
         while (is.peek().type != TokenType::SemiColon)

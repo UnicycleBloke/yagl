@@ -4,6 +4,7 @@
 # Action00 - RailTypes
 
 ```c++
+// NOTE: These numbers are mostly made up rubbish for the sake of demonstrating the format of each property.
 properties<RailTypes, 0x0001> // Action00
 {
     // instance_id: 0x0001

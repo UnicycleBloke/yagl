@@ -5,6 +5,7 @@
 # Action00 - Road Vehicles
 
 ```c++
+// NOTE: These numbers are mostly made up rubbish for the sake of demonstrating the format of each property.
 ```
 
 #### Property details
