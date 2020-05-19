@@ -20,6 +20,7 @@
 #include "Action00Common.h"
 #include "IntegerDescriptor.h"
 #include "DateDescriptor.h"
+#include "VisualEffect.h"
 
 
 class Action00Vehicles : public Action00Common
@@ -35,33 +36,33 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    UInt8     m_08_speed_2_kmh{};
-    UInt8     m_09_running_cost_factor{};
-    UInt32    m_0A_running_cost_base{};
-    UInt8     m_0E_sprite_id{};
-    UInt8     m_0F_cargo_capacity{};
-    UInt8     m_10_cargo_type{};
-    UInt8     m_11_cost_factor{};
-    UInt8     m_12_sound_effect_type{};
-    UInt8     m_13_power_10_hp{};
-    UInt8     m_14_weight_quarter_tons{};
-    UInt8     m_15_speed_half_kmh{};
-    UInt32    m_16_refit_cargo_types{};
-    UInt8     m_17_callback_flags_mask{};
-    UInt8     m_18_coeff_of_tractive_effort{};
-    UInt8     m_19_coeff_of_air_drag{};
-    UInt8     m_1A_refit_cost{};
-    UInt8     m_1B_retire_vehicle_early{};
-    UInt8     m_1C_miscellaneous_flags{};
-    UInt16    m_1D_refittable_cargo_classes{};
-    UInt16    m_1E_non_refittable_cargo_classes{};
-    LongDate  m_1F_long_introduction_date{};
-    UInt8Ext  m_20_sort_purchase_list{};
-    UInt8     m_21_visual_effect{};
-    UInt16    m_22_custom_cargo_aging_period{};
-    UInt8     m_23_shorten_vehicle{};
-    CargoList m_24_always_refittable_cargos{};
-    CargoList m_25_never_refittable_cargos{};
+    UInt8         m_08_speed_2_kmh{};
+    UInt8         m_09_running_cost_factor{};
+    UInt32        m_0A_running_cost_base{};
+    UInt8         m_0E_sprite_id{};
+    UInt8         m_0F_cargo_capacity{};
+    UInt8         m_10_cargo_type{};
+    UInt8         m_11_cost_factor{};
+    UInt8         m_12_sound_effect_type{};
+    UInt8         m_13_power_10_hp{};
+    UInt8         m_14_weight_quarter_tons{};
+    UInt8         m_15_speed_half_kmh{};
+    UInt32        m_16_refit_cargo_types{};
+    UInt8         m_17_callback_flags_mask{};
+    UInt8         m_18_coeff_of_tractive_effort{};
+    UInt8         m_19_coeff_of_air_drag{};
+    UInt8         m_1A_refit_cost{};
+    UInt8         m_1B_retire_vehicle_early{};
+    UInt8         m_1C_miscellaneous_flags{};
+    UInt16        m_1D_refittable_cargo_classes{};
+    UInt16        m_1E_non_refittable_cargo_classes{};
+    LongDate      m_1F_long_introduction_date{};
+    UInt8Ext      m_20_sort_purchase_list{};
+    VisualEffect  m_21_visual_effect{};
+    UInt16        m_22_custom_cargo_aging_period{};
+    UInt8         m_23_shorten_vehicle{};
+    CargoList     m_24_always_refittable_cargos{};
+    CargoList     m_25_never_refittable_cargos{};
 };
 
 

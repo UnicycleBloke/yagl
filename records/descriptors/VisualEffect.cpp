@@ -94,10 +94,23 @@ void VisualEffect::parse(TokenStream& is)
     is.match_ident(str_effect);
     is.match(TokenType::OpenParen);
     desc_effect.parse(m_effect, is);
-    is.match(TokenType::Comma);
-    m_position = is.match_uint8();
-    is.match(TokenType::Comma);
-    desc_power.parse(m_wagon_power, is);
+
+    // Optional feature.
+    m_position = 0;
+    if (is.peek().type == TokenType::Comma)
+    {
+        is.match(TokenType::Comma);
+        m_position = is.match_uint8();
+    }
+
+    // Optional feature.
+    m_wagon_power = WagonPower::Enable;
+    if (is.peek().type == TokenType::Comma)
+    {
+        is.match(TokenType::Comma);
+        desc_power.parse(m_wagon_power, is);
+    }
+
     is.match(TokenType::CloseParen);
 }
 

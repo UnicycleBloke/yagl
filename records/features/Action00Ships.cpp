@@ -79,29 +79,29 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-constexpr UInt8Descriptor       desc_08  = { 0x08, str_sprite_id,                    UIntFormat::Hex };
-constexpr BoolDescriptor        desc_09  = { 0x09, str_is_refittable };
-constexpr UInt8Descriptor       desc_0A  = { 0x0A, str_cost_factor,                  UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_0B  = { 0x0B, str_speed_2_kmh,                  UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_0C  = { 0x0C, str_cargo_type,                   UIntFormat::Hex };
-constexpr UInt16Descriptor      desc_0D  = { 0x0D, str_cargo_capacity,               UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_0F  = { 0x0F, str_running_cost_factor,          UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_10  = { 0x10, str_sound_effect_type,            UIntFormat::Hex };
-constexpr UInt32Descriptor      desc_11  = { 0x11, str_refit_cargo_types,            UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_12  = { 0x12, str_callback_flags_mask,          UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_13  = { 0x13, str_refit_cost,                   UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_14  = { 0x14, str_ocean_speed_fraction,         UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_15  = { 0x15, str_canal_speed_fraction,         UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_16  = { 0x16, str_retire_vehicle_early,         UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_17  = { 0x17, str_miscellaneous_flags,          UIntFormat::Hex };
-constexpr UInt16Descriptor      desc_18  = { 0x18, str_refittable_cargo_classes,     UIntFormat::Hex };
-constexpr UInt16Descriptor      desc_19  = { 0x19, str_non_refittable_cargo_classes, UIntFormat::Hex };
-constexpr LongDateDescriptor    desc_1A  = { 0x1A, str_long_introduction_date };
-constexpr UInt8ExtDescriptor    desc_1B  = { 0x1B, str_sort_purchase_list,           UIntFormat::Hex };
-constexpr UInt8Descriptor       desc_1C  = { 0x1C, str_visual_effect,                UIntFormat::Hex };
-constexpr UInt16Descriptor      desc_1D  = { 0x1D, str_custom_cargo_aging_period,    UIntFormat::Hex };
-constexpr CargoListDescriptor   desc_1E  = { 0x1E, str_always_refittable_cargos };
-constexpr CargoListDescriptor   desc_1F  = { 0x1F, str_never_refittable_cargos };
+constexpr UInt8Descriptor        desc_08  = { 0x08, str_sprite_id,                    UIntFormat::Hex };
+constexpr BoolDescriptor         desc_09  = { 0x09, str_is_refittable };
+constexpr UInt8Descriptor        desc_0A  = { 0x0A, str_cost_factor,                  UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_0B  = { 0x0B, str_speed_2_kmh,                  UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_0C  = { 0x0C, str_cargo_type,                   UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_0D  = { 0x0D, str_cargo_capacity,               UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_0F  = { 0x0F, str_running_cost_factor,          UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_10  = { 0x10, str_sound_effect_type,            UIntFormat::Hex };
+constexpr UInt32Descriptor       desc_11  = { 0x11, str_refit_cargo_types,            UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_12  = { 0x12, str_callback_flags_mask,          UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_13  = { 0x13, str_refit_cost,                   UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_14  = { 0x14, str_ocean_speed_fraction,         UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_15  = { 0x15, str_canal_speed_fraction,         UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_16  = { 0x16, str_retire_vehicle_early,         UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_17  = { 0x17, str_miscellaneous_flags,          UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_18  = { 0x18, str_refittable_cargo_classes,     UIntFormat::Hex };
+constexpr UInt16Descriptor       desc_19  = { 0x19, str_non_refittable_cargo_classes, UIntFormat::Hex };
+constexpr LongDateDescriptor     desc_1A  = { 0x1A, str_long_introduction_date };
+constexpr UInt8ExtDescriptor     desc_1B  = { 0x1B, str_sort_purchase_list,           UIntFormat::Hex };
+constexpr VisualEffectDescriptor desc_1C  = { 0x1C, str_visual_effect };
+constexpr UInt16Descriptor       desc_1D  = { 0x1D, str_custom_cargo_aging_period,    UIntFormat::Hex };
+constexpr CargoListDescriptor    desc_1E  = { 0x1E, str_always_refittable_cargos };
+constexpr CargoListDescriptor    desc_1F  = { 0x1F, str_never_refittable_cargos };
 
 
 } // namespace {

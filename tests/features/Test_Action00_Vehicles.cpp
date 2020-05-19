@@ -52,7 +52,7 @@ static constexpr const char* str_YAGL =
     "        non_refittable_cargo_classes: 0x4413;\n"
     "        long_introduction_date: date(1911/3/13);\n"
     "        sort_purchase_list: 0x0102;\n"
-    "        visual_effect: 0x45;\n"
+    "        visual_effect: effect(SteamPuffs, 0x07, Disable);\n"
     "        custom_cargo_aging_period: 0x1237;\n"
     "        shorten_vehicle: 0x46;\n"
     "        always_refittable_cargos: [ 0x02 0x03 0x04 0x11 ];\n"
@@ -90,7 +90,7 @@ static constexpr const char* str_NFO =
     "1E 13 44 "          // non_refittable_cargo_classes
     "1F C1 A6 0A 00 "    // long_introduction_date
     "20 FF 02 01 "       // sort_purchase_list
-    "21 45 "             // visual_effect
+    "21 97 "             // visual_effect
     "22 37 12 "          // custom_cargo_aging_period
     "23 46 "             // shorten_vehicle
     "24 04 02 03 04 11 " // always_refittable_cargos
