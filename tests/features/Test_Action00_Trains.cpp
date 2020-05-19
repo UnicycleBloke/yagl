@@ -52,7 +52,7 @@ static constexpr const char* str_YAGL =
     "        coeff_of_tractive_effort: 0x56;\n"
     "        coeff_of_air_drag: 0x57;\n"
     "        shorten_vehicle: 0x58;\n"
-    "        visual_effect: 0x59;\n"
+    "        visual_effect: effect(SteamPuffs, 0x07, Disable);\n"
     "        weight_from_wagons: 0x5A;\n"
     "        weight_high_byte: 0x5B;\n"
     "        mask_for_var_42: 0x5C;\n"
@@ -97,7 +97,7 @@ static constexpr const char* str_NFO =
     "1F 56 "              // coeff_of_tractive_effort
     "20 57 "              // coeff_of_air_drag
     "21 58 "              // shorten_vehicle
-    "22 59 "              // visual_effect
+    "22 97 "              // visual_effect  0x10 (steam puffs), 0x07 (position), x80 (disable)
     "23 5A "              // weight_from_wagons
     "24 5B "              // weight_high_byte
     "25 5C "              // mask_for_var_42

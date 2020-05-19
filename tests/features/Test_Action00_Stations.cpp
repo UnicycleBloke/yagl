@@ -51,14 +51,14 @@ static constexpr const char* str_YAGL =
     "        disabled_platform_lengths: 0x15;\n"
     "        custom_layouts: \n"
     "        {\n"
-    "            layout\n"
+    "            layout<NE_SW>\n"
     "            {\n"
     "                // Platform: B=Building, P=Plain, L=RoofLeft, R=RoofRight\n"
     "                B B B B B B ;\n" // Plaform 0
     "                B B B B B B ;\n" // Plaform 1
     "                B B B B B B ;\n" // Plaform 2
     "            }\n"
-    "            layout\n"
+    "            layout<NW_SE>\n"
     "            {\n"
     "                // Platform: B=Building, P=Plain, L=RoofLeft, R=RoofRight\n"
     "                B B P P P B B R B B ;\n" // Plaform 0
@@ -107,8 +107,8 @@ static constexpr const char* str_NFO =
           "02 02 02 02 02 02 "
           "02 02 02 02 02 02 "
        "0A 02 "
-          "02 02 00 00 00 02 02 06 02 02 "
-          "04 06 02 00 00 00 00 02 02 02 "
+          "03 03 01 01 01 03 03 07 03 03 "
+          "05 07 03 01 01 01 01 03 03 03 "
        "00 00 "
     "0F 23 "           // copy_custom_layout_id
     "10 34 12 "        // little_lots_threshold
