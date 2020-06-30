@@ -29,6 +29,38 @@
 #include "catch.hpp"
 
 
+// Convenience functions to check for errors when opening files. Not checking came up as a 
+// possible cause in a bug report when no GRF was created on encoding, but without 
+// any errors. Streams have move semantics so it should be fine to return the opened 
+// stream here.
+static std::ifstream open_read_file(const std::string& file_name)
+{
+    std::ifstream is(file_name, std::ios::binary);
+    if (is.fail())
+    {
+        std::ostringstream ss;
+        ss << "Error opening file for reading: " << file_name;  
+        throw RUNTIME_ERROR(ss.str());
+    }
+
+    return is;
+}
+
+
+static std::ofstream open_write_file(const std::string& file_name)
+{
+    std::ofstream os(file_name, std::ios::binary);
+    if (os.fail())
+    {
+        std::ostringstream ss;
+        ss << "Error opening file for writing: " << file_name;  
+        throw RUNTIME_ERROR(ss.str());
+    }
+
+    return os;
+}
+
+
 static void decode()
 {
     CommandLineOptions& options = CommandLineOptions::options();
@@ -47,12 +79,12 @@ static void decode()
         // The GRF file already checked for existence.
         std::cout << "Reading GRF..." << std::endl;
         NewGRFData grf_data;
-        std::ifstream is(options.grf_file(), std::ios::binary);
+        std::ifstream is = open_read_file(options.grf_file());
         grf_data.read(is);
 
         // Write out the YAGL file and associated sprite sheets ...
         std::cout << "Writing YAGL and other files..." << std::endl;
-        std::ofstream os(options.yagl_file(), std::ios::binary);
+        std::ofstream os = open_write_file(options.yagl_file());
         grf_data.print(os, options.yagl_dir(), options.image_base());
     }
     catch (const std::exception& e)
@@ -77,7 +109,7 @@ static void encode()
         // This file already checked for existence.
         // Will need to check for the sprite sheets as we go along.
         std::cout << "Lexing YAGL..." << std::endl;
-        std::ifstream is(options.yagl_file(), std::ios::binary);
+        std::ifstream is = open_read_file(options.yagl_file());
         TokenStream token_stream{is};
 
         // Parse the YAGL script ...
@@ -98,7 +130,7 @@ static void encode()
 
         // Write out the GRF file ...
         std::cout << "Writing GRF..." << std::endl;
-        std::ofstream os(options.grf_file(), std::ios::binary);
+        std::ofstream os = open_write_file(options.grf_file());
         grf_data.write(os);
     }
     catch (const std::exception& e)
@@ -125,12 +157,12 @@ static void hex_dump()
         // The GRF file already checked for existence.
         std::cout << "Reading GRF..." << std::endl;
         NewGRFData grf_data;
-        std::ifstream is(options.grf_file(), std::ios::binary);
+        std::ifstream is = open_read_file(options.grf_file());
         grf_data.read(is);
 
         // Write out the HEX file...
         std::cout << "Writing HEX..." << std::endl;
-        std::ofstream os(options.hex_file(), std::ios::binary);
+        std::ofstream os = open_write_file(options.hex_file());
         grf_data.hex_dump(os);
     }
     catch (const std::exception& e)
