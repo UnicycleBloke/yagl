@@ -66,18 +66,19 @@ For full details, read `grf.txt` which can be found in the **grfcodec** [reposit
 
 ## Software representation
 
-The software design mimics the structure of a Container2 format file. When reading a Container1 file, it automatically generates the necessary SpriteIndex records, and invents IDs for the sprites.
+The software design mimics the structure of a Container2 format file. When reading a Container1 file, it automatically generates the necessary SpriteIndex records, and invents IDs for the sprites. 
 
 ```bash
 NewGRFData
-  - vector<Record>
+  - std::vector<Record>
       - Action14Record
       - Action08Record
       - ... 
-      - Action01Record - only the parent record is present in the vector
-          - SpriteIndexRecord (index = 1)
-          - SpriteIndexRecord (index = 2)
-          - ...
+      - Action01Record 
+          - std::vector<Record>
+              - SpriteIndexRecord (index = 1)
+              - SpriteIndexRecord (index = 2)
+              - ...
       - Action02Record
       - ...
 		
@@ -92,6 +93,11 @@ NewGRFData
           - ... 
       - ...		
 ```
+
+- The basic structure of the GRF file is captured in a NewGRFData object. This holds a vector of "top-level" records. 
+- Some types of records, such as Action01Record, are basically containers/parents for sprites (i.e. SpriteIndexRecords), sound effects, and one or two others. 
+- The sprites are not placed at the top-level, but held as children of the containing record, in another vector.
+- The graphics section is represented by a map which associates each sprite index with a vector of one or more sprite records.
 
 Each type of record is represented by a distinct class which is derived from a common base class. Each type implements methods to read/write itself from/to a file stream. 
 - There are two read methods: 

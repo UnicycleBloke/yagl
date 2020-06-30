@@ -1,5 +1,7 @@
 # Yet Another GRF Language 
 
+Read the [main documentation](docs/index.md) here.
+
 **yagl** is a command line tool, and a script language (called YAGL for maximal ambiguity), for working with OpenTTD and TTDPatch GRF files, as described in the [NewGRF specs](https://newgrf-specs.tt-wiki.net/wiki/Main_Page). It is basically a codec which performs either of the following operations:
 
 1. Read a GRF file into a memory data structure, and then write out a YAGL script containing a textual representation of its contents, together with one or more sprite sheets (PNG format) containing the images present in the GRF. Sound effects are also written to files.
@@ -31,10 +33,6 @@ The goal here is not to decompile NML, which is probably impossible to do well, 
 Although theoretically complete in terms of the basic functionality, more could be done:
 
 - Most properties in Action00 records are represented by simple numbers (presented in hex, but decimal, octal and binary are supported). Many of these are enumerations which could be replaced with text representations of the permitted values. Many others are bitfields for each each supported bit could be replaced by a text represention. This would make the YAGL more readable.
-
-- There is as yet no documentation. It would be nice if **yagl** itself could generate annotated versions of the various YAGL records it can print. 
-
-- The software currently terminates as soon as there is a fault while parsing the YAGL. It would be good to implement a more fault tolerant design. This would not accept poorly formatted YAGL, but could form the basis for a linter. 
 
 - It might be worth generating NFO which is compatible with **grfcodec**. 
 
