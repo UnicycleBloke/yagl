@@ -49,7 +49,7 @@ void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, ui
     if (sprites.find(m_sprite_id) != sprites.end())
     {
         const SpriteZoomVector& sprite_list = sprites.at(m_sprite_id);
-        for (auto sprite: sprite_list)
+        for (const auto& sprite: sprite_list)
         {
             sprite->print(os, sprites, indent + 4);
         }
@@ -76,7 +76,7 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
-        std::shared_ptr<Record> record;
+        std::unique_ptr<Record> record;
 
         // SpriteIndexRecords generally "contain" one or several real sprite images (zoom levels),
         // But can also contain a single binary sound effect, which is itself found in the graphics
@@ -85,7 +85,7 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
         {
             // Need to create RealSpriteRecord     
             // Size and compression are place holder values to be read from the token stream.
-            record = std::make_shared<RealSpriteRecord>(m_sprite_id, 0, 0);
+            record = std::make_unique<RealSpriteRecord>(m_sprite_id, 0, 0);
             record->parse(is, sprites);
         }
         else
@@ -94,9 +94,9 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
             // into the binary file, which the ActionFF does not do. This is only important for Container
             // version 2 files. RealSprites this for themselves. ActionFF can also be used directly in the 
             // data section, whether Container 2 or not.
-            std::shared_ptr<Record> effect = std::make_shared<ActionFFRecord>();
+            std::unique_ptr<Record> effect = std::make_unique<ActionFFRecord>();
             effect->parse(is, sprites);
-            record = std::make_shared<SpriteWrapperRecord>(m_sprite_id, effect);
+            record = std::make_unique<SpriteWrapperRecord>(m_sprite_id, std::move(effect));
         }
 
         // This adds the sprite to the m_sprites map inside NewGRFData.
@@ -107,7 +107,7 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
         {
             sprites[m_sprite_id] = SpriteZoomVector{};
         }
-        sprites[m_sprite_id].push_back(record);
+        sprites[m_sprite_id].push_back(std::move(record));
     }
 
     is.match(TokenType::CloseBrace);

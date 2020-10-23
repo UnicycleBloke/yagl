@@ -122,7 +122,7 @@ void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << pad(indent) << "{\n";
 
     uint16_t id = m_first_id;
-    for (auto instance: m_instances)
+    for (const auto& instance: m_instances)
     {
         // Made this into a comment since we only need the ID of the first instance, and we already have that.
         //os << pad(indent + 4) << str_instance_id << ": " << to_hex(id++) << "\n";  
@@ -145,31 +145,31 @@ void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-std::shared_ptr<Action00Feature> Action00Record::make_feature(FeatureType feature)
+std::unique_ptr<Action00Feature> Action00Record::make_feature(FeatureType feature)
 {
     switch (feature)
     {
-        case FeatureType::Trains:          return std::make_shared<Action00Trains>();
-        case FeatureType::Vehicles:        return std::make_shared<Action00Vehicles>();
-        case FeatureType::Ships:           return std::make_shared<Action00Ships>();
-        case FeatureType::Aircraft:        return std::make_shared<Action00Aircraft>();
-        case FeatureType::Stations:        return std::make_shared<Action00Stations>();
-        case FeatureType::Canals:          return std::make_shared<Action00Canals>();
-        case FeatureType::Bridges:         return std::make_shared<Action00Bridges>();
-        case FeatureType::Houses:          return std::make_shared<Action00Houses>();
-        case FeatureType::GlobalSettings:  return std::make_shared<Action00GlobalSettings>();
-        case FeatureType::IndustryTiles:   return std::make_shared<Action00IndustryTiles>();
-        case FeatureType::Industries:      return std::make_shared<Action00Industries>();
-        case FeatureType::Cargos:          return std::make_shared<Action00Cargos>();
-        case FeatureType::SoundEffects:    return std::make_shared<Action00SoundEffects>();
-        case FeatureType::Airports:        return std::make_shared<Action00Airports>();
-        //case FeatureType::Signals:         return std::make_shared<Action00Signals>();
-        case FeatureType::Objects:         return std::make_shared<Action00Objects>();
-        case FeatureType::RailTypes:       return std::make_shared<Action00RailTypes>();
-        case FeatureType::AirportTiles:    return std::make_shared<Action00AirportTiles>();
-        case FeatureType::RoadTypes:       return std::make_shared<Action00RoadTypes>();
-        case FeatureType::TramTypes:       return std::make_shared<Action00TramTypes>();
-        //case FeatureType::OriginalStrings: return std::make_shared<Action00OriginalStrings>();
+        case FeatureType::Trains:          return std::make_unique<Action00Trains>();
+        case FeatureType::Vehicles:        return std::make_unique<Action00Vehicles>();
+        case FeatureType::Ships:           return std::make_unique<Action00Ships>();
+        case FeatureType::Aircraft:        return std::make_unique<Action00Aircraft>();
+        case FeatureType::Stations:        return std::make_unique<Action00Stations>();
+        case FeatureType::Canals:          return std::make_unique<Action00Canals>();
+        case FeatureType::Bridges:         return std::make_unique<Action00Bridges>();
+        case FeatureType::Houses:          return std::make_unique<Action00Houses>();
+        case FeatureType::GlobalSettings:  return std::make_unique<Action00GlobalSettings>();
+        case FeatureType::IndustryTiles:   return std::make_unique<Action00IndustryTiles>();
+        case FeatureType::Industries:      return std::make_unique<Action00Industries>();
+        case FeatureType::Cargos:          return std::make_unique<Action00Cargos>();
+        case FeatureType::SoundEffects:    return std::make_unique<Action00SoundEffects>();
+        case FeatureType::Airports:        return std::make_unique<Action00Airports>();
+        //case FeatureType::Signals:         return std::make_unique<Action00Signals>();
+        case FeatureType::Objects:         return std::make_unique<Action00Objects>();
+        case FeatureType::RailTypes:       return std::make_unique<Action00RailTypes>();
+        case FeatureType::AirportTiles:    return std::make_unique<Action00AirportTiles>();
+        case FeatureType::RoadTypes:       return std::make_unique<Action00RoadTypes>();
+        case FeatureType::TramTypes:       return std::make_unique<Action00TramTypes>();
+        //case FeatureType::OriginalStrings: return std::make_unique<Action00OriginalStrings>();
     }
 
     throw RUNTIME_ERROR("Action00Record::make_feature");
@@ -201,8 +201,8 @@ void Action00Record::parse(TokenStream& is, SpriteZoomMap& sprites)
         is.match(TokenType::OpenBrace);
 
         // Parse the set of properties that have been given for this item.
-        std::shared_ptr<Action00Feature> instance = make_feature(m_feature);
-        m_instances.push_back(instance);
+        std::unique_ptr<Action00Feature> instance = make_feature(m_feature);
+        m_instances.push_back(std::move(instance));
 
         // This list need to be the same for each instance, at least when sorted.
         std::vector<uint8_t> properties;    

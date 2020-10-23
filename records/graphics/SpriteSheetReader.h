@@ -44,8 +44,8 @@ public:
     static SpriteSheetPool& pool();
 
 public:  
-    std::shared_ptr<SpriteSheet> get_sprite_sheet(const std::string file_name, SpriteSheet::Colour colour);
+    SpriteSheet& get_sprite_sheet(const std::string file_name, SpriteSheet::Colour colour);
 
 private:
-    std::map<std::string, std::shared_ptr<SpriteSheet>> m_sheets;
+    std::map<std::string, std::unique_ptr<SpriteSheet>> m_sheets;
 };

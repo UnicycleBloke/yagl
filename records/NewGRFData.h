@@ -25,7 +25,7 @@
 
 
 // This is used to append a sprite to the current NewGRFData::m_sprites during parsing.
-void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite);
+void append_real_sprite(uint32_t sprite_id, std::unique_ptr<Record> sprite);
 
 
 class NewGRFData
@@ -47,18 +47,18 @@ public:
 private:    
     // Helpers for reading a GRF binary file 
     GRFFormat               read_format(std::istream& is);
-    std::shared_ptr<Record> read_record(std::istream& is, uint32_t size, bool top_level, const GRFInfo& info);
+    std::unique_ptr<Record> read_record(std::istream& is, uint32_t size, bool top_level, const GRFInfo& info);
     void                    read_sprite(std::istream& is, uint32_t sprite_id, uint32_t size, uint8_t compression, const GRFInfo& info);
-    std::shared_ptr<Record> make_record(RecordType record_type);
+    std::unique_ptr<Record> make_record(RecordType record_type);
 
-    friend void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite);
-    void append_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite);
-    void update_version_info(std::shared_ptr<Record> record);
+    friend void append_real_sprite(uint32_t sprite_id, std::unique_ptr<Record> sprite);
+    void append_sprite(uint32_t sprite_id, std::unique_ptr<Record> sprite);
+    void update_version_info(const Record& record);
 
     // Helpers for writing a GRF binary file
     void write_format(std::ostream& os, uint32_t sprite_offs = 0) const;
     void write_counter(std::ostream& os) const;
-    void write_record(std::ostream& os, std::shared_ptr<Record> record) const;
+    void write_record(std::ostream& os, const Record& record) const;
     uint32_t total_records() const;
 
 private:
@@ -68,7 +68,7 @@ private:
     // Should be consistent between Format1 and Format2, so manufacture sprite references 
     // when reading Format1 (sprites are in the data section), and place the actual sprites 
     // into the map below. Could then be saved as Format2 if so desired.
-    std::vector<std::shared_ptr<Record>> m_records;            
+    std::vector<std::unique_ptr<Record>> m_records;            
     
     // Map the sprite ID to images. There are possibly multiple images for each ID for
     // various zoom levels. The same zoom level may appear more than once (at least, maybe

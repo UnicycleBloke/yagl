@@ -28,7 +28,7 @@ class SpriteSheetGenerator
         void generate();
 
     private:
-        using SpriteVector = std::vector<std::shared_ptr<RealSpriteRecord>>;
+        using SpriteVector = std::vector<RealSpriteRecord*>;
         using ZoomLevel    = RealSpriteRecord::ZoomLevel;
 
         // Palette and mask are both 8bpp images. Masks are used in conjunction with 32bpp of the same size.
@@ -57,7 +57,7 @@ class SpriteSheetGenerator
     private:
         void partition_sprites();
         void partition_sprite(std::map<Category, SpriteVector>& partitions, 
-            Category cat, std::shared_ptr<RealSpriteRecord> sprite);
+            Category cat, RealSpriteRecord* sprite);
         void layout_sprites(Category category, SpriteVector sprites);
 
         void create_sprite_sheet(Category category, SpriteVector sprites, 

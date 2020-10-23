@@ -42,7 +42,7 @@ void SpriteSheetGenerator::generate()
 
 
 void SpriteSheetGenerator::partition_sprite(std::map<Category, SpriteVector>& partitions, 
-    Category cat, std::shared_ptr<RealSpriteRecord> sprite)
+    Category cat, RealSpriteRecord* sprite)
 {
     if (partitions.find(cat) == partitions.end())
     {
@@ -63,14 +63,14 @@ void SpriteSheetGenerator::partition_sprites()
     std::map<Category, SpriteVector> partitions;
     for (const auto& it: m_sprites)
     {
-        for (const auto record: it.second)
+        for (const auto& record: it.second)
         {
             // We only care about real sprites. We might also encounter 
             // recolour sprites here.
             if (record->record_type() == RecordType::REAL_SPRITE)
             {
                 // We need to downcast the pointer to access particular members.
-                auto sprite = std::static_pointer_cast<RealSpriteRecord>(record);
+                auto sprite = static_cast<RealSpriteRecord*>(record.get());
                 Category cat;
 
                 cat.zoom       = sprite->zoom();

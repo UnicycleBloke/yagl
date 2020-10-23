@@ -116,7 +116,7 @@ void NewGRFData::read(std::istream& is)
         // The info byte determines what type of record we are dealing with. 
         uint8_t info = read_uint8(is);
 
-        std::shared_ptr<Record> record = nullptr;
+        std::unique_ptr<Record> record = nullptr;
         switch (info)
         {
             // This record is a pseudo-sprite. It contains data about properties and other things, 
@@ -168,7 +168,7 @@ void NewGRFData::read(std::istream& is)
             // It appears that this can also be used for sound effects. RUKTS.grf does this. 
             // Need to take account of parent type...
             case 0xFD:
-                record = std::make_shared<SpriteIndexRecord>(container);
+                record = std::make_unique<SpriteIndexRecord>(container);
                 record->read(is, m_info);
                 break;
 
@@ -180,7 +180,7 @@ void NewGRFData::read(std::istream& is)
                 // In this case info = compression for a real sprite, and we use the record index
                 // as the sprite id.
                 read_sprite(is, record_index, size, info, m_info);
-                record = std::make_shared<SpriteIndexRecord>(container, record_index);
+                record = std::make_unique<SpriteIndexRecord>(container, record_index);
                 break;
         } 
 
@@ -192,7 +192,7 @@ void NewGRFData::read(std::istream& is)
         if (num_sprites > 0)
         {
             // We need to append the record to the previous container.
-            m_records.back()->append_sprite(record);
+            m_records.back()->append_sprite(std::move(record));
             --num_sprites; 
         }   
         else
@@ -200,7 +200,7 @@ void NewGRFData::read(std::istream& is)
             // This is a top level record, maybe a container. If it's a container,
             // num_sprites will be set to a non-zero value for the number of contained
             // sprites.
-            m_records.push_back(record);
+            m_records.push_back(std::move(record));
             num_sprites = record->num_sprites_to_read();
             container   = record->record_type();
         }  
@@ -238,9 +238,9 @@ void NewGRFData::read(std::istream& is)
                 // Is this always a sound effect? What records followed the 
                 // Action11 in the data section? Sprite references. Size needs to be 
                 // reduced by one for some reason.
-                std::shared_ptr<Record> effect  = read_record(is, size - 1, true, m_info);
-                std::shared_ptr<Record> wrapper = std::make_shared<SpriteWrapperRecord>(sprite_id, effect);
-                append_sprite(sprite_id, wrapper);
+                std::unique_ptr<Record> effect  = read_record(is, size - 1, true, m_info);
+                std::unique_ptr<Record> wrapper = std::make_unique<SpriteWrapperRecord>(sprite_id, std::move(effect));
+                append_sprite(sprite_id, std::move(wrapper));
             }
             else
             {
@@ -293,7 +293,7 @@ GRFFormat NewGRFData::read_format(std::istream& is)
 }
 
 
-void NewGRFData::append_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite)
+void NewGRFData::append_sprite(uint32_t sprite_id, std::unique_ptr<Record> sprite)
 {
     // Sprites with the same ID are stored in map indexed by zoom level. 
     // These maps are stored in a map index by the sprite ID.
@@ -301,19 +301,19 @@ void NewGRFData::append_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprit
     {
         m_sprites[sprite_id] = SpriteZoomVector{};
     }
-    m_sprites[sprite_id].push_back(sprite);
+    m_sprites[sprite_id].push_back(std::move(sprite));
 }
 
 
 void NewGRFData::read_sprite(std::istream& is, uint32_t sprite_id, uint32_t size, uint8_t compression, const GRFInfo& info)
 {
-    std::shared_ptr<RealSpriteRecord> sprite = std::make_shared<RealSpriteRecord>(sprite_id, size, compression);
+    std::unique_ptr<RealSpriteRecord> sprite = std::make_unique<RealSpriteRecord>(sprite_id, size, compression);
     sprite->read(is, m_info);
-    append_sprite(sprite_id, sprite);
+    append_sprite(sprite_id, std::move(sprite));
 }
 
 
-std::shared_ptr<Record> NewGRFData::read_record(std::istream& is, uint32_t size, bool top_level, const GRFInfo& info)
+std::unique_ptr<Record> NewGRFData::read_record(std::istream& is, uint32_t size, bool top_level, const GRFInfo& info)
 {   
     // Extract the type and data of this record. A little bit of interpretation is 
     // required to work out how to parse the data. Whether we parse the data or not,
@@ -429,62 +429,62 @@ std::shared_ptr<Record> NewGRFData::read_record(std::istream& is, uint32_t size,
 
     // Use a factory to create the appropriate object and then parse the data 
     // previously read from the file.
-    std::shared_ptr<Record> record = make_record(record_type);
+    std::unique_ptr<Record> record = make_record(record_type);
     std::istringstream iss(data);
     record->read(iss, m_info); 
     record->read_data = data;
-    update_version_info(record);
+    update_version_info(*record);
 
     return record;
 }
 
 
-std::shared_ptr<Record> NewGRFData::make_record(RecordType record_type)
+std::unique_ptr<Record> NewGRFData::make_record(RecordType record_type)
 {
     switch (record_type)
     {
-        case RecordType::ACTION_00:               return std::make_shared<Action00Record>(); 
-        case RecordType::ACTION_01:               return std::make_shared<Action01Record>(); 
-        case RecordType::ACTION_02_BASIC:         return std::make_shared<Action02BasicRecord>();
-        case RecordType::ACTION_02_RANDOM:        return std::make_shared<Action02RandomRecord>(); 
-        case RecordType::ACTION_02_VARIABLE:      return std::make_shared<Action02VariableRecord>(); 
-        case RecordType::ACTION_02_INDUSTRY:      return std::make_shared<Action02IndustryRecord>(); 
-        case RecordType::ACTION_02_SPRITE_LAYOUT: return std::make_shared<Action02SpriteLayoutRecord>(); 
-        case RecordType::ACTION_03:               return std::make_shared<Action03Record>(); 
-        case RecordType::ACTION_04:               return std::make_shared<Action04Record>(); 
-        case RecordType::ACTION_05:               return std::make_shared<Action05Record>(); 
-        case RecordType::ACTION_06:               return std::make_shared<Action06Record>(); 
-        case RecordType::ACTION_07:               return std::make_shared<Action07Record>(RecordType::ACTION_07); 
-        case RecordType::ACTION_08:               return std::make_shared<Action08Record>(); 
+        case RecordType::ACTION_00:               return std::make_unique<Action00Record>(); 
+        case RecordType::ACTION_01:               return std::make_unique<Action01Record>(); 
+        case RecordType::ACTION_02_BASIC:         return std::make_unique<Action02BasicRecord>();
+        case RecordType::ACTION_02_RANDOM:        return std::make_unique<Action02RandomRecord>(); 
+        case RecordType::ACTION_02_VARIABLE:      return std::make_unique<Action02VariableRecord>(); 
+        case RecordType::ACTION_02_INDUSTRY:      return std::make_unique<Action02IndustryRecord>(); 
+        case RecordType::ACTION_02_SPRITE_LAYOUT: return std::make_unique<Action02SpriteLayoutRecord>(); 
+        case RecordType::ACTION_03:               return std::make_unique<Action03Record>(); 
+        case RecordType::ACTION_04:               return std::make_unique<Action04Record>(); 
+        case RecordType::ACTION_05:               return std::make_unique<Action05Record>(); 
+        case RecordType::ACTION_06:               return std::make_unique<Action06Record>(); 
+        case RecordType::ACTION_07:               return std::make_unique<Action07Record>(RecordType::ACTION_07); 
+        case RecordType::ACTION_08:               return std::make_unique<Action08Record>(); 
         // Action09 is identical to Action 07 except in how it is used.
-        case RecordType::ACTION_09:               return std::make_shared<Action07Record>(RecordType::ACTION_09); 
-        case RecordType::ACTION_0A:               return std::make_shared<Action0ARecord>(); 
-        case RecordType::ACTION_0B:               return std::make_shared<Action0BRecord>(); 
-        case RecordType::ACTION_0C:               return std::make_shared<Action0CRecord>(); 
-        case RecordType::ACTION_0D:               return std::make_shared<Action0DRecord>(); 
-        case RecordType::ACTION_0E:               return std::make_shared<Action0ERecord>(); 
-        case RecordType::ACTION_0F:               return std::make_shared<Action0FRecord>(); 
-        case RecordType::ACTION_10:               return std::make_shared<Action10Record>(); 
-        case RecordType::ACTION_11:               return std::make_shared<Action11Record>(); 
-        case RecordType::ACTION_12:               return std::make_shared<Action12Record>(); 
-        case RecordType::ACTION_13:               return std::make_shared<Action13Record>(); 
-        case RecordType::ACTION_14:               return std::make_shared<Action14Record>(); 
+        case RecordType::ACTION_09:               return std::make_unique<Action07Record>(RecordType::ACTION_09); 
+        case RecordType::ACTION_0A:               return std::make_unique<Action0ARecord>(); 
+        case RecordType::ACTION_0B:               return std::make_unique<Action0BRecord>(); 
+        case RecordType::ACTION_0C:               return std::make_unique<Action0CRecord>(); 
+        case RecordType::ACTION_0D:               return std::make_unique<Action0DRecord>(); 
+        case RecordType::ACTION_0E:               return std::make_unique<Action0ERecord>(); 
+        case RecordType::ACTION_0F:               return std::make_unique<Action0FRecord>(); 
+        case RecordType::ACTION_10:               return std::make_unique<Action10Record>(); 
+        case RecordType::ACTION_11:               return std::make_unique<Action11Record>(); 
+        case RecordType::ACTION_12:               return std::make_unique<Action12Record>(); 
+        case RecordType::ACTION_13:               return std::make_unique<Action13Record>(); 
+        case RecordType::ACTION_14:               return std::make_unique<Action14Record>(); 
         
         // These are sound effects.
-        case RecordType::ACTION_FE:               return std::make_shared<ActionFERecord>();
-        case RecordType::ACTION_FF:               return std::make_shared<ActionFFRecord>();
+        case RecordType::ACTION_FE:               return std::make_unique<ActionFERecord>();
+        case RecordType::ACTION_FF:               return std::make_unique<ActionFFRecord>();
 
         // These are graphics.
-        case RecordType::RECOLOUR:                return std::make_shared<RecolourRecord>(); 
-        case RecordType::SPRITE_INDEX:            return std::make_shared<SpriteIndexRecord>(RecordType::ACTION_01);
+        case RecordType::RECOLOUR:                return std::make_unique<RecolourRecord>(); 
+        case RecordType::SPRITE_INDEX:            return std::make_unique<SpriteIndexRecord>(RecordType::ACTION_01);
 
         // Special case of an empty sprite used for absent image.
-        case RecordType::FAKE_SPRITE:             return std::make_shared<FakeSpriteRecord>();
+        case RecordType::FAKE_SPRITE:             return std::make_unique<FakeSpriteRecord>();
         
         default:                                  throw RUNTIME_ERROR("NewGRFData::create_action");
     }
 
-    return std::make_shared<Record>();
+    return std::make_unique<Record>();
 }
 
 
@@ -493,7 +493,7 @@ uint32_t NewGRFData::total_records() const
 {
     uint32_t result = uint32_t(m_records.size());
  
-    for (std::shared_ptr<Record> record: m_records)
+    for (const auto& record: m_records)
     {
         result += record->num_sprites_to_write();
     }
@@ -558,26 +558,26 @@ void NewGRFData::write_counter(std::ostream& os) const
 // }
 
 
-void NewGRFData::write_record(std::ostream& os, std::shared_ptr<Record> record) const
+void NewGRFData::write_record(std::ostream& os, const Record& record) const
 {
-    if (record->record_type() == RecordType::REAL_SPRITE)
+    if (record.record_type() == RecordType::REAL_SPRITE)
     {
         // Real sprites calculate their own length, which has a non-obvious
         // relationship to the data length.
-        record->write(os, m_info);
+        record.write(os, m_info);
     }
-    else if ( (record->record_type() == RecordType::SPRITE_INDEX) && 
+    else if ( (record.record_type() == RecordType::SPRITE_INDEX) && 
               (m_info.format == GRFFormat::Container1)                 ) 
     {
         // For Container1 we faked up the sprite index records for convenience. Now 
         // we need to retrieve the real sprite and write that out instead.
-        auto reference = std::static_pointer_cast<SpriteIndexRecord>(record);
+        auto reference = static_cast<const SpriteIndexRecord*>(&record);
         const SpriteZoomVector& sprites = m_sprites.at(reference->sprite_id());
         if (sprites.size() != 1)
         {
             throw RUNTIME_ERROR("Expected single real sprite");
         }
-        write_record(os, sprites[0]);
+        write_record(os, *sprites[0]);
     }       
     else 
     {
@@ -586,7 +586,7 @@ void NewGRFData::write_record(std::ostream& os, std::shared_ptr<Record> record) 
         // Write the record into a buffer in order to obtain its length.
         // The buffer is copied to the output after writing a record header.
         std::ostringstream ss;
-        record->write(ss, m_info);
+        record.write(ss, m_info);
         std::string data = ss.str();
         uint16_t length = uint16_t(data.length());
 
@@ -610,7 +610,7 @@ void NewGRFData::write_record(std::ostream& os, std::shared_ptr<Record> record) 
         }
 
         // All pseudo-sprites are prefixed with 0xFF, except index records for real sprites.        
-        uint8_t prefix = (record->record_type() == RecordType::SPRITE_INDEX) ? 0xFD : 0xFF;
+        uint8_t prefix = (record.record_type() == RecordType::SPRITE_INDEX) ? 0xFD : 0xFF;
         write_uint8(os, prefix);
 
         // Copy out the record data
@@ -629,16 +629,16 @@ void NewGRFData::write(std::ostream& os) const
     write_format(os);
     write_counter(os);
 
-    for (std::shared_ptr<Record> record: m_records)
+    for (const auto& record: m_records)
     {
-        write_record(os, record);
+        write_record(os, *record);
 
         // Containers are used to hold records in a logical tree which is
         // not really present in the GRF. This is mostly used for the collection
         // of sprites which comes after Actions 01, 05, 0A, and so on. And Action 11.
         for (uint32_t j = 0; j < record->num_sprites_to_write(); ++j)
         {
-            write_record(os, record->get_sprite(j));
+            write_record(os, *(record->get_sprite(j)));
         }
     }
 
@@ -662,7 +662,7 @@ void NewGRFData::write(std::ostream& os) const
     {
         for (const auto& it: m_sprites)
         {
-            for (const auto sprite: it.second)
+            for (const auto& sprite: it.second)
             {
                 sprite->write(os, m_info);
             }
@@ -705,7 +705,7 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
     // Finally write out the YAGL script.
     std::cout << "Writing YAGL script...\n";
     uint32_t index = 1;
-    for (auto record: m_records)
+    for (const auto& record: m_records)
     {
         os << "// Record #" << index << '\n';
         record->print(os, m_sprites, 0);
@@ -716,18 +716,6 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
         ++index;
     }
 }
-
-
-// This is used to append a sprite to the current NewGRFData::m_sprites during parsing.
-//NewGRFData* g_new_grf_data = nullptr;
-//void append_real_sprite(uint32_t sprite_id, std::shared_ptr<Record> sprite)
-//{
-//    // Assert not nullptr 
-//    if (g_new_grf_data)
-//    {
-//        g_new_grf_data->append_sprite(sprite_id, sprite);
-//    }
-//}
 
 
 void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std::string& image_file_base)
@@ -785,10 +773,10 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
             RecordType type  = parse_record_type(is);
             is.unmatch();
 
-            std::shared_ptr<Record> record = make_record(type);
-            m_records.push_back(record);
+            std::unique_ptr<Record> record = make_record(type);
+            m_records.push_back(std::move(record));
             record->parse(is, m_sprites);
-            update_version_info(record);
+            update_version_info(*record);
         }
         catch (const std::exception& e)
         {
@@ -808,13 +796,13 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
 }
 
 
-void NewGRFData::update_version_info(std::shared_ptr<Record> record)
+void NewGRFData::update_version_info(const Record& record)
 {
     // We need to know the GRF version so we can pass it to the other records, some 
     // of which are interpreted differently depending on the version. 
-    if (record->record_type() == RecordType::ACTION_08)
+    if (record.record_type() == RecordType::ACTION_08)
     {
-        auto action08  = std::dynamic_pointer_cast<Action08Record>(record);
+        auto action08  = dynamic_cast<const Action08Record*>(&record);
         m_info.version = action08->grf_version();
     }
 }
@@ -841,7 +829,7 @@ void NewGRFData::hex_dump(std::ostream& os)
 {
     uint32_t index = 0;
 
-    for (auto record: m_records)
+    for (const auto& record: m_records)
     {
         ++index; 
 
@@ -858,10 +846,10 @@ void NewGRFData::hex_dump(std::ostream& os)
     {
         for (const auto& it: m_sprites)
         {
-            for (const auto record: it.second)
+            for (const auto& record: it.second)
             {
                 ++index; 
-                auto sprite = std::dynamic_pointer_cast<RealSpriteRecord>(record);
+                auto sprite = dynamic_cast<RealSpriteRecord*>(record.get());
 
                 std::ostringstream ss;
                 sprite->write(ss, m_info);

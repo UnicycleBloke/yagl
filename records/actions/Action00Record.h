@@ -37,15 +37,15 @@ public:
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
 private:
-    std::shared_ptr<Action00Feature> make_feature(FeatureType feature_type);
+    std::unique_ptr<Action00Feature> make_feature(FeatureType feature_type);
 
 private:
-    FeatureType m_feature;
+    FeatureType m_feature{};
     // The record may contain properties for one or more feature instances 
     // (e.g. such as two trains). This is the ID of the first one.
-    uint16_t m_first_id;
+    uint16_t m_first_id{};
     // This vector holds objects representing the one or more feature instances.
-    std::vector<std::shared_ptr<Action00Feature>> m_instances;
+    std::vector<std::unique_ptr<Action00Feature>> m_instances;
     // Used to keep track of the order in which properties are read from the source.
     // This will allow for duplicates, but only the last value is preserved. A map 
     // would eliminate duplicates, but also lose the ordering.

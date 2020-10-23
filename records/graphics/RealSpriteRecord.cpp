@@ -634,14 +634,14 @@ void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 
     fs::path image_file = CommandLineOptions::options().yagl_dir();
     image_file.append(m_filename);
-    std::shared_ptr<SpriteSheet> image_sheet = pool.get_sprite_sheet(image_file.make_preferred().string(), colour);
+    SpriteSheet* image_sheet = &pool.get_sprite_sheet(image_file.make_preferred().string(), colour);
 
-    std::shared_ptr<SpriteSheet> mask_sheet;
+    SpriteSheet* mask_sheet;
     if (m_mask_filename.length() > 0)
     {
         fs::path mask_file = CommandLineOptions::options().yagl_dir();
         mask_file.append(m_mask_filename);
-        mask_sheet = pool.get_sprite_sheet(mask_file.make_preferred().string(), SpriteSheet::Colour::Palette);
+        mask_sheet = &pool.get_sprite_sheet(mask_file.make_preferred().string(), SpriteSheet::Colour::Palette);
     }
 
     // Count the number of pure white pixels in the sprite. This should normally be none. 
@@ -686,7 +686,7 @@ void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
         std::cout << "    The first is at [" << xpos << ", " << ypos << "] in sprite sheet " << m_filename << std::endl;  
     }
 
-    check_white_border(image_sheet.get());
+    check_white_border(image_sheet);
 }
 
 

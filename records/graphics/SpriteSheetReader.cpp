@@ -93,7 +93,7 @@ SpriteSheetPool& SpriteSheetPool::pool()
 }
 
 
-std::shared_ptr<SpriteSheet> SpriteSheetPool::get_sprite_sheet(const std::string file_name, SpriteSheet::Colour colour)
+SpriteSheet& SpriteSheetPool::get_sprite_sheet(const std::string file_name, SpriteSheet::Colour colour)
 {
     auto it = m_sheets.find(file_name);
     if (it == m_sheets.end())
@@ -102,23 +102,22 @@ std::shared_ptr<SpriteSheet> SpriteSheetPool::get_sprite_sheet(const std::string
 
         std::cout << "Opening sprite sheet: " << file_name << "..." << std::endl;
 
-        std::shared_ptr<SpriteSheet> sheet;
+        std::unique_ptr<SpriteSheet> sheet;
         switch (colour)
         {
             case Colour::Palette:
-                sheet = std::make_shared<PaletteSpriteSheet>(file_name);
+                sheet = std::make_unique<PaletteSpriteSheet>(file_name);
                 break; 
             // case Colour::RGB:
-            //     sheet = std::make_shared<RGBSpriteSheet>(file_name);
+            //     sheet = std::make_unique<RGBSpriteSheet>(file_name);
             //     break; 
             case Colour::RGBA:
-                sheet = std::make_shared<RGBASpriteSheet>(file_name);
+                sheet = std::make_unique<RGBASpriteSheet>(file_name);
                 break; 
         }
 
-        m_sheets[file_name] = sheet;
-        return sheet;
+        m_sheets[file_name] = std::move(sheet);
     }
 
-    return m_sheets[file_name];
+    return *m_sheets[file_name];
 }

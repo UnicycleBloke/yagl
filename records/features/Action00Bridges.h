@@ -47,7 +47,7 @@ public:
     void parse(TokenStream& is);
 
 private:
-    uint8_t                  m_first_table_id;
+    uint8_t                  m_first_table_id{};
     std::vector<BridgeTable> m_tables;
 };
 

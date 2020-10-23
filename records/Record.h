@@ -162,7 +162,7 @@ struct GRFInfo
 
 
 class Record;
-using SpriteZoomVector = std::vector<std::shared_ptr<Record>>;
+using SpriteZoomVector = std::vector<std::unique_ptr<Record>>;
 using SpriteZoomMap    = std::map<uint32_t, SpriteZoomVector>;
 
 
@@ -187,10 +187,10 @@ public:
     virtual void parse(TokenStream& is, SpriteZoomMap& sprites) {};
 
     // These methods are for adding sprites to a container action.
-    virtual void append_sprite(std::shared_ptr<Record> record) { throw RUNTIME_ERROR("append_sprite"); }
+    virtual void append_sprite(std::unique_ptr<Record> record) { throw RUNTIME_ERROR("append_sprite"); }
     virtual uint16_t num_sprites_to_read() const { return 0; }
     virtual uint16_t num_sprites_to_write() const { return 0; }
-    virtual std::shared_ptr<Record> get_sprite(uint16_t index) const { return nullptr; }
+    virtual Record* get_sprite(uint16_t index) const { return nullptr; }
 
     RecordType record_type() const { return m_record_type; }
 
@@ -231,9 +231,9 @@ public:
     //void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override {};
     //void parse(TokenStream& is, SpriteZoomMap& sprites) override {};
 
-    void append_sprite(std::shared_ptr<Record> record) override;
-    std::shared_ptr<Record> get_sprite(uint16_t index) const override 
-        { return (index < num_sprites_to_write()) ? m_sprites[index] : nullptr; }
+    void append_sprite(std::unique_ptr<Record> record) override;
+    Record* get_sprite(uint16_t index) const override 
+        { return (index < num_sprites_to_write()) ? m_sprites[index].get() : nullptr; }
     uint16_t num_sprites_to_write() const override { return uint16_t(m_sprites.size()); }
 
 protected:    
@@ -242,7 +242,7 @@ protected:
     void parse_sprite(TokenStream& is, SpriteZoomMap& sprites);
 
 private:
-    std::vector<std::shared_ptr<Record>> m_sprites;            
+    std::vector<std::unique_ptr<Record>> m_sprites;            
 };
 
 

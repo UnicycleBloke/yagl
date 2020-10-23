@@ -69,9 +69,9 @@ void ActionRecord::write(std::ostream& os, const GRFInfo& info) const
 }
 
 
-void ContainerRecord::append_sprite(std::shared_ptr<Record> record)
+void ContainerRecord::append_sprite(std::unique_ptr<Record> record)
 {
-    m_sprites.push_back(record);
+    m_sprites.push_back(std::move(record));
 }
 
 
@@ -115,23 +115,23 @@ void ContainerRecord::parse_sprite(TokenStream& is, SpriteZoomMap& sprites)
     TokenValue token = is.peek();
     if (token.type == TokenType::Ident)
     {
-        std::shared_ptr<Record> record;
+        std::unique_ptr<Record> record;
 
         const auto it = g_indices.find(token.value);
         if (it != g_indices.end())
         {
             switch (it->second)
             {
-                case 0x00: record = std::make_shared<SpriteIndexRecord>(record_type()); break;
-                case 0x01: record = std::make_shared<RecolourRecord>(); break;
-                case 0x02: record = std::make_shared<ActionFFRecord>(); break;
-                case 0x03: record = std::make_shared<ActionFERecord>(); break;
-                case 0x04: record = std::make_shared<FakeSpriteRecord>(); break;
+                case 0x00: record = std::make_unique<SpriteIndexRecord>(record_type()); break;
+                case 0x01: record = std::make_unique<RecolourRecord>(); break;
+                case 0x02: record = std::make_unique<ActionFFRecord>(); break;
+                case 0x03: record = std::make_unique<ActionFERecord>(); break;
+                case 0x04: record = std::make_unique<FakeSpriteRecord>(); break;
                 default:   throw PARSER_ERROR("Unexpected container sub-record type", token);
             }
         } 
         
-        append_sprite(record);
+        append_sprite(std::move(record));
         record->parse(is, sprites);
     }
     else

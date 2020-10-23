@@ -26,10 +26,10 @@ class NewGRFData;
 class SpriteWrapperRecord : public Record
 {
 public:
-    explicit SpriteWrapperRecord(uint32_t sprite_id, std::shared_ptr<Record> sprite)
+    explicit SpriteWrapperRecord(uint32_t sprite_id, std::unique_ptr<Record> sprite)
     : Record{RecordType::SPRITE_WRAPPER}
     , m_sprite_id{sprite_id}
-    , m_sprite{sprite}
+    , m_sprite{std::move(sprite)}
     {
     }
 
@@ -44,7 +44,7 @@ public:
 
 private:
     uint32_t                m_sprite_id{};
-    std::shared_ptr<Record> m_sprite{};
+    std::unique_ptr<Record> m_sprite{};
 
 };
 
