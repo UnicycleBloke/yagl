@@ -184,6 +184,11 @@ void NewGRFData::read(std::istream& is)
                 break;
         } 
 
+        if (CommandLineOptions::options().debug())
+        {
+            record->print(std::cout, m_sprites, 0); // Indent = 0     
+        }
+
         // This is our slightly too trusting method for grouping sprites into containers. 
         // The format for the file is simply a long list of records. Some of the records are effectively
         // containers, such as Action01, and indicate how many sprites they contain, call it NUM. 
@@ -200,14 +205,9 @@ void NewGRFData::read(std::istream& is)
             // This is a top level record, maybe a container. If it's a container,
             // num_sprites will be set to a non-zero value for the number of contained
             // sprites.
-            m_records.push_back(std::move(record));
             num_sprites = record->num_sprites_to_read();
             container   = record->record_type();
-        }  
-
-        if (CommandLineOptions::options().debug())
-        {
-            record->print(std::cout, m_sprites, 0); // Indent = 0     
+            m_records.push_back(std::move(record));
         }
 
         // Important: this is used to give indices to real sprites for Container1 files. 
@@ -768,15 +768,13 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
     {
         try
         {
-            //TokenValue token = is.peek();
-            //RecordType type  = RecordFromName(token.value);
             RecordType type  = parse_record_type(is);
             is.unmatch();
 
             std::unique_ptr<Record> record = make_record(type);
-            m_records.push_back(std::move(record));
             record->parse(is, m_sprites);
             update_version_info(*record);
+            m_records.push_back(std::move(record));
         }
         catch (const std::exception& e)
         {

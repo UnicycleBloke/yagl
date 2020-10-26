@@ -202,7 +202,6 @@ void Action00Record::parse(TokenStream& is, SpriteZoomMap& sprites)
 
         // Parse the set of properties that have been given for this item.
         std::unique_ptr<Action00Feature> instance = make_feature(m_feature);
-        m_instances.push_back(std::move(instance));
 
         // This list need to be the same for each instance, at least when sorted.
         std::vector<uint8_t> properties;    
@@ -221,6 +220,9 @@ void Action00Record::parse(TokenStream& is, SpriteZoomMap& sprites)
 
             is.match(TokenType::SemiColon);
         }
+
+        // This call after any other uses of 'instance' because std::move.
+        m_instances.push_back(std::move(instance));
 
         if (m_instances.size() == 1)
         {

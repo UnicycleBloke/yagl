@@ -131,8 +131,8 @@ void ContainerRecord::parse_sprite(TokenStream& is, SpriteZoomMap& sprites)
             }
         } 
         
-        append_sprite(std::move(record));
         record->parse(is, sprites);
+        append_sprite(std::move(record));
     }
     else
     {

@@ -153,13 +153,9 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
     if (m_compression & CHUNKED_FORMAT)
     {
         m_pixels = decode_tile(pixdata, m_xdim, m_ydim, m_compression, info.format);
-        //m_pixels = std::move(pixdata);
     }
     else
     {
-        // This causes an exception in Windows release build. Something buried deep in ntdll or something.
-        // It looks like new fails and goes to the new handler. Or the subsequent deallocation fails. 
-        //m_pixels = pixdata;
         m_pixels = std::move(pixdata);
     }
 }
