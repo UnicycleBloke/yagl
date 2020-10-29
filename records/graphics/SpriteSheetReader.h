@@ -29,6 +29,11 @@ public:
     enum class Colour { Palette, RGB, RGBA }; 
     using Pixel = RealSpriteRecord::Pixel;       
 
+    // Overloaded for testing purposes only
+    static int alloc_count;
+    static void* operator new(std::size_t size);
+    static void operator delete(void* ptr);
+
 public:
     SpriteSheet() = default;
     virtual ~SpriteSheet() {}

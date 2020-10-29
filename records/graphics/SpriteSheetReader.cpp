@@ -30,6 +30,24 @@
 // };
 
 
+int SpriteSheet::alloc_count = 0;
+
+
+void* SpriteSheet::operator new(std::size_t size)
+{
+    void* ptr = ::operator new(size);
+    std::cout << ++alloc_count << " new(" << size << ") => " << ptr << "\n";
+    return ptr;
+}
+
+
+void SpriteSheet::operator delete(void* ptr)
+{
+    std::cout << --alloc_count << " delete(" << ptr << ")\n";
+    ::operator delete(ptr);
+}
+
+
 class RGBASpriteSheet : public SpriteSheet
 {
 public:

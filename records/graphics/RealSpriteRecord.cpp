@@ -632,7 +632,7 @@ void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
     image_file.append(m_filename);
     SpriteSheet* image_sheet = &pool.get_sprite_sheet(image_file.make_preferred().string(), colour);
 
-    SpriteSheet* mask_sheet;
+    SpriteSheet* mask_sheet = nullptr;
     if (m_mask_filename.length() > 0)
     {
         fs::path mask_file = CommandLineOptions::options().yagl_dir();
