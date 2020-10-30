@@ -252,21 +252,3 @@ int main (int argc, char* argv[])
     return 0;
 }
 
-
-/*
-void* operator new(std::size_t size)
-{
-    void* ptr = malloc(size);
-    printf("new(%d, %08X)\n", size, ptr);
-    if (ptr == nullptr)
-        throw std::bad_alloc{};
-    return ptr;
-}
-
-
-void operator delete(void* ptr)
-{
-    printf("delete(%08X)\n", ptr);
-    free(ptr);
-}
-*/

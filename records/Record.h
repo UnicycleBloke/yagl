@@ -196,8 +196,6 @@ public:
 
     // Overloaded for testing purposes only
     static int alloc_count;
-    static void* operator new(std::size_t size);
-    static void operator delete(void* ptr);
 
 public:
     // Purely for testing purposes.

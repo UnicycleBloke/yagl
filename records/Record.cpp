@@ -28,21 +28,6 @@
 int Record::alloc_count = 0;
 
 
-void* Record::operator new(std::size_t size)
-{
-    void* ptr = ::operator new(size);
-    //std::cout << ++alloc_count << " new(" << size << ") => " << ptr << "\n";
-    return ptr;
-}
-
-
-void Record::operator delete(void* ptr)
-{
-    //std::cout << --alloc_count << " delete(" << ptr << ")\n";
-    ::operator delete(ptr);
-}
-
-
 void ActionRecord::write(std::ostream& os, const GRFInfo& info) const
 {
     // The read and write methods for this class are unbalanced because 
