@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "TokenStream.h"
+#include "utility/StreamHelpers.h"
 #include <cstdint>
 #include <iostream>
 #include <array>

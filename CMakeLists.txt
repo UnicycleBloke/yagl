@@ -127,7 +127,7 @@ add_executable(${NEWGRF_PROGRAM_NAME}
 #    yagl -t -a "*Action01*" # Run tests with Action01 in their name
 #
 # See Catch2 documentation for details.
-if (${WITH_TESTS} EQUAL 1)
+if (${WITH_TESTS})
     message("Including tests")
     add_definitions(-DWITH_TESTS=1)
     target_sources(yagl PUBLIC
