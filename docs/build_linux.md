@@ -25,6 +25,7 @@ ninja
 
 The software has so far only been compiled with **g++** on Linux. Pretty much any reasonably recent Linux-like environment should be fine. The software has been built and run on the following configurations:
 - Ubuntu 16.04 LTS; CMake 3.15.0; g++ 9.2.1
+- Ubuntu 22.04 LTS
 - Windows 10 Subsystem for Linux; Ubuntu 18.04 LTS; CMake 3.10; g++ 8.2.0
 
 It should also build with **g++ 7.4**, though this required a little conditional compilation around `<filesystem>`, which was not officially supported until **g++ 8.0**. Not recommended.
