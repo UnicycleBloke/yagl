@@ -37,7 +37,6 @@ void CommandLineOptions::parse(int argc, char* argv[])
     bool     decode  = false;
     bool     encode  = false;
     bool     hexdump = false;
-    bool     test    = false;
 
     uint16_t palette = 1;
     uint16_t format  = 2;
@@ -54,8 +53,6 @@ void CommandLineOptions::parse(int argc, char* argv[])
             ("d,decode",    "Decodes a GRF file to YAGL script and sprite sheets", cxxopts::value<bool>(decode))
             ("e,encode",    "Encodes a GRF file from YAGL script and sprite sheets", cxxopts::value<bool>(encode))
             ("x,hexdump",   "Reads a GRF file and dumps it to hex somewhat like NFO", cxxopts::value<bool>(hexdump))
-            ("t,test",      "Runs unit tests", cxxopts::value<bool>(test))
-            ("a,test_args", "Arguments to pass to the unit tests", cxxopts::value<std::string>(m_test_args))
 
             // Other options
             ("p,palette",   "Choose the initial palette for the GRF", cxxopts::value<uint16_t>(palette), "<idx>")
@@ -90,27 +87,20 @@ void CommandLineOptions::parse(int argc, char* argv[])
         }
 
         // Make sure that one and only one operation is selected.
-        uint16_t operation = decode + encode + hexdump + test;
+        uint16_t operation = decode + encode + hexdump;
         if (operation > 1)
         {
-            std::cout << "ERROR: The --encode.-e, --decode,-d, --hexdump,-x and --test,-t options are mutually exclusive\n";
+            std::cout << "ERROR: The --encode.-e, --decode,-d, and --hexdump,-x options are mutually exclusive\n";
             exit(1);
         }
         if (operation == 0)
         {
-            std::cout << "ERROR: One of the --encode.-e, --decode,-d, --hexdump,-x or --test,-t options is required\n";
+            std::cout << "ERROR: One of the --encode.-e, --decode,-d ,or --hexdump,-x options is required\n";
             exit(1);
         }
         if (encode)  m_operation = Operation::Encode;
         if (decode)  m_operation = Operation::Decode;
         if (hexdump) m_operation = Operation::HexDump;
-        if (test)    m_operation = Operation::Test;
-
-        if (m_operation == Operation::Test)
-        {
-            // We don't need any other information for tests.
-            return;
-        }
 
         // Make sure that we have GRF file.
         if (!result.count("grf_file"))

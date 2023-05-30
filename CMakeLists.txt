@@ -19,12 +19,15 @@
 
 cmake_minimum_required(VERSION 3.10) 
 
-set(NEWGRF_PROGRAM_NAME "yagl")
 
-project(${NEWGRF_PROGRAM_NAME} LANGUAGES CXX)
+set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(${NEWGRF_PROGRAM_NAME}
-    application/main.cpp
+
+project(yagl LANGUAGES CXX)
+
+
+add_library(yagl_lib STATIC
     application/CommandLineOptions.cpp
 
     # Top level data structure representing all the data in a GRF file. 
@@ -118,78 +121,69 @@ add_executable(${NEWGRF_PROGRAM_NAME}
 )
 
 
-# The unit tests are optionally built directly into the executable for both Debug and Release
-# builds. The tests are run by using the -t command line option. The tests are built with 
-# Catch2. Any Catch2 command line (e.g. to list or filter the tests) is passed with the -a 
-# command line option for example:
-#
-#    yagl -t -a "[actions]"  # Run tests with the [actions] attribute
-#    yagl -t -a "*Action01*" # Run tests with Action01 in their name
-#
-# See Catch2 documentation for details.
-if (${WITH_TESTS})
-    message("Including tests")
-    add_definitions(-DWITH_TESTS=1)
-    target_sources(yagl PUBLIC
-        # Unit test.
-        tests/sundries/Test_StreamHelpers.cpp
-        tests/sundries/Test_IntegerDescriptor.cpp
-        tests/sundries/Test_YearDescriptor.cpp
-        tests/sundries/Test_DateDescriptor.cpp
+add_executable(yagl 
+    application/main.cpp
+)
 
-        # Properties for various features.
-        tests/features/Test_Action00_Aircraft.cpp
-        tests/features/Test_Action00_Airports.cpp
-        tests/features/Test_Action00_AirportTiles.cpp
-        tests/features/Test_Action00_Bridges.cpp
-        tests/features/Test_Action00_Canals.cpp
-        tests/features/Test_Action00_Cargos.cpp
-        tests/features/Test_Action00_Common.cpp
-        tests/features/Test_Action00_GlobalSettings.cpp
-        tests/features/Test_Action00_Houses.cpp
-        tests/features/Test_Action00_Industries.cpp
-        tests/features/Test_Action00_IndustryTiles.cpp
-        tests/features/Test_Action00_Objects.cpp
-        tests/features/Test_Action00_RailTypes.cpp
-        tests/features/Test_Action00_RoadTypes.cpp
-        tests/features/Test_Action00_Ships.cpp
-        tests/features/Test_Action00_SoundEffects.cpp
-        tests/features/Test_Action00_Stations.cpp
-        tests/features/Test_Action00_Trains.cpp
-        tests/features/Test_Action00_TramTypes.cpp
-        tests/features/Test_Action00_Vehicles.cpp
 
-        # Other ActionXX records.
-        tests/actions/Test_Action01Record.cpp             # Define sprites
-        tests/actions/Test_Action02BasicRecord.cpp        # Define graphics
-        tests/actions/Test_Action02RandomRecord.cpp        
-        tests/actions/Test_Action02VariableRecord.cpp      
-        tests/actions/Test_Action02IndustryRecord.cpp      
-        tests/actions/Test_Action02SpriteLayoutRecord.cpp  
-        tests/actions/Test_Action03Record.cpp             # Assign graphics
-        tests/actions/Test_Action04Record.cpp             # Strings
-        tests/actions/Test_Action05Record.cpp             # Sprites
-        tests/actions/Test_Action06Record.cpp             # Modify next
-        tests/actions/Test_Action07Record.cpp             # Skip records
-        tests/actions/Test_Action08Record.cpp             # GRF identification
-        tests/actions/Test_Action0ARecord.cpp              
-        tests/actions/Test_Action0BRecord.cpp              
-        tests/actions/Test_Action0CRecord.cpp              
-        tests/actions/Test_Action0DRecord.cpp             # Set parameters
-        tests/actions/Test_Action0ERecord.cpp              
-        tests/actions/Test_Action0FRecord.cpp              
-        tests/actions/Test_Action10Record.cpp              
-        tests/actions/Test_Action11Record.cpp              
-        tests/actions/Test_Action12Record.cpp              
-        tests/actions/Test_Action13Record.cpp              
-        tests/actions/Test_Action14Record.cpp              
-        tests/actions/Test_ActionFERecord.cpp              
-        tests/actions/Test_ActionFFRecord.cpp              
-    )
-else()
-    message("Excluding tests")
-    add_definitions(-DWITH_TESTS=0)
-endif()
+add_executable(yagl_tests 
+    third_party/catch2/catch_amalgamated.cpp
+
+    # Unit test.
+    tests/sundries/Test_StreamHelpers.cpp
+    tests/sundries/Test_IntegerDescriptor.cpp
+    tests/sundries/Test_YearDescriptor.cpp
+    tests/sundries/Test_DateDescriptor.cpp
+
+    # Properties for various features.
+    tests/features/Test_Action00_Aircraft.cpp
+    tests/features/Test_Action00_Airports.cpp
+    tests/features/Test_Action00_AirportTiles.cpp
+    tests/features/Test_Action00_Bridges.cpp
+    tests/features/Test_Action00_Canals.cpp
+    tests/features/Test_Action00_Cargos.cpp
+    tests/features/Test_Action00_Common.cpp
+    tests/features/Test_Action00_GlobalSettings.cpp
+    tests/features/Test_Action00_Houses.cpp
+    tests/features/Test_Action00_Industries.cpp
+    tests/features/Test_Action00_IndustryTiles.cpp
+    tests/features/Test_Action00_Objects.cpp
+    tests/features/Test_Action00_RailTypes.cpp
+    tests/features/Test_Action00_RoadTypes.cpp
+    tests/features/Test_Action00_Ships.cpp
+    tests/features/Test_Action00_SoundEffects.cpp
+    tests/features/Test_Action00_Stations.cpp
+    tests/features/Test_Action00_Trains.cpp
+    tests/features/Test_Action00_TramTypes.cpp
+    tests/features/Test_Action00_Vehicles.cpp
+
+    # Other ActionXX records.
+    tests/actions/Test_Action01Record.cpp             # Define sprites
+    tests/actions/Test_Action02BasicRecord.cpp        # Define graphics
+    tests/actions/Test_Action02RandomRecord.cpp        
+    tests/actions/Test_Action02VariableRecord.cpp      
+    tests/actions/Test_Action02IndustryRecord.cpp      
+    tests/actions/Test_Action02SpriteLayoutRecord.cpp  
+    tests/actions/Test_Action03Record.cpp             # Assign graphics
+    tests/actions/Test_Action04Record.cpp             # Strings
+    tests/actions/Test_Action05Record.cpp             # Sprites
+    tests/actions/Test_Action06Record.cpp             # Modify next
+    tests/actions/Test_Action07Record.cpp             # Skip records
+    tests/actions/Test_Action08Record.cpp             # GRF identification
+    tests/actions/Test_Action0ARecord.cpp              
+    tests/actions/Test_Action0BRecord.cpp              
+    tests/actions/Test_Action0CRecord.cpp              
+    tests/actions/Test_Action0DRecord.cpp             # Set parameters
+    tests/actions/Test_Action0ERecord.cpp              
+    tests/actions/Test_Action0FRecord.cpp              
+    tests/actions/Test_Action10Record.cpp              
+    tests/actions/Test_Action11Record.cpp              
+    tests/actions/Test_Action12Record.cpp              
+    tests/actions/Test_Action13Record.cpp              
+    tests/actions/Test_Action14Record.cpp              
+    tests/actions/Test_ActionFERecord.cpp              
+    tests/actions/Test_ActionFFRecord.cpp              
+)
 
 
 # This appears to be the simplest way to create a pre-build step that
@@ -201,9 +195,10 @@ add_custom_target(
     # Windows Subsystem for Linux: needed to manually create soft link to /usr/bin/python3.
     COMMAND python ${PROJECT_SOURCE_DIR}/yagl_version.py
 )
-add_dependencies(${NEWGRF_PROGRAM_NAME} prebuild_commands)
+add_dependencies(yagl prebuild_commands)
 
-target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC 
+
+target_include_directories(yagl_lib PUBLIC 
     .
     records
     records/actions 
@@ -220,25 +215,31 @@ target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC
     third_party/cxxopts/include
 )
 
+
 if (UNIX)
     # Builds on UNIX-like systems: Linux, MSYS2, Windows Subsystem for Linux, ...
     # We assume GCC is used for the build
-    target_compile_options(${NEWGRF_PROGRAM_NAME} PUBLIC -g -std=c++17)
-    target_link_libraries(${NEWGRF_PROGRAM_NAME} PUBLIC png stdc++fs) 
+    target_link_libraries(yagl PUBLIC yagl_lib png stdc++fs) 
+    target_link_libraries(yagl_tests PUBLIC yagl_lib png stdc++fs) 
+    target_link_libraries(yagl_lib PUBLIC png stdc++fs) 
 else()
     # Microsoft Visual Studio 2019 (2017 didn't work so well due to some of the C++17 features in the code).
     # Code be fixed with a bit off faff. Or just install VS2019. :)
-    target_compile_options(${NEWGRF_PROGRAM_NAME} PUBLIC /std:c++17 /MT)
-    target_link_options(${NEWGRF_PROGRAM_NAME} PUBLIC /VERBOSE:LIB)
-    target_link_libraries(${NEWGRF_PROGRAM_NAME} PUBLIC libpng16 zlib)
+    #target_compile_options(yagl PUBLIC /std:c++17 /MT)
+    #target_link_options(yagl PUBLIC /VERBOSE:LIB)
+    target_link_libraries(yagl PUBLIC libpng16 zlib)
+
+    #target_compile_options(yagl PUBLIC /std:c++17 /MT)
+    #target_link_options(yagl PUBLIC /VERBOSE:LIB)
+    target_link_libraries(yagl PUBLIC libpng16 zlib)
 
     # Is their a nicer, more automatic, way to generalise the location of vcpkg? 
     # Here we expect -DVCPKG_DIR=<dir> to be given on the cmake command line.
     if (NOT EXISTS ${VCPKG_DIR})
         message(FATAL_ERROR "ERROR: The directory given by VCPKG_DIR does not exist - specify with -DVCPKG_DIR=<dir>")
     endif()    
-    target_link_directories(${NEWGRF_PROGRAM_NAME} PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/lib) 
-    target_include_directories(${NEWGRF_PROGRAM_NAME} PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/include)
+    target_link_directories(yagl PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/lib) 
+    target_include_directories(yagl PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/include)
     
     # Prevent the compiler whining about this deprecated feature used in the GRFStrings stuff.    
     add_compile_definitions(_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING)

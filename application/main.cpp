@@ -185,41 +185,6 @@ std::vector<std::string> split(const std::string& str)
 }
 
 
-int test(const char* arg0, const std::string str_args)
-{
-#if (WITH_TESTS == 1)    
-    // Recreate the command line for the benefit of the Catch2 tests.
-    auto split_args = split(str_args);
-    std::vector<const char*> ptr_args;
-    ptr_args.push_back(arg0);
-    for (const auto& arg: split_args)
-    {
-        ptr_args.push_back(&arg[0]);
-    } 
- 
-    std::cout << "Performing unit tests...\n";
-    Catch::Session session; // There must be exactly one instance
- 
-    // Writing to session.configData() here sets defaults
-    // this is the preferred way to set them.   
-    int result = session.applyCommandLine(int(ptr_args.size()), &ptr_args[0]);
-    if( result != 0 ) // Indicates a command line error
-        return result;
- 
-    // Writing to session.configData() or session.Config() here 
-    // overrides command line args. Only do this if you know you need to.
-
-    // num_failed is clamped to 255 as some unices only use the lower 8 bits.
-    // This clamping has already been applied, so just return it here.
-    // You can also do any post run clean-up here.
-    int num_failed = session.run();
-    return num_failed;
-#else
-    return 0;    
-#endif    
-}
-
-
 int main (int argc, char* argv[])
 {
     std::cout << "\n";
@@ -242,10 +207,6 @@ int main (int argc, char* argv[])
 
         case CommandLineOptions::Operation::HexDump:
             hex_dump();
-            break;
-
-        case CommandLineOptions::Operation::Test:
-            test(argv[0], options.test_args());
             break;
     }
 
