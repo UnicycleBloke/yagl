@@ -225,21 +225,16 @@ if (UNIX)
 else()
     # Microsoft Visual Studio 2019 (2017 didn't work so well due to some of the C++17 features in the code).
     # Code be fixed with a bit off faff. Or just install VS2019. :)
-    #target_compile_options(yagl PUBLIC /std:c++17 /MT)
-    #target_link_options(yagl PUBLIC /VERBOSE:LIB)
-    target_link_libraries(yagl PUBLIC libpng16 zlib)
+    target_link_libraries(yagl PUBLIC yagl_lib libpng16 zlib)
+    target_link_libraries(yagl_tests PUBLIC yagl_lib libpng16 zlib)
 
-    #target_compile_options(yagl PUBLIC /std:c++17 /MT)
-    #target_link_options(yagl PUBLIC /VERBOSE:LIB)
-    target_link_libraries(yagl PUBLIC libpng16 zlib)
-
-    # Is their a nicer, more automatic, way to generalise the location of vcpkg? 
+    # Is there a nicer, more automatic, way to generalise the location of vcpkg? 
     # Here we expect -DVCPKG_DIR=<dir> to be given on the cmake command line.
     if (NOT EXISTS ${VCPKG_DIR})
         message(FATAL_ERROR "ERROR: The directory given by VCPKG_DIR does not exist - specify with -DVCPKG_DIR=<dir>")
     endif()    
-    target_link_directories(yagl PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/lib) 
-    target_include_directories(yagl PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/include)
+    target_link_directories(yagl_lib PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/lib) 
+    target_include_directories(yagl_lib PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/include)
     
     # Prevent the compiler whining about this deprecated feature used in the GRFStrings stuff.    
     add_compile_definitions(_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING)
