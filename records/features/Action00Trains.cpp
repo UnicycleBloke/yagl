@@ -56,6 +56,10 @@ constexpr const char* str_long_introduction_date       = "long_introduction_date
 constexpr const char* str_custom_cargo_aging_period    = "custom_cargo_aging_period";
 constexpr const char* str_always_refittable_cargos     = "always_refittable_cargos";
 constexpr const char* str_never_refittable_cargos      = "never_refittable_cargos";
+constexpr const char* str_maximum_curve_speed_modifier = "maximum_curve_speed_modifier";
+constexpr const char* str_variant_group                = "variant_group";
+constexpr const char* str_extra_flags                  = "extra_flags";
+constexpr const char* str_extra_callback_flags_mask    = "extra_callback_flags_mask";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
@@ -97,6 +101,10 @@ const std::map<std::string, uint8_t> g_indices =
     { str_custom_cargo_aging_period,    0x2B },
     { str_always_refittable_cargos,     0x2C },
     { str_never_refittable_cargos,      0x2D },
+    { str_maximum_curve_speed_modifier, 0x2E },
+    { str_variant_group,                0x2F },
+    { str_extra_flags,                  0x30 },
+    { str_extra_callback_flags_mask,    0x31 },
 };
 
 
@@ -134,6 +142,10 @@ constexpr LongDateDescriptor      desc_2A  = { 0x2A, str_long_introduction_date 
 constexpr UInt16Descriptor        desc_2B  = { 0x2B, str_custom_cargo_aging_period,    UIntFormat::Hex };
 constexpr CargoListDescriptor     desc_2C  = { 0x2C, str_always_refittable_cargos };
 constexpr CargoListDescriptor     desc_2D  = { 0x2D, str_never_refittable_cargos };
+constexpr UInt16Descriptor        desc_2E  = { 0x2E, str_maximum_curve_speed_modifier, UIntFormat::Hex };
+constexpr UInt16Descriptor        desc_2F  = { 0x2F, str_variant_group,                UIntFormat::Hex };
+constexpr UInt32Descriptor        desc_30  = { 0x30, str_extra_flags,                  UIntFormat::Hex };
+constexpr UInt8Descriptor         desc_31  = { 0x31, str_extra_callback_flags_mask,    UIntFormat::Hex };
 
 
 } // namespace {
@@ -182,6 +194,10 @@ bool Action00Trains::read_property(std::istream& is, uint8_t property)
         case 0x2B: m_2B_custom_cargo_aging_period.read(is);    break;
         case 0x2C: m_2C_always_refittable_cargos.read(is);     break;
         case 0x2D: m_2D_never_refittable_cargos.read(is);      break;
+        case 0x2E: m_2E_maximum_curve_speed_modifier.read(is); break;
+        case 0x2F: m_2F_variant_group.read(is);                break;
+        case 0x30: m_30_extra_flags.read(is);                  break;
+        case 0x31: m_31_extra_callback_flags_mask.read(is);    break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -232,6 +248,10 @@ bool Action00Trains::write_property(std::ostream& os, uint8_t property) const
         case 0x2B: m_2B_custom_cargo_aging_period.write(os);    break;
         case 0x2C: m_2C_always_refittable_cargos.write(os);     break;
         case 0x2D: m_2D_never_refittable_cargos.write(os);      break;
+        case 0x2E: m_2E_maximum_curve_speed_modifier.write(os); break;
+        case 0x2F: m_2F_variant_group.write(os);                break;
+        case 0x30: m_30_extra_flags.write(os);                  break;
+        case 0x31: m_31_extra_callback_flags_mask.write(os);    break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -282,6 +302,10 @@ bool Action00Trains::print_property(std::ostream& os, uint8_t property, uint16_t
         case 0x2B: desc_2B.print(m_2B_custom_cargo_aging_period, os, indent);    break;
         case 0x2C: desc_2C.print(m_2C_always_refittable_cargos, os, indent);     break;
         case 0x2D: desc_2D.print(m_2D_never_refittable_cargos, os, indent);      break;
+        case 0x2E: desc_2E.print(m_2E_maximum_curve_speed_modifier, os, indent); break;
+        case 0x2F: desc_2F.print(m_2F_variant_group, os, indent);                break;
+        case 0x30: desc_30.print(m_30_extra_flags, os, indent);                  break;
+        case 0x31: desc_31.print(m_31_extra_callback_flags_mask, os, indent);    break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -336,6 +360,10 @@ bool Action00Trains::parse_property(TokenStream& is, const std::string& name, ui
             case 0x2B: desc_2B.parse(m_2B_custom_cargo_aging_period, is);    break;
             case 0x2C: desc_2C.parse(m_2C_always_refittable_cargos, is);     break;
             case 0x2D: desc_2D.parse(m_2D_never_refittable_cargos, is);      break;
+            case 0x2E: desc_2E.parse(m_2E_maximum_curve_speed_modifier, is); break;
+            case 0x2F: desc_2F.parse(m_2F_variant_group, is);                break;
+            case 0x30: desc_30.parse(m_30_extra_flags, is);                  break;
+            case 0x31: desc_31.parse(m_31_extra_callback_flags_mask, is);    break;
             default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
