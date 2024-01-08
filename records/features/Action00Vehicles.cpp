@@ -50,6 +50,9 @@ constexpr const char* str_custom_cargo_aging_period    = "custom_cargo_aging_per
 constexpr const char* str_shorten_vehicle              = "shorten_vehicle";
 constexpr const char* str_always_refittable_cargos     = "always_refittable_cargos";
 constexpr const char* str_never_refittable_cargos      = "never_refittable_cargos";
+constexpr const char* str_variant_group                = "variant_group";
+constexpr const char* str_extra_flags                  = "extra_flags";
+constexpr const char* str_extra_callback_flags_mask    = "extra_callback_flags_mask";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
@@ -84,6 +87,9 @@ const std::map<std::string, uint8_t> g_indices =
     { str_shorten_vehicle,              0x23 },
     { str_always_refittable_cargos,     0x24 },
     { str_never_refittable_cargos,      0x25 },
+    { str_variant_group,                0x26 },
+    { str_extra_flags,                  0x27 },
+    { str_extra_callback_flags_mask,    0x28 },
 };
 
 
@@ -114,6 +120,9 @@ constexpr UInt16Descriptor       desc_22  = { 0x22, str_custom_cargo_aging_perio
 constexpr UInt8Descriptor        desc_23  = { 0x23, str_shorten_vehicle,              UIntFormat::Hex };
 constexpr CargoListDescriptor    desc_24  = { 0x24, str_always_refittable_cargos };
 constexpr CargoListDescriptor    desc_25  = { 0x25, str_never_refittable_cargos };
+constexpr UInt16Descriptor       desc_26  = { 0x26, str_variant_group,                UIntFormat::Hex };
+constexpr UInt32Descriptor       desc_27  = { 0x27, str_extra_flags,                  UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_28  = { 0x28, str_extra_callback_flags_mask,    UIntFormat::Hex };
 
 
 } // namespace {
@@ -155,6 +164,9 @@ bool Action00Vehicles::read_property(std::istream& is, uint8_t property)
         case 0x23: m_23_shorten_vehicle.read(is);              break;
         case 0x24: m_24_always_refittable_cargos.read(is);     break;
         case 0x25: m_25_never_refittable_cargos.read(is);      break;
+        case 0x26: m_26_variant_group.read(is);                break;
+        case 0x27: m_27_extra_flags.read(is);                  break;
+        case 0x28: m_28_extra_callback_flags_mask.read(is);    break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -198,6 +210,9 @@ bool Action00Vehicles::write_property(std::ostream& os, uint8_t property) const
         case 0x23: m_23_shorten_vehicle.write(os);              break;
         case 0x24: m_24_always_refittable_cargos.write(os);     break;
         case 0x25: m_25_never_refittable_cargos.write(os);      break;
+        case 0x26: m_26_variant_group.write(os);                break;
+        case 0x27: m_27_extra_flags.write(os);                  break;
+        case 0x28: m_28_extra_callback_flags_mask.write(os);    break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
     
@@ -241,6 +256,9 @@ bool Action00Vehicles::print_property(std::ostream& os, uint8_t property, uint16
         case 0x23: desc_23.print(m_23_shorten_vehicle, os, indent);              break;
         case 0x24: desc_24.print(m_24_always_refittable_cargos, os, indent);     break;
         case 0x25: desc_25.print(m_25_never_refittable_cargos, os, indent);      break;
+        case 0x26: desc_26.print(m_26_variant_group, os, indent);                break;
+        case 0x27: desc_27.print(m_27_extra_flags, os, indent);                  break;
+        case 0x28: desc_28.print(m_28_extra_callback_flags_mask, os, indent);    break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -288,6 +306,9 @@ bool Action00Vehicles::parse_property(TokenStream& is, const std::string& name, 
             case 0x23: desc_23.parse(m_23_shorten_vehicle, is);              break;
             case 0x24: desc_24.parse(m_24_always_refittable_cargos, is);     break;
             case 0x25: desc_25.parse(m_25_never_refittable_cargos, is);      break;
+            case 0x26: desc_26.parse(m_26_variant_group, is);                break;
+            case 0x27: desc_27.parse(m_27_extra_flags, is);                  break;
+            case 0x28: desc_28.parse(m_28_extra_callback_flags_mask, is);    break;
             default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 
