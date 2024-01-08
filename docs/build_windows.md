@@ -31,6 +31,3 @@ vcpkg install libpng:x64-windows-static
 The following header only libraries are included in the source tree along with their licences:
 - **png++**: a C++ wrapper around the libpng API: https://www.nongnu.org/pngpp/.
 - **cxxopts**: a C++ command line option parser: https://github.com/jarro2783/cxxopts.
-
-The build also makes use of **python** for a pre-build step to create the version number from the git repository: it runs `yagl_version.py` to create `yagl_version.h`. Python needs to be on your path. 
-

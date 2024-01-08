@@ -1,0 +1,2 @@
+// This file is generated in a pre-build step by yagl_version.cmake
+const char* str_yagl_version = "@VERSION@";
