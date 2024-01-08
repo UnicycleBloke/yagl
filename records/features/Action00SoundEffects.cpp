@@ -28,7 +28,7 @@ constexpr const char* str_priority           = "priority";
 constexpr const char* str_override_old_sound = "override_old_sound";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -58,7 +58,7 @@ bool Action00SoundEffects::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00SoundEffects::write_property(std::ostream& os, uint8_t property) const
@@ -75,7 +75,7 @@ bool Action00SoundEffects::write_property(std::ostream& os, uint8_t property) co
 }
 
 
-bool Action00SoundEffects::print_property(std::ostream& os, uint8_t property, uint16_t indent) const 
+bool Action00SoundEffects::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
     switch (property)
     {

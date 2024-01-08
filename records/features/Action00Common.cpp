@@ -31,7 +31,7 @@ constexpr const char* str_climate_availability    = "climate_availability";
 constexpr const char* str_loading_speed           = "loading_speed";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -49,7 +49,7 @@ constexpr ShortDateDescriptor          desc_00 = { 0x00, str_introduction_date }
 constexpr UInt8Descriptor              desc_02 = { 0x02, str_reliability_decay_speed, UIntFormat::Dec };
 constexpr UInt8Descriptor              desc_03 = { 0x03, str_vehicle_life_years,      UIntFormat::Dec };
 constexpr UInt8Descriptor              desc_04 = { 0x04, str_model_life_years,        UIntFormat::Dec };
-const     BitfieldDescriptorT<UInt8>   desc_06 = { 0x06, str_climate_availability,    
+const     BitfieldDescriptorT<UInt8>   desc_06 = { 0x06, str_climate_availability,
     { {1, "Temperate"}, {2, "Arctic"}, {4, "Tropical"}, {8, "Toyland"} } };
 constexpr UInt8Descriptor              desc_07 = { 0x07, str_loading_speed,           UIntFormat::Hex };
 
@@ -70,10 +70,10 @@ bool Action00Common::read_property(std::istream& is, uint8_t property)
         default:   return false;
     }
 
-    return true; 
-}   
+    return true;
+}
 
-    
+
 bool Action00Common::write_property(std::ostream& os, uint8_t property) const
 {
     switch (property)
@@ -87,7 +87,7 @@ bool Action00Common::write_property(std::ostream& os, uint8_t property) const
         default:   return false;
     }
 
-    return true; 
+    return true;
 }
 
 
@@ -102,7 +102,7 @@ bool Action00Common::print_property(std::ostream& os, uint8_t property, uint16_t
         case 0x06: desc_06.print(m_06_climate_availability, os, indent);    break;
         case 0x07: desc_07.print(m_07_loading_speed, os, indent);           break;
         default:   return false;
-    }    
+    }
 
     return true;
 }
@@ -124,11 +124,11 @@ bool Action00Common::parse_property(TokenStream& is, const std::string& name, ui
             case 0x07: desc_07.parse(m_07_loading_speed, is);           break;
             default:   throw PROPERTY_ERROR("Unknown property", property);
         }
-    
+
         return true;
     }
 
-    // No exception here as the property might be parsed by the derived vehicle type. 
+    // No exception here as the property might be parsed by the derived vehicle type.
     return false;
 }
 

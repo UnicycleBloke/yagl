@@ -34,11 +34,11 @@ void Action04Record::read(std::istream& is, const GRFInfo& info)
     uint8_t num_strings = read_uint8(is);
 
     // Read the ID of the first string here. The format is bizarrely conditional. From the specs:
-    // - When language - id bit 7 is clear, this is a byte value; For OpenTTD since r13482, where it is an extended byte 
+    // - When language - id bit 7 is clear, this is a byte value; For OpenTTD since r13482, where it is an extended byte
     //   value for vehicles.
     // - When language - id bit 7 is set, this is a word value in little endian notation, e.g. 8134 becomes 34 81.
     // - The 8 bit version is only allowed for vehicles to set their name, in which case the text ID is just the vehicle ID.
-    // - To replace original texts, or to define texts for usage in callbacks or properties of vehicles, stations, houses or 
+    // - To replace original texts, or to define texts for usage in callbacks or properties of vehicles, stations, houses or
     //   industries you have to use the 16 bit version.
     if (m_uint16_ids)
     {
@@ -95,7 +95,7 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
     {
         str.write(os);
     }
-}  
+}
 
 
 void Action04Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
@@ -111,7 +111,7 @@ void Action04Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t string_id = m_first_string_id;
     for (const auto& s: m_strings)
     {
-        os << pad(indent + 4) << "/* " << to_hex(string_id++) << " */ "; 
+        os << pad(indent + 4) << "/* " << to_hex(string_id++) << " */ ";
         os << "\"" << s.readable() << "\";\n";
     }
 

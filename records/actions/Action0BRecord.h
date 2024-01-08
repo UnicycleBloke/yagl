@@ -22,9 +22,9 @@
 
 
 // Generate error messages.
-// With this action, you can alert the user to problems in the way 
-// the grf file is loaded, e.g. not in the right order, not the right 
-// patch version, or wrong parameters. 
+// With this action, you can alert the user to problems in the way
+// the grf file is loaded, e.g. not in the right order, not the right
+// patch version, or wrong parameters.
 class Action0BRecord : public ActionRecord
 {
 public:
@@ -57,6 +57,6 @@ private:
     GRFString   m_message;                   // Only present if 0xFF ID.
     GRFString   m_data;                      // Inserted at second 0x80 in the string.
     uint8_t     m_num_params        = 0;     // Optional up to two.
-    uint8_t     m_param1            = 0; 
-    uint8_t     m_param2            = 0; 
+    uint8_t     m_param1            = 0;
+    uint8_t     m_param2            = 0;
 };

@@ -22,7 +22,7 @@
 #include <sstream>
 
 
-TEST_CASE("to_string()", "[integers]") 
+TEST_CASE("to_string()", "[integers]")
 {
     SECTION("to_string<uint8_t>()")
     {
@@ -76,8 +76,8 @@ TEST_CASE("to_string()", "[integers]")
 }
 
 
-TEST_CASE("UInt types", "[integers]") 
-{    
+TEST_CASE("UInt types", "[integers]")
+{
     SECTION("UInt8")
     {
         for (uint16_t i = 0; i < 256; ++i)
@@ -149,7 +149,7 @@ TEST_CASE("UInt types", "[integers]")
             std::ostringstream os;
             value.write(os);
 
-            // Always used the long format for extended bytes. 
+            // Always used the long format for extended bytes.
             // May need to change this later.
             auto str = os.str();
             CHECK(str.size() == 3);
@@ -252,8 +252,8 @@ TEST_CASE("UInt types", "[integers]")
 }
 
 
-TEST_CASE("UIntArray", "[integers]") 
-{    
+TEST_CASE("UIntArray", "[integers]")
+{
     // Inlude decimal, hex and binary numbers here for parsing.
     std::istringstream is("[1 0x02 0b0011 0xf4 5 0xF6]");
     TokenStream ts{is};

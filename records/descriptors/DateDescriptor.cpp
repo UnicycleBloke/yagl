@@ -52,7 +52,7 @@ uint8_t days_in_month(uint32_t year, uint8_t month)
     case 12: return 31;
     }
 
-    // Should never get here. 
+    // Should never get here.
     return 0;
 }
 
@@ -76,8 +76,8 @@ uint32_t days_from_years(uint32_t years)
     days += (year / 4) * DAYS_4_YEARS;
     year = year % 4;
 
-    // The odd years add more days on. We have to account for leaps years. 
-    // The thinking is that is the year is 1922, then we have already got the days up to 
+    // The odd years add more days on. We have to account for leaps years.
+    // The thinking is that is the year is 1922, then we have already got the days up to
     // the beginning of 1920, and we have to add the days for 1920 (366 as it is a leap year),
     // and the days for 1921 (365). Not very happy with this calculation.
     switch (year)

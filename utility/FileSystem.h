@@ -17,7 +17,7 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 
-// This needs to be tested. Inconvenient that the filesystem stuff 
+// This needs to be tested. Inconvenient that the filesystem stuff
 // isn't supported as cleanly as we'd like.
 #ifdef __GNUC__
     #include <features.h>

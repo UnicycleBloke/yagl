@@ -31,7 +31,7 @@ public:
     void print(std::ostream& os, uint16_t indent) const;
     void parse(TokenStream& is);
 
-private:    
+private:
     bool     m_new_bb; ///< Indicates that this sprite has its own bounding box
     int8_t   m_x_off;
     int8_t   m_y_off;
@@ -51,7 +51,7 @@ public:
     void print(std::ostream& os, uint16_t indent) const;
     void parse(TokenStream& is);
 
-private:    
+private:
     uint32_t m_ground_sprite;
     std::vector<StationTileData> m_data;
 };
@@ -81,13 +81,13 @@ public:
     bool terminator() const { return (m_platform_count == 0) && (m_platform_length == 0); }
 
 public:
-    enum class Platform 
+    enum class Platform
     {
-        Plain     = 0x00, 
-        Building  = 0x02, 
-        RoofLeft  = 0x04, 
+        Plain     = 0x00,
+        Building  = 0x02,
+        RoofLeft  = 0x04,
         RoofRight = 0x06
-    }; 
+    };
 
     enum class Direction
     {
@@ -95,12 +95,12 @@ public:
         NW_SE = 0x01
     };
 
-private:    
+private:
     uint8_t   m_platform_length;
     uint8_t   m_platform_count;
     Direction m_direction = Direction::NE_SW;
     // length * count, All bytes 00, 02, 04 or 06
-    std::vector<Platform> m_platform_tiles; 
+    std::vector<Platform> m_platform_tiles;
 };
 
 
@@ -148,7 +148,7 @@ private:
     UInt8          m_17_animation_speed{};
     UInt16         m_18_animation_triggers{};
 
-    // TODO 
+    // TODO
     //Action00StationRouting  m_19_station_routing;
     //Action00StationAdvanced m_1A_station_advanced; - like Action02SpriteLayout?
 

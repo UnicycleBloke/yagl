@@ -30,7 +30,7 @@ void Action0ERecord::write(std::ostream& os, const GRFInfo& info) const
 {
     ActionRecord::write(os, info);
     m_grf_ids.write(os);
-}  
+}
 
 
 // disable_grfs
@@ -57,7 +57,7 @@ void Action0ERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << pad(indent) << "{\n";
 
     grf_desc.print(m_grf_ids, os, indent + 4);
-    
+
     os << pad(indent) << "}\n";
 }
 

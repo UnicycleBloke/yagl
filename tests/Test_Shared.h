@@ -25,7 +25,7 @@
 template <typename ActionRecord, uint8_t ACTION>
 void test_yagl_matches(const char* YAGL_IN, const char* YAGL_OUT)
 {
-    SpriteZoomMap sprites; 
+    SpriteZoomMap sprites;
     std::istringstream is(YAGL_IN);
     TokenStream ts{is};
     ActionRecord action;
@@ -33,7 +33,7 @@ void test_yagl_matches(const char* YAGL_IN, const char* YAGL_OUT)
     std::ostringstream os;
     action.print(os, sprites, 0);
 
-    SpriteZoomMap sprites2; 
+    SpriteZoomMap sprites2;
     std::istringstream is2(YAGL_IN);
     TokenStream ts2{is2};
     ActionRecord action2;
@@ -45,10 +45,10 @@ void test_yagl_matches(const char* YAGL_IN, const char* YAGL_OUT)
 }
 
 
-// This parses some YAGL and ensures that printing it back out again matches. The 
+// This parses some YAGL and ensures that printing it back out again matches. The
 // second YAGL parameter can be used when we expect the printed output to be different
-// to the input (due to ordering differences). The parsed information is also written 
-// out as binary and read back in, and then printed again, to confirm that the binary 
+// to the input (due to ordering differences). The parsed information is also written
+// out as binary and read back in, and then printed again, to confirm that the binary
 // works as expected.
 template <typename ActionRecord, uint8_t ACTION>
 void test_yagl(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = nullptr)
@@ -62,7 +62,7 @@ void test_yagl(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = null
         test_yagl_matches<ActionRecord, ACTION>(YAGL_OUT, YAGL_IN);
     }
 
-    SpriteZoomMap sprites; 
+    SpriteZoomMap sprites;
 
     // Confirm that we print what we parse.
     // The sample is in the expected format.
@@ -89,7 +89,7 @@ void test_yagl(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = null
     CHECK(str.size() == (std::strlen(NFO) / 3));
     CHECK(hex_dump(str) == NFO);
 
-    // Confirm that reading the binary and printing the 
+    // Confirm that reading the binary and printing the
     // result gets us back to the example.
     std::istringstream is2(str);
     CHECK(uint8_t(is2.get()) == ACTION);
@@ -113,7 +113,7 @@ void test_container(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT =
         test_yagl_matches<ActionRecord, ACTION>(YAGL_OUT, YAGL_IN);
     }
 
-    SpriteZoomMap sprites; 
+    SpriteZoomMap sprites;
 
     // Confirm that we print what we parse.
     // The sample is in the expected format.
@@ -140,12 +140,12 @@ void test_container(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT =
     CHECK(str.size() == (std::strlen(NFO) / 3));
     CHECK(hex_dump(str) == NFO);
 
-    // Confirm that reading the binary and printing the 
+    // Confirm that reading the binary and printing the
     // result gets us back to the example.
     std::istringstream is2(str);
     CHECK(uint8_t(is2.get()) == ACTION);
 
-    // Don't test that the read content matches. This is because we don't 
+    // Don't test that the read content matches. This is because we don't
     // read and write the child records which contain the actual sprites, nor
     // the real sprite records themselves in the case of Container2 files.
     //ActionRecord action2;

@@ -45,7 +45,7 @@ public:
     uint32_t value() const { return m_label; }
 
 private:
-    uint32_t m_label{};    
+    uint32_t m_label{};
 };
 
 

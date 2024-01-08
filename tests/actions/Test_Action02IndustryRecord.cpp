@@ -54,7 +54,7 @@ static constexpr const char* str_NFO0 =
     "02 "                // Action02
     "0A "                // Industries
     "45 "                // This set ID
-    "00 "                // Version 0 
+    "00 "                // Version 0
     "01 10 02 20 03 30 " // Subtract in (3 words - amounts)
     "04 40 05 50 "       // Add out (2 words - amounts)
     "00 ";               // Repeat flag
@@ -62,23 +62,23 @@ static constexpr const char* str_NFO0 =
 static constexpr const char* str_NFO1 =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "02 "                // Action02
-    "0A "                // Industries  
+    "0A "                // Industries
     "45 "                // This set ID
     "01 "                // Version 1
     "01 02 03 "          // Subtract in (3 bytes - registers contain amounts)
-    "04 05 "             // Add out (2 bytes - register contain amounts) 
+    "04 05 "             // Add out (2 bytes - register contain amounts)
     "06 ";               // Repeat register - contains flag
 
 static constexpr const char* str_NFO2 =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "02 "                // Action02
     "0A "                // Industries
-    "45 "                // This set ID   
+    "45 "                // This set ID
     "02 "                // Version 2
     "04 "                // Subtract in - 4 items
        "01 02 "          // Cargo index and register for amount
-       "04 05 "          // - ditto - 
-       "61 07 "          // - ditto - 
+       "04 05 "          // - ditto -
+       "61 07 "          // - ditto -
        "08 09 "          // - ditto -
     "03 "                // Add out - 3 items
        "11 12 "          // Cargo index and register for amount

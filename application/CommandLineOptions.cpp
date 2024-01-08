@@ -110,24 +110,24 @@ void CommandLineOptions::parse(int argc, char* argv[])
         }
 
         // These are all the paths we might need. Image base is extended to create the name of each sprite sheet.
-        std::string grf_name = fs::path(m_grf_file).filename().string(); 
+        std::string grf_name = fs::path(m_grf_file).filename().string();
         m_grf_file   = fs::path(m_grf_file).make_preferred().string();
         m_yagl_dir   = fs::path(m_grf_file).parent_path().append(m_yagl_dir).make_preferred().string();
         m_yagl_file  = fs::path(m_yagl_dir).append(grf_name).replace_extension("yagl").make_preferred().string();
         m_hex_file   = fs::path(m_yagl_file).replace_extension("hex").make_preferred().string();
         m_image_base = fs::path(m_yagl_file).replace_extension().make_preferred().string();
 
-        if (m_operation == Operation::Decode) 
+        if (m_operation == Operation::Decode)
         {
-            if (!fs::is_regular_file(m_grf_file)) 
+            if (!fs::is_regular_file(m_grf_file))
             {
                 std::cout << "ERROR: File '" << m_grf_file << "' does not exist\n";
                 exit(1);
             }
         }
-        else if (m_operation == Operation::Encode) 
+        else if (m_operation == Operation::Encode)
         {
-            if (!fs::is_regular_file(m_yagl_file)) 
+            if (!fs::is_regular_file(m_yagl_file))
             {
                 std::cout << "ERROR: File '" << m_yagl_file << "' does not exist\n";
                 exit(1);
@@ -145,7 +145,7 @@ void CommandLineOptions::parse(int argc, char* argv[])
                 std::cout << "ERROR: Invalid palette index. Permitted values are 1, 2, 3, 4 and 5.\n";
                 exit(1);
         }
-    } 
+    }
     catch (const cxxopts::OptionException& e)
     {
         std::cout << "ERROR: Error parsing options: " << e.what() << std::endl;

@@ -35,7 +35,7 @@ struct Character
 const Character& get_char(uint16_t index);
 
 
-// png++ uses template parameters to represent colour depth. 
+// png++ uses template parameters to represent colour depth.
 // Not super convenient, but we do the same thing.
 template <typename PixType>
 class SpriteIDLabel
@@ -45,7 +45,7 @@ public:
         png::image<PixType>& image);
 
 private:
-    void draw_character(char c, uint32_t& xoff, uint32_t yoff, 
+    void draw_character(char c, uint32_t& xoff, uint32_t yoff,
         png::image<PixType>& image);
 };
 
@@ -71,7 +71,7 @@ void SpriteIDLabel<PixType>::draw(uint32_t id, uint32_t& xoff, uint32_t yoff,
     {
         --index;
     }
-  
+
     // Display the remaining characters.
     while (index < length)
     {
@@ -98,11 +98,11 @@ void SpriteIDLabel<PixType>::draw_character(char c, uint32_t& xoff, uint32_t yof
         case '7':
         case '8':
         case '9': index = c - '0' + 1; break;
-        case 'A': 
-        case 'B': 
-        case 'C': 
-        case 'D': 
-        case 'E': 
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
         case 'F': index = c - 'A' + 11; break;
     }
 

@@ -23,7 +23,7 @@
 
 namespace {
 
-// Add all properties, even with silly values, so that we can confirm the 
+// Add all properties, even with silly values, so that we can confirm the
 // formatting of each one if they are individually changed.
 static constexpr const char* str_YAGL =
     "properties<Houses, 0x0023> // Action00\n"
@@ -66,7 +66,7 @@ static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "00 "                 // Action00
     "07 "                 // Houses
-    "1C "                 // 0x1C properties... 
+    "1C "                 // 0x1C properties...
     "01 "                 // ... for 0x01 item
     "FF 23 00 "           // First ID 0x23 (extended byte)                substitute_building_id
     "08 01 "              // building_flags

@@ -24,9 +24,9 @@
 namespace{
 
 
-const EnumDescriptorT<Action07Record::Condition> desc_condition 
-{ 
-    0x00, "", 
+const EnumDescriptorT<Action07Record::Condition> desc_condition
+{
+    0x00, "",
     {
         { 0x00, "is_bit_set" },
         { 0x01, "is_bit_clear" },
@@ -47,7 +47,7 @@ const EnumDescriptorT<Action07Record::Condition> desc_condition
         { 0x10, "is_road_type_valid" },
         { 0x11, "is_tram_type_invalid" },
         { 0x12, "is_tram_type_valid" },
-    }          
+    }
 };
 
 
@@ -62,19 +62,19 @@ std::string param_description(uint8_t param)
     if (param & 0x80)
     {
         ss << str_global_var << "[" << to_hex(param) << "]";
-    }   
+    }
     else
     {
         ss << str_param << "[" << to_hex(param) << "]";
-    }    
+    }
     return ss.str();
 }
 
 
 void parse_description(uint8_t& param, TokenStream& is)
-{    
+{
     // One of param_str, str_global_var, ...
-    is.match(TokenType::Ident); 
+    is.match(TokenType::Ident);
     is.match(TokenType::OpenBracket);
     param = is.match_uint8();
     is.match(TokenType::CloseBracket);
@@ -90,7 +90,7 @@ void Action07Record::read(std::istream& is, const GRFInfo& info)
     m_varsize   = read_uint8(is);
     m_condition = static_cast<Condition>(read_uint8(is));
 
-    if ( (m_condition == Condition::BitClear) || 
+    if ( (m_condition == Condition::BitClear) ||
          (m_condition == Condition::BitSet)   )
     {
         // Always 1 for bit tests, the given value should be ignored.
@@ -120,7 +120,7 @@ void Action07Record::write(std::ostream& os, const GRFInfo& info) const
 
     switch (m_varsize)
     {
-        case 8: write_uint32(os, m_value); 
+        case 8: write_uint32(os, m_value);
                 write_uint32(os, m_mask); break;
         case 4: write_uint32(os, m_value); break;
         case 2: write_uint16(os, m_value); break;
@@ -129,7 +129,7 @@ void Action07Record::write(std::ostream& os, const GRFInfo& info) const
     }
 
     write_uint8(os, m_num_sprites);
-}  
+}
 
 
 void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
@@ -143,9 +143,9 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
         case Condition::BitSet:
         case Condition::BitClear:
             os << desc_condition.value(m_condition) << "(";
-            os << param_description(m_variable) << " & 0xFF, 1 << " << m_value << ")"; 
+            os << param_description(m_variable) << " & 0xFF, 1 << " << m_value << ")";
             break;
-        
+
         // e.g. Equal(parameter[m_variable] & m_mask, m_value)
         case Condition::Equal:
         case Condition::NotEqual:
@@ -155,13 +155,13 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
             os << param_description(m_variable) << " & ";
             switch (m_varsize)
             {
-                case 1: os << to_hex<uint8_t>(m_mask) << ", " << to_hex<uint8_t>(m_value) << ")"; break; 
-                case 2: os << to_hex<uint16_t>(m_mask) << ", " << to_hex<uint16_t>(m_value) << ")"; break; 
-                case 4: 
-                case 8: os << to_hex<uint32_t>(m_mask) << ", " << to_hex<uint32_t>(m_value) << ")"; break; 
+                case 1: os << to_hex<uint8_t>(m_mask) << ", " << to_hex<uint8_t>(m_value) << ")"; break;
+                case 2: os << to_hex<uint16_t>(m_mask) << ", " << to_hex<uint16_t>(m_value) << ")"; break;
+                case 4:
+                case 8: os << to_hex<uint32_t>(m_mask) << ", " << to_hex<uint32_t>(m_value) << ")"; break;
             }
             break;
-        
+
         // e.g. GRFActivated(m_value, m_mask) - 4-byte values
         case Condition::GRFActivated:
         case Condition::GRFNotActivated:
@@ -171,7 +171,7 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
             os << desc_condition.value(m_condition) << "(";
             os << "\"" << label.to_string() << "\", " << to_hex(m_mask) << ")";
             break;
-        
+
         // e.g. CargoTypeInvalid(m_value) - 4-byte value
         case Condition::CargoTypeInvalid:
         case Condition::CargoTypeValid:
@@ -180,22 +180,22 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
         case Condition::RoadTypeInvalid:
         case Condition::RoadTypeValid:
         case Condition::TramTypeInvalid:
-        case Condition::TramTypeValid: 
+        case Condition::TramTypeValid:
             os << desc_condition.value(m_condition) << "(";
             os << "\"" << label.to_string() << "\")";
-            break;             
+            break;
     }
 
     os << ") // Action0";
-    os << (record_type() == RecordType::ACTION_07 ? "7" : "9"); 
+    os << (record_type() == RecordType::ACTION_07 ? "7" : "9");
     os << pad(indent) << "\n{\n";
 
     os << pad(indent + 4) << str_skip_sprites << ": " << to_hex(m_num_sprites) << ";\n";
     os << pad(indent + 4) << "// Or skip to the next label (Action10) with this value - search wraps at end of GRF.\n";
-    os << pad(indent + 4) << "// 0x00 means skip to end of GRF file - may disable the GRF.\n";  
-     
+    os << pad(indent + 4) << "// 0x00 means skip to end of GRF file - may disable the GRF.\n";
+
     os << pad(indent) << "}\n";
-}    
+}
 
 
 // if_act9 (is_equal(param[0x6B] & 0xFFFFFFFF, 0x00000001)) // Action09
@@ -246,7 +246,7 @@ void Action07Record::parse(TokenStream& is, SpriteZoomMap& sprites)
             is.match(TokenType::ShiftLeft);
             m_value = is.match_uint32();
             break;
-        
+
         // e.g. Equal(parameter[m_variable] & m_mask, m_value)
         case Condition::Equal:
         case Condition::NotEqual:
@@ -258,7 +258,7 @@ void Action07Record::parse(TokenStream& is, SpriteZoomMap& sprites)
             is.match(TokenType::Comma);
             m_value = is.match_uint32();
             break;
-        
+
         // e.g. GRFActivated(m_value, m_mask) - 4-byte values
         case Condition::GRFActivated:
         case Condition::GRFNotActivated:
@@ -271,7 +271,7 @@ void Action07Record::parse(TokenStream& is, SpriteZoomMap& sprites)
             is.match(TokenType::Comma);
             m_mask = is.match_uint32();
             break;
-        
+
         // e.g. CargoTypeInvalid(m_value) - 4-byte value
         case Condition::CargoTypeInvalid:
         case Condition::CargoTypeValid:
@@ -280,20 +280,20 @@ void Action07Record::parse(TokenStream& is, SpriteZoomMap& sprites)
         case Condition::RoadTypeInvalid:
         case Condition::RoadTypeValid:
         case Condition::TramTypeInvalid:
-        case Condition::TramTypeValid: 
+        case Condition::TramTypeValid:
             label.parse(is);
             m_variable = 0x00; // Ignored
             m_value = label.value();
             m_mask = 0xFFFFFFFF;
-            break;             
+            break;
     }
 
     switch (m_mask)
     {
-        case 0x000000FF: m_varsize = 1; break; 
-        case 0x0000FFFF: m_varsize = 2; break; 
-        case 0xFFFFFFFF: m_varsize = 4; break; 
-        default:         m_varsize = 8; break; 
+        case 0x000000FF: m_varsize = 1; break;
+        case 0x0000FFFF: m_varsize = 2; break;
+        case 0xFFFFFFFF: m_varsize = 4; break;
+        default:         m_varsize = 8; break;
     }
 
     is.match(TokenType::CloseParen);
@@ -304,7 +304,7 @@ void Action07Record::parse(TokenStream& is, SpriteZoomMap& sprites)
     is.match(TokenType::Colon);
     m_num_sprites = is.match_uint8();
     is.match(TokenType::SemiColon);
-    
+
     is.match(TokenType::CloseBrace);
 
 }

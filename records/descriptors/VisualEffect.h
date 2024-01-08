@@ -22,7 +22,7 @@
 
 class VisualEffect
 {
-public:    
+public:
     enum class Type : uint8_t
     {
         Default          = 0x00,
@@ -41,16 +41,16 @@ public:
         Disable = 0x80
     };
 
-public:    
+public:
     void read(std::istream& is);
     void write(std::ostream& os) const;
-    void print(std::ostream& os) const; 
+    void print(std::ostream& os) const;
     void parse(TokenStream& is);
 
 private:
     Type       m_effect{Type::Default};
     uint8_t    m_position{};
-    WagonPower m_wagon_power{WagonPower::Enable};    
+    WagonPower m_wagon_power{WagonPower::Enable};
 };
 
 

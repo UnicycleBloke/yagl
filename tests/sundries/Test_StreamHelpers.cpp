@@ -21,7 +21,7 @@
 #include <sstream>
 
 
-TEST_CASE("Basic integer read/write tests", "[integers]") 
+TEST_CASE("Basic integer read/write tests", "[integers]")
 {
     SECTION("Byte values")
     {
@@ -41,7 +41,7 @@ TEST_CASE("Basic integer read/write tests", "[integers]")
     }
 
     SECTION("Extended byte values - always long format")
-    {    
+    {
         for (uint32_t index = 0; index <=65535; index += 5)
         {
             uint16_t value = static_cast<uint16_t>(index);
@@ -79,7 +79,7 @@ TEST_CASE("Basic integer read/write tests", "[integers]")
                 CHECK(uint8_t(str[1]) == (index & 0xFF));
                 CHECK(uint8_t(str[2]) == (index >> 8));
             }
-            
+
             std::istringstream is(str);
             value = read_uint8_ext(is);
             CHECK(value == index);
@@ -126,7 +126,7 @@ TEST_CASE("Basic integer read/write tests", "[integers]")
 }
 
 
-TEST_CASE("Template integer read/write tests", "[integers]") 
+TEST_CASE("Template integer read/write tests", "[integers]")
 {
     SECTION("Byte values")
     {
@@ -146,7 +146,7 @@ TEST_CASE("Template integer read/write tests", "[integers]")
     }
 
     SECTION("Extended byte values - always long format when using the template")
-    {    
+    {
         for (uint32_t index = 0; index <=65535; index += 5)
         {
             uint16_t value = static_cast<uint16_t>(index);
@@ -204,26 +204,26 @@ TEST_CASE("Template integer read/write tests", "[integers]")
 }
 
 
-TEST_CASE("to_hex() template", "[integers]") 
+TEST_CASE("to_hex() template", "[integers]")
 {
     SECTION("to_hex<uint8_t>")
     {
         uint8_t value = 0x13;
-        CHECK(to_hex(value) == "0x13"); 
-        CHECK(to_hex(value, false) == "13"); // No prefix 
+        CHECK(to_hex(value) == "0x13");
+        CHECK(to_hex(value, false) == "13"); // No prefix
     }
 
     SECTION("to_hex<uint16_t>")
     {
         uint16_t value = 0x1357;
-        CHECK(to_hex(value) == "0x1357"); 
-        CHECK(to_hex(value, false) == "1357"); // No prefix 
+        CHECK(to_hex(value) == "0x1357");
+        CHECK(to_hex(value, false) == "1357"); // No prefix
     }
 
     SECTION("to_hex<uint32_t>")
     {
         uint32_t value = 0x1323'4567;
-        CHECK(to_hex(value) == "0x13234567"); 
-        CHECK(to_hex(value, false) == "13234567"); // No prefix 
+        CHECK(to_hex(value) == "0x13234567");
+        CHECK(to_hex(value, false) == "13234567"); // No prefix
     }
 }

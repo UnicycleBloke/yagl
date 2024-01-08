@@ -16,14 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once 
+#pragma once
 #include "RealSpriteRecord.h"
 
 
 class SpriteSheetGenerator
 {
     public:
-        SpriteSheetGenerator(const std::map<uint32_t, SpriteZoomVector>& sprites, 
+        SpriteSheetGenerator(const std::map<uint32_t, SpriteZoomVector>& sprites,
             const std::string& base_name, GRFFormat format);
         void generate();
 
@@ -33,13 +33,13 @@ class SpriteSheetGenerator
 
         // Palette and mask are both 8bpp images. Masks are used in conjunction with 32bpp of the same size.
         // The data for a mask is contained within the RealSpriteRecord. We need to split this into two parts.
-        enum class ColourType { Palette, RGB, RGBA, Mask };        
+        enum class ColourType { Palette, RGB, RGBA, Mask };
 
         // This is needed so that we can create a map of different colour depths and zoom levels.
         // These categories will be placed into different spritesheets.
         struct Category
         {
-            ZoomLevel  zoom;     
+            ZoomLevel  zoom;
             ColourType colour;
             bool operator<(const Category& other) const
             {
@@ -56,26 +56,26 @@ class SpriteSheetGenerator
 
     private:
         void partition_sprites();
-        void partition_sprite(std::map<Category, SpriteVector>& partitions, 
+        void partition_sprite(std::map<Category, SpriteVector>& partitions,
             Category cat, RealSpriteRecord* sprite);
         void layout_sprites(Category category, SpriteVector sprites);
 
-        void create_sprite_sheet(Category category, SpriteVector sprites, 
+        void create_sprite_sheet(Category category, SpriteVector sprites,
             uint32_t index, uint32_t width, uint32_t height);
 
-        // png++ uses a template for different colour depths. This is not 
+        // png++ uses a template for different colour depths. This is not
         // dynamic polymorphism, so create methods to handle the cases we need.
-        void create_sprite_sheet_8bpp(const std::string& image_path, SpriteVector sprites, 
+        void create_sprite_sheet_8bpp(const std::string& image_path, SpriteVector sprites,
             uint32_t width, uint32_t height);
-        //void create_sprite_sheet_24bpp(const std::string& image_path, SpriteVector sprites, 
+        //void create_sprite_sheet_24bpp(const std::string& image_path, SpriteVector sprites,
         //    uint32_t width, uint32_t height);
-        void create_sprite_sheet_32bpp(const std::string& image_path, SpriteVector sprites, 
+        void create_sprite_sheet_32bpp(const std::string& image_path, SpriteVector sprites,
             uint32_t width, uint32_t height);
-        void create_sprite_sheet_mask(const std::string& image_path, SpriteVector sprites, 
+        void create_sprite_sheet_mask(const std::string& image_path, SpriteVector sprites,
             uint32_t width, uint32_t height);
 
     private:
-        const std::map<uint32_t, SpriteZoomVector>& m_sprites;            
+        const std::map<uint32_t, SpriteZoomVector>& m_sprites;
         std::string                                 m_base_name;
         GRFFormat                                   m_format;
 };

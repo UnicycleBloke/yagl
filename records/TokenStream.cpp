@@ -20,9 +20,9 @@
 #include <sstream>
 
 
-const TokenValue& TokenStream::peek(uint16_t lookahead) 
+const TokenValue& TokenStream::peek(uint16_t lookahead)
 {
-    static const TokenValue terminator{TokenType::Terminator, NumberType::None, ""}; 
+    static const TokenValue terminator{TokenType::Terminator, NumberType::None, ""};
 
     uint32_t index = m_index + lookahead;
     if (index >= static_cast<uint32_t>(m_tokens.size()))
@@ -39,7 +39,7 @@ const std::string& TokenStream::match(TokenType type)
     {
         throw PARSER_ERROR("Unexpected match token: '" + token.value + "'", token);
     }
-    ++m_index; 
+    ++m_index;
     if (token.type == TokenType::OpenBrace)
     {
         //std::cout << m_blocks << " -> " << (m_blocks + 1) << "\n";
@@ -70,7 +70,7 @@ void TokenStream::next_record()
 }
 
 
-bool TokenStream::match_ident(const std::string& value) 
+bool TokenStream::match_ident(const std::string& value)
 {
     const TokenValue& token = peek();
     if ((TokenType::Ident != token.type) || (token.value != value))
@@ -89,7 +89,7 @@ uint64_t TokenStream::match_uint64(TokenValue& token, DataType type)
     {
         match(TokenType::Number);
 
-        // The number format has already been checked during lexing, 
+        // The number format has already been checked during lexing,
         // so we can be confident that it has one of the following formats:
         // - bin: 0bBBBBBBBBB, B is a binary digit
         // - oct: 0DDDDDDDDDD, D is an octal digit
@@ -115,9 +115,9 @@ uint64_t TokenStream::match_uint64(TokenValue& token, DataType type)
 static constexpr bool is_leap_year(uint32_t year)
 {
     bool result = (year % 4) == 0;
-    if ((year % 100) == 0) 
+    if ((year % 100) == 0)
         result = false;
-    if ((year % 400) == 0) 
+    if ((year % 400) == 0)
         result = true;
     return result;
 }
@@ -131,7 +131,7 @@ static constexpr uint32_t days(uint32_t year, uint8_t month, uint8_t day)
     result += year / 4;
     result -= year / 100;
     result += year / 400;
-    
+
     // This is to match the calculation in grfcodec. I think.
     result -= 1;
 
@@ -149,8 +149,8 @@ static constexpr uint32_t days(uint32_t year, uint8_t month, uint8_t day)
         case  4: result += 31; // Mar
         case  3: result += (is_leap_year(year) ? 29 : 28); // Feb
         case  2: result += 31; // Jan
-        //case  1: result +=  0; 
-        //default: 
+        //case  1: result +=  0;
+        //default:
     }
 
     result += day;
@@ -161,7 +161,7 @@ static constexpr uint32_t days(uint32_t year, uint8_t month, uint8_t day)
 // Return the number of days since 1920/1/1.
 uint32_t TokenStream::match_date(DataType type)
 {
-    // This number was obtained from the grfcodec source. Checking here to 
+    // This number was obtained from the grfcodec source. Checking here to
     // make sure our calculation matches.
     static_assert(days(1920, 1, 1) == 701265, "");
     static constexpr uint32_t DAYS_TO_1920 = days(1920, 1, 1);
@@ -203,7 +203,7 @@ uint32_t TokenStream::match_uint32()
 {
     TokenValue token;
     uint64_t result = match_uint64(token, DataType::U32);
-    // Check for negative value by inverting all the bits. High bits are all 0 or all 1 for 
+    // Check for negative value by inverting all the bits. High bits are all 0 or all 1 for
     // numbers which are in range.
     if ((result > 0xFFFF'FFFF) && (~result > 0xFFFF'FFFF))
     {

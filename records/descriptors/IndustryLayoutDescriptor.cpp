@@ -33,13 +33,13 @@ constexpr const char* str_new_tile     = "new_tile";
 constexpr const char* str_old_tile     = "old_tile";
 
 
-const EnumDescriptorT<IndustryTile::Type> desc_type 
-{ 
-    0x03, "type", 
+const EnumDescriptorT<IndustryTile::Type> desc_type
+{
+    0x03, "type",
     {
-        { static_cast<uint8_t>(IndustryTile::Type::OldTile),   str_old_tile },       
-        { static_cast<uint8_t>(IndustryTile::Type::NewTile),   str_new_tile },  
-        { static_cast<uint8_t>(IndustryTile::Type::Clearance), str_clearance }, 
+        { static_cast<uint8_t>(IndustryTile::Type::OldTile),   str_old_tile },
+        { static_cast<uint8_t>(IndustryTile::Type::NewTile),   str_new_tile },
+        { static_cast<uint8_t>(IndustryTile::Type::Clearance), str_clearance },
     }
 };
 
@@ -61,13 +61,13 @@ bool IndustryTile::read(std::istream& is)
 {
     m_x_off = read_uint8(is);
     m_y_off = read_uint8(is);
- 
+
     // List termination.
     // Nasty! Sign extension of the signed int8 causes test against 0x80 to fail.
     if (m_x_off == 0x00 && uint8_t(m_y_off) == 0x80)
         return true;
- 
-    m_tile = read_uint8(is); 
+
+    m_tile = read_uint8(is);
     switch (m_tile)
     {
         case 0xFF:
@@ -89,7 +89,7 @@ void IndustryTile::write(std::ostream& os) const
 {
     write_uint8(os, m_x_off);
     write_uint8(os, m_y_off);
- 
+
     switch (m_type)
     {
         case Type::Clearance:
@@ -109,17 +109,17 @@ void IndustryTile::print(std::ostream& os, uint16_t indent) const
 {
     switch (m_type)
     {
-        case Type::Clearance: 
-            os << pad(indent) << str_clearance << "("; 
-            os << int16_t(m_x_off) << ", " << int16_t(m_y_off) << ");\n"; 
-            break; 
-        case Type::NewTile:   
-            os << pad(indent) << str_new_tile << "(";
-            os << int16_t(m_x_off) << ", " << int16_t(m_y_off) << ", " << to_hex(m_tile) << ");\n"; 
+        case Type::Clearance:
+            os << pad(indent) << str_clearance << "(";
+            os << int16_t(m_x_off) << ", " << int16_t(m_y_off) << ");\n";
             break;
-        case Type::OldTile:          
+        case Type::NewTile:
+            os << pad(indent) << str_new_tile << "(";
+            os << int16_t(m_x_off) << ", " << int16_t(m_y_off) << ", " << to_hex(m_tile) << ");\n";
+            break;
+        case Type::OldTile:
             os << pad(indent) << str_old_tile << "(";
-            os << int16_t(m_x_off) << ", " << int16_t(m_y_off) << ", " << to_hex(m_tile) << ");\n"; 
+            os << int16_t(m_x_off) << ", " << int16_t(m_y_off) << ", " << to_hex(m_tile) << ");\n";
             break;
     }
 }
@@ -133,18 +133,18 @@ void IndustryTile::parse(TokenStream& is)
     switch (m_type)
     {
         case Type::Clearance:
-            m_x_off = is.match_uint8(); 
+            m_x_off = is.match_uint8();
             is.match(TokenType::Comma);
-            m_y_off = is.match_uint8(); 
+            m_y_off = is.match_uint8();
             break;
 
-        case Type::NewTile:   
-        case Type::OldTile:          
-            m_x_off = is.match_uint8(); 
+        case Type::NewTile:
+        case Type::OldTile:
+            m_x_off = is.match_uint8();
             is.match(TokenType::Comma);
-            m_y_off = is.match_uint8(); 
+            m_y_off = is.match_uint8();
             is.match(TokenType::Comma);
-            m_tile = is.match_uint16(); 
+            m_tile = is.match_uint16();
             break;
     }
 
@@ -208,15 +208,15 @@ void IndustryLayout::print(std::ostream& os, uint16_t indent) const
     }
     else
     {
-        os << pad(indent) << str_layout << "\n"; 
-        os << pad(indent) << "{\n"; 
+        os << pad(indent) << str_layout << "\n";
+        os << pad(indent) << "{\n";
 
         for (const auto& tile: m_tiles)
         {
             tile.print(os, indent + 4);
         }
 
-        os << pad(indent) << "}\n"; 
+        os << pad(indent) << "}\n";
     }
 }
 
@@ -231,7 +231,7 @@ void IndustryLayout::parse(TokenStream& is)
         uint16_t index = it->second;
         switch (index)
         {
-            case 0x01: 
+            case 0x01:
                 m_is_reference = true;
                 is.match(TokenType::OpenParen);
                 m_industry_num = is.match_uint8();
@@ -240,8 +240,8 @@ void IndustryLayout::parse(TokenStream& is)
                 is.match(TokenType::CloseParen);
                 is.match(TokenType::SemiColon);
                 break;
-            
-            case 0x02: 
+
+            case 0x02:
                 m_is_reference = false;
                 is.match(TokenType::OpenBrace);
                 while (is.peek().type != TokenType::CloseBrace)
@@ -252,8 +252,8 @@ void IndustryLayout::parse(TokenStream& is)
                 }
                 is.match(TokenType::CloseBrace);
                 break;
-            
-            default:   
+
+            default:
                 throw RUNTIME_ERROR("Unknown layout type");
         }
     }
@@ -281,14 +281,14 @@ void IndustryLayouts::write(std::ostream& os) const
 {
     write_uint8(os, uint8_t(m_layouts.size()));
 
-    // Size needs to be calculated... 
+    // Size needs to be calculated...
     std::ostringstream ss;
     for (const auto& layout: m_layouts)
     {
         layout.write(ss);
     }
     write_uint32(os, uint32_t(ss.str().length()));
-    
+
     for (const auto& layout: m_layouts)
     {
         layout.write(os);
@@ -298,13 +298,13 @@ void IndustryLayouts::write(std::ostream& os) const
 
 void IndustryLayouts::print(std::ostream& os, uint16_t indent) const
 {
-    os << "\n" << pad(indent) << "{\n"; 
+    os << "\n" << pad(indent) << "{\n";
     for (const auto& layout: m_layouts)
     {
         layout.print(os, indent + 4);
     }
 
-    os << pad(indent) << "}"; 
+    os << pad(indent) << "}";
 }
 
 

@@ -104,9 +104,9 @@ void Action14Record::write_chunks(std::ostream& os, const std::vector<Chunk>& ch
 void Action14Record::write(std::ostream& os, const GRFInfo& info) const
 {
     ActionRecord::write(os, info);
-    
+
     write_chunks(os, m_chunks);
-}  
+}
 
 
 void Action14Record::print_chunks(std::ostream& os, const std::vector<Chunk>& chunks, uint16_t indent) const
@@ -146,7 +146,7 @@ void Action14Record::print_chunks(std::ostream& os, const std::vector<Chunk>& ch
 
 // optional_info // Action14
 // {
-//     INFO: 
+//     INFO:
 //     {
 //         NPAR: [ 0x01 ];
 //         NAME: default, "NewStations v0.6 14.08.2014"; // Default
@@ -155,7 +155,7 @@ void Action14Record::print_chunks(std::ostream& os, const std::vector<Chunk>& ch
 //         PALS: [ 0x44 ];
 //         VRSN: [ 0x03 0x00 0x00 0x00 ];
 //         MINV: [ 0x00 0x00 0x00 0x00 ];
-//         PARA: 
+//         PARA:
 //         {
 //             0x00000000: // Index instead of GRF label
 //             {
@@ -164,11 +164,11 @@ void Action14Record::print_chunks(std::ostream& os, const std::vector<Chunk>& ch
 //                 NAME: default, "No green glass"; // Default
 //                 NAME: de_DE, "ÞKein grünes Glas"; // German
 //                 NAME: fr_FR, "ÞPas de verre teinté vert"; // French
-//                 ... // More languages 
+//                 ... // More languages
 //                 DESC: default, "{lt-gray}Disables the tinted green glass for modern roofed platforms."; // Default
 //                 DESC: de_DE, "Þ{lt-gray}Grünes Glas für die modernen überdachten Bahnsteige wird deaktiviert."; // German
 //                 DESC: fr_FR, "Þ{lt-gray}Désactive le verre teinté vert pour les quais modernes couvertes."; // French
-//                 ... // More languages 
+//                 ... // More languages
 //             }
 //         }
 //     }
@@ -186,8 +186,8 @@ void Action14Record::parse_chunks(TokenStream& is, std::vector<Chunk>& chunks)
         // Read the GRFLabel
         chunk.label.parse(is);
         is.match(TokenType::Colon);
- 
-        const TokenValue& token = is.peek();   
+
+        const TokenValue& token = is.peek();
         switch(token.type)
         {
             case TokenType::OpenBrace:

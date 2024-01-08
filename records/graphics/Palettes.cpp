@@ -21,17 +21,17 @@
 
 // Credit: the following palette data was copied directly from the NML code.
 // NML is released under GNU General Public License version 2.
-// 
-// In all cases, 
+//
+// In all cases,
 // the RGB values at index 0x0F are {252, 252, 252} = {0xFC, 0xFC, 0xFC}, and
 // the RGB values at index 0xFF are {255, 255, 255} = {0xFF, 0xFF, 0xFF}.
-// 
+//
 // Images should not use the colour 0xFF, but should use 0x0F instead. Sprite
 // sheets have a background of 0xFF. This allows grfcodes, and now yagl, to
 // detect when the rectangles for sprites are not places correctly.
 
 // DOS palette - R, G, B values
-static const PaletteArray dos_palette = 
+static const PaletteArray dos_palette =
 {
      0,   0, 255,     16,  16,  16,     32,  32,  32,     48,  48,  48,
     64,  64,  64,     80,  80,  80,    100, 100, 100,    116, 116, 116,
@@ -116,7 +116,7 @@ static const PaletteArray dos_palette =
 
 
 // Windows palette - R, G, B values
-static const PaletteArray windows_palette = 
+static const PaletteArray windows_palette =
 {
      0,   0, 255,    238,   0, 238,    239,   0, 239,    240,   0, 240,
    241,   0, 241,    242,   0, 242,    243,   0, 243,    244,   0, 244,
@@ -201,7 +201,7 @@ static const PaletteArray windows_palette =
 
 
 // DOS Toyland palette - R, G, B values
-static const PaletteArray dos_toyland_palette = 
+static const PaletteArray dos_toyland_palette =
 {
       0,   0, 255,     16,  16,  16,     32,  32,  32,     48,  48,  48,
      64,  64,  64,     80,  80,  80,    100, 100, 100,    116, 116, 116,
@@ -286,7 +286,7 @@ static const PaletteArray dos_toyland_palette =
 
 
 // Windows Toyland palette - R, G, B values
-static const PaletteArray windows_toyland_palette = 
+static const PaletteArray windows_toyland_palette =
 {
       0, 255, 255,    238,   0, 238,    239,   0, 239,    240,   0, 240,
     241,   0, 241,    242,   0, 242,    243,   0, 243,    244,   0, 244,
@@ -373,8 +373,8 @@ static const PaletteArray windows_toyland_palette =
 const PaletteArray& get_palette_data(PaletteType type)
 {
     switch (type)
-    {   
-        case PaletteType::Default:     
+    {
+        case PaletteType::Default:
         case PaletteType::DOS:            return dos_palette;
         case PaletteType::Windows:        return windows_palette;
         case PaletteType::DOSToyland:     return dos_toyland_palette;

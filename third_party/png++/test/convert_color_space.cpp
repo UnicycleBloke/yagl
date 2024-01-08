@@ -62,7 +62,7 @@ try
         print_usage();
         return EXIT_FAILURE;
     }
-    
+
     char const* space = argv[1];
     int bits = atoi(argv[2]);
     char const* buffer_type = argv[3];
@@ -112,13 +112,13 @@ try
         if (bits == 16)
         {
             png::ga_pixel_16 ga(1); // test alpha_pixel_traits
-            
+
             convert_image< png::ga_pixel_16 >(buffer_type, infile, outfile);
         }
         else
         {
             png::ga_pixel ga(1); // test alpha_pixel_traits
-            
+
             convert_image< png::ga_pixel >(buffer_type, infile, outfile);
         }
     }

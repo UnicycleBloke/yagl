@@ -17,7 +17,7 @@
 #// along with yagl. If not, see <https://www.gnu.org/licenses/>.
 #///////////////////////////////////////////////////////////////////////////////
 
-cmake_minimum_required(VERSION 3.10) 
+cmake_minimum_required(VERSION 3.10)
 
 
 set (CMAKE_CXX_STANDARD 17)
@@ -30,7 +30,7 @@ project(yagl LANGUAGES CXX)
 add_library(yagl_lib STATIC
     application/CommandLineOptions.cpp
 
-    # Top level data structure representing all the data in a GRF file. 
+    # Top level data structure representing all the data in a GRF file.
     records/NewGRFData.cpp
     # Base class for all types of record in a GRF file.
     records/Record.cpp
@@ -68,7 +68,7 @@ add_library(yagl_lib STATIC
     records/actions/ActionFERecord.cpp # Imported sound effects
     records/actions/ActionFFRecord.cpp # Binary sound effects
 
-    # Descriptors used to print and parse feature properties (Action00). 
+    # Descriptors used to print and parse feature properties (Action00).
     records/descriptors/DescriptorBase.cpp
     records/descriptors/BitfieldDescriptor.cpp
     records/descriptors/EnumDescriptor.cpp
@@ -121,12 +121,12 @@ add_library(yagl_lib STATIC
 )
 
 
-add_executable(yagl 
+add_executable(yagl
     application/main.cpp
 )
 
 
-add_executable(yagl_tests 
+add_executable(yagl_tests
     third_party/catch2/catch_amalgamated.cpp
 
     # Unit test.
@@ -160,29 +160,29 @@ add_executable(yagl_tests
     # Other ActionXX records.
     tests/actions/Test_Action01Record.cpp             # Define sprites
     tests/actions/Test_Action02BasicRecord.cpp        # Define graphics
-    tests/actions/Test_Action02RandomRecord.cpp        
-    tests/actions/Test_Action02VariableRecord.cpp      
-    tests/actions/Test_Action02IndustryRecord.cpp      
-    tests/actions/Test_Action02SpriteLayoutRecord.cpp  
+    tests/actions/Test_Action02RandomRecord.cpp
+    tests/actions/Test_Action02VariableRecord.cpp
+    tests/actions/Test_Action02IndustryRecord.cpp
+    tests/actions/Test_Action02SpriteLayoutRecord.cpp
     tests/actions/Test_Action03Record.cpp             # Assign graphics
     tests/actions/Test_Action04Record.cpp             # Strings
     tests/actions/Test_Action05Record.cpp             # Sprites
     tests/actions/Test_Action06Record.cpp             # Modify next
     tests/actions/Test_Action07Record.cpp             # Skip records
     tests/actions/Test_Action08Record.cpp             # GRF identification
-    tests/actions/Test_Action0ARecord.cpp              
-    tests/actions/Test_Action0BRecord.cpp              
-    tests/actions/Test_Action0CRecord.cpp              
+    tests/actions/Test_Action0ARecord.cpp
+    tests/actions/Test_Action0BRecord.cpp
+    tests/actions/Test_Action0CRecord.cpp
     tests/actions/Test_Action0DRecord.cpp             # Set parameters
-    tests/actions/Test_Action0ERecord.cpp              
-    tests/actions/Test_Action0FRecord.cpp              
-    tests/actions/Test_Action10Record.cpp              
-    tests/actions/Test_Action11Record.cpp              
-    tests/actions/Test_Action12Record.cpp              
-    tests/actions/Test_Action13Record.cpp              
-    tests/actions/Test_Action14Record.cpp              
-    tests/actions/Test_ActionFERecord.cpp              
-    tests/actions/Test_ActionFFRecord.cpp              
+    tests/actions/Test_Action0ERecord.cpp
+    tests/actions/Test_Action0FRecord.cpp
+    tests/actions/Test_Action10Record.cpp
+    tests/actions/Test_Action11Record.cpp
+    tests/actions/Test_Action12Record.cpp
+    tests/actions/Test_Action13Record.cpp
+    tests/actions/Test_Action14Record.cpp
+    tests/actions/Test_ActionFERecord.cpp
+    tests/actions/Test_ActionFFRecord.cpp
 )
 
 
@@ -198,19 +198,19 @@ add_custom_target(
 add_dependencies(yagl prebuild_commands)
 
 
-target_include_directories(yagl_lib PUBLIC 
+target_include_directories(yagl_lib PUBLIC
     .
     records
-    records/actions 
-    records/descriptors 
+    records/actions
+    records/descriptors
     records/graphics
     records/features
     utility
     application
     tests
 
-    # Header only third party libraries used for convenience. 
-    third_party/catch2  
+    # Header only third party libraries used for convenience.
+    third_party/catch2
     third_party/png++
     third_party/cxxopts/include
 )
@@ -219,23 +219,23 @@ target_include_directories(yagl_lib PUBLIC
 if (UNIX)
     # Builds on UNIX-like systems: Linux, MSYS2, Windows Subsystem for Linux, ...
     # We assume GCC is used for the build
-    target_link_libraries(yagl PUBLIC yagl_lib png stdc++fs) 
-    target_link_libraries(yagl_tests PUBLIC yagl_lib png stdc++fs) 
-    target_link_libraries(yagl_lib PUBLIC png stdc++fs) 
+    target_link_libraries(yagl PUBLIC yagl_lib png stdc++fs)
+    target_link_libraries(yagl_tests PUBLIC yagl_lib png stdc++fs)
+    target_link_libraries(yagl_lib PUBLIC png stdc++fs)
 else()
     # Microsoft Visual Studio 2019 (2017 didn't work so well due to some of the C++17 features in the code).
     # Code be fixed with a bit off faff. Or just install VS2019. :)
     target_link_libraries(yagl PUBLIC yagl_lib libpng16 zlib)
     target_link_libraries(yagl_tests PUBLIC yagl_lib libpng16 zlib)
 
-    # Is there a nicer, more automatic, way to generalise the location of vcpkg? 
+    # Is there a nicer, more automatic, way to generalise the location of vcpkg?
     # Here we expect -DVCPKG_DIR=<dir> to be given on the cmake command line.
     if (NOT EXISTS ${VCPKG_DIR})
         message(FATAL_ERROR "ERROR: The directory given by VCPKG_DIR does not exist - specify with -DVCPKG_DIR=<dir>")
-    endif()    
-    target_link_directories(yagl_lib PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/lib) 
+    endif()
+    target_link_directories(yagl_lib PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/lib)
     target_include_directories(yagl_lib PUBLIC ${VCPKG_DIR}/installed/x64-windows-static/include)
-    
-    # Prevent the compiler whining about this deprecated feature used in the GRFStrings stuff.    
+
+    # Prevent the compiler whining about this deprecated feature used in the GRFStrings stuff.
     add_compile_definitions(_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING)
 endif()

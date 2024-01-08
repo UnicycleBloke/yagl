@@ -40,7 +40,7 @@ static constexpr const char* str_YAGL =
     "    import(\"GRFx\", 0x0002);\n"
     "}\n";
 
-    static constexpr const char* str_NFO = 
+    static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "11 "     // Action11
     "06 00 "; // 6 items

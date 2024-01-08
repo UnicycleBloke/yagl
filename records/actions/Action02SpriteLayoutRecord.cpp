@@ -27,7 +27,7 @@ void Action02SpriteLayoutRecord::SpriteRegisters::read(std::istream& is, bool is
     if (flags & BIT0_SKIP_SPRITE)     skip_sprite     = read_uint8(is);
     if (flags & BIT1_SPRITE_OFFSET)   sprite_offset   = read_uint8(is);
     if (flags & BIT2_RECOLOUR_OFFSET) recolour_offset = read_uint8(is);
-    
+
     if (is_parent)
     {
         if (flags & BIT4_BB_XY_OFFSET) offset_x = read_uint8(is);
@@ -50,7 +50,7 @@ void Action02SpriteLayoutRecord::SpriteRegisters::write(std::ostream& os, bool i
     if (flags & BIT0_SKIP_SPRITE)       write_uint8(os, skip_sprite);
     if (flags & BIT1_SPRITE_OFFSET)     write_uint8(os, sprite_offset);
     if (flags & BIT2_RECOLOUR_OFFSET)   write_uint8(os, recolour_offset);
-    
+
     if (is_parent)
     {
         if (flags & BIT4_BB_XY_OFFSET) write_uint8(os, offset_x);
@@ -71,15 +71,15 @@ void Action02SpriteLayoutRecord::SpriteRegisters::write(std::ostream& os, bool i
 namespace {
 
 
-constexpr const char* str_registers       = "registers";   
-constexpr const char* str_hide_sprite     = "hide_sprite";   
-constexpr const char* str_sprite_offset   = "sprite_offset"; 
+constexpr const char* str_registers       = "registers";
+constexpr const char* str_hide_sprite     = "hide_sprite";
+constexpr const char* str_sprite_offset   = "sprite_offset";
 constexpr const char* str_palette_offset  = "palette_offset";
 constexpr const char* str_palette_act01   = "palette_act01";
 constexpr const char* str_offset_x        = "offset_x";
 constexpr const char* str_offset_y        = "offset_y";
 constexpr const char* str_offset_z        = "offset_z";
-constexpr const char* str_sprite_var10    = "sprite_var10"; 
+constexpr const char* str_sprite_var10    = "sprite_var10";
 constexpr const char* str_palette_var10   = "palette_var10";
 constexpr const char* str_ground_sprite   = "ground_sprite";
 constexpr const char* str_building_sprite = "building_sprite";
@@ -150,7 +150,7 @@ void Action02SpriteLayoutRecord::SpriteRegisters::print(std::ostream& os, bool i
             bool flag = true;
             desc_palette_act01.print(flag, os, indent + 4);
         }
-        
+
         if (is_parent)
         {
             if (flags & BIT4_BB_XY_OFFSET) desc_offset_x.print(offset_x, os, indent + 4);
@@ -186,42 +186,42 @@ void Action02SpriteLayoutRecord::SpriteRegisters::parse(TokenStream& is, bool is
             bool flag = false;
             switch (it->second)
             {
-                case 0x00: 
+                case 0x00:
                     desc_hide_sprite.parse(skip_sprite, is);
-                    flags |= BIT0_SKIP_SPRITE; 
-                    break;                   
-                case 0x01: 
-                    desc_sprite_offset.parse(sprite_offset, is); 
-                    flags |= BIT1_SPRITE_OFFSET; 
-                    break; 
-                case 0x02: 
-                    desc_palette_offset.parse(recolour_offset, is); 
-                    flags |= BIT2_RECOLOUR_OFFSET; 
+                    flags |= BIT0_SKIP_SPRITE;
                     break;
-                case 0x03: 
-                    desc_palette_act01.parse(flag, is); 
-                    flags |= BIT3_RECOLOUR_ACT01; 
+                case 0x01:
+                    desc_sprite_offset.parse(sprite_offset, is);
+                    flags |= BIT1_SPRITE_OFFSET;
                     break;
-                case 0x04: 
-                    desc_offset_x.parse(offset_x, is); 
-                    flags |= BIT4_BB_XY_OFFSET; 
-                    break;      
-                case 0x05: 
-                    desc_offset_y.parse(offset_y, is); 
-                    flags |= (is_parent ? BIT4_BB_XY_OFFSET : BIT5_CHILD_Y_OFFSET); 
-                    break;      
-                case 0x06: 
-                    desc_offset_z.parse(offset_z, is); 
-                    flags |= BIT5_BB_Z_OFFSET; 
-                    break;      
-                case 0x07: 
-                    desc_sprite_var10.parse(sprite_var10, is); 
-                    flags |= BIT6_SPRITE_VAR10; 
-                    break;  
-                case 0x08: 
-                    desc_palette_var10.parse(recolour_var10, is); 
-                    flags |= BIT7_RECOLOUR_VAR10; 
-                    break; 
+                case 0x02:
+                    desc_palette_offset.parse(recolour_offset, is);
+                    flags |= BIT2_RECOLOUR_OFFSET;
+                    break;
+                case 0x03:
+                    desc_palette_act01.parse(flag, is);
+                    flags |= BIT3_RECOLOUR_ACT01;
+                    break;
+                case 0x04:
+                    desc_offset_x.parse(offset_x, is);
+                    flags |= BIT4_BB_XY_OFFSET;
+                    break;
+                case 0x05:
+                    desc_offset_y.parse(offset_y, is);
+                    flags |= (is_parent ? BIT4_BB_XY_OFFSET : BIT5_CHILD_Y_OFFSET);
+                    break;
+                case 0x06:
+                    desc_offset_z.parse(offset_z, is);
+                    flags |= BIT5_BB_Z_OFFSET;
+                    break;
+                case 0x07:
+                    desc_sprite_var10.parse(sprite_var10, is);
+                    flags |= BIT6_SPRITE_VAR10;
+                    break;
+                case 0x08:
+                    desc_palette_var10.parse(recolour_var10, is);
+                    flags |= BIT7_RECOLOUR_VAR10;
+                    break;
             }
 
             is.match(TokenType::SemiColon);
@@ -240,10 +240,10 @@ void Action02SpriteLayoutRecord::read(std::istream& is, const GRFInfo& info)
 {
     m_feature = static_cast<FeatureType>(read_uint8(is));
     m_set_id  = read_uint8(is);
-    
+
     // This will be zero for the basic format - meaning only one building sprite.
-    // If the value has bit 6 (0x40) set, it is advanced format rather than 
-    // extended format. Presumably byte read will be 0x41 rather 0x40 for a single 
+    // If the value has bit 6 (0x40) set, it is advanced format rather than
+    // extended format. Presumably byte read will be 0x41 rather 0x40 for a single
     // building sprite.
     uint8_t num_sprites = read_uint8(is);
     m_format = Format::Basic;
@@ -384,7 +384,7 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
             }
         }
     }
-}  
+}
 
 
 void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
@@ -458,7 +458,7 @@ void Action02SpriteLayoutRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 
     if ((m_format == Format::Basic) && (m_building_sprites.size() > 1))
     {
-        m_format = Format::Extended; 
+        m_format = Format::Extended;
     }
 }
 
@@ -482,12 +482,12 @@ void Action02SpriteLayoutRecord::parse_ground_sprite(TokenStream& is)
 
             switch (it->second)
             {
-                case 0x03: 
-                    m_ground_regs.parse(is, true); // parent 
+                case 0x03:
+                    m_ground_regs.parse(is, true); // parent
                     m_format = (m_ground_regs.flags != 0x00) ? Format::Advanced : m_format;
                     break;
 
-                default:   
+                default:
                     throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
             }
         }
@@ -521,7 +521,7 @@ void Action02SpriteLayoutRecord::parse_building_sprite(TokenStream& is)
 
             switch (it->second)
             {
-                case 0x01: 
+                case 0x01:
                     sprite.xofs = is.match_uint8();
                     is.match(TokenType::Comma);
                     sprite.yofs = is.match_uint8();
@@ -530,7 +530,7 @@ void Action02SpriteLayoutRecord::parse_building_sprite(TokenStream& is)
                     is.match(TokenType::SemiColon);
                     break; // offset
 
-                case 0x02: 
+                case 0x02:
                     sprite.xext = is.match_uint8();
                     is.match(TokenType::Comma);
                     sprite.yext = is.match_uint8();
@@ -539,12 +539,12 @@ void Action02SpriteLayoutRecord::parse_building_sprite(TokenStream& is)
                     is.match(TokenType::SemiColon);
                     break; // extent
 
-                case 0x03: 
+                case 0x03:
                     sprite.regs.parse(is, true); // Parent
                     m_format = (sprite.regs.flags != 0x00) ? Format::Advanced : m_format;
                     break;
 
-                default: 
+                default:
                     throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
             }
         }
@@ -580,19 +580,19 @@ void Action02SpriteLayoutRecord::parse_child_sprite(TokenStream& is)
 
             switch (it->second)
             {
-                case 0x01: 
+                case 0x01:
                     sprite.xofs = is.match_uint8();
                     is.match(TokenType::Comma);
                     sprite.yofs = is.match_uint8();
                     is.match(TokenType::SemiColon);
                     break; // offset
 
-                case 0x03: 
+                case 0x03:
                     sprite.regs.parse(is, false); // Not a parent
                     m_format = (sprite.regs.flags != 0x00) ? Format::Advanced : m_format;
                     break;
 
-                default: 
+                default:
                     throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
             }
         }

@@ -25,7 +25,7 @@ namespace {
 
 static constexpr const char* str_YAGL7 =
 // param[0x6C] & <mask> 0xFF, 0xFFFF, 0xFFFF'FFFF or custom
-"if_act7 (is_bit_set(param[0x6C] & 0xFF, 1 << 0)) // Action07\n" 
+"if_act7 (is_bit_set(param[0x6C] & 0xFF, 1 << 0)) // Action07\n"
 "{\n"
 "    skip_sprites: 0x01;\n"
 "    // Or skip to the next label (Action10) with this value - search wraps at end of GRF.\n"
@@ -45,7 +45,7 @@ static constexpr const char* str_NFO7 =
 
 static constexpr const char* str_YAGL9 =
 // param[0x6C] & <mask> 0xFF, 0xFFFF, 0xFFFF'FFFF or custom
-"if_act9 (is_bit_set(param[0x6C] & 0xFF, 1 << 0)) // Action09\n" 
+"if_act9 (is_bit_set(param[0x6C] & 0xFF, 1 << 0)) // Action09\n"
 "{\n"
 "    skip_sprites: 0x01;\n"
 "    // Or skip to the next label (Action10) with this value - search wraps at end of GRF.\n"
@@ -68,7 +68,7 @@ static constexpr const char* str_NFO9 =
 template <RecordType TYPE, uint8_t ACTION>
 void test_yagl_action07(const char* YAGL, const char* NFO)
 {
-    SpriteZoomMap sprites; 
+    SpriteZoomMap sprites;
 
     // Confirm that we print what we parse.
     // The sample is in the expected format.
@@ -90,7 +90,7 @@ void test_yagl_action07(const char* YAGL, const char* NFO)
     CHECK(str.size() == (std::strlen(NFO) / 3));
     CHECK(hex_dump(str) == NFO);
 
-    // Confirm that reading the binary and printing the 
+    // Confirm that reading the binary and printing the
     // result gets us back to the example.
     std::istringstream is2(str);
     CHECK(uint8_t(is2.get()) == ACTION);

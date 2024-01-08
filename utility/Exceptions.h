@@ -23,7 +23,7 @@
 
 
 // Exception used during lexing to indicate where in the input stream the error occurred.
-class LexerError : public std::runtime_error 
+class LexerError : public std::runtime_error
 {
 public:
     explicit LexerError(const std::string& what_arg, uint32_t line, uint32_t column, const char* file, uint32_t line2);
@@ -31,7 +31,7 @@ public:
 
     const char* what() const noexcept { return m_what.c_str(); }
 
-private:    
+private:
     std::string m_what;
 };
 #define LEXER_ERROR(what, line, column) LexerError(what, line, column, __FILE__, __LINE__)
@@ -39,7 +39,7 @@ private:
 
 // Exception used during parsing to indicates where in the original input the error occured.
 struct TokenValue;
-class ParserError : public std::runtime_error 
+class ParserError : public std::runtime_error
 {
 public:
     explicit ParserError(const std::string& what_arg, const TokenValue& token, const char* file, uint32_t line);
@@ -47,13 +47,13 @@ public:
 
     const char* what() const noexcept { return m_what.c_str(); }
 
-private:    
+private:
     std::string m_what;
 };
 #define PARSER_ERROR(what, token) ParserError(what, token, __FILE__, __LINE__)
 
 
-class RuntimeError : public std::runtime_error 
+class RuntimeError : public std::runtime_error
 {
 public:
     explicit RuntimeError(const std::string& what_arg, const char* file, uint32_t line);
@@ -61,13 +61,13 @@ public:
 
     const char* what() const noexcept { return m_what.c_str(); }
 
-private:    
+private:
     std::string m_what;
 };
 #define RUNTIME_ERROR(what) RuntimeError(what, __FILE__, __LINE__)
 #define RUNTIME_TEST(cond, what) if (!(cond)) { throw RUNTIME_ERROR(what); } else {}
 
-class PropertyError : public std::runtime_error 
+class PropertyError : public std::runtime_error
 {
 public:
     explicit PropertyError(const std::string& what_arg, uint8_t property, const char* file, uint32_t line);
@@ -75,7 +75,7 @@ public:
 
     const char* what() const noexcept { return m_what.c_str(); }
 
-private:    
+private:
     std::string m_what;
 };
 #define PROPERTY_ERROR(what, property) PropertyError(what, property, __FILE__, __LINE__)

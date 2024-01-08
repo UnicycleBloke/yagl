@@ -23,7 +23,7 @@
 
 namespace {
 
-// Add all properties, even with silly values, so that we can confirm the 
+// Add all properties, even with silly values, so that we can confirm the
 // formatting of each one if they are individually changed.
 static constexpr const char* str_YAGL =
     "properties<Vehicles, 0x0023> // Action00\n"

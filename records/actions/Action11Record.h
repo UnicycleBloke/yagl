@@ -20,7 +20,7 @@
 #include "Record.h"
 
 
-// This is a container for binaries - WAV files. It can also contain non-binaries which refer to 
+// This is a container for binaries - WAV files. It can also contain non-binaries which refer to
 // binaries in this or other GRFs. Binaries are captured in ActionFF. Binary references in ActionFE.
 class Action11Record : public ContainerRecord
 {
@@ -37,7 +37,7 @@ public:
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
-    // This is the number of real sprites records (or references) we expect to 
+    // This is the number of real sprites records (or references) we expect to
     // follow immediately after this record in the file.
     uint16_t num_sprites_to_read() const override { return m_num_binaries; }
 

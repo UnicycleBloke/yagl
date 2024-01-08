@@ -27,7 +27,7 @@ Date<T> increment(const Date<T>& date)
 {
     uint32_t year  = date.year();
     uint8_t  month = date.month();
-    uint8_t  day   = date.day();  
+    uint8_t  day   = date.day();
 
     ++day;
     if (day > days_in_month(year, month))
@@ -80,7 +80,7 @@ TEST_CASE("Long and short dates", "[integers]")
         for (uint32_t days = 0; days < days_max; ++days)
         {
             CHECK(date3.days() == days);
-            date3 = increment(date3);   
+            date3 = increment(date3);
         }
     }
 
@@ -117,7 +117,7 @@ TEST_CASE("Long and short dates", "[integers]")
         for (uint32_t days = 0; days < days_max; ++days)
         {
             CHECK(date3.days() == days);
-            date3 = increment(date3);   
+            date3 = increment(date3);
         }
     }
 }

@@ -23,9 +23,9 @@
 
 // Assign parameters and calculate results.
 
-// Action D allows you to set the value of grf 
-// parameter (i.e. those usually set as options in 
-// the newgrf(w).cfg file), as well as do math on them. 
+// Action D allows you to set the value of grf
+// parameter (i.e. those usually set as options in
+// the newgrf(w).cfg file), as well as do math on them.
 
 class Action0DRecord : public ActionRecord
 {
@@ -37,7 +37,7 @@ public:
 
     // Binary serialisation
     void read(std::istream& is, const GRFInfo& info) override;
-    void write(std::ostream& os, const GRFInfo& info) const override; 
+    void write(std::ostream& os, const GRFInfo& info) const override;
     // Text serialisation
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
@@ -47,10 +47,10 @@ public:
 public:
     enum class Operation : uint8_t
     {
-        Assignment              = 0x00,	
+        Assignment              = 0x00,
         Addition 	            = 0x01,
         Subtraction 	        = 0x02,
-        MultiplyUnsigned        = 0x03,	
+        MultiplyUnsigned        = 0x03,
         MultiplySigned          = 0x04,
         BitShiftUnsigned        = 0x05,
         BitShiftSigned 	        = 0x06,
@@ -60,7 +60,7 @@ public:
         DivideSigned 	        = 0x0A,
         ModuloUnsigned 	        = 0x0B,
         ModuloSigned 	        = 0x0C
-    }; 
+    };
 
     enum class GRMOperator : uint8_t
     {
@@ -85,9 +85,9 @@ public:
 
     enum class Type : uint8_t
     {
-        Param,     // Normal parameter operations 
-        Patch,     // Assignment from patch variables 
-        Resources, // GRF resource management 
+        Param,     // Normal parameter operations
+        Patch,     // Assignment from patch variables
+        Resources, // GRF resource management
         OtherGRF   // Assignment from other GRF variables
     };
 
@@ -107,37 +107,37 @@ private:
 
 private:
     // target, source1, source2
-    // These bytes specify the target parameter and source parameters. 
-    // They can either be simply the numbers of grf parameters, or they 
-    // can be a global variable. 
-    
-    // If either source1 or source2 is FF, the value from <data> is used 
+    // These bytes specify the target parameter and source parameters.
+    // They can either be simply the numbers of grf parameters, or they
+    // can be a global variable.
+
+    // If either source1 or source2 is FF, the value from <data> is used
     // instead of a parameter value.
-    
-    // If <source2> is FE, then this action D will perform one of the 
-    // following (see wiki) special variable accesses. In this case, <operation> 
-    // must be assignment and <data> is an argument to the data access, not a 
-    // source value. 
+
+    // If <source2> is FE, then this action D will perform one of the
+    // following (see wiki) special variable accesses. In this case, <operation>
+    // must be assignment and <data> is an argument to the data access, not a
+    // source value.
     // - Read parameters of another GRF
     // - Read game configuration settings
-    // - Reserve GRF resources to prevent conflicts with other GRFs   
+    // - Reserve GRF resources to prevent conflicts with other GRFs
 
     // operation
-    // You can add 0x80 to the operation number to make it apply only if the target 
-    // is not defined yet. In this respect, a parameter is taken to be defined if 
+    // You can add 0x80 to the operation number to make it apply only if the target
+    // is not defined yet. In this respect, a parameter is taken to be defined if
     // any of the following applies:
     // - it has been set to any value in the newgrf(w).cfg parameter list
-    // - it or a parameter with higher number has been set to any value by an earlier 
+    // - it or a parameter with higher number has been set to any value by an earlier
     //   action D
-    // If, for example, parameters 0 and 1 are set in the newgrf(w).cfg file, and 
-    // action D sets parameter 4, then parameters 2 and 3 automatically become defined 
-    // and get a value of zero.  
+    // If, for example, parameters 0 and 1 are set in the newgrf(w).cfg file, and
+    // action D sets parameter 4, then parameters 2 and 3 automatically become defined
+    // and get a value of zero.
 
-    uint8_t   m_target = 0;                        // Target parameter 
+    uint8_t   m_target = 0;                        // Target parameter
     Operation m_operation = Operation::Assignment; // Calculation to carry out - see wiki
-    bool      m_not_if_defined = 0;                // Apply operation only if parameter undefined 
-    uint8_t   m_source1 = 0;                       // First argument 
-    uint8_t   m_source2 = 0;                       // Second argument 
+    bool      m_not_if_defined = 0;                // Apply operation only if parameter undefined
+    uint8_t   m_source1 = 0;                       // First argument
+    uint8_t   m_source2 = 0;                       // Second argument
 
     union
     {
@@ -146,7 +146,7 @@ private:
         struct                                     // For GRM operations
         {
             uint8_t    m_ff;                       // Dummy
-            GRMFeature m_feature;                   
+            GRMFeature m_feature;
             uint16_t   m_number;
         };
     };

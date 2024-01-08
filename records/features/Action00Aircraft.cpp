@@ -48,7 +48,7 @@ constexpr const char* str_never_refittable_cargos      = "never_refittable_cargo
 constexpr const char* str_aircraft_range               = "aircraft_range";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -118,7 +118,7 @@ bool Action00Aircraft::read_property(std::istream& is, uint8_t property)
     {
         case 0x08: m_08_sprite_id.read(is);                    break;
         case 0x09: m_09_is_helicopter.read(is);                break;
-        case 0x0A: m_0A_is_large.read(is);                     break; 
+        case 0x0A: m_0A_is_large.read(is);                     break;
         case 0x0B: m_0B_cost_factor.read(is);                  break;
         case 0x0C: m_0C_speed_8_mph.read(is);                  break;
         case 0x0D: m_0D_acceleration.read(is);                 break;
@@ -143,7 +143,7 @@ bool Action00Aircraft::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00Aircraft::write_property(std::ostream& os, uint8_t property) const
@@ -185,7 +185,7 @@ bool Action00Aircraft::write_property(std::ostream& os, uint8_t property) const
 }
 
 
-bool Action00Aircraft::print_property(std::ostream& os, uint8_t property, uint16_t indent) const 
+bool Action00Aircraft::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
     if (Action00Common::print_property(os, property, indent))
     {

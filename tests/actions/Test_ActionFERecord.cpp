@@ -25,7 +25,7 @@ namespace {
 
 static constexpr const char* str_YAGL =
     "import(\"ABC\\x01\", 0x0013);\n";
-static constexpr const char* str_NFO = 
+static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "FE "
     "00 "

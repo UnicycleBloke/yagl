@@ -31,7 +31,7 @@ void RecolourRecord::read(std::istream& is, const GRFInfo& info)
 
 void RecolourRecord::write(std::ostream& os, const GRFInfo& info) const
 {
-    // The first byte in the record is literal zero. This makes it 
+    // The first byte in the record is literal zero. This makes it
     // look like an Action00, but it can be disambiguated by context on
     // reading.
     write_uint8(os, 0x00);
@@ -40,7 +40,7 @@ void RecolourRecord::write(std::ostream& os, const GRFInfo& info) const
     {
         write_uint8(os, item);
     }
-}  
+}
 
 
 static constexpr const char* str_recolour_sprite = "recolour_sprite";
@@ -60,7 +60,7 @@ void RecolourRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t state = 0;
     uint16_t start;
     for (uint16_t i = 0; i < 256; ++i)
-    {        
+    {
         switch (state)
         {
             case 0:
@@ -78,12 +78,12 @@ void RecolourRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
                     {
                         os << pad(indent + 4) << to_hex(uint8_t(start)) << ".." << to_hex(uint8_t(i-1)) << ": ";
                         os << to_hex(m_colour_map[start]) << ".." << to_hex(m_colour_map[i-1]) << ";" << "\n";
-                    }                   
+                    }
                     else
                     {
                         os << pad(indent + 4) << to_hex(uint8_t(start)) << ": ";
                         os << to_hex(m_colour_map[start]) << ";" << "\n";
-                    }                     
+                    }
                     state = 0;
                     if (diffs[i] != 0)
                     {

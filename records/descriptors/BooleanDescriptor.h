@@ -26,7 +26,7 @@ class BoolT
 public:
     void print(std::ostream& os) const
     {
-        os << std::boolalpha << m_value; 
+        os << std::boolalpha << m_value;
     }
 
     void parse(TokenStream& is)
@@ -46,11 +46,11 @@ public:
     }
 
     void write(std::ostream& os) const
-    {     
+    {
         uint8_t value = (m_value ? TRUE : FALSE);
         write_uint8(os, value);
     }
-  
+
 private:
     bool m_value{};
 };
@@ -72,7 +72,7 @@ struct BooleanDescriptor : PropertyDescriptor
     void print(bool value, std::ostream& os, uint16_t indent) const
     {
         prefix(os, indent);
-        os << std::boolalpha << value << ";\n"; 
+        os << std::boolalpha << value << ";\n";
     }
 
     void parse(bool& value, TokenStream& is) const

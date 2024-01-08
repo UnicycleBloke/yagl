@@ -22,10 +22,10 @@
 #include <memory>
 
 
-// Defining a set of real sprites. Action 01 is used to define sets of 
+// Defining a set of real sprites. Action 01 is used to define sets of
 // real sprites (as opposed to pseudo-sprites). This record is a container
 // for real sprites records. In Format2 files it is followed by references
-// to real sprites - this allows the sprite IDs to be associated with 
+// to real sprites - this allows the sprite IDs to be associated with
 // multiple images, which enables zoom alternatives.
 class Action01Record : public ContainerRecord
 {
@@ -42,7 +42,7 @@ public:
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
-    // This is the number of real sprites records (or references) we expect to 
+    // This is the number of real sprites records (or references) we expect to
     // follow immediately after this record in the file.
     uint16_t num_sprites_to_read() const override { return m_num_sets * m_num_sprites; }
 
@@ -53,13 +53,13 @@ private:
     // The number given to the first sprite set defined by this Action00. The others
     // are just incrementing values.
     uint16_t m_first_set = 0;
-    
+
     // The number of sprites sets defined by the Action00.
     uint16_t m_num_sets = 0;
 
     // The number of sprites contained in each sprite set. These are all the same.
     uint16_t m_num_sprites = 0;
 
-    // NOTE: The number of sprites needs to match the number of records in 
+    // NOTE: The number of sprites needs to match the number of records in
     // this ContainerRecord. ASSERT?
 };

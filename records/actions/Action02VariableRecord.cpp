@@ -24,8 +24,8 @@
 using VarType = Action02VariableRecord::VarType;
 
 
-// The sizes of a number of the fields in the record depend on the type 
-// read near the beginning. 
+// The sizes of a number of the fields in the record depend on the type
+// read near the beginning.
 static uint32_t read_action(std::istream& is, VarType var_type)
 {
      switch (var_type)
@@ -72,16 +72,16 @@ void Action02VariableRecord::read(std::istream& is, const GRFInfo& info)
     m_set_id.read(is);
     m_var_type = static_cast<VarType>(read_uint8(is));
 
-    // It's a little involved, but basically a chain of variable operations 
+    // It's a little involved, but basically a chain of variable operations
     // which are performed and combined in sequence.
     bool advanced = false;
     do
     {
         VarAction var_action;
 
-        // For the second and subsequent iterations, we need to read 
+        // For the second and subsequent iterations, we need to read
         // an operation which tells us how to combine the previous result
-        // with the next variable calculation. 
+        // with the next variable calculation.
         if (m_actions.size() > 0)
         {
             var_action.operation = static_cast<Operation>(read_uint8(is));
@@ -89,7 +89,7 @@ void Action02VariableRecord::read(std::istream& is, const GRFInfo& info)
 
         // What variable are we going to perform a calculation with?
         var_action.variable  = read_uint8(is);
-        // 0x60+x variables require an additional byte - an index? 
+        // 0x60+x variables require an additional byte - an index?
         if (var_action.variable >= 0x60 && var_action.variable < 0x80)
         {
             var_action.parameter = read_uint8(is);
@@ -105,7 +105,7 @@ void Action02VariableRecord::read(std::istream& is, const GRFInfo& info)
         var_action.shift_num = var_action.shift_num & 0x1F;
 
         // We AND the shifted result with a mask and then have three options:
-        // 1. Return the result (bit 6 and bit 7 are not set)                
+        // 1. Return the result (bit 6 and bit 7 are not set)
         // 2. Add a value and divide the result (bit 6 is set)
         // 3. Add a value and modulo the result (bit 7 is set)
         var_action.and_mask = read_action(is, m_var_type);
@@ -129,13 +129,13 @@ void Action02VariableRecord::read(std::istream& is, const GRFInfo& info)
     }
     while (advanced);
 
-    // Since TTDPatch 2.0.1 alpha 57, nvar=0 is a special case. Instead 
-    // of using ranges, nvar=0 means that the result of an advanced calculation 
-    // (or, if no calculation is performed, the adjusted variable value itself) 
-    // is returned as callback result, with bit 15 set.  This is useful for those 
-    // callbacks where many different return values are possible and it is easier 
-    // to calculate them than list them in ranges.  The default value must still 
-    // be specified, and will be used in case the variable(s) used are not available. 
+    // Since TTDPatch 2.0.1 alpha 57, nvar=0 is a special case. Instead
+    // of using ranges, nvar=0 means that the result of an advanced calculation
+    // (or, if no calculation is performed, the adjusted variable value itself)
+    // is returned as callback result, with bit 15 set.  This is useful for those
+    // callbacks where many different return values are possible and it is easier
+    // to calculate them than list them in ranges.  The default value must still
+    // be specified, and will be used in case the variable(s) used are not available.
     uint8_t num_ranges = read_uint8(is);
     for (uint8_t i = 0; i < num_ranges; ++i)
     {
@@ -204,15 +204,15 @@ void Action02VariableRecord::write(std::ostream& os, const GRFInfo& info) const
     }
 
     m_default.write(os);
-}  
+}
 
 
 namespace {
 
 
-const EnumDescriptorT<Action02VariableRecord::VarType> desc_var_type = 
+const EnumDescriptorT<Action02VariableRecord::VarType> desc_var_type =
 {
-    0x00, "var_type",                   
+    0x00, "var_type",
     {
         { 0x81, "PrimaryByte" },
         { 0x82, "RelatedByte" },
@@ -220,13 +220,13 @@ const EnumDescriptorT<Action02VariableRecord::VarType> desc_var_type =
         { 0x86, "RelatedWord" },
         { 0x89, "PrimaryDWord" },
         { 0x8A, "RelatedDWord" },
-    }    
+    }
 };
 
 
-const EnumDescriptorT<Action02VariableRecord::Operation> desc_operation = 
-{ 
-    0x00, "operation",                   
+const EnumDescriptorT<Action02VariableRecord::Operation> desc_operation =
+{
+    0x00, "operation",
     {
         { 0x00, "Addition" },
         { 0x01, "Subtraction" },
@@ -251,7 +251,7 @@ const EnumDescriptorT<Action02VariableRecord::Operation> desc_operation =
         { 0x14, "ShiftLeft" },
         { 0x15, "UnsignedShiftRight" },
         { 0x16, "SignedShiftRight" },
-    }    
+    }
 };
 
 
@@ -301,7 +301,7 @@ std::string Action02VariableRecord::variable_expression(const VarAction& va) con
     // No point showing the shift if it does nothing.
     if (va.shift_num > 0)
     {
-        os << " >> " << uint16_t(va.shift_num); 
+        os << " >> " << uint16_t(va.shift_num);
     }
 
     os << " & " << to_hex(va.and_mask);
@@ -311,11 +311,11 @@ std::string Action02VariableRecord::variable_expression(const VarAction& va) con
         // No point showing the add value if it is zero.
         if (va.add_value > 0)
         {
-            os << " + " << to_hex(va.add_value);  
+            os << " + " << to_hex(va.add_value);
         }
-        
+
         os << (((va.action & 0x80) == 0x00) ? " / " : " % ");
-        os << to_hex(va.div_mod_value);  
+        os << to_hex(va.div_mod_value);
     }
 
     return os.str();
@@ -325,7 +325,7 @@ std::string Action02VariableRecord::variable_expression(const VarAction& va) con
 void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
-    os << ", "; 
+    os << ", ";
     m_set_id.print(os, UIntFormat::Hex);
     os << ", " << desc_var_type.value(m_var_type);
     os << "> // Action02 variable" << '\n';
@@ -337,11 +337,11 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
     // uint8_t var_size    = 4;
     // switch (m_var_type)
     // {
-    //      case VarType::PrimaryByte: 
+    //      case VarType::PrimaryByte:
     //      case VarType::RelatedByte:  var_size = 1; break;
-    //      case VarType::PrimaryWord: 
+    //      case VarType::PrimaryWord:
     //      case VarType::RelatedWord:  var_size = 2; break;
-    //      case VarType::PrimaryDWord: 
+    //      case VarType::PrimaryDWord:
     //      case VarType::RelatedDWord: var_size = 4; break;
     // }
 
@@ -404,20 +404,20 @@ void Action02VariableRecord::print_expression(std::ostream& os, uint16_t indent)
         // For the second and later items - this is an advanced variational action 02.
         if (&va == &m_actions[0])
         {
-            os << pad(indent + 4) << str_value1 << " = "; 
+            os << pad(indent + 4) << str_value1 << " = ";
             os << variable_expression(va);
         }
         else
         {
             os << "\n";
-            os << pad(indent + 4) << str_value2 << " = "; 
+            os << pad(indent + 4) << str_value2 << " = ";
             os  << variable_expression(va) << ";\n";
-            
-            os << pad(indent + 4) << str_value1 << " = "; 
+
+            os << pad(indent + 4) << str_value1 << " = ";
             os << desc_operation.value(va.operation);
             os << "(" << str_value1 << ", " << str_value2 << ")";
-        }          
- 
+        }
+
         os << ";\n";
     }
     os << pad(indent) << "};\n" ;
@@ -428,14 +428,14 @@ void Action02VariableRecord::print_expression(std::ostream& os, uint16_t indent)
     // {
     //     bool has_parameter() const { return (variable >= 0x60) && (variable < 0x80); }
 
-    //     Operation  operation;     // Ignored for first varaction. 
+    //     Operation  operation;     // Ignored for first varaction.
     //     uint8_t    variable;
-    //     uint8_t    parameter;     // Additional byte following 60+ variables - but not 80+? 
-    //     uint8_t    shift_num;     // Bit5 means advanced, bit6 and bit7 mutex 
+    //     uint8_t    parameter;     // Additional byte following 60+ variables - but not 80+?
+    //     uint8_t    shift_num;     // Bit5 means advanced, bit6 and bit7 mutex
     //     uint8_t    action;
     //     uint32_t   and_mask;
-    //     uint32_t   add_value;     // If bit6 or bit7 of shift_num set 
-    //     uint32_t   div_mod_value; // If bit6 or bit7  of shift_num set 
+    //     uint32_t   add_value;     // If bit6 or bit7 of shift_num set
+    //     uint32_t   div_mod_value; // If bit6 or bit7  of shift_num set
     // };
 
 
@@ -446,7 +446,7 @@ void Action02VariableRecord::parse_expression(TokenStream& is)
     {
         VarAction action = {};
 
-        // value2 = 
+        // value2 =
         is.match(TokenType::Ident);  // value1 or value2
         is.match(TokenType::Equals);
 
@@ -532,7 +532,7 @@ void Action02VariableRecord::print_ranges(std::ostream& os, uint16_t indent) con
         {
             os << to_hex(r.low_range) << ": ";
         }
-        else    
+        else
         {
             os << to_hex(r.low_range) << ".." << to_hex(r.high_range) << ": ";
         }

@@ -35,7 +35,7 @@ void ActionFERecord::write(std::ostream& os, const GRFInfo& info) const
     write_uint8(os, m_import_code);
     m_grf_id.write(os);
     write_uint16(os, m_sound_index);
-}  
+}
 
 
 static constexpr const char* str_import = "import";

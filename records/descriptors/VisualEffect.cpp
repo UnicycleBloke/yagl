@@ -24,9 +24,9 @@
 namespace {
 
 using Effect = VisualEffect::Type;
-const EnumDescriptorT<Effect> desc_effect 
-{ 
-    0x00, "effect", 
+const EnumDescriptorT<Effect> desc_effect
+{
+    0x00, "effect",
     {
         { static_cast<uint8_t>(Effect::Default),          "Default" },
         { static_cast<uint8_t>(Effect::SteamPuffs),       "SteamPuffs" },
@@ -41,8 +41,8 @@ const EnumDescriptorT<Effect> desc_effect
 
 using Power = VisualEffect::WagonPower;
 const EnumDescriptorT<Power> desc_power
-{ 
-    0x00, "power", 
+{
+    0x00, "power",
     {
         { static_cast<uint8_t>(Power::Enable),  "Enable" },
         { static_cast<uint8_t>(Power::Disable), "Disable" },

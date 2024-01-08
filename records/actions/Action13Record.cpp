@@ -24,7 +24,7 @@ void Action13Record::read(std::istream& is, const GRFInfo& info)
 {
     m_grf_id.read(is);
 
-    // Added for GRF8 
+    // Added for GRF8
     m_language = 0x7F;
     if (info.version == GRFVersion::GRF8)
     {
@@ -62,7 +62,7 @@ void Action13Record::write(std::ostream& os, const GRFInfo& info) const
     {
         str.write(os);
     }
-}  
+}
 
 
 // grf_strings<"GRFX", en_US, 0xC504> // <grf_id, language, first_id> Action13, English (US)
@@ -93,7 +93,7 @@ void Action13Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     uint16_t string_id = m_first_string_id;
     for (const auto& str: m_strings)
     {
-        os << pad(indent + 4) << "/*" << to_hex(string_id++) << "*/ "; 
+        os << pad(indent + 4) << "/*" << to_hex(string_id++) << "*/ ";
         os << "\"" << str.readable() << "\";\n";
     }
 

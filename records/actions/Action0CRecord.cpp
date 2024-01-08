@@ -23,7 +23,7 @@
 void Action0CRecord::read(std::istream& is, const GRFInfo& info)
 {
     // This could be a text comment, or binary data (a commented pseudo-sprite).
-    // UI needs to reflect this. 
+    // UI needs to reflect this.
     m_comment.read(is, StringTerm::None);
 }
 
@@ -31,10 +31,10 @@ void Action0CRecord::read(std::istream& is, const GRFInfo& info)
 void Action0CRecord::write(std::ostream& os, const GRFInfo& info) const
 {
     ActionRecord::write(os, info);
- 
+
      // Write an unterminated string. The record size implies the termination.
     m_comment.write(os, StringTerm::None);
-}  
+}
 
 
 // ignore // Action0C
@@ -49,9 +49,9 @@ void Action0CRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << "{\n";
 
     // TODO This is probably not a valid thing to do. Should more likely
-    // print nothing, or convert to hex. 
+    // print nothing, or convert to hex.
     os << pad(indent + 4) << "\"" << m_comment.readable() << "\";\n";
-    
+
     os << "}\n";
 }
 

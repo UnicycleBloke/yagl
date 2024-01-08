@@ -34,7 +34,7 @@ void Action10Record::write(std::ostream& os, const GRFInfo& info) const
     write_uint8(os, m_label);
     // Write an unterminated string. The record size implies the termination.
     m_comment.write(os, StringTerm::None);
-}  
+}
 
 
 void Action10Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
@@ -43,12 +43,12 @@ void Action10Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << "{\n";
 
     // TODO This is probably not a valid thing to do. Should more likely
-    // print nothing, or convert to hex. 
+    // print nothing, or convert to hex.
     if (m_comment.length() > 1)
     {
         os << pad(indent + 4) << "\"" << m_comment.readable() << "\";\n";
     }
-    
+
     os << "}\n";
 }
 

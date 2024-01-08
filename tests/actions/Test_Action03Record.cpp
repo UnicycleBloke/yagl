@@ -46,7 +46,7 @@ static constexpr const char* str_NFO =
     "02 "           // 2 cargo types
     "12 FE 02 "     // Cargo 0
     "13 FD 03 "     // Cargo 1
-    "F8 01 ";       // Default 
+    "F8 01 ";       // Default
 
 } // namespace {
 

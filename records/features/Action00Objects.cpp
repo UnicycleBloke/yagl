@@ -44,7 +44,7 @@ constexpr const char* str_number_of_views      = "number_of_views";
 constexpr const char* str_number_on_creation   = "number_on_creation";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -73,7 +73,7 @@ constexpr GRFLabelDescriptor          desc_08  = { 0x08, str_class_label };
 constexpr UInt16Descriptor            desc_09  = { 0x09, str_class_text_id,        UIntFormat::Hex };
 constexpr UInt16Descriptor            desc_0A  = { 0x0A, str_object_text_id,       UIntFormat::Hex };
 // TODO share this with Common.
-const     BitfieldDescriptorT<UInt8>  desc_0B = { 0x0B, str_climate_availability,    
+const     BitfieldDescriptorT<UInt8>  desc_0B = { 0x0B, str_climate_availability,
     { {1, "Temperate"}, {2, "Arctic"}, {4, "Tropical"}, {8, "Toyland"} } };
 //constexpr UInt8Descriptor             desc_0B  = { 0x0B, str_climate_availability, UIntFormat::Hex };
 constexpr UInt8Descriptor             desc_0C  = { 0x0C, str_size_xy,              UIntFormat::Hex };
@@ -89,7 +89,7 @@ constexpr UInt16Descriptor            desc_15  = { 0x15, str_callback_flags,    
 constexpr UInt8Descriptor             desc_16  = { 0x16, str_building_height,      UIntFormat::Hex };
 constexpr UInt8Descriptor             desc_17  = { 0x17, str_number_of_views,      UIntFormat::Hex };
 constexpr UInt8Descriptor             desc_18  = { 0x18, str_number_on_creation,   UIntFormat::Hex };
-    
+
 
 } // namespace {
 
@@ -119,7 +119,7 @@ bool Action00Objects::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00Objects::write_property(std::ostream& os, uint8_t property) const
@@ -150,7 +150,7 @@ bool Action00Objects::write_property(std::ostream& os, uint8_t property) const
 }
 
 
-bool Action00Objects::print_property(std::ostream& os, uint8_t property, uint16_t indent) const 
+bool Action00Objects::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
     switch (property)
     {
@@ -163,7 +163,7 @@ bool Action00Objects::print_property(std::ostream& os, uint8_t property, uint16_
         case 0x0E: desc_0E.print(m_0E_introduction_date, os, indent);    break;
         case 0x0F: desc_0F.print(m_0F_end_of_life_date, os, indent);     break;
         case 0x10: desc_10.print(m_10_object_flags, os, indent);         break;
-        case 0x11: desc_11.print(m_11_animation_info, os, indent);       break; 
+        case 0x11: desc_11.print(m_11_animation_info, os, indent);       break;
         case 0x12: desc_12.print(m_12_animation_speed, os, indent);      break;
         case 0x13: desc_13.print(m_13_animation_triggers, os, indent);   break;
         case 0x14: desc_14.print(m_14_removal_cost_factor, os, indent);  break;

@@ -22,19 +22,19 @@
 #include "StreamHelpers.h"
 
 
-// Years are stored as uint8_t, uint16_t or uint32_t. This structure helps to 
-// regularise this. The uint8_t versions are years since 1920; the others since 
-// year 0, to a maximum of 500,000 (I think). 
+// Years are stored as uint8_t, uint16_t or uint32_t. This structure helps to
+// regularise this. The uint8_t versions are years since 1920; the others since
+// year 0, to a maximum of 500,000 (I think).
 template <typename T>
 class Year
 {
-    static constexpr uint32_t MIN_SHORT_YEAR = 1920; 
-    static constexpr uint32_t MAX_SHORT_YEAR = MIN_SHORT_YEAR + 255; 
+    static constexpr uint32_t MIN_SHORT_YEAR = 1920;
+    static constexpr uint32_t MAX_SHORT_YEAR = MIN_SHORT_YEAR + 255;
 
-public:  
+public:
     explicit Year(uint32_t year = 1920)
     : m_year{year}
-    {        
+    {
     }
 
     void print(std::ostream& os) const
@@ -63,7 +63,7 @@ public:
     }
 
     void write(std::ostream& os) const
-    {        
+    {
         if constexpr (std::is_same_v<T, uint8_t>)
         {
             uint8_t temp = static_cast<uint8_t>(m_year - MIN_SHORT_YEAR);

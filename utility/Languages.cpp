@@ -23,13 +23,13 @@
 
 struct LanguageInfo
 {
-    uint8_t     code;  // Index for the language used within OTTD  
-    const char* iso;   // Short string representation of the language_region  
-    const char* name;  // Long string representation of the language 
+    uint8_t     code;  // Index for the language used within OTTD
+    const char* iso;   // Short string representation of the language_region
+    const char* name;  // Long string representation of the language
 };
 
 
-static const std::map<uint8_t, LanguageInfo> g_language_names = 
+static const std::map<uint8_t, LanguageInfo> g_language_names =
 {
     // The ISO codes have mostly been looked up. A few have guessed region codes.
     // The intention is just to allow users to enter language codes without less
@@ -45,7 +45,7 @@ static const std::map<uint8_t, LanguageInfo> g_language_names =
     { 0x08, { 0x08, "ga_IE", "Irish" } },     // Is the region code reasonable?
     { 0x09, { 0x09, "mt_MT", "Maltese" } },
     { 0x0A, { 0x0A, "ta_IN", "Tamil" } },
-    { 0x0B, { 0x0B, "cv_RU", "Chuvash" } }, 
+    { 0x0B, { 0x0B, "cv_RU", "Chuvash" } },
     { 0x0C, { 0x0C, "zh_TW", "Chinese (Traditional)" } },
     { 0x0D, { 0x0D, "sr_BA", "Serbian" } },
     { 0x0E, { 0x0E, "nn_NO", "Norwegian (Nynorsk)" } },
@@ -53,7 +53,7 @@ static const std::map<uint8_t, LanguageInfo> g_language_names =
     { 0x10, { 0x10, "be_BY", "Belarusian" } },
     { 0x11, { 0x11, "mr_IN", "Marathi" } },
     { 0x12, { 0x12, "fo_FO", "Faroese" } },
-    { 0x13, { 0x13, "gd_GB", "Scottish Gaelic" } }, 
+    { 0x13, { 0x13, "gd_GB", "Scottish Gaelic" } },
     { 0x14, { 0x14, "ar_EG", "Arabic (Egypt)" } },
     { 0x15, { 0x15, "cs_CZ", "Czech" } },
     { 0x16, { 0x16, "sk_SK", "Slovak" } },
@@ -104,7 +104,7 @@ static const std::map<uint8_t, LanguageInfo> g_language_names =
 
 std::string language_name(uint8_t language_id)
 {
-    const auto& it = g_language_names.find(language_id);    
+    const auto& it = g_language_names.find(language_id);
     if (it != g_language_names.end())
     {
         return it->second.name;
@@ -116,7 +116,7 @@ std::string language_name(uint8_t language_id)
 
 std::string language_iso(uint8_t language_id)
 {
-    const auto& it = g_language_names.find(language_id);    
+    const auto& it = g_language_names.find(language_id);
     if (it != g_language_names.end())
     {
         return it->second.iso;

@@ -23,7 +23,7 @@
 
 namespace {
 
-// Add all properties, even with silly values, so that we can confirm the 
+// Add all properties, even with silly values, so that we can confirm the
 // formatting of each one if they are individually changed.
 static constexpr const char* str_YAGL =
     "properties<Bridges, 0x0009> // Action00\n"
@@ -67,7 +67,7 @@ static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "00 "             // Action00
     "06 "             // AirportTiles
-    "0D "             // 0x06 properties... 
+    "0D "             // 0x06 properties...
     "01 "             // ... for 0x01 item
     "FF 09 00 "       // First ID 0x23 (extended byte)
     "00 01 "
@@ -77,8 +77,8 @@ static constexpr const char* str_NFO =
     "0B 56 "
     "0C 45 12 "
     "0D "
-       "12 "          // First ID 
-       "02 "          // 2 tables  
+       "12 "          // First ID
+       "02 "          // 2 tables
        // Table 12
        "00 56 34 12 01 56 34 12 02 56 34 12 03 56 34 12 04 56 34 12 05 56 34 12 06 56 34 12 07 56 34 12 "
        "08 56 34 12 09 56 34 12 0A 56 34 12 0B 56 34 12 0C 56 34 12 0D 56 34 12 0E 56 34 12 0F 56 34 12 "

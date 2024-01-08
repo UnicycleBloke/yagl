@@ -28,13 +28,13 @@ static constexpr const char* str_YAGL =
     "{\n"
     "    grf_ids: [ \"ABCD\" \"ABC\\x01\" \"xV4\\x12\" ];\n"
     "}\n";
-static constexpr const char* str_NFO = 
+static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "0E "           // Action0E
     "03 "           // 3 items
     "41 42 43 44 "  // ABCD
     "41 42 43 01 "  // ABC\x01
-    "78 56 34 12 "; // 0x12345678 -> xV4\x12 
+    "78 56 34 12 "; // 0x12345678 -> xV4\x12
 
 } // namespace {}
 

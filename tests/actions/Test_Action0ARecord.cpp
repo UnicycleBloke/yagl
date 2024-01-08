@@ -23,7 +23,7 @@
 
 namespace {
 
-// Add all properties, even with silly values, so that we can confirm the 
+// Add all properties, even with silly values, so that we can confirm the
 // formatting of each one if they are individually changed.
 static constexpr const char* str_YAGL =
     "replacement_sprite_sets // Action0A\n"
@@ -67,9 +67,9 @@ static constexpr const char* str_NFO =
     "02 "     // 2 sprite sets
     "02 "     // 2 sprites in the first sprite set
     "AD 0A "  // First sprite ID 0x0AAD
-    "01 "     // 1 sprite in the second sprite set 
+    "01 "     // 1 sprite in the second sprite set
     "BD 0A "; // First sprite ID 0x0ABD
- 
+
 } // namespace {
 
 

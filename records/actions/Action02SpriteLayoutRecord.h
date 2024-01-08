@@ -30,12 +30,12 @@ public:
 
     // Binary serialisation
     void read(std::istream& is, const GRFInfo& info) override;
-    void write(std::ostream& os, const GRFInfo& info) const override;    
+    void write(std::ostream& os, const GRFInfo& info) const override;
     // Text serialisation
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
-private:    
+private:
     void parse_ground_sprite(TokenStream& is);
     void parse_building_sprite(TokenStream& is);
     void parse_child_sprite(TokenStream& is);
@@ -47,7 +47,7 @@ private:
         static constexpr uint8_t BIT1_SPRITE_OFFSET   = 0x02; // Add signed offset to sprite.
         static constexpr uint8_t BIT2_RECOLOUR_OFFSET = 0x04; // Add signed offset to recolour sprite.
         static constexpr uint8_t BIT3_RECOLOUR_ACT01  = 0x08; // Recolour sprite is from Action 1 (no registers)
-        static constexpr uint8_t BIT4_BB_XY_OFFSET    = 0x10; // Add signed offset to bounding box X and Y positions (2 registers) 
+        static constexpr uint8_t BIT4_BB_XY_OFFSET    = 0x10; // Add signed offset to bounding box X and Y positions (2 registers)
         static constexpr uint8_t BIT5_BB_Z_OFFSET     = 0x20; // Add signed offset to bounding box Z positions.
         static constexpr uint8_t BIT4_CHILD_X_OFFSET  = 0x10; // Add signed offset to child sprite X positions.
         static constexpr uint8_t BIT5_CHILD_Y_OFFSET  = 0x20; // Add signed offset to child sprite Y positions.
@@ -61,7 +61,7 @@ private:
         uint8_t  offset_x;          // bit 4
         uint8_t  offset_y;          // bit 4 (parent), bit 5 (child/ground)
         uint8_t  offset_z;          // bit 5 (parent)
-        uint8_t  sprite_var10;      // bit 6 
+        uint8_t  sprite_var10;      // bit 6
         uint8_t  recolour_var10;    // bit 7
 
         void read(std::istream& is, bool is_parent);
@@ -73,18 +73,18 @@ private:
 private:
     struct BuildingSprite
     {
-        uint32_t        sprite = 0x00; // May be zero only in the simple case 
+        uint32_t        sprite = 0x00; // May be zero only in the simple case
         SpriteRegisters regs   = {};
         int8_t          xofs   = 0x00;
         int8_t          yofs   = 0x00;
-        uint8_t         zofs   = 0x80; // Absent for simple case. 0x80 when re-using previous bounding box 
-        uint8_t         xext   = 0x00; // Absent when re-using previous bounding box 
-        uint8_t         yext   = 0x00; // Absent when re-using previous bounding box 
-        uint8_t         zext   = 0x00; // Absent when re-using previous bounding box 
+        uint8_t         zofs   = 0x80; // Absent for simple case. 0x80 when re-using previous bounding box
+        uint8_t         xext   = 0x00; // Absent when re-using previous bounding box
+        uint8_t         yext   = 0x00; // Absent when re-using previous bounding box
+        uint8_t         zext   = 0x00; // Absent when re-using previous bounding box
         bool            new_bb = false;
     };
 
-private:    
+private:
     enum class Format { Basic, Extended, Advanced };
 
 private:

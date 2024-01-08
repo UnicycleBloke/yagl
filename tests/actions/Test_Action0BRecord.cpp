@@ -23,7 +23,7 @@
 
 namespace {
 
-// Add all properties, even with silly values, so that we can confirm the 
+// Add all properties, even with silly values, so that we can confirm the
 // formatting of each one if they are individually changed.
 static constexpr const char* str_YAGL =
     "error_message<Fatal, default, 0x02> // Action0B <severity, language, message>\n"
@@ -40,7 +40,7 @@ static constexpr const char* str_NFO =
     "02 "  // Message ID (from a table)
     "4F 70 65 6E 54 54 44 00 "; // Custom text: OpenTTD
 
-// Add all properties, even with silly values, so that we can confirm the 
+// Add all properties, even with silly values, so that we can confirm the
 // formatting of each one if they are individually changed.
 static constexpr const char* str_YAGL2 =
     "error_message<Warning, en_GB, 0xFF> // Action0B <severity, language, message>\n"

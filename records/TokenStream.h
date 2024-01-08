@@ -21,7 +21,7 @@
 #include <fstream>
 
 
-// Can we make this more stream based? Get the lexer to some work, and then a bit 
+// Can we make this more stream based? Get the lexer to some work, and then a bit
 // more when the queue is empty. Could use a ring buffer since we don't care about
 // items already matched.
 class TokenStream
@@ -33,7 +33,7 @@ public:
         m_tokens = lexer.lex(is);
     }
 
-    const TokenValue& peek(uint16_t lookahead = 0); 
+    const TokenValue& peek(uint16_t lookahead = 0);
     const std::string& match(TokenType type);
 
     bool match_ident(const std::string& value);
@@ -69,30 +69,30 @@ public:
 
     // Special case for integer matching.
     enum class DataType { U32, U16, U8 };
-    uint32_t match_date(DataType type); 
-    
+    uint32_t match_date(DataType type);
+
     // Added to allow us to move to the beginning of the next record when an exception occurs
     // during parsing.
     void next_record();
-    
-    // Backtrack one step. This is a bodge really, and could easily be removed. For now the 
-    // names of records are parsed to create the right type of object, but backtracked and 
+
+    // Backtrack one step. This is a bodge really, and could easily be removed. For now the
+    // names of records are parsed to create the right type of object, but backtracked and
     // parsed again by that object. This gives a nicer exception...
     void unmatch() { if (m_index > 0) --m_index; }
 
 private:
     uint64_t match_uint64(TokenValue& token, DataType type);
 
-private:    
+private:
     // List of all tokens found in the YAGL by the lexer, in order.
     std::vector<TokenValue> m_tokens;
-    
-    // Current position in the stream while parsing. 
+
+    // Current position in the stream while parsing.
     uint32_t m_index = 0;
-    
-    // Current block depth. Blocks are delineated by { and }. This can used 
+
+    // Current block depth. Blocks are delineated by { and }. This can used
     // after an exception to start parsing again with the next record.
-    uint32_t m_blocks = 0; 
+    uint32_t m_blocks = 0;
 };
 
 

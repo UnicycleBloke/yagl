@@ -46,7 +46,7 @@ void Action0ARecord::write(std::ostream& os, const GRFInfo& info) const
         write_uint8(os, set.num_sprites);
         write_uint16(os, set.first_sprite);
     }
-}  
+}
 
 
 uint16_t Action0ARecord::num_sprites_to_read() const
@@ -60,7 +60,7 @@ uint16_t Action0ARecord::num_sprites_to_read() const
 }
 
 
-// replacement_sprite_sets // Action0A 
+// replacement_sprite_sets // Action0A
 // {
 //     replacement_sprite_set // One or more sets
 //     {
@@ -84,7 +84,7 @@ uint16_t Action0ARecord::num_sprites_to_read() const
 //     }
 //     replacement_sprite_set
 //     {
-//     ... 
+//     ...
 
 
 static constexpr const char* str_replacement_sprite_set = "replacement_sprite_set";
@@ -124,18 +124,18 @@ void Action0ARecord::parse(TokenStream& is, SpriteZoomMap& sprites)
     while (is.peek().type != TokenType::CloseBrace)
     {
         SpriteSet set{};
-        is.match_ident(str_replacement_sprite_set); 
+        is.match_ident(str_replacement_sprite_set);
         is.match(TokenType::OpenAngle);
         set.first_sprite = is.match_uint16();
         is.match(TokenType::CloseAngle);
         is.match(TokenType::OpenBrace);
-    
+
         while (is.peek().type != TokenType::CloseBrace)
         {
             parse_sprite(is, sprites);
             ++set.num_sprites;
         }
-    
+
         is.match(TokenType::CloseBrace);
         m_sets.push_back(set);
     }

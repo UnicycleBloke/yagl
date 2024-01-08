@@ -1,7 +1,7 @@
 [Back to table of contents](index.md)
 
 
-# Building on Linux 
+# Building on Linux
 
 Starting in some folder on your machine, execute the following commands in a terminal window. This assumes that you have installed the build dependencies (see below):
 
@@ -12,7 +12,7 @@ mkdir build
 cd build
 cmake ..
 make -j
-./yagl -d <your_grf_file.grf> 
+./yagl -d <your_grf_file.grf>
 ```
 
 If you prefer **ninja** for building:
@@ -20,7 +20,7 @@ If you prefer **ninja** for building:
 ```bash
 cmake -G"Ninja" ..
 ninja
-./yagl -d <your_grf_file.grf> 
+./yagl -d <your_grf_file.grf>
 ```
 
 The software has so far only been compiled with **g++** on Linux. Pretty much any reasonably recent Linux-like environment should be fine. The software has been built and run on the following configurations:

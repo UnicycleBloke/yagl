@@ -1,6 +1,6 @@
 [Back to table of contents](index.md)
 
-# Building on Windows  
+# Building on Windows
 
 Starting in some folder on your machine, execute the following commands in a terminal window. This assumes that you have installed Microsoft Visual Studio 2019 (Community edition is fine), and placed MSBuild on the path, and have installed the build dependencies (see below):
 
@@ -12,7 +12,7 @@ cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>\scripts\buildsystems\vcpkg.cmake
     -DVCPKG_DIR=<vcpkg-root> ..
 msbuild yagl.sln /property:Configuration=Release
-Release\yagl.exe -d <your_grf_file.grf> 
+Release\yagl.exe -d <your_grf_file.grf>
 ```
 
 Rather than use MSBuild, you can open the solution file in Visual Studio and build it from there. This will certainly be more useful for debugging, should you need to do that.

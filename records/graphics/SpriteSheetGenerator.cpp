@@ -26,7 +26,7 @@
 #include "FileSystem.h"
 
 
-SpriteSheetGenerator::SpriteSheetGenerator(const std::map<uint32_t, SpriteZoomVector>& sprites, 
+SpriteSheetGenerator::SpriteSheetGenerator(const std::map<uint32_t, SpriteZoomVector>& sprites,
     const std::string& base_name, GRFFormat format)
 : m_sprites{sprites}
 , m_base_name{base_name}
@@ -41,17 +41,17 @@ void SpriteSheetGenerator::generate()
 }
 
 
-void SpriteSheetGenerator::partition_sprite(std::map<Category, SpriteVector>& partitions, 
+void SpriteSheetGenerator::partition_sprite(std::map<Category, SpriteVector>& partitions,
     Category cat, RealSpriteRecord* sprite)
 {
     if (partitions.find(cat) == partitions.end())
     {
-        SpriteVector ids{ sprite }; 
-        partitions[cat] = ids; 
+        SpriteVector ids{ sprite };
+        partitions[cat] = ids;
     }
     else
     {
-        partitions[cat].push_back(sprite); 
+        partitions[cat].push_back(sprite);
     }
 }
 
@@ -59,13 +59,13 @@ void SpriteSheetGenerator::partition_sprite(std::map<Category, SpriteVector>& pa
 void SpriteSheetGenerator::partition_sprites()
 {
     // First work out what the different colour classes are that we have.
-    // This map is used to count the number of sprites in each class. 
+    // This map is used to count the number of sprites in each class.
     std::map<Category, SpriteVector> partitions;
     for (const auto& it: m_sprites)
     {
         for (const auto& record: it.second)
         {
-            // We only care about real sprites. We might also encounter 
+            // We only care about real sprites. We might also encounter
             // recolour sprites here.
             if (record->record_type() == RecordType::REAL_SPRITE)
             {
@@ -79,38 +79,38 @@ void SpriteSheetGenerator::partition_sprites()
                 {
                     case RealSpriteRecord::HAS_PALETTE:
                         cat.colour = ColourType::Palette;
-                        partition_sprite(partitions, cat, sprite); 
+                        partition_sprite(partitions, cat, sprite);
                         break;
-                    
+
                     case RealSpriteRecord::HAS_RGB | RealSpriteRecord::HAS_ALPHA:
                         cat.colour = ColourType::RGBA;
-                        partition_sprite(partitions, cat, sprite); 
+                        partition_sprite(partitions, cat, sprite);
                         break;
 
                     case RealSpriteRecord::HAS_RGB | RealSpriteRecord::HAS_ALPHA | RealSpriteRecord::HAS_PALETTE:
                         cat.colour = ColourType::RGBA;
                         partition_sprite(partitions, cat, sprite);
-                        // The sprite contains two images 
+                        // The sprite contains two images
                         cat.colour = ColourType::Mask;
-                        partition_sprite(partitions, cat, sprite); 
+                        partition_sprite(partitions, cat, sprite);
                         break;
 
                     // Do these ever occur?
                     case RealSpriteRecord::HAS_RGB:
                         cat.colour = ColourType::RGB;
-                        partition_sprite(partitions, cat, sprite); 
+                        partition_sprite(partitions, cat, sprite);
                         break;
 
                     // Do these ever occur?
                     case RealSpriteRecord::HAS_RGB | RealSpriteRecord::HAS_PALETTE:
                         cat.colour = ColourType::RGB;
-                        partition_sprite(partitions, cat, sprite); 
+                        partition_sprite(partitions, cat, sprite);
                         cat.colour = ColourType::Mask;
-                        partition_sprite(partitions, cat, sprite); 
+                        partition_sprite(partitions, cat, sprite);
                         break;
 
                     default:  throw RUNTIME_ERROR("Invalid colour depth");
-                }   
+                }
             }
         }
     }
@@ -127,7 +127,7 @@ void SpriteSheetGenerator::layout_sprites(Category category, SpriteVector sprite
     // Constants
     const uint32_t max_width  = CommandLineOptions::options().width();
     const uint32_t max_height = CommandLineOptions::options().height();
-    const uint32_t xmargin    = 10; 
+    const uint32_t xmargin    = 10;
     const uint32_t ymargin    = 10;
 
     // Image file index
@@ -139,7 +139,7 @@ void SpriteSheetGenerator::layout_sprites(Category category, SpriteVector sprite
 
     // Working variables
     uint32_t row_height = 0;
-    uint32_t xoffset    = xmargin;  
+    uint32_t xoffset    = xmargin;
     uint32_t yoffset    = ymargin;
 
     SpriteVector layout;
@@ -153,12 +153,12 @@ void SpriteSheetGenerator::layout_sprites(Category category, SpriteVector sprite
             image_height = std::max(image_height, yoffset);
 
             // This will result in image a little taller than image_height because the
-            // sprites in the final row are laid out before making the decision. Is it 
+            // sprites in the final row are laid out before making the decision. Is it
             // problem? Nah.
             if (image_height > max_height)
             {
                 create_sprite_sheet(category, layout, index, image_width, image_height);
-                layout.clear(); 
+                layout.clear();
 
                 image_width  = 0;
                 image_height = 0;
@@ -167,7 +167,7 @@ void SpriteSheetGenerator::layout_sprites(Category category, SpriteVector sprite
             }
         }
 
-        // Distinguish mask from regular file offsets. This is only relevant for 
+        // Distinguish mask from regular file offsets. This is only relevant for
         // RGB[A]P sprites.
         if (category.colour == ColourType::Mask)
         {
@@ -179,44 +179,44 @@ void SpriteSheetGenerator::layout_sprites(Category category, SpriteVector sprite
             sprite->set_xoff(xoffset);
             sprite->set_yoff(yoffset);
         }
-        
+
         layout.push_back(sprite);
 
         row_height   = std::max<uint32_t>(row_height, sprite->ydim());
         xoffset     += sprite->xdim() + xmargin;
         image_width  = std::max(image_width, xoffset);
-    }  
+    }
 
     image_height = std::max(image_height, yoffset + row_height + ymargin);
     create_sprite_sheet(category, layout, index, image_width, image_height);
 }
 
 
-void SpriteSheetGenerator::create_sprite_sheet(Category category, SpriteVector sprites, 
+void SpriteSheetGenerator::create_sprite_sheet(Category category, SpriteVector sprites,
     uint32_t index, uint32_t width, uint32_t height)
 {
     // Manufacture a file name for the sprite sheet. Maybe it makes
-    // no sense to partition the sprites by zoom level, but let's do it 
+    // no sense to partition the sprites by zoom level, but let's do it
     // for now.
     std::ostringstream os;
     os << m_base_name;
 
     switch (category.colour)
     {
-        case ColourType::Palette:  
-            os << "-8bpp"; 
+        case ColourType::Palette:
+            os << "-8bpp";
             break;
-        case ColourType::RGBA:  
-            os << "-32bpp"; 
+        case ColourType::RGBA:
+            os << "-32bpp";
             break;
         // Do these ever occur?
-        case ColourType::RGB:  
-            os << "-24bpp"; 
+        case ColourType::RGB:
+            os << "-24bpp";
             break;
-        case ColourType::Mask:  
-            os << "-mask"; 
+        case ColourType::Mask:
+            os << "-mask";
             break;
-        default:  throw RUNTIME_ERROR("Invalid colour depth");   
+        default:  throw RUNTIME_ERROR("Invalid colour depth");
     }
 
     switch (category.zoom)
@@ -236,10 +236,10 @@ void SpriteSheetGenerator::create_sprite_sheet(Category category, SpriteVector s
     // Deal with different colour depths.
     switch (category.colour)
     {
-        case ColourType::Palette: 
+        case ColourType::Palette:
             create_sprite_sheet_8bpp(image_path, sprites, width, height);
             break;
-        //case ColourType::RGB: 
+        //case ColourType::RGB:
         //    create_sprite_sheet_24bpp(image_path, sprites, width, height);
         //    break;
         case ColourType::RGBA:
@@ -253,12 +253,12 @@ void SpriteSheetGenerator::create_sprite_sheet(Category category, SpriteVector s
 
 
 // The functions below are horribly repetitive. png++ sort of forced
-// this on us. Until we think of something neater. 
+// this on us. Until we think of something neater.
 
 
 void SpriteSheetGenerator::create_sprite_sheet_8bpp(const std::string& image_path,
     SpriteVector sprites, uint32_t width, uint32_t height)
-{    
+{
     // Since this is a paletted image, we need to create the palette. Copy in
     // one of the standard palettes. This is set on the command line, or by an
     // Action14 PALS section.
@@ -287,15 +287,15 @@ void SpriteSheetGenerator::create_sprite_sheet_8bpp(const std::string& image_pat
     uint32_t xlabel = 0;
     for (const auto& sprite: sprites)
     {
-        // Each sprite needs to know the file name of its sprite sheet so that we 
+        // Each sprite needs to know the file name of its sprite sheet so that we
         // can put this into the YAGL and read back the pixels later.
         std::string image_file = fs::path(image_path).filename().string();
         sprite->set_filename(image_file);
 
-        const uint32_t xdim = sprite->xdim(); 
-        const uint32_t ydim = sprite->ydim(); 
-        const uint32_t xoff = sprite->xoff(); 
-        const uint32_t yoff = sprite->yoff(); 
+        const uint32_t xdim = sprite->xdim();
+        const uint32_t ydim = sprite->ydim();
+        const uint32_t xoff = sprite->xoff();
+        const uint32_t yoff = sprite->yoff();
 
         if (xoff <= 10)
         {
@@ -314,7 +314,7 @@ void SpriteSheetGenerator::create_sprite_sheet_8bpp(const std::string& image_pat
             for (uint32_t x = 0; x < xdim; ++x)
             {
                 RealSpriteRecord::Pixel p = sprite->pixel(x, y);
-                image[y + yoff][x + xoff] = p.index; 
+                image[y + yoff][x + xoff] = p.index;
             }
         }
     }
@@ -324,9 +324,9 @@ void SpriteSheetGenerator::create_sprite_sheet_8bpp(const std::string& image_pat
 
 
 /*
-void SpriteSheetGenerator::create_sprite_sheet_24bpp(const std::string& image_path, 
+void SpriteSheetGenerator::create_sprite_sheet_24bpp(const std::string& image_path,
     SpriteVector sprites, uint32_t width, uint32_t height)
-{    
+{
     // Finally create the actual image.
     png::image<png::rgb_pixel> image;
     image.resize(width, height);
@@ -344,15 +344,15 @@ void SpriteSheetGenerator::create_sprite_sheet_24bpp(const std::string& image_pa
     uint32_t xlabel = 0;
     for (const auto& sprite: sprites)
     {
-        // Each sprite needs to know the file name of its sprite sheet so that we 
+        // Each sprite needs to know the file name of its sprite sheet so that we
         // can put this into the YAGL and read back the pixels later.
         std::string image_file = fs::path(image_path).filename().string();
         sprite->set_filename(image_file);
 
-        const uint32_t xdim = sprite->xdim(); 
-        const uint32_t ydim = sprite->ydim(); 
-        const uint32_t xoff = sprite->xoff(); 
-        const uint32_t yoff = sprite->yoff(); 
+        const uint32_t xdim = sprite->xdim();
+        const uint32_t ydim = sprite->ydim();
+        const uint32_t xoff = sprite->xoff();
+        const uint32_t yoff = sprite->yoff();
 
         if (xoff <= 10)
         {
@@ -381,9 +381,9 @@ void SpriteSheetGenerator::create_sprite_sheet_24bpp(const std::string& image_pa
 */
 
 
-void SpriteSheetGenerator::create_sprite_sheet_32bpp(const std::string& image_path, 
+void SpriteSheetGenerator::create_sprite_sheet_32bpp(const std::string& image_path,
     SpriteVector sprites, uint32_t width, uint32_t height)
-{    
+{
     // Finally create the actual image.
     png::image<png::rgba_pixel> image;
     image.resize(width, height);
@@ -401,15 +401,15 @@ void SpriteSheetGenerator::create_sprite_sheet_32bpp(const std::string& image_pa
     uint32_t xlabel = 0;
     for (const auto& sprite: sprites)
     {
-        // Each sprite needs to know the file name of its sprite sheet so that we 
+        // Each sprite needs to know the file name of its sprite sheet so that we
         // can put this into the YAGL and read back the pixels later.
         std::string image_file = fs::path(image_path).filename().string();
         sprite->set_filename(image_file);
 
-        const uint32_t xdim = sprite->xdim(); 
-        const uint32_t ydim = sprite->ydim(); 
-        const uint32_t xoff = sprite->xoff(); 
-        const uint32_t yoff = sprite->yoff(); 
+        const uint32_t xdim = sprite->xdim();
+        const uint32_t ydim = sprite->ydim();
+        const uint32_t xoff = sprite->xoff();
+        const uint32_t yoff = sprite->yoff();
 
         if (xoff <= 10)
         {
@@ -439,7 +439,7 @@ void SpriteSheetGenerator::create_sprite_sheet_32bpp(const std::string& image_pa
 
 void SpriteSheetGenerator::create_sprite_sheet_mask(const std::string& image_path,
     SpriteVector sprites, uint32_t width, uint32_t height)
-{    
+{
     // Since this is a paletted image, we need to create the palette. Copy in
     // one of the standard palettes. This is set on the command line, or by an
     // Action14 PALS section.
@@ -468,15 +468,15 @@ void SpriteSheetGenerator::create_sprite_sheet_mask(const std::string& image_pat
     uint32_t xlabel = 0;
     for (const auto& sprite: sprites)
     {
-        // Each sprite needs to know the file name of its sprite sheet so that we 
+        // Each sprite needs to know the file name of its sprite sheet so that we
         // can put this into the YAGL and read back the pixels later.
         std::string image_file = fs::path(image_path).filename().string();
         sprite->set_mask_filename(image_file);
 
-        const uint32_t xdim = sprite->xdim(); 
-        const uint32_t ydim = sprite->ydim(); 
-        const uint32_t xoff = sprite->mask_xoff(); 
-        const uint32_t yoff = sprite->mask_yoff(); 
+        const uint32_t xdim = sprite->xdim();
+        const uint32_t ydim = sprite->ydim();
+        const uint32_t xoff = sprite->mask_xoff();
+        const uint32_t yoff = sprite->mask_yoff();
 
         if (xoff <= 10)
         {
@@ -495,7 +495,7 @@ void SpriteSheetGenerator::create_sprite_sheet_mask(const std::string& image_pat
             for (uint32_t x = 0; x < xdim; ++x)
             {
                 RealSpriteRecord::Pixel p = sprite->pixel(x, y);
-                image[y + yoff][x + xoff] = p.index; 
+                image[y + yoff][x + xoff] = p.index;
             }
         }
     }

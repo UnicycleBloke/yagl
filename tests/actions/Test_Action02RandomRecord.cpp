@@ -62,7 +62,7 @@ static constexpr const char* str_NFO =
     // FD probability is 17 / 128
     "FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 "
     "FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 ";
-    
+
 } // namespace {
 
 

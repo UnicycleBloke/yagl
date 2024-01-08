@@ -22,7 +22,7 @@
 
 void PropertyDescriptor::prefix(std::ostream& os, uint16_t indent) const
 {
-    // Each property is preceded by its name and a colon. It is then up to the particular 
+    // Each property is preceded by its name and a colon. It is then up to the particular
     // type of descriptor how to format the property's value.
     os << pad(indent) << name << ": ";
 }

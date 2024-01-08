@@ -32,13 +32,13 @@ std::string to_string(T value, UIntFormat format)
     {
         case UIntFormat::Hex:
             if constexpr (sizeof(T) == 1)
-                std::snprintf(buffer, 16, "0x%02X", value & 0xFF); 
+                std::snprintf(buffer, 16, "0x%02X", value & 0xFF);
             else if constexpr (sizeof(T) == 2)
-                std::snprintf(buffer, 16, "0x%04X", value & 0xFFFF); 
+                std::snprintf(buffer, 16, "0x%04X", value & 0xFFFF);
             else if constexpr (sizeof(T) == 4)
-                std::snprintf(buffer, 16, "0x%08X", value & 0xFFFF'FFFF); 
+                std::snprintf(buffer, 16, "0x%08X", value & 0xFFFF'FFFF);
             else if constexpr (sizeof(T) == 8)
-                std::snprintf(buffer, 16, "0x%016X", value); 
+                std::snprintf(buffer, 16, "0x%016X", value);
             break;
 
         case UIntFormat::Dec:
@@ -48,7 +48,7 @@ std::string to_string(T value, UIntFormat format)
         case UIntFormat::Bool:
             std::snprintf(buffer, 16, "%s", value != 0x00 ? "true" : "false");
             break;
-  
+
         default:
             std::snprintf(buffer, 16, "<error>");
     }
@@ -58,7 +58,7 @@ std::string to_string(T value, UIntFormat format)
 
 
 // TODO Can we retire this.
-// Used in Actions 0B, 02Random, 02SpriteLayout, 02Variable, 03. 
+// Used in Actions 0B, 02Random, 02SpriteLayout, 02Variable, 03.
 template <typename T>
 struct IntegerDescriptorT : PropertyDescriptor
 {
@@ -110,8 +110,8 @@ struct IntegerListDescriptorT : PropertyDescriptor
 
 
 // Use this in place of naked uint8_t, uint16_t and uint32_t.
-// Should help to avoid errors by internalising the size of reads and 
-// writes. UIntFormat is a print parameter, which is not true of all 
+// Should help to avoid errors by internalising the size of reads and
+// writes. UIntFormat is a print parameter, which is not true of all
 // types with the read(), write(), parse(), print() interface.
 // TODO what about signed types?
 template <typename T, bool EXT = false>
@@ -119,7 +119,7 @@ class UInt
 {
 public:
     using Type = T;
-    static constexpr bool Ext = EXT;    
+    static constexpr bool Ext = EXT;
 
 public:
     void print(std::ostream& os, UIntFormat format) const
@@ -138,7 +138,7 @@ public:
     }
 
     void write(std::ostream& os) const
-    {        
+    {
         write_uint<T, EXT>(os, m_value);
     }
 
@@ -160,12 +160,12 @@ private:
 };
 
 
-// Fixed size array of any type with the standard read(), write(), 
+// Fixed size array of any type with the standard read(), write(),
 // parse(), print() interface, with UIntFormat as a print parameter.
 template <typename T, uint16_t SIZE>
 class UIntArray
 {
-public:    
+public:
     explicit UIntArray(std::array<T, SIZE> values = {})
     : m_values{values}
     {
@@ -201,7 +201,7 @@ public:
     }
 
     void write(std::ostream& os) const
-    {        
+    {
         for (const auto& value: m_values)
         {
             value.write(os);
@@ -220,12 +220,12 @@ private:
 };
 
 
-// Variable size array of any type with the standard read(), write(), 
+// Variable size array of any type with the standard read(), write(),
 // parse(), print() interface, with UIntFormat as a print parameter.
 template <typename T>
 class UIntVector
 {
-public:    
+public:
     explicit UIntVector(std::vector<T> values = {})
     : m_values{values}
     {
@@ -267,7 +267,7 @@ public:
     }
 
     void write(std::ostream& os) const
-    {        
+    {
         write_uint8(os, uint8_t(m_values.size()));
         for (const auto& value: m_values)
         {
@@ -287,7 +287,7 @@ private:
 };
 
 
-// TODO adding a print_property() member to the value would eliminate the need for this 
+// TODO adding a print_property() member to the value would eliminate the need for this
 template <typename T>
 struct UIntDescriptor : PropertyDescriptor
 {

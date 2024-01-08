@@ -40,7 +40,7 @@ private:
 
 class BridgeLayout
 {
-public:    
+public:
     void read(std::istream& is);
     void write(std::ostream& os) const;
     void print(std::ostream& os, uint16_t indent) const;

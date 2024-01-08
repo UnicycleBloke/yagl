@@ -26,10 +26,10 @@ void Action08Record::read(std::istream& is, const GRFInfo& info)
 {
     // This is the version of the GRF specification we are using.
     m_grf_version = static_cast<GRFVersion>(read_uint8(is));
-    
+
     // Unique GRF ID. Can contain a version, or place a version in the Action14 record.
     m_grf_id.read(is);
-        
+
     m_name.read(is);
     m_info.read(is);
 }
@@ -40,10 +40,10 @@ void Action08Record::write(std::ostream& os, const GRFInfo& info) const
     ActionRecord::write(os, info);
 
     write_uint8(os, static_cast<uint8_t>(m_grf_version));
-    m_grf_id.write(os);   
+    m_grf_id.write(os);
     m_name.write(os);
     m_info.write(os);
-}  
+}
 
 
 namespace {
@@ -89,7 +89,7 @@ void Action08Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << pad(indent) << RecordName(record_type()) << " // Action08\n";
     os << pad(indent) << "{\n";
 
-    desc_grf_id.print(m_grf_id, os, indent + 4); 
+    desc_grf_id.print(m_grf_id, os, indent + 4);
     desc_version.print(m_grf_version, os, indent + 4);
     desc_name.print(m_name, os, indent + 4);
     desc_description.print(m_info, os, indent + 4);

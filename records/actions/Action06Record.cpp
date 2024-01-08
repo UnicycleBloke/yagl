@@ -50,7 +50,7 @@ void Action06Record::write(std::ostream& os, const GRFInfo& info) const
         write_uint8_ext(os, mod.offset);
     }
     write_uint8(os, 0xFF);
-}  
+}
 
 
 // modify_next // Action06
@@ -70,11 +70,11 @@ void Action06Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 {
     os << pad(indent) << RecordName(record_type()) << " // Action06\n";
     os << pad(indent) << "{\n";
-    os << pad(indent + 4) << "// modification(value, num_bytes, offset, add?);\n"; 
+    os << pad(indent + 4) << "// modification(value, num_bytes, offset, add?);\n";
 
     for (const auto& mod: m_modifications)
     {
-        os << pad(indent + 4) << str_modification << "("; 
+        os << pad(indent + 4) << str_modification << "(";
         os << str_parameter << "[" << to_hex(mod.param_num) << "], ";
         os << static_cast<uint16_t>(mod.param_size) << ", ";
         os << mod.offset << ", ";
@@ -88,7 +88,7 @@ void Action06Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 void Action06Record::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
-    
+
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {

@@ -35,7 +35,7 @@ void SpriteIndexRecord::read(std::istream& is, const GRFInfo& info)
 void SpriteIndexRecord::write(std::ostream& os, const GRFInfo& info) const
 {
     write_uint32(os, m_sprite_id);
-}  
+}
 
 
 static constexpr const char* str_sprite_id = "sprite_id";
@@ -83,7 +83,7 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
         // section of the GRF.
         if (is.peek().type == TokenType::OpenBracket)
         {
-            // Need to create RealSpriteRecord     
+            // Need to create RealSpriteRecord
             // Size and compression are place holder values to be read from the token stream.
             record = std::make_unique<RealSpriteRecord>(m_sprite_id, 0, 0);
             record->parse(is, sprites);
@@ -92,7 +92,7 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
         {
             // ActionFF is a sound effect. The SpriteWrapper is needed to write the sprite index value
             // into the binary file, which the ActionFF does not do. This is only important for Container
-            // version 2 files. RealSprites this for themselves. ActionFF can also be used directly in the 
+            // version 2 files. RealSprites this for themselves. ActionFF can also be used directly in the
             // data section, whether Container 2 or not.
             std::unique_ptr<Record> effect = std::make_unique<ActionFFRecord>();
             effect->parse(is, sprites);
@@ -101,7 +101,7 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 
         // This adds the sprite to the m_sprites map inside NewGRFData.
         //append_real_sprite(m_sprite_id, record);
-        // Sprites with the same ID are stored in map indexed by zoom level. 
+        // Sprites with the same ID are stored in map indexed by zoom level.
         // These maps are stored in a map index by the sprite ID.
         if (sprites.find(m_sprite_id) == sprites.end())
         {

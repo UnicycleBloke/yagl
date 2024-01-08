@@ -45,7 +45,7 @@ static constexpr const char* str_NFO =
     "00 "                // Trains
     "FD "                // This set's ID
     "89 "                // VarAction type - primary object, double word size
-    "0C "                // Variable  
+    "0C "                // Variable
        "00 "             // Shift num
        "FF FF 00 00 "    // AND mask
     "03 "                // 3 ranges

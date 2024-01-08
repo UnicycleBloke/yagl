@@ -23,19 +23,19 @@
 #include "Record.h"
 
 
-// A simple singleton so that we can more easily access the command line options 
+// A simple singleton so that we can more easily access the command line options
 // from everywhere in the software, if we need to.
 class CommandLineOptions
 {
-    public: 
-        enum class Operation { Decode, Encode, HexDump };   
+    public:
+        enum class Operation { Decode, Encode, HexDump };
 
-    public: 
+    public:
         void parse(int argc, char* argv[]);
         static CommandLineOptions& options();
 
         Operation          operation()  const { return m_operation; }
-        
+
         const std::string& grf_file()   const { return m_grf_file; }
         const std::string& yagl_dir()   const { return m_yagl_dir; }
         const std::string& yagl_file()  const { return m_yagl_file; }
@@ -49,7 +49,7 @@ class CommandLineOptions
 
         bool               debug()      const { return m_debug; }
         const std::string& test_args()  const { return m_test_args; }
-        
+
     private:
         CommandLineOptions() {}
 
@@ -62,8 +62,8 @@ class CommandLineOptions
         // Optional arguments.
         uint16_t    m_width     = 800;                    // Max width of spritesheets
         uint16_t    m_height    = 16'000;                 // Max height of spritesheets
-        PaletteType m_palette   = PaletteType::Default; 
-        uint8_t     m_chunk_gap = 3;                      // Join chunks in tiles gaps smaller than is. 
+        PaletteType m_palette   = PaletteType::Default;
+        uint8_t     m_chunk_gap = 3;                      // Join chunks in tiles gaps smaller than is.
 
         // Calculated from m_grf_file and m_yagl_dir.
         std::string m_yagl_dir  = "sprites";
@@ -75,4 +75,3 @@ class CommandLineOptions
         bool        m_debug    = false;
 };
 
-  

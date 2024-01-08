@@ -36,10 +36,10 @@ public:
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
 public:
-    // Use 80 to randomize the object (vehicle, station, building, industry, object) 
+    // Use 80 to randomize the object (vehicle, station, building, industry, object)
     //   based on its own triggers and bits.
     // Use 83 to randomize the object based on its "related" object (s.b.).
-    // Use 84 to randomize the vehicle based on any vehicle in the consist. 
+    // Use 84 to randomize the vehicle based on any vehicle in the consist.
     enum class RandomType : uint8_t
     {
         Object  = 0x80,
@@ -60,16 +60,16 @@ private:
     uint8_t               m_set_id  = 0;
     RandomType            m_type    = RandomType::Object;
 
-    // Only present if type is RandomType::Consist 
+    // Only present if type is RandomType::Consist
     uint8_t               m_count   = 0;
     ConsistType           m_method  = ConsistType::BackwardFromEngine;
-    
+
     uint8_t               m_triggers = 0;
     uint8_t               m_randbit  = 0;
-    
-    // Number of set IDs must be a power of 2. A map is 
-    // used to account for duplicates. Using a map will 
-    // reorder the set IDs into blocks: probably doesn't 
+
+    // Number of set IDs must be a power of 2. A map is
+    // used to account for duplicates. Using a map will
+    // reorder the set IDs into blocks: probably doesn't
     // matter.
     std::map<uint16_t, uint16_t> m_set_ids;
 };

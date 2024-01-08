@@ -48,8 +48,8 @@ static constexpr const char* str_YAGL =
     "        }\n"
     "    }\n"
     "}\n";
-    
-static constexpr const char* str_NFO = 
+
+static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "14 "
     "43 49 4E 46 4F " // INFO
@@ -67,7 +67,7 @@ static constexpr const char* str_NFO =
        "42 4D 49 4E 56 " // MINV
           "04 00 "
           "7F 1C 00 00 "
-       "42 4E 50 41 52 " // NPAR 
+       "42 4E 50 41 52 " // NPAR
           "01 00 "
           "06 "
        "43 50 41 52 41 " // PARA

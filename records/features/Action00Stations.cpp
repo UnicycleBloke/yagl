@@ -42,13 +42,13 @@ constexpr const char* str_animation_info            = "animation_info";
 constexpr const char* str_animation_speed           = "animation_speed";
 constexpr const char* str_animation_triggers        = "animation_triggers";
 constexpr const char* str_sprite                    = "sprite";
-constexpr const char* str_tile                      = "tile"; 
-constexpr const char* str_layout                    = "layout"; 
+constexpr const char* str_tile                      = "tile";
+constexpr const char* str_layout                    = "layout";
 //constexpr const char* str_ground_sprite             = "ground_sprite";
 //constexpr const char* str_sprite_data               = "sprite_data";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -96,23 +96,23 @@ constexpr UInt8Descriptor           desc_17  = { 0x17, str_animation_speed,     
 constexpr UInt16Descriptor          desc_18  = { 0x18, str_animation_triggers,        UIntFormat::Hex };
 
 
-const EnumDescriptorT<CustomLayout::Platform> platform_desc = 
-{ 
-    0x00, "platform",                   
+const EnumDescriptorT<CustomLayout::Platform> platform_desc =
+{
+    0x00, "platform",
     {
-        { 0, "P" }, // Platform::Plain },    
-        { 2, "B" }, // Platform::Building }, 
-        { 4, "L" }, // Platform::RoofLeft }, 
-        { 6, "R" }, // Platform::RoofRight }, 
+        { 0, "P" }, // Platform::Plain },
+        { 2, "B" }, // Platform::Building },
+        { 4, "L" }, // Platform::RoofLeft },
+        { 6, "R" }, // Platform::RoofRight },
     }
 };
 
-const EnumDescriptorT<CustomLayout::Direction> direction_desc = 
-{ 
-    0x00, "direction",                   
+const EnumDescriptorT<CustomLayout::Direction> direction_desc =
+{
+    0x00, "direction",
     {
-        { 0, "NE_SW" },     
-        { 1, "NW_SE" },  
+        { 0, "NE_SW" },
+        { 1, "NW_SE" },
     }
 };
 
@@ -163,15 +163,15 @@ void StationTileData::print(std::ostream& os, uint16_t indent) const
     if (m_new_bb)
     {
         os << pad(indent) << str_sprite << "(" << to_hex(m_sprite) << ", ";
-        os << to_hex(m_x_off) << ", " << to_hex(m_y_off) << ", " << to_hex(m_z_off) << ", "; 
-        os << to_hex(m_x_ext) << ", " << to_hex(m_y_ext) << ", " << to_hex(m_z_ext); 
-        os << ");\n"; 
+        os << to_hex(m_x_off) << ", " << to_hex(m_y_off) << ", " << to_hex(m_z_off) << ", ";
+        os << to_hex(m_x_ext) << ", " << to_hex(m_y_ext) << ", " << to_hex(m_z_ext);
+        os << ");\n";
     }
     else
     {
         os << pad(indent) << str_sprite << "(" << to_hex(m_sprite) << ", ";
-        os << to_hex(m_x_off) << ", " << to_hex(m_y_off); 
-        os << ");\n"; 
+        os << to_hex(m_x_off) << ", " << to_hex(m_y_off);
+        os << ");\n";
     }
 }
 
@@ -243,7 +243,7 @@ void StationTile::write(std::ostream& os) const
 void StationTile::print(std::ostream& os, uint16_t indent) const
 {
     os << pad(indent) << str_tile << "<" << to_hex(m_ground_sprite) << ">\n";
-    os << pad(indent) << "{\n"; 
+    os << pad(indent) << "{\n";
 
     if (m_ground_sprite != 0x0000'0000)
     {
@@ -253,7 +253,7 @@ void StationTile::print(std::ostream& os, uint16_t indent) const
         }
     }
 
-    os << pad(indent) << "}\n"; 
+    os << pad(indent) << "}\n";
 
 }
 
@@ -302,12 +302,12 @@ void StationLayout::write(std::ostream& os) const
 
 void StationLayout::print(std::ostream& os, uint16_t indent) const
 {
-    os << "\n" << pad(indent) << "{\n"; 
+    os << "\n" << pad(indent) << "{\n";
     for (const auto& tile: m_tiles)
     {
         tile.print(os, indent + 4);
     }
-    os << pad(indent) << "}"; 
+    os << pad(indent) << "}";
 }
 
 
@@ -367,14 +367,14 @@ void CustomLayout::print(std::ostream& os, uint16_t indent) const
 {
     os << pad(indent) << str_layout << "<";
     direction_desc.print_value(m_direction, os);
-    os << ">\n"; 
-    os << pad(indent) << "{\n"; 
-    os << pad(indent + 4) << "// Platform: B=Building, P=Plain, L=RoofLeft, R=RoofRight\n"; 
+    os << ">\n";
+    os << pad(indent) << "{\n";
+    os << pad(indent + 4) << "// Platform: B=Building, P=Plain, L=RoofLeft, R=RoofRight\n";
 
     uint16_t index{};
     for (uint8_t c = 0; c < m_platform_count; ++c)
     {
-        os << pad(indent + 4); 
+        os << pad(indent + 4);
         for (uint8_t l = 0; l < m_platform_length; ++l)
         {
             // Assert that the vector has the correct length?
@@ -387,10 +387,10 @@ void CustomLayout::print(std::ostream& os, uint16_t indent) const
                 case Platform::RoofRight: os << "R "; break;
             }
         }
-        os << ";\n"; 
+        os << ";\n";
     }
 
-    os << pad(indent) << "}\n"; 
+    os << pad(indent) << "}\n";
 }
 
 
@@ -454,12 +454,12 @@ void CustomStation::write(std::ostream& os) const
 
 void CustomStation::print(std::ostream& os, uint16_t indent) const
 {
-    os << "\n" << pad(indent) << "{\n"; 
+    os << "\n" << pad(indent) << "{\n";
     for (const auto& layout: m_layouts)
     {
         layout.print(os, indent + 4);
     }
-    os << pad(indent) << "}"; 
+    os << pad(indent) << "}";
 }
 
 
@@ -503,7 +503,7 @@ bool Action00Stations::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00Stations::write_property(std::ostream& os, uint8_t property) const
@@ -534,7 +534,7 @@ bool Action00Stations::write_property(std::ostream& os, uint8_t property) const
 }
 
 
-bool Action00Stations::print_property(std::ostream& os, uint8_t property, uint16_t indent) const 
+bool Action00Stations::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
     switch (property)
     {

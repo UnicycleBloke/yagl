@@ -39,8 +39,8 @@ struct AirportTile
 
 struct AirportLayout
 {
-    enum class Rotation { North = 0, East = 2, South = 4, West = 6 }; 
-    
+    enum class Rotation { North = 0, East = 2, South = 4, West = 6 };
+
     Rotation rotation;
     std::vector<AirportTile> tiles;
 

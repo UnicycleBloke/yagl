@@ -39,7 +39,7 @@ constexpr const char* str_layout              = "layout";
 constexpr const char* str_table               = "table";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -101,26 +101,26 @@ void BridgeTable::write(std::ostream& os) const
 
 void BridgeTable::print(std::ostream& os, uint16_t indent) const
 {
-    os << pad(indent) << "{\n"; 
- 
+    os << pad(indent) << "{\n";
+
     uint16_t index = 0;
     for (const uint32_t& sprite: m_sprites)
     {
-        if ((index % 8) == 0) 
+        if ((index % 8) == 0)
         {
             os << pad(indent + 4);
         }
-        
+
         os << to_hex(sprite) << " ";
-        
+
         ++index;
-        if ((index % 8) == 0) 
+        if ((index % 8) == 0)
         {
-            os << "\n"; 
+            os << "\n";
         }
     }
 
-    os << pad(indent) << "}\n"; 
+    os << pad(indent) << "}\n";
 }
 
 
@@ -167,14 +167,14 @@ void BridgeLayout::print(std::ostream& os, uint16_t indent) const
 {
     uint8_t table_id = m_first_table_id;
 
-    os << "\n"; 
-    os << pad(indent) << "{\n"; 
+    os << "\n";
+    os << pad(indent) << "{\n";
     for (const auto& table: m_tables)
     {
-        os << pad(indent + 4) << str_table << "<" << to_hex(table_id++) << ">\n"; 
+        os << pad(indent + 4) << str_table << "<" << to_hex(table_id++) << ">\n";
         table.print(os, indent + 4);
     }
-    os << pad(indent) << "}"; 
+    os << pad(indent) << "}";
 }
 
 
@@ -223,7 +223,7 @@ bool Action00Bridges::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00Bridges::write_property(std::ostream& os, uint8_t property) const
@@ -250,7 +250,7 @@ bool Action00Bridges::write_property(std::ostream& os, uint8_t property) const
 }
 
 
-bool Action00Bridges::print_property(std::ostream& os, uint8_t property, uint16_t indent) const 
+bool Action00Bridges::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
     switch (property)
     {

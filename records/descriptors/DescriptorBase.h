@@ -34,7 +34,7 @@ struct PropertyDescriptor
 };
 
 
-// We optionally forward the indent to the value being printed. This is 
+// We optionally forward the indent to the value being printed. This is
 // used for example by the SnowLine.
 template <typename T, bool INDENT = false>
 struct GenericDescriptor : PropertyDescriptor
@@ -57,14 +57,14 @@ struct GenericDescriptor : PropertyDescriptor
 };
 
 
-// Useful for any array of objects with the standard interface: 
+// Useful for any array of objects with the standard interface:
 // print(), parse(), read(), write(). Integers have an additional
-// format parameter passed to print(), so there is a different Array 
+// format parameter passed to print(), so there is a different Array
 // for these.
 template <typename T, uint16_t SIZE>
 class Array
 {
-public:    
+public:
     void print(std::ostream& os) const
     {
         os << "[";
@@ -95,7 +95,7 @@ public:
     }
 
     void write(std::ostream& os) const
-    {        
+    {
         for (const auto& value: m_values)
         {
             value.write(os);
@@ -107,15 +107,15 @@ private:
 };
 
 
-// Useful for any vector of objects with the standard interface: 
+// Useful for any vector of objects with the standard interface:
 // print(), parse(), read(), write(). Integers have an additional
-// format parameter passed to print(), so there is a different Array 
+// format parameter passed to print(), so there is a different Array
 // for these. We assume that the binary format includes a uint8_t
 // length before the items.
 template <typename T>
 class Vector
 {
-public:    
+public:
     void print(std::ostream& os) const
     {
         os << "[";
@@ -152,7 +152,7 @@ public:
     }
 
     void write(std::ostream& os) const
-    {        
+    {
         write_uint8(os, uint8_t(m_values.size()));
         for (const auto& value: m_values)
         {

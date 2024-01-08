@@ -23,7 +23,7 @@
 #include <iostream>
 
 
-// All the different 
+// All the different
 enum class TokenType
 {
     // Tokens with no value
@@ -36,7 +36,7 @@ enum class TokenType
     OpenBrace,   CloseBrace,   // Blocks
     OpenAngle,   CloseAngle,   // Arguments?
 
-    Equals,     // = 
+    Equals,     // =
     NotEqual,   // !=
     Ampersand,  // &
     Percent,    // %
@@ -51,7 +51,7 @@ enum class TokenType
     OpDivide,   // / - single slash
 
     // Tokens with values attached
-    Number, // Any decimal, binary (0bXXX), octal (0XXX), hexadecimal (0xXXX), or (decimal) floating point number 
+    Number, // Any decimal, binary (0bXXX), octal (0XXX), hexadecimal (0xXXX), or (decimal) floating point number
     Ident,  // Any name or keyword
     String, // Any string literal - this is a unicode string endoded as UTF-8.
 
@@ -83,17 +83,17 @@ struct TokenValue
 class Lexer
 {
 public:
-    std::vector<TokenValue> lex(std::istream& yagl_stream); 
+    std::vector<TokenValue> lex(std::istream& yagl_stream);
 
 private:
-    // These return true if the byte is consumed. In some cases, the state 
+    // These return true if the byte is consumed. In some cases, the state
     // changes but the byte is not consumed - a peek without a peek.
     bool handle_byte(uint8_t c, uint8_t p);
     bool handle_symbol(uint8_t c, uint8_t p);
-    bool handle_ident(uint8_t c);    
-    bool handle_octal(uint8_t c);    
-    bool handle_decimal(uint8_t c);            
-    bool handle_hexadecimal(uint8_t c);            
+    bool handle_ident(uint8_t c);
+    bool handle_octal(uint8_t c);
+    bool handle_decimal(uint8_t c);
+    bool handle_hexadecimal(uint8_t c);
     bool handle_binary(uint8_t c);
     bool handle_float(uint8_t c);
     bool handle_string(uint8_t c);
@@ -105,28 +105,28 @@ private:
     bool handle_comment_star(uint8_t c);
 
     // Append a new token to the output list.
-    void emit(TokenType type, std::string value = ""); 
-    void emit(TokenType type, NumberType num_type, std::string value = ""); 
+    void emit(TokenType type, std::string value = "");
+    void emit(TokenType type, NumberType num_type, std::string value = "");
 
 private:
     // The lexer is simple state machine for the purposes of combining
     // multiple characters into a single lexeme.
-    enum class LexerState 
-    { 
-        // We are not in the middle of a multicharacter lexeme. 
-        None, 
+    enum class LexerState
+    {
+        // We are not in the middle of a multicharacter lexeme.
+        None,
         // We used the peek value to create a digraph.
         Peeked,
-        // We are constructing and alphanumeric identifier.        
-        Ident, 
+        // We are constructing and alphanumeric identifier.
+        Ident,
         // We are constructing a literal string - can contain anything. Delimited by double quotes.
-        String, 
+        String,
         // States for constructing numbers in the supported formats.
-        Dec, Bin, Oct, Hex, Float, 
+        Dec, Bin, Oct, Hex, Float,
         // States for eliminating comments from the input stream.
-        // '/' starts a comment: C-style if followed by '*'; C++-style if followed by '/'; or an error. 
+        // '/' starts a comment: C-style if followed by '*'; C++-style if followed by '/'; or an error.
         // '*' heralds the end of C-style, if followed by '/', or is just a continuation.
-        // '\n' marks the end of C++-style 
+        // '\n' marks the end of C++-style
         Slash, Star, CPP, C
     };
 
@@ -134,7 +134,7 @@ private:
     std::string m_yagl_file;
 
     // The lexer is a simple state machine.
-    LexerState m_state = LexerState::None;  
+    LexerState m_state = LexerState::None;
 
     // Keep track of the position in the file to allow more targeted errors.
     uint32_t                m_line   = 1;

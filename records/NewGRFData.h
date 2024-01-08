@@ -44,8 +44,8 @@ public:
     // Dump the records as hex, but break lines between records so that diff tools can recover after diffs.
     void hex_dump(std::ostream& os);
 
-private:    
-    // Helpers for reading a GRF binary file 
+private:
+    // Helpers for reading a GRF binary file
     GRFFormat               read_format(std::istream& is);
     std::unique_ptr<Record> read_record(std::istream& is, uint32_t size, bool top_level, const GRFInfo& info);
     void                    read_sprite(std::istream& is, uint32_t sprite_id, uint32_t size, uint8_t compression, const GRFInfo& info);
@@ -64,16 +64,16 @@ private:
 private:
     GRFInfo m_info;
 
-    // Simple list of all records in the data section. 
-    // Should be consistent between Format1 and Format2, so manufacture sprite references 
-    // when reading Format1 (sprites are in the data section), and place the actual sprites 
+    // Simple list of all records in the data section.
+    // Should be consistent between Format1 and Format2, so manufacture sprite references
+    // when reading Format1 (sprites are in the data section), and place the actual sprites
     // into the map below. Could then be saved as Format2 if so desired.
-    std::vector<std::unique_ptr<Record>> m_records;            
-    
+    std::vector<std::unique_ptr<Record>> m_records;
+
     // Map the sprite ID to images. There are possibly multiple images for each ID for
     // various zoom levels. The same zoom level may appear more than once (at least, maybe
     // an 8bpp and a 32bpp image for normal zoom). Perhaps these are conditionally selected.
     // Some images appear to have RGB + A + P.
-    std::map<uint32_t, SpriteZoomVector> m_sprites;            
+    std::map<uint32_t, SpriteZoomVector> m_sprites;
 };
 

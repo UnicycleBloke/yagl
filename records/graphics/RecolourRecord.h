@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once 
+#pragma once
 #include "Record.h"
 
 
@@ -36,10 +36,10 @@ public:
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
 private:
-    // A 256-byte recolor table. A byte at the offset equal to the index of the 
-    // source color specifies the color to be drawn. Note that the offsets and 
-    // bytes are different depending on whether the GRF is being loaded in TTD 
-    // DOS or TTD Win.     
+    // A 256-byte recolor table. A byte at the offset equal to the index of the
+    // source color specifies the color to be drawn. Note that the offsets and
+    // bytes are different depending on whether the GRF is being loaded in TTD
+    // DOS or TTD Win.
     std::array<uint8_t, 256> m_colour_map;
 };
 
