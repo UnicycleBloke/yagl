@@ -53,7 +53,7 @@
 #include "SpriteSheetGenerator.h"
 #include "CommandLineOptions.h"
 #include "Exceptions.h"
-#include "yagl_version.h" // Generated in a pre-build step.
+#include "Version.h"
 #include <sstream>
 #include <fstream>
 #include <csignal>

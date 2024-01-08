@@ -118,6 +118,9 @@ add_library(yagl_lib STATIC
     utility/GRFStrings.cpp
     utility/Exceptions.cpp
     utility/Languages.cpp
+
+    # Version
+    "${CMAKE_BINARY_DIR}/generated/yagl_version.cpp"
 )
 
 
@@ -186,14 +189,12 @@ add_executable(yagl_tests
 )
 
 
-# This appears to be the simplest way to create a pre-build step that
-# actually works. Create a fake target and make the real target depend on it.
+# Generate a target to determine the version, output to yagl_version.cpp
 add_custom_target(
     prebuild_commands
-    COMMAND echo Pre-build commands...
-    # Python is required. I used Python 3.8.1, but the script doesn't do much...
-    # Windows Subsystem for Linux: needed to manually create soft link to /usr/bin/python3.
-    COMMAND python ${PROJECT_SOURCE_DIR}/yagl_version.py
+    ${CMAKE_COMMAND} "-DOUTPUT_FILE=${CMAKE_BINARY_DIR}/generated/yagl_version.cpp" -P "${CMAKE_SOURCE_DIR}/yagl_version.cmake"
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    BYPRODUCTS "${CMAKE_BINARY_DIR}/generated/yagl_version.cpp"
 )
 add_dependencies(yagl prebuild_commands)
 
@@ -208,6 +209,7 @@ target_include_directories(yagl_lib PUBLIC
     utility
     application
     tests
+    version
 
     # Header only third party libraries used for convenience.
     third_party/catch2

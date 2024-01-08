@@ -19,7 +19,7 @@
 #include "CommandLineOptions.h"
 #include "Exceptions.h"
 #include "FileSystem.h"
-#include "yagl_version.h" // Generated in a pre-build step.
+#include "Version.h"
 #include <iostream>
 
 

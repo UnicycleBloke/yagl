@@ -21,7 +21,7 @@
 #include "NewGRFData.h"
 #include "Lexer.h"
 #include "CommandLineOptions.h"
-#include "yagl_version.h" // Generated in a pre-build step.
+#include "Version.h"
 #include "FileSystem.h"
 
 // Unit testing framework
