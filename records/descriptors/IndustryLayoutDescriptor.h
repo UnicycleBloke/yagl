@@ -48,11 +48,11 @@ public:
     void print(std::ostream& os, uint16_t indent) const;
     void parse(TokenStream& is);
 
-private:    
+private:
     // The layout is a reference is the first byte is 0xFE.
     bool m_is_reference;
-    
-    // These are used if this layout is a reference to another 
+
+    // These are used if this layout is a reference to another
     // industry layout, in which case there are zero tiles.
     uint8_t m_industry_num;
     uint8_t m_layout_num;
@@ -70,7 +70,7 @@ public:
     void print(std::ostream& os, uint16_t indent) const;
     void parse(TokenStream& is);
 
-private:    
+private:
     std::vector<IndustryLayout> m_layouts;
 };
 

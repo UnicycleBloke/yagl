@@ -14,7 +14,7 @@ main()
     image image1;               // default contructor
     image image2("test2.png");  // char const*
     char test3[] = "test3.png"; // char*
-    image image3(test3); 
+    image image3(test3);
     image image4(std::string("test4.png"));
 
     image1.write("test4.png");  // char const*

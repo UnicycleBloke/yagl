@@ -30,8 +30,8 @@ int Record::alloc_count = 0;
 
 void ActionRecord::write(std::ostream& os, const GRFInfo& info) const
 {
-    // The read and write methods for this class are unbalanced because 
-    // the file reader needs to read ahead to work out what kind of 
+    // The read and write methods for this class are unbalanced because
+    // the file reader needs to read ahead to work out what kind of
     // record to create.
 
     // Convert the record type enum into an index for the record in the file.
@@ -64,7 +64,7 @@ void ActionRecord::write(std::ostream& os, const GRFInfo& info) const
         case RecordType::ACTION_12:               type = 0x12; break;
         case RecordType::ACTION_13:               type = 0x13; break;
         case RecordType::ACTION_14:               type = 0x14; break;
-        case RecordType::ACTION_FE:               type = 0xFE; break; 
+        case RecordType::ACTION_FE:               type = 0xFE; break;
         case RecordType::ACTION_FF:               type = 0xFF; break;
     }
 
@@ -78,7 +78,7 @@ void ContainerRecord::append_sprite(std::unique_ptr<Record> record)
 }
 
 
-void ContainerRecord::print_sprite(uint16_t index, std::ostream& os, 
+void ContainerRecord::print_sprite(uint16_t index, std::ostream& os,
     const SpriteZoomMap& sprites, uint16_t indent) const
 {
     auto record = get_sprite(index);
@@ -88,17 +88,17 @@ void ContainerRecord::print_sprite(uint16_t index, std::ostream& os,
     }
     else
     {
-        os << pad(indent) << "Missing record\n"; 
+        os << pad(indent) << "Missing record\n";
     }
 }
 
 
-// A container may contain four different types of objects. Only certain combinations 
-// are permitted. 
+// A container may contain four different types of objects. Only certain combinations
+// are permitted.
 static const std::map<std::string, uint8_t> g_indices =
 {
     { "sprite_id",       0x00 }, // Sprite index - indirection for one or several images (zoom levels)
-                                 // Can also be indirection for a binary sound effects stored in the 
+                                 // Can also be indirection for a binary sound effects stored in the
                                  // graphics section of a Container2 file.
     { "recolour_sprite", 0x01 }, // Colour palette shuffling.
 
@@ -132,15 +132,15 @@ void ContainerRecord::parse_sprite(TokenStream& is, SpriteZoomMap& sprites)
                 case 0x04: record = std::make_unique<FakeSpriteRecord>(); break;
                 default:   throw PARSER_ERROR("Unexpected container sub-record type", token);
             }
-        } 
-        
+        }
+
         record->parse(is, sprites);
         append_sprite(std::move(record));
     }
     else
     {
         throw PARSER_ERROR("Unexpected token type", token);
-    }            
+    }
 }
 
 
@@ -294,27 +294,27 @@ bool feature_is_vehicle(FeatureType type)
 
 const std::map<NewFeatureType, std::string> g_new_feature_names =
 {
-    { NewFeatureType::PreSignal,        "PreSignal" },  
-    { NewFeatureType::Catenary,         "Catenary" },  
-    { NewFeatureType::Foundations,      "Foundations" },  
-    { NewFeatureType::TTDPatchGUI,      "TTDPatchGUI" },  
-    { NewFeatureType::Canals,           "Canals" },  
-    { NewFeatureType::OneWayArrows,     "OneWayArrows" },  
-    { NewFeatureType::TwoCompanyColour, "TwoCompanyColour" },  
-    { NewFeatureType::TramTracks,       "TramTracks" },  
-    { NewFeatureType::SnowyTrees,       "SnowyTrees" },  
-    { NewFeatureType::CoastTiles,       "CoastTiles" },  
-    { NewFeatureType::NewSignals,       "NewSignals" },  
-    { NewFeatureType::SlopeTrackMarks,  "SlopeTrackMarks" },  
-    { NewFeatureType::AirportExtra,     "AirportExtra" },  
-    { NewFeatureType::RoadStops,        "RoadStops" },  
-    { NewFeatureType::Aqueducts,        "Aqueducts" },   
-    { NewFeatureType::AutoRail,         "AutoRail" },  
-    { NewFeatureType::Flags,            "Flags" },  
-    { NewFeatureType::OpenTTDGUI,       "OpenTTDGUI" },  
-    { NewFeatureType::AirportPreview,   "AirportPreview" },  
-    { NewFeatureType::RailTypeTunnel,   "RailTypeTunnel" },  
-    { NewFeatureType::ExtraAllBlack,    "ExtraAllBlack" },  
+    { NewFeatureType::PreSignal,        "PreSignal" },
+    { NewFeatureType::Catenary,         "Catenary" },
+    { NewFeatureType::Foundations,      "Foundations" },
+    { NewFeatureType::TTDPatchGUI,      "TTDPatchGUI" },
+    { NewFeatureType::Canals,           "Canals" },
+    { NewFeatureType::OneWayArrows,     "OneWayArrows" },
+    { NewFeatureType::TwoCompanyColour, "TwoCompanyColour" },
+    { NewFeatureType::TramTracks,       "TramTracks" },
+    { NewFeatureType::SnowyTrees,       "SnowyTrees" },
+    { NewFeatureType::CoastTiles,       "CoastTiles" },
+    { NewFeatureType::NewSignals,       "NewSignals" },
+    { NewFeatureType::SlopeTrackMarks,  "SlopeTrackMarks" },
+    { NewFeatureType::AirportExtra,     "AirportExtra" },
+    { NewFeatureType::RoadStops,        "RoadStops" },
+    { NewFeatureType::Aqueducts,        "Aqueducts" },
+    { NewFeatureType::AutoRail,         "AutoRail" },
+    { NewFeatureType::Flags,            "Flags" },
+    { NewFeatureType::OpenTTDGUI,       "OpenTTDGUI" },
+    { NewFeatureType::AirportPreview,   "AirportPreview" },
+    { NewFeatureType::RailTypeTunnel,   "RailTypeTunnel" },
+    { NewFeatureType::ExtraAllBlack,    "ExtraAllBlack" },
 };
 
 

@@ -25,14 +25,14 @@ void EnumDescriptor::print_impl(uint32_t value, std::ostream& os, uint16_t inden
     prefix(os, indent);
 
     for (const auto& item: items)
-    { 
+    {
         if (value == item.value)
         {
             os << item.name << ";\n";
             return;
         }
     }
-    
+
     std::ostringstream ss;
     ss << "EnumDescriptor::print " << value;
     throw RUNTIME_ERROR(ss.str());
@@ -42,14 +42,14 @@ void EnumDescriptor::print_impl(uint32_t value, std::ostream& os, uint16_t inden
 void EnumDescriptor::print_value_impl(uint32_t value, std::ostream& os) const
 {
     for (const auto& item: items)
-    { 
+    {
         if (value == item.value)
         {
             os << item.name;
             return;
         }
     }
-    
+
     std::ostringstream ss;
     ss << "EnumDescriptor::print_value " << value;
     throw RUNTIME_ERROR(ss.str());
@@ -59,7 +59,7 @@ void EnumDescriptor::print_value_impl(uint32_t value, std::ostream& os) const
 const char* EnumDescriptor::value_impl(uint32_t value) const
 {
     for (const auto& item: items)
-    { 
+    {
         if (value == item.value)
         {
             return item.name;
@@ -77,7 +77,7 @@ void EnumDescriptor::parse_impl(uint32_t& value, TokenStream& is) const
     std::string name = is.match(TokenType::Ident);
 
     for (const auto& item: items)
-    { 
+    {
         if (name == item.name)
         {
             value = item.value;

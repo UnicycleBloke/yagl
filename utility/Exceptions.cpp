@@ -32,7 +32,7 @@ LexerError::LexerError(const std::string& what_arg, uint32_t line, uint32_t colu
 LexerError::LexerError(const char* what_arg, uint32_t line, uint32_t column, const char* file, uint32_t line2)
 : std::runtime_error{what_arg}
 {
-    CommandLineOptions& options = CommandLineOptions::options(); 
+    CommandLineOptions& options = CommandLineOptions::options();
 
     std::ostringstream os;
     os << "YAGL lexer error: ";
@@ -54,7 +54,7 @@ ParserError::ParserError(const std::string& what_arg, const TokenValue& token, c
 ParserError::ParserError(const char* what_arg, const TokenValue& token, const char* file, uint32_t line)
 : std::runtime_error{what_arg}
 {
-    CommandLineOptions& options = CommandLineOptions::options(); 
+    CommandLineOptions& options = CommandLineOptions::options();
 
     std::ostringstream os;
     os << "YAGL parser error: ";
@@ -76,7 +76,7 @@ RuntimeError::RuntimeError(const std::string& what_arg, const char* file, uint32
 RuntimeError::RuntimeError(const char* what_arg, const char* file, uint32_t line)
 : std::runtime_error(what_arg)
 {
-    CommandLineOptions& options = CommandLineOptions::options(); 
+    CommandLineOptions& options = CommandLineOptions::options();
 
     std::ostringstream os;
     os << "Runtime error: ";
@@ -98,7 +98,7 @@ PropertyError::PropertyError(const std::string& what_arg, uint8_t property, cons
 PropertyError::PropertyError(const char* what_arg, uint8_t property, const char* file, uint32_t line)
 : std::runtime_error(what_arg)
 {
-    CommandLineOptions& options = CommandLineOptions::options(); 
+    CommandLineOptions& options = CommandLineOptions::options();
 
     std::ostringstream os;
     os << "Property error: ";

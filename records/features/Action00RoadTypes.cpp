@@ -43,7 +43,7 @@ constexpr const char* str_maintenance_cost_factor = "maintenance_cost_factor";
 constexpr const char* str_alternate_roadtypes     = "alternate_roadtypes";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -118,7 +118,7 @@ bool Action00RoadTypes::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00RoadTypes::write_property(std::ostream& os, uint8_t property) const
@@ -150,7 +150,7 @@ bool Action00RoadTypes::write_property(std::ostream& os, uint8_t property) const
 }
 
 
-bool Action00RoadTypes::print_property(std::ostream& os, uint8_t property, uint16_t indent) const 
+bool Action00RoadTypes::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
     switch (property)
     {

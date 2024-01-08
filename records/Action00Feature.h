@@ -22,15 +22,15 @@
 #include <iostream>
 
 
-// Base class for all the different types of features. 
+// Base class for all the different types of features.
 // Each one has its own distinct set of properties.
 class Action00Feature
 {
 public:
     Action00Feature() {}
-    virtual ~Action00Feature() {}    
+    virtual ~Action00Feature() {}
 
-    // These methods only return bool so we can know if the base class for vehicles, ships, etc. 
+    // These methods only return bool so we can know if the base class for vehicles, ships, etc.
     // handled the property or not. We don't care about the result - an exception will be thrown
     // in cases where this was not so.
     // Binary serialisation

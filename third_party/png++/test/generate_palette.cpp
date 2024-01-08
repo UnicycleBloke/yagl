@@ -39,7 +39,7 @@ generate_image(png::image< pixel >& image)
 {
     typedef png::pixel_traits< pixel > traits;
     size_t colors = 1 << traits::get_bit_depth();
-    size_t size = colors / 2; 
+    size_t size = colors / 2;
     image.resize(size, size);
 
     png::palette palette(colors);

@@ -32,13 +32,13 @@ static constexpr uint16_t LONG_LAST_CHUNK  = 0x8000;
 class ChunkEncoder
 {
 public:
-    ChunkEncoder(const std::vector<uint8_t>& pixels, uint16_t xdim, uint16_t ydim, 
+    ChunkEncoder(const std::vector<uint8_t>& pixels, uint16_t xdim, uint16_t ydim,
         uint8_t compression, GRFFormat format);
-    std::vector<uint8_t> encode(); 
+    std::vector<uint8_t> encode();
 
 private:
-    struct Chunk 
-    { 
+    struct Chunk
+    {
         uint16_t length; // in pixels, high bit set if last chunk
         uint16_t offset; // in pixels
     };
@@ -54,45 +54,45 @@ private:
     uint16_t  m_xdim;
     uint16_t  m_ydim;
     GRFFormat m_format;
-    
-    uint16_t  m_pixel_size   = 0; 
+
+    uint16_t  m_pixel_size   = 0;
     uint16_t  m_trans_offset = 0;
     uint16_t  m_last_chunk   = 0;
 };
 
 
-std::vector<uint8_t> encode_tile(const std::vector<uint8_t>& pixels, uint16_t xdim, uint16_t ydim, 
+std::vector<uint8_t> encode_tile(const std::vector<uint8_t>& pixels, uint16_t xdim, uint16_t ydim,
     uint8_t compression, GRFFormat format)
 {
     ChunkEncoder encoder(pixels, xdim, ydim, compression, format);
-    return encoder.encode(); 
+    return encoder.encode();
 }
 
 
-std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xdim, uint16_t ydim, 
+std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xdim, uint16_t ydim,
     uint8_t compression, GRFFormat format)
 {
     const uint16_t LAST_CHUNK = (xdim > 0x100) ? LONG_LAST_CHUNK : SHORT_LAST_CHUNK;
 
     bool     long_offset  = chunks.size() > 0x10000;
-    uint16_t pixel_size   = 0; 
+    uint16_t pixel_size   = 0;
     uint16_t trans_offset = 0;
 
     // Interpret the compression information
     if (format == GRFFormat::Container2)
     {
-        // Is this format really supported? Have seen examples in 
+        // Is this format really supported? Have seen examples in
         // zbase-v5588/zbase_extra.grf. Makes no sense to me.
-        if ((compression & RealSpriteRecord::HAS_RGB) && 
-            (compression & RealSpriteRecord::HAS_ALPHA) && 
+        if ((compression & RealSpriteRecord::HAS_RGB) &&
+            (compression & RealSpriteRecord::HAS_ALPHA) &&
             (compression & RealSpriteRecord::HAS_PALETTE))
         {
             pixel_size   = 5;
             trans_offset = 3;
         }
-        // Is it possible to have only RGB? Or are such images converted to 
+        // Is it possible to have only RGB? Or are such images converted to
         // RGBA with all alpha fully opaque?
-        else if ((compression & RealSpriteRecord::HAS_RGB) && 
+        else if ((compression & RealSpriteRecord::HAS_RGB) &&
                  (compression & RealSpriteRecord::HAS_ALPHA))
         {
             pixel_size   = 4;
@@ -109,14 +109,14 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
         pixel_size   = 1;
         trans_offset = 0;
     }
-    
-    // Create a array of the lengths for the chunk data in each row. We care about this to more 
-    // clearly work out which rows are empty and which are not. It seems that the length of the 
+
+    // Create a array of the lengths for the chunk data in each row. We care about this to more
+    // clearly work out which rows are empty and which are not. It seems that the length of the
     // first chunk cannot be entirely trusted in the case of zero or full width chunks.
     std::vector<uint32_t> offsets;
     for (uint16_t y = 0; y < ydim; ++y)
     {
-        // Index of the row offset in the chunked data's index array. 
+        // Index of the row offset in the chunked data's index array.
         uint32_t index = y * (long_offset ? sizeof(uint32_t) : sizeof(uint16_t));
         // Offset of the first chunk for the current row.
         uint32_t offset = chunks[index++];
@@ -138,8 +138,8 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
     for (uint16_t y = 0; y < ydim; ++y)
     {
         // Skips empty rows. These are indicated by rows whose length are the size of one null chunk.
-        // An empty row contains a single chunk header (byte/word cinfo and byte/word cofs), but no 
-        // further bytes. cinfo should have length zero in this case, but this doesn't seem entirely 
+        // An empty row contains a single chunk header (byte/word cinfo and byte/word cofs), but no
+        // further bytes. cinfo should have length zero in this case, but this doesn't seem entirely
         // reliable.
         uint32_t offset = offsets[y];
         if ((offsets[y+1] - offset) == (long_offset ? sizeof(uint32_t) : sizeof(uint16_t)))
@@ -170,19 +170,19 @@ std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xd
                 chunk_off |= (chunks[offset++] << 8);
             }
 
-            // Empty rows still in chunked data. This supposed to be with a length of zero and 
+            // Empty rows still in chunked data. This supposed to be with a length of zero and
             // the last chunk bit set. dutchtrains.grf seems to have a length of xdim instead. I
             // have used % to get rid of this. Linux builds were fine, but this caused an exception
-            // on Windows (correctly). 
-            //if (is_last_chunk && (chunk_len == 0)) 
+            // on Windows (correctly).
+            //if (is_last_chunk && (chunk_len == 0))
             //{
             //    break;
             //}
 
             uint32_t imax  = (chunk_len & ~LAST_CHUNK) * pixel_size;
             uint32_t pixel = (y * xdim + chunk_off) * pixel_size;
-            for (uint16_t i = 0; i < imax ; ++i) 
-            { 
+            for (uint16_t i = 0; i < imax ; ++i)
+            {
                 uint8_t pix = chunks[offset];
                 output[pixel] = pix;
                 ++pixel;
@@ -206,18 +206,18 @@ ChunkEncoder::ChunkEncoder(const std::vector<uint8_t>& pixels, uint16_t xdim, ui
     // Interpret the compression information
     if (format == GRFFormat::Container2)
     {
-        // Is this format really supported? Have seen examples in 
+        // Is this format really supported? Have seen examples in
         // zbase-v5588/zbase_extra.grf. Makes no sense to me.
-        if ((compression & RealSpriteRecord::HAS_RGB) && 
-            (compression & RealSpriteRecord::HAS_ALPHA) && 
+        if ((compression & RealSpriteRecord::HAS_RGB) &&
+            (compression & RealSpriteRecord::HAS_ALPHA) &&
             (compression & RealSpriteRecord::HAS_PALETTE))
         {
             m_pixel_size   = 5;
             m_trans_offset = 3;
         }
-        // Is it possible to have only RGB? Or are such images converted to 
+        // Is it possible to have only RGB? Or are such images converted to
         // RGBA with all alpha fully opaque?
-        else if ((compression & RealSpriteRecord::HAS_RGB) && 
+        else if ((compression & RealSpriteRecord::HAS_RGB) &&
                  (compression & RealSpriteRecord::HAS_ALPHA))
         {
             m_pixel_size   = 4;
@@ -272,7 +272,7 @@ static std::vector<uint16_t> trim_row_edges(const std::vector<uint16_t>& edges)
 
 std::vector<uint16_t> ChunkEncoder::find_row_edges(uint16_t y)
 {
-    // Scan a single row of the image data to find edges where pixels transition from 
+    // Scan a single row of the image data to find edges where pixels transition from
     // transparent to visible, and vice versa.
     std::vector<uint16_t> edges;
 
@@ -307,7 +307,7 @@ std::vector<uint16_t> ChunkEncoder::find_row_edges(uint16_t y)
             break;
         }
     }
-    // Ensure that we have pairs of edges. Each pair represents a 
+    // Ensure that we have pairs of edges. Each pair represents a
     // chunk in the row. We will combine chunks with only small gaps.
     if ((edges.size() % 2) == 1)
     {
@@ -326,23 +326,23 @@ std::vector<uint16_t> ChunkEncoder::find_row_edges(uint16_t y)
 std::vector<ChunkEncoder::Chunk> ChunkEncoder::find_row_chunks(const std::vector<uint16_t>& edges)
 {
     // Create a collection of chunks for the current row.
-    std::vector<Chunk> chunks; 
+    std::vector<Chunk> chunks;
 
     auto it  = edges.begin();
     while (it != edges.end())
     {
-        // Start and end of a chunk. Need to divide into 
+        // Start and end of a chunk. Need to divide into
         // two or more if the length is greater than m_last_chunk.
         uint16_t beg = *it++;
         uint16_t end = *it++;
-        do 
+        do
         {
             Chunk chunk;
             chunk.offset = beg;
-            chunk.length = std::min<uint16_t>(end - beg, m_last_chunk - 1); 
+            chunk.length = std::min<uint16_t>(end - beg, m_last_chunk - 1);
             chunks.push_back(chunk);
 
-            beg += chunk.length; 
+            beg += chunk.length;
         }
         while (beg != end);
     }
@@ -358,7 +358,7 @@ std::vector<ChunkEncoder::Chunk> ChunkEncoder::find_row_chunks(const std::vector
 
 std::vector<uint8_t> ChunkEncoder::make_row_data(const std::vector<ChunkEncoder::Chunk>& chunks, uint16_t y)
 {
-    // Created the chunked data for a single row. 
+    // Created the chunked data for a single row.
     std::vector<uint8_t> data;
     if (chunks.size() > 0)
     {
@@ -379,8 +379,8 @@ std::vector<uint8_t> ChunkEncoder::make_row_data(const std::vector<ChunkEncoder:
             }
 
             // Store the data for the pixels in the chunk.
-            uint32_t offset = (y * m_xdim + chunk.offset) * m_pixel_size;  
-            uint16_t imax   = chunk.length & ~m_last_chunk;  
+            uint32_t offset = (y * m_xdim + chunk.offset) * m_pixel_size;
+            uint16_t imax   = chunk.length & ~m_last_chunk;
             for (uint16_t i = 0; i < imax; ++i)
             {
                 for (uint8_t p = 0; p < m_pixel_size; ++p)
@@ -400,7 +400,7 @@ std::vector<uint8_t> ChunkEncoder::make_row_data(const std::vector<ChunkEncoder:
             data.push_back(0x00);
             data.push_back(0x00);
         }
-    }  
+    }
 
     return data;
 }
@@ -416,7 +416,7 @@ std::vector<uint8_t> ChunkEncoder::encode()
         // Find edges in the row is a preliminary to finding visible chunks.
         std::vector<uint16_t> edges       = find_row_edges(y);
         std::vector<Chunk>    chunks      = find_row_chunks(edges);
-        std::vector<uint8_t>  chunked_row = make_row_data(chunks, y);       
+        std::vector<uint8_t>  chunked_row = make_row_data(chunks, y);
         chunked_size += uint32_t(chunked_row.size());
         chunked_rows.push_back(chunked_row);
     }
@@ -428,7 +428,7 @@ std::vector<uint8_t> ChunkEncoder::encode()
     std::vector<uint8_t> output;
 
     // First create an array of offsets for the chunked row data.
-    // This may use a long or short format depending on the final 
+    // This may use a long or short format depending on the final
     // length of the output.
     for (const auto& chunked_row: chunked_rows)
     {
@@ -443,7 +443,7 @@ std::vector<uint8_t> ChunkEncoder::encode()
         offset += uint32_t(chunked_row.size());
     }
 
-    // Then store the chunked data for each row. 
+    // Then store the chunked data for each row.
     for (const auto& chunked_row: chunked_rows)
     {
         for (const auto byte: chunked_row)
@@ -456,4 +456,4 @@ std::vector<uint8_t> ChunkEncoder::encode()
 }
 
 
-        
+

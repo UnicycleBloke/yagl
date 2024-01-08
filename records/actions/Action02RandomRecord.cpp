@@ -26,21 +26,21 @@ void Action02RandomRecord::read(std::istream& is, const GRFInfo& info)
 {
     m_feature = static_cast<FeatureType>(read_uint8(is));
     m_set_id  = read_uint8(is);
-    
+
     m_type = static_cast<RandomType>(read_uint8(is));
     if (m_type == RandomType::Consist)
     {
-        // For type 84, the count byte specifies which vehicle's random bits this vehicle 
+        // For type 84, the count byte specifies which vehicle's random bits this vehicle
         // will be using and/or modifying.
-        // - The low nibble (bits 0-3) specifies how far to count from the starting vehicle. 
+        // - The low nibble (bits 0-3) specifies how far to count from the starting vehicle.
         //   If it is zero, the count will be read from GRF register 100h instead.
-        // - The high nibble (bits 6-7, actually) specifies which vehicle is the starting 
-        //   vehicle, and which direction to count.     
+        // - The high nibble (bits 6-7, actually) specifies which vehicle is the starting
+        //   vehicle, and which direction to count.
         m_count   = read_uint8(is);
         m_method  = static_cast<ConsistType>(m_count & 0xC0);
         m_count  &= 0x0F;
     }
-    
+
     m_triggers = read_uint8(is);
     m_randbit  = read_uint8(is);
 
@@ -56,7 +56,7 @@ void Action02RandomRecord::read(std::istream& is, const GRFInfo& info)
         else
         {
             m_set_ids[set_id] = m_set_ids[set_id] + 1;
-        }        
+        }
     }
 }
 
@@ -67,7 +67,7 @@ void Action02RandomRecord::write(std::ostream& os, const GRFInfo& info) const
 
     write_uint8(os, static_cast<uint8_t>(m_feature));
     write_uint8(os, m_set_id);
-    
+
     write_uint8(os, static_cast<uint8_t>(m_type));
     if (m_type == RandomType::Consist)
     {
@@ -84,7 +84,7 @@ void Action02RandomRecord::write(std::ostream& os, const GRFInfo& info) const
         nrand += it.second;
     }
     write_uint8(os, uint8_t(nrand));
- 
+
     for (const auto it: m_set_ids)
     {
         for (uint16_t i = 0; i < it.second; ++i)
@@ -92,7 +92,7 @@ void Action02RandomRecord::write(std::ostream& os, const GRFInfo& info) const
             write_uint16(os, it.first);
         }
     }
-}  
+}
 
 
 namespace {
@@ -114,25 +114,25 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-const EnumDescriptorT<Action02RandomRecord::RandomType> random_desc = 
-{ 
-    0x00, str_random_type,                   
+const EnumDescriptorT<Action02RandomRecord::RandomType> random_desc =
+{
+    0x00, str_random_type,
     {
-        { 0x80, "Object" },  // RandomType::Object },    
-        { 0x83, "Related" }, // RandomType::Related }, 
-        { 0x84, "Consist" }, // RandomType::Consist }, 
+        { 0x80, "Object" },  // RandomType::Object },
+        { 0x83, "Related" }, // RandomType::Related },
+        { 0x84, "Consist" }, // RandomType::Consist },
     }
 };
 
 
-const EnumDescriptorT<Action02RandomRecord::ConsistType> consist_desc = 
-{ 
-    0x01, str_consist_type,                   
+const EnumDescriptorT<Action02RandomRecord::ConsistType> consist_desc =
+{
+    0x01, str_consist_type,
     {
-        { 0x00, "BackwardFromVehicle" }, // ConsistType::BackwardFromVehicle: 
-        { 0x40, "ForwardFromVehicle" },  // ConsistType::ForwardFromVehicle: 
-        { 0x80, "BackwardFromEngine" },  // ConsistType::BackwardFromEngine: 
-        { 0xC0, "BackwardFromSameID" },  // ConsistType::BackwardFromSameID: 
+        { 0x00, "BackwardFromVehicle" }, // ConsistType::BackwardFromVehicle:
+        { 0x40, "ForwardFromVehicle" },  // ConsistType::ForwardFromVehicle:
+        { 0x80, "BackwardFromEngine" },  // ConsistType::BackwardFromEngine:
+        { 0xC0, "BackwardFromSameID" },  // ConsistType::BackwardFromSameID:
     }
 };
 
@@ -158,8 +158,8 @@ void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites,
     os << "> // Action02 random\n";
     os << pad(indent) << "{\n";
 
-    triggers_desc.print(m_triggers, os, indent + 4); 
-    randbit_desc.print(m_randbit, os, indent + 4); 
+    triggers_desc.print(m_triggers, os, indent + 4);
+    randbit_desc.print(m_randbit, os, indent + 4);
 
     // TODO create descripter for this?
     os << pad(indent + 4) << str_set_ids << ": // set_id: probability;\n";
@@ -176,7 +176,7 @@ void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites,
 
 void Action02RandomRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
-    is.match_ident(RecordName(record_type()));    
+    is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
@@ -209,7 +209,7 @@ void Action02RandomRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
             {
                 case 0x02: triggers_desc.parse(m_triggers, is); break;
                 case 0x03: randbit_desc.parse(m_randbit, is); break;
-                
+
                 case 0x04:
                     is.match(TokenType::OpenBrace);
                     while (is.peek().type != TokenType::CloseBrace)

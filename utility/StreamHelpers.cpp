@@ -49,7 +49,7 @@ uint16_t read_uint8_ext(std::istream& is)
 void write_uint8_ext(std::ostream& os, uint16_t value, ExtByteFormat format)
 {
     // Use extended format only when it is necessary for the value.
-    // OR Always used the extended format - this is what NMLC appears to do - default. 
+    // OR Always used the extended format - this is what NMLC appears to do - default.
     if ((value >= 0xFF) || (format == ExtByteFormat::Long))
     {
         write_uint8(os, 0xFF);
@@ -102,10 +102,10 @@ void write_uint32(std::ostream& os, uint32_t value)
 }
 
 
-// Used for debugging to see what bytes are in the stream as sort of NFO. 
+// Used for debugging to see what bytes are in the stream as sort of NFO.
 /*
 void dump_hex(std::istream& is, uint16_t length)
-{ 
+{
     std::streamoff done = 0;
     try
     {
@@ -115,13 +115,13 @@ void dump_hex(std::istream& is, uint16_t length)
             std::cout << to_hex(byte, false) << " ";
             --done;
         }
-        std::cout << '\n';        
+        std::cout << '\n';
     }
     catch (const std::exception& e)
     {
         std::cout << '\n';
         std::cout << e.what() << '\n';
-    }    
+    }
 
     is.seekg(done, std::istream::cur);
 }

@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once 
+#pragma once
 #include "TokenStream.h"
 #include "GRFStrings.h"
 #include "GRFLabel.h"
@@ -117,7 +117,7 @@ enum class NewFeatureType : uint8_t
     SlopeTrackMarks  = 0x0F,
     AirportExtra     = 0x10,
     RoadStops        = 0x11,
-    Aqueducts        = 0x12, 
+    Aqueducts        = 0x12,
     AutoRail         = 0x13,
     Flags            = 0x14,
     OpenTTDGUI       = 0x15,
@@ -129,18 +129,18 @@ std::string NewFeatureName(NewFeatureType type);
 NewFeatureType NewFeatureFromName(const std::string& name);
 
 
-enum class GRFFormat 
-{ 
+enum class GRFFormat
+{
     Invalid,
-    Container1, 
-    Container2 
+    Container1,
+    Container2
 };
 
 
 // Supported version of the NewGRF specs.
 // Need to account for binary differences.
-enum class GRFVersion 
-{ 
+enum class GRFVersion
+{
     //GRF0 = 0,
     //GRF1 = 1,
     GRF2 = 2,
@@ -175,13 +175,13 @@ public:
     Record(RecordType record_type = RecordType::NONE)
     : m_record_type{record_type}
     {
-    }    
+    }
 
     virtual ~Record() {}
 
     // Binary serialisation
     virtual void read(std::istream& is, const GRFInfo& info) {};
-    virtual void write(std::ostream& os, const GRFInfo& info) const {}; 
+    virtual void write(std::ostream& os, const GRFInfo& info) const {};
     // Text serialisation - sprites structure needed to hold sprites found in containers.
     virtual void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const {};
     virtual void parse(TokenStream& is, SpriteZoomMap& sprites) {};
@@ -199,12 +199,12 @@ public:
 
 public:
     // Purely for testing purposes.
-    std::string read_data;    
+    std::string read_data;
 };
 
 
 
-// Base for all Actions. 
+// Base for all Actions.
 class ActionRecord : public Record
 {
 public:
@@ -213,7 +213,7 @@ public:
 
     // Binary serialisation
     //void read(std::istream& is, const GRFInfo& info) override {};
-    void write(std::ostream& os, const GRFInfo& info) const override; 
+    void write(std::ostream& os, const GRFInfo& info) const override;
     // Text serialisation
     //void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override {};
     //void parse(TokenStream& is, SpriteZoomMap& sprites) override {};
@@ -229,23 +229,23 @@ public:
 
     // Binary serialisation
     //void read(std::istream& is, const GRFInfo& info) override {};
-    //void write(std::ostream& os, const GRFInfo& info) const override; 
+    //void write(std::ostream& os, const GRFInfo& info) const override;
     // Text serialisation
     //void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override {};
     //void parse(TokenStream& is, SpriteZoomMap& sprites) override {};
 
     void append_sprite(std::unique_ptr<Record> record) override;
-    Record* get_sprite(uint16_t index) const override 
+    Record* get_sprite(uint16_t index) const override
         { return (index < num_sprites_to_write()) ? m_sprites[index].get() : nullptr; }
     uint16_t num_sprites_to_write() const override { return uint16_t(m_sprites.size()); }
 
-protected:    
-    void print_sprite(uint16_t index, std::ostream& os, 
+protected:
+    void print_sprite(uint16_t index, std::ostream& os,
         const SpriteZoomMap& sprites, uint16_t indent) const;
     void parse_sprite(TokenStream& is, SpriteZoomMap& sprites);
 
 private:
-    std::vector<std::unique_ptr<Record>> m_sprites;            
+    std::vector<std::unique_ptr<Record>> m_sprites;
 };
 
 

@@ -35,7 +35,7 @@ public:
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
-    // This is the number of real sprites records (or references) we expect to 
+    // This is the number of real sprites records (or references) we expect to
     // follow immediately after this record in the file.
     uint16_t num_sprites_to_read() const override;
 
@@ -48,7 +48,7 @@ public:
         NormalFixed = 3
     };
 
-    struct Range   
+    struct Range
     {
         Font     font      = Font::NormalProp;
         uint8_t  num_chars = 0;

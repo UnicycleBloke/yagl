@@ -25,7 +25,7 @@ void Action0FRecord::read(std::istream& is, const GRFInfo& info)
 {
     m_id  = read_uint8(is);
 
-    // Style names only exist if this is the final definition, the 
+    // Style names only exist if this is the final definition, the
     // root. This is indicated by the high bit of the ID.
     if ((m_id & 0x80) == 0x80)
     {
@@ -79,7 +79,7 @@ void Action0FRecord::write(std::ostream& os, const GRFInfo& info) const
 
     if (is_final)
     {
-        for (const Name& style_name: m_style_names) 
+        for (const Name& style_name: m_style_names)
         {
             write_uint8(os, style_name.lang_id);
             style_name.name.write(os);
@@ -89,7 +89,7 @@ void Action0FRecord::write(std::ostream& os, const GRFInfo& info) const
 
     write_uint8(os, uint8_t(m_style_parts.size()));
 
-    for (const Part& part: m_style_parts) 
+    for (const Part& part: m_style_parts)
     {
         write_uint8(os, uint8_t(part.texts.size()));
         write_uint8(os, part.first_bit);
@@ -108,7 +108,7 @@ void Action0FRecord::write(std::ostream& os, const GRFInfo& info) const
             }
         }
     }
-}  
+}
 
 
 namespace {
@@ -152,7 +152,7 @@ void Action0FRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
             if (text.is_string)
             {
                 os << pad(indent + 8) << str_text << "(\"" << text.text.readable() << "\"";
-            } 
+            }
             else
             {
                 os << pad(indent + 8) << str_town_names << "(" << to_hex(text.action_0F_id);
@@ -222,11 +222,11 @@ void Action0FRecord::parse_styles(TokenStream& is)
 void Action0FRecord::parse_part(TokenStream& is)
 {
     Part part;
-    is.match(TokenType::OpenAngle); 
+    is.match(TokenType::OpenAngle);
     part.first_bit = is.match_uint8();
     is.match(TokenType::Comma);
     part.num_bits = is.match_uint8();
-    is.match(TokenType::CloseAngle); 
+    is.match(TokenType::CloseAngle);
 
     is.match(TokenType::Colon);
     is.match(TokenType::OpenBrace);

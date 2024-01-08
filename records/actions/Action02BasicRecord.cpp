@@ -58,7 +58,7 @@ void Action02BasicRecord::write(std::ostream& os, const GRFInfo& info) const
     {
         write_uint16(os, set_id);
     }
-}  
+}
 
 
 // sprite_groups<Stations, 0xFF> // Action02 basic
@@ -71,8 +71,8 @@ void Action02BasicRecord::write(std::ostream& os, const GRFInfo& info) const
 namespace {
 
 
-constexpr const char* str_primary_spritesets = "primary_spritesets"; 
-constexpr const char* str_secondary_spritesets = "secondary_spritesets"; 
+constexpr const char* str_primary_spritesets = "primary_spritesets";
+constexpr const char* str_secondary_spritesets = "secondary_spritesets";
 
 
 // Fake property numbers to facilitate out of order parsing.
@@ -114,7 +114,7 @@ void Action02BasicRecord::print(std::ostream& os, const SpriteZoomMap& sprites, 
 // TODO convert this to using Descriptors...
 void Action02BasicRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
-    is.match_ident(RecordName(record_type()));    
+    is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);

@@ -24,10 +24,10 @@
 
 bool has_transparency(uint8_t compression, const GRFInfo& info);
 
-std::vector<uint8_t> encode_tile(const std::vector<uint8_t>& pixels, uint16_t xdim, uint16_t ydim, 
+std::vector<uint8_t> encode_tile(const std::vector<uint8_t>& pixels, uint16_t xdim, uint16_t ydim,
     uint8_t compression, GRFFormat format);
 
-std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xdim, uint16_t ydim, 
+std::vector<uint8_t> decode_tile(const std::vector<uint8_t>& chunks, uint16_t xdim, uint16_t ydim,
     uint8_t compression, GRFFormat format);
 
 void encode_tile_test();

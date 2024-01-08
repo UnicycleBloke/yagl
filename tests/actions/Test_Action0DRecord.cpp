@@ -29,7 +29,7 @@ static constexpr const char* str_YAGL =
     "    expression: parameter[0x6B] = parameter[0x6A] & parameter[0x69];\n"
     "    not_if_defined: false;\n"
     "}\n";
-static constexpr const char* str_NFO = 
+static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "0D "  // Action0D
     "6B "  // Target parameter = 6B
@@ -43,7 +43,7 @@ static constexpr const char* str_YAGL2 =
     "    expression: parameter[0x6B] = parameter[0x6A] | parameter[0x69];\n"
     "    not_if_defined: true;\n"
     "}\n";
-static constexpr const char* str_NFO2 = 
+static constexpr const char* str_NFO2 =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "0D "  // Action0D
     "6B "  // Target parameter = 6B
@@ -57,7 +57,7 @@ static constexpr const char* str_YAGL3 =
     "    expression: parameter[0x6B] = parameter[0x6A] % parameter[0x69], signed;\n"
     "    not_if_defined: false;\n"
     "}\n";
-static constexpr const char* str_NFO3 = 
+static constexpr const char* str_NFO3 =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "0D "  // Action0D
     "6B "  // Target parameter = 6B
@@ -71,7 +71,7 @@ static constexpr const char* str_YAGL4 =
     "    expression: parameter[0x6B] = parameter[0x6A] % parameter[0x69], unsigned;\n"
     "    not_if_defined: false;\n"
     "}\n";
-static constexpr const char* str_NFO4 = 
+static constexpr const char* str_NFO4 =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "0D "  // Action0D
     "6B "  // Target parameter = 6B

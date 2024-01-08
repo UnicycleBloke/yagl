@@ -34,7 +34,7 @@ void GRFLabel::write(std::ostream& os) const
 
 void GRFLabel::print(std::ostream& os) const
 {
-    os << "\"" << to_string() << "\""; 
+    os << "\"" << to_string() << "\"";
 }
 
 
@@ -69,7 +69,7 @@ void GRFLabel::parse(TokenStream& is)
             {
                 throw PARSER_ERROR("Invalid GRF label: '" + token.value + "'", token);
             }
-            
+
             m_label = 0;
             for (uint8_t i = 0; i < 4; ++i)
             {
@@ -135,7 +135,7 @@ std::string GRFLabel::to_string_or_hex() const
         uint8_t c = (m_label >> (i * 8)) & 0xFF;
         if (!std::isprint(c))
         {
-            return ::to_hex(m_label); 
+            return ::to_hex(m_label);
         }
     }
 

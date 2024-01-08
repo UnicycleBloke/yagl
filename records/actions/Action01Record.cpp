@@ -23,9 +23,9 @@
 void Action01Record::read(std::istream& is, const GRFInfo& info)
 {
     m_feature = static_cast<FeatureType>(read_uint8(is));
-    
+
     // The record has a basic and an extended format. This is distinguished
-    // by whether the number of sets in the basic format is zero. 
+    // by whether the number of sets in the basic format is zero.
     m_num_sets = read_uint8(is);
     bool has_first_id = (m_num_sets == 0);
 
@@ -64,7 +64,7 @@ void Action01Record::write(std::ostream& os, const GRFInfo& info) const
         write_uint8(os, uint8_t(m_num_sets));
         write_uint8_ext(os, m_num_sprites);
     }
-}  
+}
 
 
 static constexpr const char* str_sprite_set = "sprite_set";
@@ -77,12 +77,12 @@ void Action01Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << to_hex(m_first_set) << "> // <feature, first_set> Action01" << '\n';
     os << pad(indent) << "{" << '\n';
 
-    uint16_t index = 0;    
+    uint16_t index = 0;
     for (uint16_t set = 0; set < m_num_sets; ++set)
     {
         os << pad(indent + 4) << str_sprite_set << " // " << to_hex<uint16_t>(m_first_set + set) << "\n";
         os << pad(indent + 4) << "{" << '\n';
-        
+
         for (uint16_t i = 0; i < m_num_sprites; ++i)
         {
             // This is a SpriteIndexRecord or a RecolourRecord

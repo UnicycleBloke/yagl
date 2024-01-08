@@ -23,13 +23,13 @@
 
 // Deactivate other graphics files or force activation of current file.
 //
-// Normally, graphics files should use Action7 to deactivate themselves, 
+// Normally, graphics files should use Action7 to deactivate themselves,
 // if they find that other incompatible graphics have been loaded.
 //
-// However, when new sets come out, it is often not feasible to change 
-// ll existing sets so that they can detect the new set. This action 
-// therefore allows the new graphics set to deactivate older sets with 
-// which it is incompatible. 
+// However, when new sets come out, it is often not feasible to change
+// ll existing sets so that they can detect the new set. This action
+// therefore allows the new graphics set to deactivate older sets with
+// which it is incompatible.
 class Action0ERecord : public ActionRecord
 {
 public:

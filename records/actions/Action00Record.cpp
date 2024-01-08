@@ -62,11 +62,11 @@ void Action00Record::read(std::istream& is, const GRFInfo& info)
     // For each property, get each feature instances to read its copy of the property.
     for (uint8_t p = 0; p < num_props; ++p)
     {
-        // The property index is always a uint8_t. It is interpreted differently 
+        // The property index is always a uint8_t. It is interpreted differently
         // depending on the particular feature we are dealing with.
         uint8_t property = read_uint8(is);
 
-        // This keeps the order (and duplicates) of properties in the GRF. 
+        // This keeps the order (and duplicates) of properties in the GRF.
         // Added only to assist with testing that the write() method results in
         // the same binary output. Probably ought to remove.
         m_properties.push_back(property);
@@ -108,7 +108,7 @@ void Action00Record::write(std::ostream& os, const GRFInfo& info) const
             instance->write_property(os, property);
         }
     }
-}  
+}
 
 
 static constexpr const char* str_instance_id = "instance_id";
@@ -117,7 +117,7 @@ static constexpr const char* str_instance_id = "instance_id";
 void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<";
-    os << FeatureName(m_feature) << ", "; 
+    os << FeatureName(m_feature) << ", ";
     os << to_hex(m_first_id) << "> // Action00" << '\n';
     os << pad(indent) << "{\n";
 
@@ -125,11 +125,11 @@ void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     for (const auto& instance: m_instances)
     {
         // Made this into a comment since we only need the ID of the first instance, and we already have that.
-        //os << pad(indent + 4) << str_instance_id << ": " << to_hex(id++) << "\n";  
-        os << pad(indent + 4) << "// " << str_instance_id << ": " << to_hex(id++) << "\n";  
-        os << pad(indent + 4) << "{\n";  
+        //os << pad(indent + 4) << str_instance_id << ": " << to_hex(id++) << "\n";
+        os << pad(indent + 4) << "// " << str_instance_id << ": " << to_hex(id++) << "\n";
+        os << pad(indent + 4) << "{\n";
 
-        for (auto property: m_properties) 
+        for (auto property: m_properties)
         {
             bool result = instance->print_property(os, property, indent + 8);
             if (!result)
@@ -138,7 +138,7 @@ void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
             }
         }
 
-        os << pad(indent + 4) << "}\n";  
+        os << pad(indent + 4) << "}\n";
     }
 
     os << pad(indent) << "}\n";
@@ -204,7 +204,7 @@ void Action00Record::parse(TokenStream& is, SpriteZoomMap& sprites)
         std::unique_ptr<Action00Feature> instance = make_feature(m_feature);
 
         // This list need to be the same for each instance, at least when sorted.
-        std::vector<uint8_t> properties;    
+        std::vector<uint8_t> properties;
         while (is.peek().type != TokenType::CloseBrace)
         {
             std::string name = is.match(TokenType::Ident);
@@ -233,7 +233,7 @@ void Action00Record::parse(TokenStream& is, SpriteZoomMap& sprites)
         {
             throw RUNTIME_ERROR("Action00Record::parse - unexpected number of properties");
         }
-        
+
 
         is.match(TokenType::CloseBrace);
     }

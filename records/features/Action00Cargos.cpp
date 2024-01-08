@@ -47,7 +47,7 @@ constexpr const char* str_cargo_amount_id        = "cargo_amount_id";
 constexpr const char* str_capacity_multiplier    = "capacity_multiplier";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -134,7 +134,7 @@ bool Action00Cargos::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00Cargos::write_property(std::ostream& os, uint8_t property) const
@@ -170,7 +170,7 @@ bool Action00Cargos::write_property(std::ostream& os, uint8_t property) const
 }
 
 
-bool Action00Cargos::print_property(std::ostream& os, uint8_t property, uint16_t indent) const 
+bool Action00Cargos::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
     switch (property)
     {

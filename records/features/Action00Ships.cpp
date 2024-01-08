@@ -48,7 +48,7 @@ constexpr const char* str_always_refittable_cargos     = "always_refittable_carg
 constexpr const char* str_never_refittable_cargos      = "never_refittable_cargos";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -143,7 +143,7 @@ bool Action00Ships::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00Ships::write_property(std::ostream& os, uint8_t property) const

@@ -31,7 +31,7 @@ constexpr const char* str_animation_speed      = "animation_speed";
 constexpr const char* str_animation_triggers   = "animation_triggers";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -63,12 +63,12 @@ bool Action00AirportTiles::read_property(std::istream& is, uint8_t property)
         case 0x08: m_08_substitute_tile_id.read(is);   break;
         case 0x09: m_09_aiport_tile_override.read(is); break;
         case 0x0E: m_0E_callback_flags.read(is);       break;
-        // The low byte specifies the number of animation frames minus one, so 00 means 1 frame, 
-        // 01 means 2 frames etc. The maximum number of frames is 256, although you can have some 
-        // problems if your animation exceeds FD (253) frames. The high byte must be 0 for 
-        // on-looping animations and 01 for looping animations. Every other value is reserved for 
-        // future use. In addition, if the whole word contains FFFF, animation is turned off for 
-        // this tile (this is the default value). 
+        // The low byte specifies the number of animation frames minus one, so 00 means 1 frame,
+        // 01 means 2 frames etc. The maximum number of frames is 256, although you can have some
+        // problems if your animation exceeds FD (253) frames. The high byte must be 0 for
+        // on-looping animations and 01 for looping animations. Every other value is reserved for
+        // future use. In addition, if the whole word contains FFFF, animation is turned off for
+        // this tile (this is the default value).
         case 0x0F: m_0F_animation_info.read(is);       break;
         case 0x10: m_10_animation_speed.read(is);      break;
         case 0x11: m_11_animation_triggers.read(is);   break;
@@ -76,7 +76,7 @@ bool Action00AirportTiles::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00AirportTiles::write_property(std::ostream& os, uint8_t property) const
@@ -96,7 +96,7 @@ bool Action00AirportTiles::write_property(std::ostream& os, uint8_t property) co
 }
 
 
-bool Action00AirportTiles::print_property(std::ostream& os, uint8_t property, uint16_t indent) const 
+bool Action00AirportTiles::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
     switch (property)
     {

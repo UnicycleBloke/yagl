@@ -33,13 +33,13 @@ void SpriteWrapperRecord::write(std::ostream& os, const GRFInfo& info) const
     std::ostringstream ss;
     m_sprite->write(ss, info);
     uint32_t size = static_cast<uint32_t>(ss.str().size());
-    
+
     write_uint32(os, m_sprite_id);
     write_uint32(os, size + 1); // +1 to account for the extra 0xFF.
     write_uint8(os, 0xFF);
 
     m_sprite->write(os, info);
-}  
+}
 
 
 void SpriteWrapperRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const

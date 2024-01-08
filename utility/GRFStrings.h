@@ -34,7 +34,7 @@ class GRFString
 {
 public:
     // Binary serialisation
-    // Directly read or write m_value. 
+    // Directly read or write m_value.
     void read(std::istream& is, StringTerm term = StringTerm::Null);
     void write(std::ostream& os, StringTerm term = StringTerm::Null) const;
 
@@ -42,15 +42,15 @@ public:
     // Convert the internal representation to a human readable version.
     void print(std::ostream& os) const;
     std::string readable() const;
-    // Convert the value that is read into the internal representation. 
+    // Convert the value that is read into the internal representation.
     // Determine whether or not the internal version needs to be UTF8.
     void parse(TokenStream& is);
 
-    uint32_t length() const { return uint32_t(m_value.length()); } 
+    uint32_t length() const { return uint32_t(m_value.length()); }
 
 private:
     // This is the value as read from or written to a binary GRF file.
-    // When reading from or writing to a YAGL file, some conversion is 
+    // When reading from or writing to a YAGL file, some conversion is
     // necessary.
     std::string m_value;
 };

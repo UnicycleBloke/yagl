@@ -22,11 +22,11 @@
 // class RGBSpriteSheet : public SpriteSheet
 // {
 // public:
-//     RGBSpriteSheet(const std::string& file_name);     
+//     RGBSpriteSheet(const std::string& file_name);
 //     Pixel pixel(uint32_t x, uint32_t y) const override;
 
 // private:
-//     png::image<png::rgb_pixel> m_image;    
+//     png::image<png::rgb_pixel> m_image;
 // };
 
 
@@ -36,29 +36,29 @@ int SpriteSheet::alloc_count = 0;
 class RGBASpriteSheet : public SpriteSheet
 {
 public:
-    RGBASpriteSheet(const std::string& file_name);     
+    RGBASpriteSheet(const std::string& file_name);
     Pixel pixel(uint32_t x, uint32_t y) const override;
 
 private:
-    png::image<png::rgba_pixel> m_image;    
+    png::image<png::rgba_pixel> m_image;
 };
 
 
 class PaletteSpriteSheet : public SpriteSheet
 {
 public:
-    PaletteSpriteSheet(const std::string& file_name);     
+    PaletteSpriteSheet(const std::string& file_name);
     Pixel pixel(uint32_t x, uint32_t y) const override;
 
 private:
-    png::image<png::index_pixel> m_image;    
+    png::image<png::index_pixel> m_image;
 };
 
 
 RGBASpriteSheet::RGBASpriteSheet(const std::string& file_name)
 : m_image{file_name, png::require_color_space<png::rgba_pixel>()}
 {
-}     
+}
 
 
 SpriteSheet::Pixel RGBASpriteSheet::pixel(uint32_t x, uint32_t y) const
@@ -78,7 +78,7 @@ SpriteSheet::Pixel RGBASpriteSheet::pixel(uint32_t x, uint32_t y) const
 PaletteSpriteSheet::PaletteSpriteSheet(const std::string& file_name)
 : m_image{file_name, png::require_color_space<png::index_pixel>()}
 {
-}     
+}
 
 
 SpriteSheet::Pixel PaletteSpriteSheet::pixel(uint32_t x, uint32_t y) const
@@ -110,13 +110,13 @@ SpriteSheet& SpriteSheetPool::get_sprite_sheet(const std::string file_name, Spri
         {
             case Colour::Palette:
                 sheet = std::make_unique<PaletteSpriteSheet>(file_name);
-                break; 
+                break;
             // case Colour::RGB:
             //     sheet = std::make_unique<RGBSpriteSheet>(file_name);
-            //     break; 
+            //     break;
             case Colour::RGBA:
                 sheet = std::make_unique<RGBASpriteSheet>(file_name);
-                break; 
+                break;
         }
 
         m_sheets[file_name] = std::move(sheet);

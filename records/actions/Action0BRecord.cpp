@@ -43,7 +43,7 @@ void Action0BRecord::read(std::istream& is, const GRFInfo& info)
         m_message.read(is);
     }
 
-    // // Can either scan the string or just check for end of input. The 
+    // // Can either scan the string or just check for end of input. The
     // // built in strings can't be scanned, so...
     if (is.peek() != EOF)
     {
@@ -87,7 +87,7 @@ void Action0BRecord::write(std::ostream& os, const GRFInfo& info) const
 
     if (m_num_params > 0) write_uint8(os, m_param1);
     if (m_num_params > 1) write_uint8(os, m_param2);
-}  
+}
 
 
 namespace {
@@ -105,7 +105,7 @@ constexpr const char* str_message_02 = "{grf_name} is designed to be used with {
 constexpr const char* str_message_03 = "Invalid parameter for {grf_name}: parameter {data} ({param_num})"; // <data> should be the switch number written out ("5")
 constexpr const char* str_message_04 = "{grf_name} must be loaded before {data}.";
 constexpr const char* str_message_05 = "{grf_name} must be loaded after {data}.";
-constexpr const char* str_message_06 = "{grf_name} requires OpenTTD version {data} or better."; 
+constexpr const char* str_message_06 = "{grf_name} requires OpenTTD version {data} or better.";
 
 
 // Fake property numbers to facilitate out of order parsing.
@@ -118,14 +118,14 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-const EnumDescriptorT<Action0BRecord::Severity> severity_desc = 
-{ 
-    0x00, "severity",                   
+const EnumDescriptorT<Action0BRecord::Severity> severity_desc =
+{
+    0x00, "severity",
     {
-        { 0, "Notice" },  // Severity::Notice },    
-        { 1, "Warning" }, // Severity::Warning }, 
-        { 2, "Error" },   // Severity::Error }, 
-        { 3, "Fatal" },   // Severity::Fatal }, 
+        { 0, "Notice" },  // Severity::Notice },
+        { 1, "Warning" }, // Severity::Warning },
+        { 2, "Error" },   // Severity::Error },
+        { 3, "Fatal" },   // Severity::Fatal },
     }
 };
 

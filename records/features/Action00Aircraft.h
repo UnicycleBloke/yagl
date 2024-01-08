@@ -26,7 +26,7 @@ class Action00Aircraft : public Action00Common
 {
 public:
     Action00Aircraft() : Action00Common() {}
-    
+
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;
     bool write_property(std::ostream& os, uint8_t property) const override;

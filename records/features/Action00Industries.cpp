@@ -58,7 +58,7 @@ constexpr const char* str_production_multipliers      = "production_multipliers"
 constexpr const char* str_input_cargo_multipliers     = "input_cargo_multipliers";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -170,7 +170,7 @@ void Multipliers::write(std::ostream& os) const
 
 void Multipliers::print(std::ostream& os) const
 {
-    uint16_t index = 0; 
+    uint16_t index = 0;
     os << "[";
     for (uint8_t i = 0; i < m_num_inputs; ++i)
     {
@@ -257,7 +257,7 @@ bool Action00Industries::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00Industries::write_property(std::ostream& os, uint8_t property) const
@@ -304,7 +304,7 @@ bool Action00Industries::write_property(std::ostream& os, uint8_t property) cons
 }
 
 
-bool Action00Industries::print_property(std::ostream& os, uint8_t property, uint16_t indent) const 
+bool Action00Industries::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
     switch (property)
     {

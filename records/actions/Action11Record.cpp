@@ -35,7 +35,7 @@ void Action11Record::write(std::ostream& os, const GRFInfo& info) const
     ContainerRecord::write(os, info);
 
     write_uint16(os, num_sprites_to_write());
-}  
+}
 
 
 // sound_effects // Action11

@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once 
+#pragma once
 #include "Exceptions.h"
 #include <cstdint>
 #include <iostream>
@@ -97,7 +97,7 @@ void write_uint(std::ostream& os, T value)
 template <typename T>
 std::string to_hex(T value, bool prefix = true)
 {
-    // Signed values are used here and there in the GRF specs. These should be converted to unsigned types of the 
+    // Signed values are used here and there in the GRF specs. These should be converted to unsigned types of the
     // same size so that the sign extension to 32 or 64 bits doesn't appear in the YAGL.
     using U = std::make_unsigned_t<T>;
     U unsigned_value = static_cast<U>(value);
@@ -117,7 +117,7 @@ std::string to_hex(T value, bool prefix = true)
 class Padding
 {
 public:
-    explicit Padding(uint16_t len) : m_len{len} {}  
+    explicit Padding(uint16_t len) : m_len{len} {}
     void execute(std::ostream& os) const
     {
         std::string spaces(m_len, ' ');

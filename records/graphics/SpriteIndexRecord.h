@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once 
+#pragma once
 #include "Record.h"
 
 
@@ -25,7 +25,7 @@ class NewGRFData;
 
 // This type is sort of a pointer to an actual image, except that
 // there may be multiple images with the same sprite_id, representing
-// different zoom levels (Format2 only).  
+// different zoom levels (Format2 only).
 class SpriteIndexRecord : public Record
 {
 public:

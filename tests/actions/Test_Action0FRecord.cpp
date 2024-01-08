@@ -34,10 +34,10 @@ static constexpr const char* str_YAGL1 =
     "        text(\"Zuiderkolonie\", 1);\n"
     "    }\n"
     "}\n";
-static constexpr const char* str_NFO1 = 
+static constexpr const char* str_NFO1 =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "0F "   // Action0F
-    "00 "   // This ActionOF ID 
+    "00 "   // This ActionOF ID
     "01 "   // 1 part ...
     "04 "   // ... containing four items
     "00 "   // ... first random bit
@@ -70,7 +70,7 @@ static constexpr const char* str_YAGL2 =
     "        town_names(0x03, 1);\n"
     "    }\n"
     "}\n";
-static constexpr const char* str_NFO2 = 
+static constexpr const char* str_NFO2 =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "0F "     // Action0F
     "A0 "     // This Action0F ID is 0x20 - the high bit means there are style names
@@ -80,7 +80,7 @@ static constexpr const char* str_NFO2 =
        "4E 65 64 65 72 6C 61 6E 64 73 65 00 "
     "7F "     // Default style name
        "44 75 74 63 68 00 "
-    "00 "     // Style names terminator    
+    "00 "     // Style names terminator
     "01 "     // 1 part ...
     "04 "     // ... containing 4 items
     "05 "     // ... first random bit

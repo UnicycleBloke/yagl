@@ -68,7 +68,7 @@ private:
     UInt16       m_28_refittable_cargo_classes{};
     UInt16       m_29_non_refittable_cargo_classes{};
     LongDate     m_2A_long_introduction_date{};
-    UInt16       m_2B_custom_cargo_aging_period{};   
+    UInt16       m_2B_custom_cargo_aging_period{};
     CargoList    m_2C_always_refittable_cargos{};
     CargoList    m_2D_never_refittable_cargos{};
 };

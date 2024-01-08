@@ -59,8 +59,8 @@
 #include <csignal>
 
 
-// Expected value for the first bytes in the GRF format 2 container. 
-static constexpr std::array<uint8_t, 8> CONTAINER2_IDENTIFIER 
+// Expected value for the first bytes in the GRF format 2 container.
+static constexpr std::array<uint8_t, 8> CONTAINER2_IDENTIFIER
     = { 0x47, 0x52, 0x46, 0x82, 0x0D, 0x0A, 0x1A, 0x0A };
 
 
@@ -71,8 +71,8 @@ NewGRFData::NewGRFData()
 
 void NewGRFData::read(std::istream& is)
 {
-    // The structure of a GRF file is pretty simple. It is just a list of 
-    // variable length records in up to three sections: 
+    // The structure of a GRF file is pretty simple. It is just a list of
+    // variable length records in up to three sections:
     // Header:  Format2 only        - exactly one record.
     // Data:    Format1 and Format2 - zero or more records.
     // Sprites: Format2 only        - zero of more records.
@@ -81,25 +81,25 @@ void NewGRFData::read(std::istream& is)
     // Attempt to read the header record.
     m_info.format = read_format(is);
 
-    // This is just the index of the current record. 
+    // This is just the index of the current record.
     uint32_t record_index = 0;
-    // This is the number of real sprite records we need to append to the 
+    // This is the number of real sprite records we need to append to the
     // most recent top level container record (Actions 01, 05, 0A, 11 and 12).
     // The sprites always immediately follow the container definition.
     uint16_t num_sprites = 0;
     // This is the type of the current container pseudo-sprite.
-    RecordType container = RecordType::ACTION_01; 
+    RecordType container = RecordType::ACTION_01;
 
     // Read data records from the data section.
     while (true)
     {
         if (CommandLineOptions::options().debug())
         {
-            std::cout << "Reading record: " << record_index << "...\n"; 
+            std::cout << "Reading record: " << record_index << "...\n";
         }
 
         // Just a handle to pause a read just before it fails. If a GRF read fails,
-        // Run it again with the -g option to dump records to the console as we go. This 
+        // Run it again with the -g option to dump records to the console as we go. This
         // will tell us where we fell over.
         if (record_index >= 111)
         {
@@ -113,13 +113,13 @@ void NewGRFData::read(std::istream& is)
         if (size == 0)
             break;
 
-        // The info byte determines what type of record we are dealing with. 
+        // The info byte determines what type of record we are dealing with.
         uint8_t info = read_uint8(is);
 
         std::unique_ptr<Record> record = nullptr;
         switch (info)
         {
-            // This record is a pseudo-sprite. It contains data about properties and other things, 
+            // This record is a pseudo-sprite. It contains data about properties and other things,
             // rather than an image.
             case 0xFF:
                 // The special case of having 4 bytes as the first record indicates the record counter.
@@ -136,12 +136,12 @@ void NewGRFData::read(std::istream& is)
                 else
                 {
                     // This is an actual pseudo-sprite. The condition (num_sprites == 0) tells read_record
-                    // whether we are read a top-level record (a pseudo-sprite) or a real-sprite (or a 
-                    // recolour-sprite). This is needed to disambiguate the start of an Action00 from 
-                    // recolour-sprite. 
+                    // whether we are read a top-level record (a pseudo-sprite) or a real-sprite (or a
+                    // recolour-sprite). This is needed to disambiguate the start of an Action00 from
+                    // recolour-sprite.
 
                     // This has fallen over while reading from zbase. The reason seems to be that the sprites
-                    // appear as top level items, so a recolour sprite is treated as Action00. This does not 
+                    // appear as top level items, so a recolour sprite is treated as Action00. This does not
                     // go well.
                     try
                     {
@@ -152,54 +152,54 @@ void NewGRFData::read(std::istream& is)
                         std::cerr << e.what() << '\n';
                         continue;
                     }
-                    
-                    
-                    // This version works most of the time, including for zbase. Unfortunately, it will go 
+
+
+                    // This version works most of the time, including for zbase. Unfortunately, it will go
                     // wrong for some Action00 records: encountered when parsing FIRS. If an Action00 record
                     // has a length of 257 bytes, we will be in trouble.
                     //record = read_record(is, size, size != 257, m_info);
                 }
                 break;
 
-            // This is a sprite reference (Format2 only). It's just the index of a sprite in the 
+            // This is a sprite reference (Format2 only). It's just the index of a sprite in the
             // later sprite section of the file. It seems that these occur in the places where real-sprites
             // would occur in Format1 files (following container records such as Action01).
             //
-            // It appears that this can also be used for sound effects. RUKTS.grf does this. 
+            // It appears that this can also be used for sound effects. RUKTS.grf does this.
             // Need to take account of parent type...
             case 0xFD:
                 record = std::make_unique<SpriteIndexRecord>(container);
                 record->read(is, m_info);
                 break;
 
-            // This is a real-sprite (Format1 only), or a recolour-sprite. The size might be misleading so we 
-            // have to decompress the image to find out. Pass record index as the (fake) sprite ID. The 
+            // This is a real-sprite (Format1 only), or a recolour-sprite. The size might be misleading so we
+            // have to decompress the image to find out. Pass record index as the (fake) sprite ID. The
             // info byte we read is in this context interpreted as the sprite's compression byte. Create an
-            // index record to mimic the behaviour of Format2 files. Things are simpler this way.      
+            // index record to mimic the behaviour of Format2 files. Things are simpler this way.
             default:
                 // In this case info = compression for a real sprite, and we use the record index
                 // as the sprite id.
                 read_sprite(is, record_index, size, info, m_info);
                 record = std::make_unique<SpriteIndexRecord>(container, record_index);
                 break;
-        } 
+        }
 
         if (CommandLineOptions::options().debug())
         {
-            record->print(std::cout, m_sprites, 0); // Indent = 0     
+            record->print(std::cout, m_sprites, 0); // Indent = 0
         }
 
-        // This is our slightly too trusting method for grouping sprites into containers. 
+        // This is our slightly too trusting method for grouping sprites into containers.
         // The format for the file is simply a long list of records. Some of the records are effectively
-        // containers, such as Action01, and indicate how many sprites they contain, call it NUM. 
+        // containers, such as Action01, and indicate how many sprites they contain, call it NUM.
         // The next NUM records in the file are the sprites which the container "holds". If the wrong
-        // number of sprites are in the file, it'll all go a bit wrong. 
+        // number of sprites are in the file, it'll all go a bit wrong.
         if (num_sprites > 0)
         {
             // We need to append the record to the previous container.
             m_records.back()->append_sprite(std::move(record));
-            --num_sprites; 
-        }   
+            --num_sprites;
+        }
         else
         {
             // This is a top level record, maybe a container. If it's a container,
@@ -210,7 +210,7 @@ void NewGRFData::read(std::istream& is)
             m_records.push_back(std::move(record));
         }
 
-        // Important: this is used to give indices to real sprites for Container1 files. 
+        // Important: this is used to give indices to real sprites for Container1 files.
         ++record_index;
     }
 
@@ -220,23 +220,23 @@ void NewGRFData::read(std::istream& is)
         //while (true)
         while (is.peek() != EOF)
         {
-            // This section is terminated with a zero length record. 
+            // This section is terminated with a zero length record.
             uint32_t sprite_id = read_uint32(is);
             if (sprite_id == 0)
                 break;
 
-            // Read the size and compression to match what we did above. 
+            // Read the size and compression to match what we did above.
             uint32_t size        = read_uint32(is);
             uint8_t  compression = read_uint8(is);
 
             // Error decoding RUKTS.grf caused a fault. It appears that sound
-            // files are stored among the images in this section of the file. 
-            // Pretty sure that wasn't in the spec... Need to look again in 
+            // files are stored among the images in this section of the file.
+            // Pretty sure that wasn't in the spec... Need to look again in
             // grf.txt.
             if (compression == 0xFF)
             {
-                // Is this always a sound effect? What records followed the 
-                // Action11 in the data section? Sprite references. Size needs to be 
+                // Is this always a sound effect? What records followed the
+                // Action11 in the data section? Sprite references. Size needs to be
                 // reduced by one for some reason.
                 std::unique_ptr<Record> effect  = read_record(is, size - 1, true, m_info);
                 std::unique_ptr<Record> wrapper = std::make_unique<SpriteWrapperRecord>(sprite_id, std::move(effect));
@@ -245,7 +245,7 @@ void NewGRFData::read(std::istream& is)
             else
             {
                 read_sprite(is, sprite_id, size, compression, m_info);
-            }   
+            }
         }
     }
 }
@@ -254,7 +254,7 @@ void NewGRFData::read(std::istream& is)
 GRFFormat NewGRFData::read_format(std::istream& is)
 {
     // If this is not a format 2 file, we will read past the end of file
-    // and maybe get an exception. This is not an error: it just means we have 
+    // and maybe get an exception. This is not an error: it just means we have
     // an empty GRF file.
     try
     {
@@ -273,14 +273,14 @@ GRFFormat NewGRFData::read_format(std::istream& is)
             read_uint32(is);
             read_uint8(is);
 
-            if (identifier == CONTAINER2_IDENTIFIER) 
+            if (identifier == CONTAINER2_IDENTIFIER)
             {
                 return GRFFormat::Container2;
             }
             else
             {
                 return GRFFormat::Container1;
-            }           
+            }
         }
     }
     catch ([[maybe_unused]] const std::exception& e)
@@ -295,7 +295,7 @@ GRFFormat NewGRFData::read_format(std::istream& is)
 
 void NewGRFData::append_sprite(uint32_t sprite_id, std::unique_ptr<Record> sprite)
 {
-    // Sprites with the same ID are stored in map indexed by zoom level. 
+    // Sprites with the same ID are stored in map indexed by zoom level.
     // These maps are stored in a map index by the sprite ID.
     if (m_sprites.find(sprite_id) == m_sprites.end())
     {
@@ -314,8 +314,8 @@ void NewGRFData::read_sprite(std::istream& is, uint32_t sprite_id, uint32_t size
 
 
 std::unique_ptr<Record> NewGRFData::read_record(std::istream& is, uint32_t size, bool top_level, const GRFInfo& info)
-{   
-    // Extract the type and data of this record. A little bit of interpretation is 
+{
+    // Extract the type and data of this record. A little bit of interpretation is
     // required to work out how to parse the data. Whether we parse the data or not,
     // it has now been taken out of the file stream.
     uint8_t action = read_uint8(is);
@@ -332,7 +332,7 @@ std::unique_ptr<Record> NewGRFData::read_record(std::istream& is, uint32_t size,
             if (top_level)
             {
                 // Defines new properties for anything added or changed by the NewGRF
-                record_type = RecordType::ACTION_00; 
+                record_type = RecordType::ACTION_00;
             }
             else
             {
@@ -350,16 +350,16 @@ std::unique_ptr<Record> NewGRFData::read_record(std::istream& is, uint32_t size,
                 else
                 {
                     throw RUNTIME_ERROR("Unknown action record type");
-                }                
+                }
             }
             break;
 
-        case 0x01: 
+        case 0x01:
             // Defines one or more graphics sets
-            record_type = RecordType::ACTION_01; 
+            record_type = RecordType::ACTION_01;
             break;
 
-        case 0x02: 
+        case 0x02:
             // Action02 (variants): Defines graphics set IDs
             // This byte is in the basic case a number of graphics sets, presumably always less than 0x80.
             switch (static_cast<uint8_t>(data[2]))
@@ -418,20 +418,20 @@ std::unique_ptr<Record> NewGRFData::read_record(std::istream& is, uint32_t size,
         case 0x12: record_type = RecordType::ACTION_12; break; // Adds Unicode font glyphs
         case 0x13: record_type = RecordType::ACTION_13; break; // Translates GRF-specific strings
         case 0x14: record_type = RecordType::ACTION_14; break; // Static NewGRF information (OpenTTD only)
-     
+
         // These are not documented as actions per se, but have the same format.
         case 0xFE: record_type = RecordType::ACTION_FE; break; // Imported sound effects
         case 0xFF: record_type = RecordType::ACTION_FF; break; // Binary sound effects
-        
-        default:   
+
+        default:
             throw RUNTIME_ERROR("Unknown action record type");
     }
 
-    // Use a factory to create the appropriate object and then parse the data 
+    // Use a factory to create the appropriate object and then parse the data
     // previously read from the file.
     std::unique_ptr<Record> record = make_record(record_type);
     std::istringstream iss(data);
-    record->read(iss, m_info); 
+    record->read(iss, m_info);
     record->read_data = data;
     update_version_info(*record);
 
@@ -443,44 +443,44 @@ std::unique_ptr<Record> NewGRFData::make_record(RecordType record_type)
 {
     switch (record_type)
     {
-        case RecordType::ACTION_00:               return std::make_unique<Action00Record>(); 
-        case RecordType::ACTION_01:               return std::make_unique<Action01Record>(); 
+        case RecordType::ACTION_00:               return std::make_unique<Action00Record>();
+        case RecordType::ACTION_01:               return std::make_unique<Action01Record>();
         case RecordType::ACTION_02_BASIC:         return std::make_unique<Action02BasicRecord>();
-        case RecordType::ACTION_02_RANDOM:        return std::make_unique<Action02RandomRecord>(); 
-        case RecordType::ACTION_02_VARIABLE:      return std::make_unique<Action02VariableRecord>(); 
-        case RecordType::ACTION_02_INDUSTRY:      return std::make_unique<Action02IndustryRecord>(); 
-        case RecordType::ACTION_02_SPRITE_LAYOUT: return std::make_unique<Action02SpriteLayoutRecord>(); 
-        case RecordType::ACTION_03:               return std::make_unique<Action03Record>(); 
-        case RecordType::ACTION_04:               return std::make_unique<Action04Record>(); 
-        case RecordType::ACTION_05:               return std::make_unique<Action05Record>(); 
-        case RecordType::ACTION_06:               return std::make_unique<Action06Record>(); 
-        case RecordType::ACTION_07:               return std::make_unique<Action07Record>(RecordType::ACTION_07); 
-        case RecordType::ACTION_08:               return std::make_unique<Action08Record>(); 
+        case RecordType::ACTION_02_RANDOM:        return std::make_unique<Action02RandomRecord>();
+        case RecordType::ACTION_02_VARIABLE:      return std::make_unique<Action02VariableRecord>();
+        case RecordType::ACTION_02_INDUSTRY:      return std::make_unique<Action02IndustryRecord>();
+        case RecordType::ACTION_02_SPRITE_LAYOUT: return std::make_unique<Action02SpriteLayoutRecord>();
+        case RecordType::ACTION_03:               return std::make_unique<Action03Record>();
+        case RecordType::ACTION_04:               return std::make_unique<Action04Record>();
+        case RecordType::ACTION_05:               return std::make_unique<Action05Record>();
+        case RecordType::ACTION_06:               return std::make_unique<Action06Record>();
+        case RecordType::ACTION_07:               return std::make_unique<Action07Record>(RecordType::ACTION_07);
+        case RecordType::ACTION_08:               return std::make_unique<Action08Record>();
         // Action09 is identical to Action 07 except in how it is used.
-        case RecordType::ACTION_09:               return std::make_unique<Action07Record>(RecordType::ACTION_09); 
-        case RecordType::ACTION_0A:               return std::make_unique<Action0ARecord>(); 
-        case RecordType::ACTION_0B:               return std::make_unique<Action0BRecord>(); 
-        case RecordType::ACTION_0C:               return std::make_unique<Action0CRecord>(); 
-        case RecordType::ACTION_0D:               return std::make_unique<Action0DRecord>(); 
-        case RecordType::ACTION_0E:               return std::make_unique<Action0ERecord>(); 
-        case RecordType::ACTION_0F:               return std::make_unique<Action0FRecord>(); 
-        case RecordType::ACTION_10:               return std::make_unique<Action10Record>(); 
-        case RecordType::ACTION_11:               return std::make_unique<Action11Record>(); 
-        case RecordType::ACTION_12:               return std::make_unique<Action12Record>(); 
-        case RecordType::ACTION_13:               return std::make_unique<Action13Record>(); 
-        case RecordType::ACTION_14:               return std::make_unique<Action14Record>(); 
-        
+        case RecordType::ACTION_09:               return std::make_unique<Action07Record>(RecordType::ACTION_09);
+        case RecordType::ACTION_0A:               return std::make_unique<Action0ARecord>();
+        case RecordType::ACTION_0B:               return std::make_unique<Action0BRecord>();
+        case RecordType::ACTION_0C:               return std::make_unique<Action0CRecord>();
+        case RecordType::ACTION_0D:               return std::make_unique<Action0DRecord>();
+        case RecordType::ACTION_0E:               return std::make_unique<Action0ERecord>();
+        case RecordType::ACTION_0F:               return std::make_unique<Action0FRecord>();
+        case RecordType::ACTION_10:               return std::make_unique<Action10Record>();
+        case RecordType::ACTION_11:               return std::make_unique<Action11Record>();
+        case RecordType::ACTION_12:               return std::make_unique<Action12Record>();
+        case RecordType::ACTION_13:               return std::make_unique<Action13Record>();
+        case RecordType::ACTION_14:               return std::make_unique<Action14Record>();
+
         // These are sound effects.
         case RecordType::ACTION_FE:               return std::make_unique<ActionFERecord>();
         case RecordType::ACTION_FF:               return std::make_unique<ActionFFRecord>();
 
         // These are graphics.
-        case RecordType::RECOLOUR:                return std::make_unique<RecolourRecord>(); 
+        case RecordType::RECOLOUR:                return std::make_unique<RecolourRecord>();
         case RecordType::SPRITE_INDEX:            return std::make_unique<SpriteIndexRecord>(RecordType::ACTION_01);
 
         // Special case of an empty sprite used for absent image.
         case RecordType::FAKE_SPRITE:             return std::make_unique<FakeSpriteRecord>();
-        
+
         default:                                  throw RUNTIME_ERROR("NewGRFData::create_action");
     }
 
@@ -492,7 +492,7 @@ std::unique_ptr<Record> NewGRFData::make_record(RecordType record_type)
 uint32_t NewGRFData::total_records() const
 {
     uint32_t result = uint32_t(m_records.size());
- 
+
     for (const auto& record: m_records)
     {
         result += record->num_sprites_to_write();
@@ -550,10 +550,10 @@ void NewGRFData::write_counter(std::ostream& os) const
 
 //     if (ros.str() != wos.str())
 //     {
-//         std::cout << ros.str() << '\n'; 
-//         std::cout << to_hex(write[0]) << '\n'; 
-//         std::cout << wos.str() << '\n'; 
-//         std::cout << '\n'; 
+//         std::cout << ros.str() << '\n';
+//         std::cout << to_hex(write[0]) << '\n';
+//         std::cout << wos.str() << '\n';
+//         std::cout << '\n';
 //     }
 // }
 
@@ -566,10 +566,10 @@ void NewGRFData::write_record(std::ostream& os, const Record& record) const
         // relationship to the data length.
         record.write(os, m_info);
     }
-    else if ( (record.record_type() == RecordType::SPRITE_INDEX) && 
-              (m_info.format == GRFFormat::Container1)                 ) 
+    else if ( (record.record_type() == RecordType::SPRITE_INDEX) &&
+              (m_info.format == GRFFormat::Container1)                 )
     {
-        // For Container1 we faked up the sprite index records for convenience. Now 
+        // For Container1 we faked up the sprite index records for convenience. Now
         // we need to retrieve the real sprite and write that out instead.
         auto reference = static_cast<const SpriteIndexRecord*>(&record);
         const SpriteZoomVector& sprites = m_sprites.at(reference->sprite_id());
@@ -578,8 +578,8 @@ void NewGRFData::write_record(std::ostream& os, const Record& record) const
             throw RUNTIME_ERROR("Expected single real sprite");
         }
         write_record(os, *sprites[0]);
-    }       
-    else 
+    }
+    else
     {
         // All the others are handled in same way.
 
@@ -609,7 +609,7 @@ void NewGRFData::write_record(std::ostream& os, const Record& record) const
             write_uint32(os, length);
         }
 
-        // All pseudo-sprites are prefixed with 0xFF, except index records for real sprites.        
+        // All pseudo-sprites are prefixed with 0xFF, except index records for real sprites.
         uint8_t prefix = (record.record_type() == RecordType::SPRITE_INDEX) ? 0xFD : 0xFF;
         write_uint8(os, prefix);
 
@@ -650,11 +650,11 @@ void NewGRFData::write(std::ostream& os) const
     else
     {
         write_uint32(os, 0x0000000);
-    } 
+    }
 
     // Now we know the offset for the graphics section.
     // There is a fixed offset here which skips the file header.
-    uint32_t sprite_offs = static_cast<uint32_t>(os.tellp()) - 14U; 
+    uint32_t sprite_offs = static_cast<uint32_t>(os.tellp()) - 14U;
 
     // For the Container version 2, all the actual image data goes at the end.
     // This section does not exist for Container version 1.
@@ -678,13 +678,13 @@ void NewGRFData::write(std::ostream& os) const
 
 
 namespace {
-const EnumDescriptorT<GRFFormat> desc_format 
+const EnumDescriptorT<GRFFormat> desc_format
 {
-    0x00, "grf_format", 
+    0x00, "grf_format",
     {
         { 0x01, "Container1" },
         { 0x02, "Container2" },
-    }    
+    }
 };
 } // namespace {
 
@@ -697,8 +697,8 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
     generator.generate();
 
     // We need to be able to cope with changes in the text format.
-    // The simplest approach is to reject text files with different 
-    // versions... 
+    // The simplest approach is to reject text files with different
+    // versions...
     os << "yagl_version: \"" << str_yagl_version << "\";\n";
     desc_format.print(m_info.format, os, 0);
 
@@ -710,7 +710,7 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
         os << "// Record #" << index << '\n';
         record->print(os, m_sprites, 0);
 
-        // This includes the number of real sprites and so on inside container record, 
+        // This includes the number of real sprites and so on inside container record,
         // which is probably a mistake. The real sprites are printed inline.
         //index = index + record->num_sprites_to_write() + 1;
         ++index;
@@ -720,7 +720,7 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
 
 void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std::string& image_file_base)
 {
-    // A bit of a bodge, but provide the ability to append sprites from other classes as 
+    // A bit of a bodge, but provide the ability to append sprites from other classes as
     // the objects are created. Probably only needed in SpriteIndexRecord.
     //g_new_grf_data = this;
 
@@ -730,7 +730,7 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
     {
         throw PARSER_ERROR("Expected YAGL version number", token);
     }
-    is.match(TokenType::Colon);    
+    is.match(TokenType::Colon);
     std::string yagl_version = is.match(TokenType::String);
     is.match(TokenType::SemiColon);
 
@@ -747,8 +747,8 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
     // This might a bit strict, but the YAGL script may evolve over time.
     // Rather than try to cope with all the variants at once, which could
     // become a bit of a burden, have the YAGL file determine which version
-    // of yagl is needed to parse it (typically the same version that 
-    // created it). 
+    // of yagl is needed to parse it (typically the same version that
+    // created it).
     if (yagl_version != str_yagl_version)
     {
         std::ostringstream os;
@@ -757,10 +757,10 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
         throw PARSER_ERROR(os.str(), token);
     }
 
-    // Top level parser. Every record has the format 'keyword [<...>] { ... }'. 
+    // Top level parser. Every record has the format 'keyword [<...>] { ... }'.
     // We create an object corresponding to the keyword, and then have that object
-    // parse its own internals. The GRF file is nothing more than a long list of 
-    // such records. Reading the text should result in the same data structure as 
+    // parse its own internals. The GRF file is nothing more than a long list of
+    // such records. Reading the text should result in the same data structure as
     // reading the equivalent binary file.
     uint32_t exceptions    = 0;
     uint32_t record_number = 0;
@@ -796,8 +796,8 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
 
 void NewGRFData::update_version_info(const Record& record)
 {
-    // We need to know the GRF version so we can pass it to the other records, some 
-    // of which are interpreted differently depending on the version. 
+    // We need to know the GRF version so we can pass it to the other records, some
+    // of which are interpreted differently depending on the version.
     if (record.record_type() == RecordType::ACTION_08)
     {
         auto action08  = dynamic_cast<const Action08Record*>(&record);
@@ -829,7 +829,7 @@ void NewGRFData::hex_dump(std::ostream& os)
 
     for (const auto& record: m_records)
     {
-        ++index; 
+        ++index;
 
 
         std::ostringstream ss;
@@ -846,7 +846,7 @@ void NewGRFData::hex_dump(std::ostream& os)
         {
             for (const auto& record: it.second)
             {
-                ++index; 
+                ++index;
                 auto sprite = dynamic_cast<RealSpriteRecord*>(record.get());
 
                 std::ostringstream ss;

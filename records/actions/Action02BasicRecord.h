@@ -22,7 +22,7 @@
 
 // Defining graphics set IDs.
 //
-// Action2 is used to group sets of sprites from the previous Action1 together, and 
+// Action2 is used to group sets of sprites from the previous Action1 together, and
 // make them accessible by a variational or random action 2 (chain) or an Action3.
 class Action02BasicRecord : public ActionRecord
 {
@@ -44,13 +44,13 @@ private:
     FeatureType m_feature = FeatureType::Trains;
 
     // The index of this Action02 set. Only a byte is allowed, which seems confusing.
-    // This is referenced later by Action02Variable or Action03 to create chains of 
+    // This is referenced later by Action02Variable or Action03 to create chains of
     // selection, and to associate graphics with feature instances.
     uint8_t m_act02_set_id = 0;
 
-    // There are two sets of entries for some features because they use different 
-    // graphics depending on their state. For vehicles, for example, the states are 
-    // 'loaded' and 'loading'. The number of entries corresponds to the number of 
+    // There are two sets of entries for some features because they use different
+    // graphics depending on their state. For vehicles, for example, the states are
+    // 'loaded' and 'loading'. The number of entries corresponds to the number of
     // loading states, e.g. 0%, 50%, 100%.
 
     // Vehicles: loadtypes, loadingtypes

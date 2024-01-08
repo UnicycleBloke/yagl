@@ -26,8 +26,8 @@
 class SpriteSheet
 {
 public:
-    enum class Colour { Palette, RGB, RGBA }; 
-    using Pixel = RealSpriteRecord::Pixel;       
+    enum class Colour { Palette, RGB, RGBA };
+    using Pixel = RealSpriteRecord::Pixel;
 
     // Overloaded for testing purposes only
     static int alloc_count;
@@ -39,14 +39,14 @@ public:
 };
 
 
-// Maintains a pool of open sprite sheets so that sprites can read their 
+// Maintains a pool of open sprite sheets so that sprites can read their
 // pixels without opening and closing files a bazillion times.
 class SpriteSheetPool
 {
-public: 
+public:
     static SpriteSheetPool& pool();
 
-public:  
+public:
     SpriteSheet& get_sprite_sheet(const std::string file_name, SpriteSheet::Colour colour);
 
 private:

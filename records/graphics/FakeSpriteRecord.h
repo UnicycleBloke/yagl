@@ -16,11 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once 
+#pragma once
 #include "Record.h"
 
 
-// This is used to represent fake sprites which are represented in GRFs with a 
+// This is used to represent fake sprites which are represented in GRFs with a
 // single zero byte (when actual images are not required). There is no data here,
 // but we need some YAGL or the record will be invisible.
 class FakeSpriteRecord : public Record

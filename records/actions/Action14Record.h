@@ -26,18 +26,18 @@
 // INFO C
 //     NAME  T                // Translatable GRF name
 //     DESC  T                // Translatable GRF description
-//     URL_  T                // URL for the GRF website 
+//     URL_  T                // URL for the GRF website
 //     PALS  B 1 'D' 'W' 'A'  // Palette
 //     BLTR  B 1 '8' '3'      // Colour depth
 //     VRSN  B 4              // Version of the GRF
-//     MINV  B 4              // Minimum compatible version of GRFs with same GRFID 
-//     NPAR  B 1              // Number of parameters - up to 128 uint32_ts 
+//     MINV  B 4              // Minimum compatible version of GRFs with same GRFID
+//     NPAR  B 1              // Number of parameters - up to 128 uint32_ts
 //     PARA  C
-//         <setting> C                               // Setting index < NPAR 
-//             NAME T                                // Name of the setting  
+//         <setting> C                               // Setting index < NPAR
+//             NAME T                                // Name of the setting
 //             DESC T                                // Description of the setting
 //             MASK B len param [firstbit [numbits]] // Parameter to set with optional mask
-//             TYPE B 1   int0|bool1                 // Type of the parameter in the GUI 
+//             TYPE B 1   int0|bool1                 // Type of the parameter in the GUI
 //             LIMI B 8   min max words              // Range for valid values
 //             VALU C
 //                 <value> T                         // Names for enumerators
@@ -53,14 +53,14 @@ public:
 
     // Binary serialisation
     void read(std::istream& is, const GRFInfo& info) override;
-    void write(std::ostream& os, const GRFInfo& info) const override;   
+    void write(std::ostream& os, const GRFInfo& info) const override;
     // Text serialisation
     void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
 private:
     struct Chunk
-    {        
+    {
         GRFLabel label;
         uint8_t  type;
 

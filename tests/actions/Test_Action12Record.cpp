@@ -23,7 +23,7 @@
 
 namespace {
 
-// Add all properties, even with silly values, so that we can confirm the 
+// Add all properties, even with silly values, so that we can confirm the
 // formatting of each one if they are individually changed.
 static constexpr const char* str_YAGL =
     "unicode_glyphs // Action12\n"
@@ -56,15 +56,15 @@ static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "12 "     // Action12
     "02 "     // 2 sprite sets
-    // First set: 
-    "01 "     // SmallProp 
+    // First set:
+    "01 "     // SmallProp
     "02 "     // 2 glyphs
     "AD 0A "  // First character
     // Second set:
-    "02 "     // LargeProp 
+    "02 "     // LargeProp
     "01 "     // 1 glyph
     "AE 0A "; // First character
- 
+
 } // namespace {
 
 

@@ -34,7 +34,7 @@ void ActionFFRecord::read(std::istream& is, const GRFInfo& info)
         throw RUNTIME_ERROR("ActionFFRecord::read inconsistent length");
     }
 
-    // Not sure how big this is likely to be. It contains a WAV encoded 
+    // Not sure how big this is likely to be. It contains a WAV encoded
     // sound effect. It is a byte-for-byte copy of the original WAV file.
     while (is.peek() != EOF)
     {
@@ -51,7 +51,7 @@ void ActionFFRecord::write(std::ostream& os, const GRFInfo& info) const
     write_string(os, m_filename);
 
     os.write((char*)&m_binary[0], m_binary.size());
-}  
+}
 
 
 static constexpr const char* str_binary = "binary";
@@ -109,10 +109,10 @@ void ActionFFRecord::read_binary_file(const std::string& binary_dir)
     if (!fs::is_regular_file(file_path))
     {
         throw RUNTIME_ERROR(file_path + ": No such file");
-    } 
+    }
 
     std::cout << "Reading binary file: " << file_path << "..." << std::endl;
-    std::ifstream is(file_path, std::ios::binary);    
+    std::ifstream is(file_path, std::ios::binary);
     while(is.peek() != EOF)
     {
         m_binary.push_back(read_uint8(is));

@@ -29,24 +29,24 @@ void Action03Record::read(std::istream& is, const GRFInfo& info)
     // This is the number of feature instances we are going to associate
     // graphics with. The livery override flag is used for wagons and means
     // that the graphics will be used for those wagons when they are attached
-    // to a particular engine. The Action03 for the engine comes just before 
+    // to a particular engine. The Action03 for the engine comes just before
     // this one in that case.
     uint8_t num_ids   = read_uint8(is);
     m_livery_override = (num_ids & 0x80) == 0x80;
     num_ids           = (num_ids & 0x7F);
 
-    // These are the IDs of the feature instances with which to associates the 
+    // These are the IDs of the feature instances with which to associates the
     // graphics. All the instances will get the same graphics. Can be zero instances.
-    // Each feature type has a set of predefined IDs: you can modify existing 
-    // instances or create new instancs with new IDs. 
+    // Each feature type has a set of predefined IDs: you can modify existing
+    // instances or create new instancs with new IDs.
     m_feature_ids.resize(num_ids);
     for (uint8_t i = 0; i < num_ids; ++i)
     {
         m_feature_ids[i] = read_uint8_ext(is);
     }
 
-    // This only applies to vehicles and stations. These are specific graphics 
-    // set IDs for various types of cargo. 
+    // This only applies to vehicles and stations. These are specific graphics
+    // set IDs for various types of cargo.
     // NOTE for RailTypes, the cargo IDs are re-purposed to give graphics IDs for
     // the various overlays and other parts.
     uint8_t num_cargo_types = read_uint8(is);
@@ -57,7 +57,7 @@ void Action03Record::read(std::istream& is, const GRFInfo& info)
         m_cargo_types[i].act02_set_id = read_uint16(is);
     }
 
-    // This is the ID of the graphics set which is used unless there 
+    // This is the ID of the graphics set which is used unless there
     m_default_act02_set_id = read_uint16(is);
 }
 
@@ -73,7 +73,7 @@ void Action03Record::write(std::ostream& os, const GRFInfo& info) const
 
     for (auto id: m_feature_ids)
     {
-        // In OpenTTD since r13482, each ID is an extended byte for vehicles, 
+        // In OpenTTD since r13482, each ID is an extended byte for vehicles,
         // otherwise the ID is a regular byte. Use short format where possible.
         if (feature_is_vehicle(m_feature))
             write_uint8_ext(os, id, ExtByteFormat::Short);
@@ -90,7 +90,7 @@ void Action03Record::write(std::ostream& os, const GRFInfo& info) const
     }
 
     write_uint16(os, m_default_act02_set_id);
-}  
+}
 
 
 namespace {
@@ -125,9 +125,9 @@ void Action03Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action03" << '\n';
     os << pad(indent) << "{" << '\n';
 
-    desc_livery_override.print(m_livery_override, os, indent + 4); 
-    desc_default_set_id.print(m_default_act02_set_id, os, indent + 4); 
-    desc_feature_ids.print(m_feature_ids, os, indent + 4); 
+    desc_livery_override.print(m_livery_override, os, indent + 4);
+    desc_default_set_id.print(m_default_act02_set_id, os, indent + 4);
+    desc_feature_ids.print(m_feature_ids, os, indent + 4);
 
     os << pad(indent + 4) << str_cargo_types << ":\n";
     os << pad(indent + 4) << "{\n";

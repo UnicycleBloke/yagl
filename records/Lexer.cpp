@@ -55,13 +55,13 @@ bool Lexer::handle_byte(uint8_t c, uint8_t p)
         // possibly comprising two or more bytes.
         case LexerState::None:
             // First character of an identifier.
-            if ( ((c >= 'a') && (c <= 'z')) || 
-                 ((c >= 'A') && (c <= 'Z')) || 
+            if ( ((c >= 'a') && (c <= 'z')) ||
+                 ((c >= 'A') && (c <= 'Z')) ||
                  (c == '_')                 )
             {
                 m_value = c;
                 m_state = LexerState::Ident;
-                return true; 
+                return true;
             }
 
             // First character of a number - could be decimal, hexadecimal, binary, octal or float.
@@ -69,17 +69,17 @@ bool Lexer::handle_byte(uint8_t c, uint8_t p)
             else if ((c >= '0') && (c <= '9'))
             {
                 m_value = c;
-                // Starting with '0' means we could be octal, binary or hex. The next character 
+                // Starting with '0' means we could be octal, binary or hex. The next character
                 // will determine this. Otherwise we must be a decimal or maybe a float.
-                m_state = (c == '0') ? LexerState::Oct : LexerState::Dec; 
-                return true; 
+                m_state = (c == '0') ? LexerState::Oct : LexerState::Dec;
+                return true;
             }
             // Unary minus for decimal numbers only.
-            else if (c == '-') 
+            else if (c == '-')
             {
                 m_value = c;
-                m_state = LexerState::Dec; 
-                return true; 
+                m_state = LexerState::Dec;
+                return true;
             }
 
             // First character of a string literal.
@@ -87,7 +87,7 @@ bool Lexer::handle_byte(uint8_t c, uint8_t p)
             {
                 m_value.clear();
                 m_state = LexerState::String;
-                return true; 
+                return true;
             }
 
             // Possibly the first character of a comment.
@@ -99,11 +99,11 @@ bool Lexer::handle_byte(uint8_t c, uint8_t p)
                     case '*':
                         // This is the start of a comment
                         m_state = LexerState::Slash;
-                        return true; 
+                        return true;
                     default:
                         // This is a division operator
                         handle_symbol(c, p);
-                        return true;   
+                        return true;
                 }
             }
 
@@ -113,14 +113,14 @@ bool Lexer::handle_byte(uint8_t c, uint8_t p)
         case LexerState::Peeked:
             // We already consume the current byte to create a digraph.
             m_state = LexerState::None;
-            return true;    
+            return true;
 
         // Multi-character token continuation.
-        case LexerState::Ident:  return handle_ident(c);    
-        case LexerState::String: return handle_string(c);    
-        case LexerState::Oct:    return handle_octal(c);    
-        case LexerState::Dec:    return handle_decimal(c);            
-        case LexerState::Hex:    return handle_hexadecimal(c);            
+        case LexerState::Ident:  return handle_ident(c);
+        case LexerState::String: return handle_string(c);
+        case LexerState::Oct:    return handle_octal(c);
+        case LexerState::Dec:    return handle_decimal(c);
+        case LexerState::Hex:    return handle_hexadecimal(c);
         case LexerState::Bin:    return handle_binary(c);
         case LexerState::Float:  return handle_float(c);
 
@@ -141,7 +141,7 @@ bool Lexer::handle_comment_c(uint8_t c)
     return true;
 }
 
- 
+
 bool Lexer::handle_comment_cpp(uint8_t c)
 {
     // We are in a C++-style comment: '\n' terminates it.
@@ -150,7 +150,7 @@ bool Lexer::handle_comment_cpp(uint8_t c)
         m_state  = LexerState::None;
         m_column = 0;
         ++m_line;
-    } 
+    }
     return true;
 }
 
@@ -180,7 +180,7 @@ bool Lexer::handle_comment_star(uint8_t c)
         // Revert to C-style.
         default:  m_state = LexerState::C;
     }
-    return true;    
+    return true;
 }
 
 
@@ -209,13 +209,13 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
         case '<' :
             if (p == '<')
             {
-                emit(TokenType::ShiftLeft, "<<"); 
+                emit(TokenType::ShiftLeft, "<<");
                 m_state = LexerState::Peeked;
                 return true;
             }
             else
             {
-                emit(TokenType::OpenAngle, "<"); 
+                emit(TokenType::OpenAngle, "<");
                 return true;
             }
             break;
@@ -223,46 +223,46 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
         case '>' :
             if (p == '>')
             {
-                emit(TokenType::ShiftRight, ">>"); 
+                emit(TokenType::ShiftRight, ">>");
                 m_state = LexerState::Peeked;
                 return true;
             }
             else
             {
-                emit(TokenType::CloseAngle, ">"); 
+                emit(TokenType::CloseAngle, ">");
                 return true;
             }
             break;
 
-        case '.' : 
+        case '.' :
             if (p == '.')
             {
-                emit(TokenType::DoubleDot, ".."); 
+                emit(TokenType::DoubleDot, "..");
                 m_state = LexerState::Peeked;
                 return true;
             }
             else
             {
-                emit(TokenType::SingleDot, "."); 
+                emit(TokenType::SingleDot, ".");
                 return true;
             }
             break;
 
-        case '!' : 
+        case '!' :
             if (p == '=')
             {
-                emit(TokenType::NotEqual, "!="); 
+                emit(TokenType::NotEqual, "!=");
                 m_state = LexerState::Peeked;
                 return true;
             }
             break;
 
-        // Ignore whitespace. Technically not a symbol but 
+        // Ignore whitespace. Technically not a symbol but
         case ' '  : return true;
         case '\r' : return true;
         case '\t' : return true;
 
-        case '\n' : 
+        case '\n' :
             m_column = 0;
             ++m_line;
             return true;
@@ -274,8 +274,8 @@ bool Lexer::handle_symbol(uint8_t c, uint8_t p)
 
 bool Lexer::handle_ident(uint8_t c)
 {
-    if ( ((c >= 'a') && (c <= 'z')) || 
-         ((c >= 'A') && (c <= 'Z')) || 
+    if ( ((c >= 'a') && (c <= 'z')) ||
+         ((c >= 'A') && (c <= 'Z')) ||
          ((c >= '0') && (c <= '9')) ||
          (c == '_')                 )
     {
@@ -285,12 +285,12 @@ bool Lexer::handle_ident(uint8_t c)
 
     emit(TokenType::Ident, m_value);
     return false;
-}   
+}
 
 
 bool Lexer::handle_string(uint8_t c)
 {
-    // All strings in YAGL are expected to be well-formed UTF8. 
+    // All strings in YAGL are expected to be well-formed UTF8.
     if (c != '"')
     {
         m_value += c;
@@ -304,9 +304,9 @@ bool Lexer::handle_string(uint8_t c)
 
 bool Lexer::handle_octal(uint8_t c)
 {
-    // Only if this is the second character in the number.  
+    // Only if this is the second character in the number.
     if (m_value.size() == 1)
-    {       
+    {
         // Maybe switch to binary
         if (c == 'b')
         {
@@ -329,9 +329,9 @@ bool Lexer::handle_octal(uint8_t c)
             return true;
         }
     }
-    
+
     // It would be confusing to have an octal number followed by another number with
-    // no space or anything. So don't allow it.  
+    // no space or anything. So don't allow it.
     if ((c >= '8') && (c <= '9'))
     {
         throw LEXER_ERROR("Invalid octal character", m_line, m_column);
@@ -346,7 +346,7 @@ bool Lexer::handle_octal(uint8_t c)
 
     emit(TokenType::Number, NumberType::Oct, m_value);
     return false;
-}    
+}
 
 
 bool Lexer::handle_decimal(uint8_t c)
@@ -374,14 +374,14 @@ bool Lexer::handle_decimal(uint8_t c)
 
     emit(TokenType::Number, NumberType::Dec, m_value);
     return false;
-}            
+}
 
 
 bool Lexer::handle_float(uint8_t c)
 {
     // Decimal digits...
     if ((c >= '0') && (c <= '9'))
-    {               
+    {
         m_value += c;
         return true;
     }
@@ -394,23 +394,23 @@ bool Lexer::handle_float(uint8_t c)
 
     emit(TokenType::Number, NumberType::Float, m_value);
     return false;
-}            
+}
 
 
 bool Lexer::handle_hexadecimal(uint8_t c)
 {
-    if ( ((c >= 'a') && (c <= 'f')) || 
-         ((c >= 'A') && (c <= 'F')) || 
+    if ( ((c >= 'a') && (c <= 'f')) ||
+         ((c >= 'A') && (c <= 'F')) ||
          ((c >= '0') && (c <= '9')) )
     {
         m_value += c;
         return true;
     }
 
-    // It is a fault if the hexadecimal number is terminated by 
+    // It is a fault if the hexadecimal number is terminated by
     // an m_value character.
-    if ( ((c >= 'a') && (c <= 'z')) || 
-         ((c >= 'A') && (c <= 'Z')) || 
+    if ( ((c >= 'a') && (c <= 'z')) ||
+         ((c >= 'A') && (c <= 'Z')) ||
          ((c >= '0') && (c <= '9')) ||
          (c == '_')                 )
     {
@@ -419,7 +419,7 @@ bool Lexer::handle_hexadecimal(uint8_t c)
 
     emit(TokenType::Number, NumberType::Hex, m_value);
     return false;
-}            
+}
 
 
 bool Lexer::handle_binary(uint8_t c)
@@ -436,23 +436,23 @@ bool Lexer::handle_binary(uint8_t c)
 }
 
 
-void Lexer::emit(TokenType type, std::string value) 
+void Lexer::emit(TokenType type, std::string value)
 {
     emit(type, NumberType::None, value);
 }
 
 
-void Lexer::emit(TokenType type, NumberType num_type, std::string value) 
+void Lexer::emit(TokenType type, NumberType num_type, std::string value)
 {
     // A binary minus is detected a decimal number: add a correction here.
     if ((type == TokenType::Number) && (value == "-"))
     {
-        type = TokenType::OpMinus; 
+        type = TokenType::OpMinus;
     }
 
     // Concatenate adjacent strings.
     // if ((type == TokenType::String) && (m_tokens.size() > 0))
-    // {        
+    // {
     //     TokenValue& prev_token = *m_tokens.rbegin();
     //     if (prev_token.type == TokenType::String)
     //     {

@@ -90,7 +90,7 @@ void Action02IndustryRecord::write(std::ostream& os, const GRFInfo& info) const
     else if (m_format == Format::Version2)
     {
         // Subtract amounts
-        m_version2.sub_in_cargos.write(os);        
+        m_version2.sub_in_cargos.write(os);
         // Add amounts
         m_version2.add_out_cargos.write(os);
         // Repeat flag
@@ -100,7 +100,7 @@ void Action02IndustryRecord::write(std::ostream& os, const GRFInfo& info) const
     {
         throw RUNTIME_ERROR("Action02IndustryRecord::write not implemented");
     }
-}  
+}
 
 
 namespace {
@@ -109,12 +109,12 @@ namespace {
 constexpr const char* str_format = "format";
 
 
-const EnumDescriptorT<Action02IndustryRecord::Format> desc_format = 
-{ 
-    0x00, str_format,                   
+const EnumDescriptorT<Action02IndustryRecord::Format> desc_format =
+{
+    0x00, str_format,
     {
-        { 0x00, "Version0" },  
-        { 0x01, "Version1" },  
+        { 0x00, "Version0" },
+        { 0x01, "Version1" },
         { 0x02, "Version2" },
     }
 };
@@ -125,7 +125,7 @@ const EnumDescriptorT<Action02IndustryRecord::Format> desc_format =
 
 void Action02IndustryRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature); 
+    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
     os << ", " << to_hex(m_act02_set_id);
     os << ", " << desc_format.value(m_format);
     os << "> // Action02 industry\n";
@@ -150,7 +150,7 @@ void Action02IndustryRecord::print(std::ostream& os, const SpriteZoomMap& sprite
 
 void Action02IndustryRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
-    is.match_ident(RecordName(record_type()));    
+    is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
@@ -230,7 +230,7 @@ void Action02IndustryRecord::print_version0(std::ostream& os, uint16_t indent) c
     desc_sub_in_amounts.print(m_version0.sub_in_amounts, os, indent);
     desc_add_out_amounts.print(m_version0.add_out_amounts, os, indent);
     desc_repeat_flag.print(m_version0.repeat_flag, os, indent);
-}   
+}
 
 
 void Action02IndustryRecord::parse_version0(TokenStream& is)
@@ -255,15 +255,15 @@ void Action02IndustryRecord::parse_version0(TokenStream& is)
     {
         throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
     }
-}   
+}
 
 
-void Action02IndustryRecord::print_version1(std::ostream& os, uint16_t indent) const  
+void Action02IndustryRecord::print_version1(std::ostream& os, uint16_t indent) const
 {
     desc_sub_in_regs.print(m_version1.sub_in_regs, os, indent);
     desc_add_out_regs.print(m_version1.add_out_regs, os, indent);
     desc_repeat_reg.print(m_version1.repeat_reg, os, indent);
-}   
+}
 
 
 void Action02IndustryRecord::parse_version1(TokenStream& is)
@@ -288,7 +288,7 @@ void Action02IndustryRecord::parse_version1(TokenStream& is)
     {
         throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
     }
-}   
+}
 
 
 void Action02IndustryRecord::CargoList::read(std::istream& is)
@@ -347,19 +347,19 @@ void Action02IndustryRecord::CargoList::parse(TokenStream& is)
 }
 
 
-void Action02IndustryRecord::print_version2(std::ostream& os, uint16_t indent) const    
+void Action02IndustryRecord::print_version2(std::ostream& os, uint16_t indent) const
 {
     // Subtract amounts
     os << pad(indent) << str_sub_in_cargos << ": ";
     m_version2.sub_in_cargos.print(os, indent);
-    
+
     // Add amounts
     os << pad(indent) << str_add_out_cargos << ": ";
     m_version2.add_out_cargos.print(os, indent);
 
     // Repeat flag
     desc_repeat_reg.print(m_version2.repeat_reg, os, indent);
-}   
+}
 
 
 void Action02IndustryRecord::parse_version2(TokenStream& is)
@@ -384,5 +384,5 @@ void Action02IndustryRecord::parse_version2(TokenStream& is)
     {
         throw PARSER_ERROR("Unexpected identifier: '" + token.value + "'", token);
     }
-}   
+}
 

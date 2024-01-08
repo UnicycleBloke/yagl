@@ -36,7 +36,7 @@ static constexpr const char* str_NFO =
     "20 70 72 65 73 65 72 76 65 64 20 69 6E 20 74 68 "
     "65 20 47 52 46 20 66 69 6C 65 2E ";
 
-// This demonstrates string concantenation but the test would fail because 
+// This demonstrates string concantenation but the test would fail because
 // printing the output does not split the string out again. Use an alternate
 // string for the output which reflects this.
 static constexpr const char* str_YAGL2_IN =

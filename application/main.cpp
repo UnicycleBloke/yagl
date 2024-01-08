@@ -29,9 +29,9 @@
 #include "catch.hpp"
 
 
-// Convenience functions to check for errors when opening files. Not checking came up as a 
-// possible cause in a bug report when no GRF was created on encoding, but without 
-// any errors. Streams have move semantics so it should be fine to return the opened 
+// Convenience functions to check for errors when opening files. Not checking came up as a
+// possible cause in a bug report when no GRF was created on encoding, but without
+// any errors. Streams have move semantics so it should be fine to return the opened
 // stream here.
 static std::ifstream open_read_file(const std::string& file_name)
 {
@@ -39,7 +39,7 @@ static std::ifstream open_read_file(const std::string& file_name)
     if (is.fail())
     {
         std::ostringstream ss;
-        ss << "Error opening file for reading: " << file_name;  
+        ss << "Error opening file for reading: " << file_name;
         throw RUNTIME_ERROR(ss.str());
     }
 
@@ -53,7 +53,7 @@ static std::ofstream open_write_file(const std::string& file_name)
     if (os.fail())
     {
         std::ostringstream ss;
-        ss << "Error opening file for writing: " << file_name;  
+        ss << "Error opening file for writing: " << file_name;
         throw RUNTIME_ERROR(ss.str());
     }
 
@@ -65,7 +65,7 @@ static void decode()
 {
     CommandLineOptions& options = CommandLineOptions::options();
 
-    try 
+    try
     {
         // We first create the sub-directory for the output files.
         fs::create_directory(options.yagl_dir());
@@ -115,7 +115,7 @@ static void encode()
         // Parse the YAGL script ...
         std::cout << "Parsing YAGL..." << std::endl;
         NewGRFData grf_data;
-        grf_data.parse(token_stream, options.yagl_dir(), options.image_base()); 
+        grf_data.parse(token_stream, options.yagl_dir(), options.image_base());
 
         // Back up the GRF before overwriting it ...
         fs::path grf_file = options.grf_file();
@@ -126,7 +126,7 @@ static void encode()
 
             std::cout << "Creating back up GRF: " << grf_file.string() << " => " << bak_file.string() << std::endl;
             fs::rename(grf_file, bak_file);
-        } 
+        }
 
         // Write out the GRF file ...
         std::cout << "Writing GRF..." << std::endl;
@@ -144,7 +144,7 @@ static void hex_dump()
 {
     CommandLineOptions& options = CommandLineOptions::options();
 
-    try 
+    try
     {
         // We first create the sub-directory for the output files.
         fs::create_directory(options.yagl_dir());
@@ -177,7 +177,7 @@ std::vector<std::string> split(const std::string& str)
     std::vector<std::string> result;
     std::istringstream is(str);
     std::string token;
-    while (std::getline(is, token, ' ')) 
+    while (std::getline(is, token, ' '))
     {
         result.push_back(token);
     }

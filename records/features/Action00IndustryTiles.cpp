@@ -37,7 +37,7 @@ constexpr const char* str_special_flags          = "special_flags";
 constexpr const char* str_cargo_acceptance_list  = "cargo_acceptance_list";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -94,7 +94,7 @@ bool Action00IndustryTiles::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00IndustryTiles::write_property(std::ostream& os, uint8_t property) const
@@ -120,7 +120,7 @@ bool Action00IndustryTiles::write_property(std::ostream& os, uint8_t property) c
 }
 
 
-bool Action00IndustryTiles::print_property(std::ostream& os, uint8_t property, uint16_t indent) const 
+bool Action00IndustryTiles::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
     switch (property)
     {

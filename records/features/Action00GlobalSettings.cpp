@@ -39,7 +39,7 @@ constexpr const char* str_case_translation_table     = "case_translation_table";
 constexpr const char* str_plural_form                = "plural_form";
 
 
-// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be 
+// Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
 // split out and not ambiguous for the parser. Not all features need this, but
 // it's simpler to be consistent.
 const std::map<std::string, uint8_t> g_indices =
@@ -58,7 +58,7 @@ const std::map<std::string, uint8_t> g_indices =
     { str_gender_translation_table,   0x13 },
     { str_case_translation_table,     0x14 },
     { str_plural_form,                0x15 },
-};      
+};
 
 
 using SnowLineDescriptor   = GenericDescriptor<SnowLine, true>; // Forward the indent
@@ -125,7 +125,7 @@ void SnowLine::parse(TokenStream& is)
 {
     is.match(TokenType::OpenBracket);
 
-    // This is a bit crude - assumes that we have the correct 
+    // This is a bit crude - assumes that we have the correct
     // number of values. Throws exception if we don't.
     for (auto& value : m_snow_heights)
     {
@@ -179,10 +179,10 @@ void GenderCase::parse(TokenStream& is)
     while (is.peek().type != TokenType::CloseBracket)
     {
         GenderCase::Item item;
-        
-        item.id = is.match_uint8(); 
+
+        item.id = is.match_uint8();
         is.match(TokenType::Colon);
-        item.name = is.match(TokenType::String); 
+        item.name = is.match(TokenType::String);
 
         m_items.push_back(item);
     }
@@ -191,7 +191,7 @@ void GenderCase::parse(TokenStream& is)
 }
 
 
-bool Action00GlobalSettings::read_property(std::istream& is, uint8_t property) 
+bool Action00GlobalSettings::read_property(std::istream& is, uint8_t property)
 {
     switch (property)
     {
@@ -213,7 +213,7 @@ bool Action00GlobalSettings::read_property(std::istream& is, uint8_t property)
     }
 
     return true;
-}   
+}
 
 
 bool Action00GlobalSettings::write_property(std::ostream& os, uint8_t property) const
@@ -263,7 +263,7 @@ bool Action00GlobalSettings::print_property(std::ostream& os, uint8_t property, 
     }
 
     return true;
-}   
+}
 
 
 bool Action00GlobalSettings::parse_property(TokenStream& is, const std::string& name, uint8_t& property)

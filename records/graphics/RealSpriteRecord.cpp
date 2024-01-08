@@ -36,15 +36,15 @@
 void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
 {
     // We already have the sprite ID, the size (whatever it actually means), and the compression.
-    // Zoom level is only used in Format2 files. 
-    m_zoom = (info.format == GRFFormat::Container2) ? static_cast<ZoomLevel>(read_uint8(is)) : ZoomLevel::Normal;        
+    // Zoom level is only used in Format2 files.
+    m_zoom = (info.format == GRFFormat::Container2) ? static_cast<ZoomLevel>(read_uint8(is)) : ZoomLevel::Normal;
     // Taller images are allowed Format2 files.
     m_ydim = (info.format == GRFFormat::Container2) ? read_uint16(is) : read_uint8(is);
     m_xdim = read_uint16(is);
     m_xrel = read_uint16(is);
     m_yrel = read_uint16(is);
 
-    // The uncompressed size is only given in certain cases. The transparency bit tells us how to decode the 
+    // The uncompressed size is only given in certain cases. The transparency bit tells us how to decode the
     // data after reading if from the file. It is the size of the data before chunk-compression (tiles). I think.
     m_uncomp_size = ((info.format == GRFFormat::Container2) && (m_compression & CHUNKED_FORMAT)) ? read_uint32(is) : 0;
 
@@ -63,7 +63,7 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
 
     // The compression byte is interpreted quite differently depending on the file format.
     // Format2 images may have more than one byte per pixel. Format1 images just have a palette byte.
-    uint32_t img_size; 
+    uint32_t img_size;
     uint32_t pix_size;
     if (info.format == GRFFormat::Container1)
     {
@@ -82,11 +82,11 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
         pix_size += (m_compression & HAS_PALETTE) ? 1 : 0;
         img_size  = (m_uncomp_size == 0) ? (m_xdim * m_ydim * pix_size) : m_uncomp_size;
         m_colour  = m_compression & (HAS_RGB | HAS_ALPHA | HAS_PALETTE);
-    }   
+    }
 
 
-    // Read the image data. This decompression is based on LZ77 in some way. I just followed 
-    // the description in the GRF container documentation. Place the expanded data into a 
+    // Read the image data. This decompression is based on LZ77 in some way. I just followed
+    // the description in the GRF container documentation. Place the expanded data into a
     // pre-sized buffer. Have subsequently compared the code to OpenTTD, and it looks fine.
     std::vector<uint8_t> pixdata(img_size);
     uint32_t index = 0;
@@ -98,7 +98,7 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
             // The high bit is set, so we are going to copy data from earlier
             // in the sprite.
             uint16_t length = -(code >> 3);
-            uint8_t  byte   = read_uint8(is);            
+            uint8_t  byte   = read_uint8(is);
             uint16_t offset = ((static_cast<uint16_t>(code) & 0x07) << 8) | byte;
             if (offset > index)
             {
@@ -127,7 +127,7 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
         }
         else
         {
-            // The high bit is not set so we have to read the next number 
+            // The high bit is not set so we have to read the next number
             // of bytes from the file.
             uint16_t length = (code == 0) ? 0x80 : code;
             if (img_size < length)
@@ -163,7 +163,7 @@ void RealSpriteRecord::read(std::istream& is, const GRFInfo& info)
 
 RealSpriteRecord::Pixel RealSpriteRecord::pixel(uint32_t x, uint32_t y) const
 {
-    // This is probably slow. Need a better implementation/interaction with 
+    // This is probably slow. Need a better implementation/interaction with
     // sprite sheet generator.
     uint8_t pix_size = 0;
     pix_size  = (m_colour & HAS_RGB)     ? 3 : 0;
@@ -178,15 +178,15 @@ RealSpriteRecord::Pixel RealSpriteRecord::pixel(uint32_t x, uint32_t y) const
         pixel.red   = m_pixels[offset++];
         pixel.green = m_pixels[offset++];
         pixel.blue  = m_pixels[offset++];
-    }    
+    }
     if (m_colour & HAS_ALPHA)
     {
         pixel.alpha = m_pixels[offset++];
-    }    
+    }
     if (m_colour & HAS_PALETTE)
     {
         pixel.index = m_pixels[offset++];
-    }    
+    }
 
     return pixel;
 }
@@ -194,7 +194,7 @@ RealSpriteRecord::Pixel RealSpriteRecord::pixel(uint32_t x, uint32_t y) const
 
 void RealSpriteRecord::set_pixel(uint32_t x, uint32_t y, const Pixel& pixel)
 {
-    // This is probably slow. Need a better implementation/interaction with 
+    // This is probably slow. Need a better implementation/interaction with
     // sprite sheet generator.
     uint8_t pix_size = 0;
     pix_size  = (m_colour & HAS_RGB)     ? 3 : 0;
@@ -208,15 +208,15 @@ void RealSpriteRecord::set_pixel(uint32_t x, uint32_t y, const Pixel& pixel)
         m_pixels[offset++] = pixel.red;
         m_pixels[offset++] = pixel.green;
         m_pixels[offset++] = pixel.blue;
-    }    
+    }
     if (m_colour & HAS_ALPHA)
     {
         m_pixels[offset++] = pixel.alpha;
-    }    
+    }
     if (m_colour & HAS_PALETTE)
     {
         m_pixels[offset++] = pixel.index;
-    }    
+    }
 }
 
 
@@ -229,7 +229,7 @@ void RealSpriteRecord::write(std::ostream& os, const GRFInfo& info) const
     else
     {
         write_format1(os);
-    }   
+    }
 }
 
 
@@ -247,14 +247,14 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
 
     if (m_compression & CHUNKED_FORMAT)
     {
-        std::vector<uint8_t> chunked_data = encode_tile(m_pixels, m_xdim, m_ydim, m_colour, GRFFormat::Container1); 
-        uncomp_size = uint32_t(chunked_data.size());            
+        std::vector<uint8_t> chunked_data = encode_tile(m_pixels, m_xdim, m_ydim, m_colour, GRFFormat::Container1);
+        uncomp_size = uint32_t(chunked_data.size());
         output_data = encode_lz77(chunked_data);
     }
     else
     {
         output_data = encode_lz77(m_pixels);
-        uncomp_size = uint32_t(m_xdim) * uint32_t(m_ydim);    
+        uncomp_size = uint32_t(m_xdim) * uint32_t(m_ydim);
     }
 
     // We need to know this value for reading chunked sprites.
@@ -268,7 +268,7 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
     //          how large it is in the file.
     // 3   8  Has transparency (i.e. is a tile), see below.
     write_uint8(os,  m_compression | 0x01); // Not entirely sure about bit 2 - see examples...
-    
+
     write_uint8(os,  uint8_t(m_ydim));
     write_uint16(os, m_xdim);
     write_uint16(os, m_xrel);
@@ -278,7 +278,7 @@ void RealSpriteRecord::write_format1(std::ostream& os) const
     {
         write_uint8(os, byte);
     }
-}   
+}
 
 
 void RealSpriteRecord::write_format2(std::ostream& os) const
@@ -322,7 +322,7 @@ void RealSpriteRecord::write_format2(std::ostream& os) const
     write_uint16(os, m_xrel);
     write_uint16(os, m_yrel);
 
-    // The uncompressed size is only given in certain cases. The transparency bit tells us how to decode the 
+    // The uncompressed size is only given in certain cases. The transparency bit tells us how to decode the
     // data after reading if from the file. It is the size of the data before chunk-compression (tiles). I think.
     //if (has_transparency(m_compression, GRFFormat::Container2))
     if (m_compression & CHUNKED_FORMAT)
@@ -337,7 +337,7 @@ void RealSpriteRecord::write_format2(std::ostream& os) const
         //write_uint8(os, byte);
         write_uint8(os, output_data[i]);
     }
-}  
+}
 
 
 static void append_byte(std::vector<uint8_t>& output, uint8_t byte)
@@ -357,14 +357,14 @@ static void append_bytes(std::vector<uint8_t>& output, const uint8_t* bytes, uin
 
 static inline int find(const uint8_t* pat_data, int32_t pat_size, const uint8_t* data, int32_t data_size)
 {
-    for (int32_t i = 0; i + pat_size <= data_size; ++i) 
+    for (int32_t i = 0; i + pat_size <= data_size; ++i)
     {
         int32_t j = 0;
         while (j < pat_size && pat_data[j] == data[i + j]) ++j;
         if (j == pat_size)
         {
             return i;
-        } 
+        }
     }
     return -1;
 }
@@ -379,16 +379,16 @@ std::vector<uint8_t> RealSpriteRecord::encode_lz77(const std::vector<uint8_t>& i
     std::array<uint8_t, 0x80> literal;
     uint8_t literal_size = 0;
     int32_t input_size  = int32_t(input_data.size());
-    
+
     int32_t position = 0;
-    while (position < input_size) 
+    while (position < input_size)
     {
         int32_t start_pos = position - (1 << 11) + 1;
         if (start_pos < 0) start_pos = 0;
 
-        // Loop through the lookahead buffer. 
+        // Loop through the lookahead buffer.
         int32_t max_look = input_size - position + 1;
-        if (max_look > 16) 
+        if (max_look > 16)
         {
             max_look = 16;
         }
@@ -396,11 +396,11 @@ std::vector<uint8_t> RealSpriteRecord::encode_lz77(const std::vector<uint8_t>& i
         int32_t overlap_pos = 0;
         int32_t overlap_len = 0;
         int32_t i;
-        for (i = 3; i < max_look; ++i) 
+        for (i = 3; i < max_look; ++i)
         {
-            // Find the pattern match in the window. 
+            // Find the pattern match in the window.
             int result = find(&input_data[0] + position, i, &input_data[0] + start_pos, position - start_pos);
-            // If match failed, we've found the longest. 
+            // If match failed, we've found the longest.
             if (result < 0) break;
 
             overlap_pos = position - start_pos - result;
@@ -408,9 +408,9 @@ std::vector<uint8_t> RealSpriteRecord::encode_lz77(const std::vector<uint8_t>& i
             start_pos += result;
         }
 
-        if (overlap_len > 0) 
+        if (overlap_len > 0)
         {
-            if (literal_size > 0) 
+            if (literal_size > 0)
             {
                 append_byte(output, literal_size);
                 append_bytes(output, &literal[0], literal_size);
@@ -420,11 +420,11 @@ std::vector<uint8_t> RealSpriteRecord::encode_lz77(const std::vector<uint8_t>& i
             append_byte(output, val);
             append_byte(output, overlap_pos & 0xFF);
             position += overlap_len;
-        } 
-        else 
+        }
+        else
         {
             literal[literal_size++] = input_data[position];
-            if (literal_size == sizeof(literal)) 
+            if (literal_size == sizeof(literal))
             {
                 append_byte(output, 0);
                 append_bytes(output, &literal[0], literal_size);
@@ -433,8 +433,8 @@ std::vector<uint8_t> RealSpriteRecord::encode_lz77(const std::vector<uint8_t>& i
             position += 1;
         }
     }
-    
-    if (literal_size > 0) 
+
+    if (literal_size > 0)
     {
         append_byte(output, literal_size);
         append_bytes(output, &literal[0], literal_size);
@@ -464,23 +464,23 @@ constexpr const char* str_chunked = "chunked";
 constexpr const char* str_no_crop = "no_crop";
 
 
-const EnumDescriptorT<RealSpriteRecord::ZoomLevel> zoom_desc = 
-{ 
-    0x00, "",                   
+const EnumDescriptorT<RealSpriteRecord::ZoomLevel> zoom_desc =
+{
+    0x00, "",
     {
-        { 0x00, str_normal }, // ZoomLevel::Normal },    
-        { 0x01, str_zin4   }, // ZoomLevel::ZoomInX4 }, 
-        { 0x02, str_zin2   }, // ZoomLevel::ZoomInX2 }, 
-        { 0x03, str_zout2  }, // ZoomLevel::ZoomOutX2 }, 
-        { 0x04, str_zout4  }, // ZoomLevel::ZoomOutX4 }, 
-        { 0x05, str_zout8  }, // ZoomLevel::ZoomOutX8 }, 
+        { 0x00, str_normal }, // ZoomLevel::Normal },
+        { 0x01, str_zin4   }, // ZoomLevel::ZoomInX4 },
+        { 0x02, str_zin2   }, // ZoomLevel::ZoomInX2 },
+        { 0x03, str_zout2  }, // ZoomLevel::ZoomOutX2 },
+        { 0x04, str_zout4  }, // ZoomLevel::ZoomOutX4 },
+        { 0x05, str_zout8  }, // ZoomLevel::ZoomOutX8 },
     }
 };
 
 
-const BitfieldDescriptorT<uint8_t> colour_desc = 
-{ 
-    0x00, "",                   
+const BitfieldDescriptorT<uint8_t> colour_desc =
+{
+    0x00, "",
     {
         { 0x04, str_8bpp    }, // HAS_PALETTE
         { 0x01, str_24bpp   }, // HAS_RGB
@@ -500,7 +500,7 @@ void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uin
     os << pad(indent) << "[" << m_xdim << ", " << m_ydim << ", " <<  m_xrel << ", " << m_yrel << "], ";
     os << zoom_desc.value(m_zoom) << ", ";
 
-    // We expect one of the following colour depths. 
+    // We expect one of the following colour depths.
     // This isn't a simple bitfield as the different bit combinations have particular meanings.
     switch (m_colour)
     {
@@ -510,12 +510,12 @@ void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uin
         // Do these ever occur? It appears not. Would treat internally as RGBA with A = FF.
         //case HAS_RGB:                           os << str_24bpp; break;
         //case HAS_RGB | HAS_PALETTE:             os << str_24bpp << " | " << str_mask; break;
-        default:  throw RUNTIME_ERROR("Invalid colour depth");   
+        default:  throw RUNTIME_ERROR("Invalid colour depth");
     }
-    
+
     // Tiles contain transparency and are stored in a chunked format to save space.
     if (m_compression & RealSpriteRecord::CHUNKED_FORMAT) os << " | " << str_chunked;
-    
+
     // grfcodec likes to remove extraneous transparent borders.
     // Is the sense here the right way?
     if (m_compression & RealSpriteRecord::CROP_TRANSARENT_BORDER) os << " | " << str_no_crop;
@@ -532,8 +532,8 @@ void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uin
     os << ";\n";
 }
 
- 
-bool RealSpriteRecord::is_pure_white(const Pixel& pixel) 
+
+bool RealSpriteRecord::is_pure_white(const Pixel& pixel)
 {
     bool is_white = false;
 
@@ -558,12 +558,12 @@ bool RealSpriteRecord::is_pure_white(const Pixel& pixel)
 }
 
 
-void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites) 
+void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 {
-    // [8, 21, -3, -11], normal, 8bpp, 
+    // [8, 21, -3, -11], normal, 8bpp,
     //         "sprites/zbase_extra-8bpp-normal-0.png", [641, 7372];
-    // [32, 34, -16, -23], normal, 32bpp|mask|chunked, 
-    //         "sprites/zbase_extra-32bpp-normal-0.png", [149, 6763], 
+    // [32, 34, -16, -23], normal, 32bpp|mask|chunked,
+    //         "sprites/zbase_extra-32bpp-normal-0.png", [149, 6763],
     //         "sprites/zbase_extra-mask-normal-0.png", [372, 293];
 
     is.match(TokenType::OpenBracket);
@@ -581,7 +581,7 @@ void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
     is.match(TokenType::Comma);
     colour_desc.parse(m_colour, is);
     is.match(TokenType::Comma);
-  
+
     m_compression  = m_colour & (RealSpriteRecord::CHUNKED_FORMAT | RealSpriteRecord::CROP_TRANSARENT_BORDER);
     m_colour       = m_colour & (HAS_RGB | HAS_ALPHA | HAS_PALETTE);
 
@@ -640,7 +640,7 @@ void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
         mask_sheet = &pool.get_sprite_sheet(mask_file.make_preferred().string(), SpriteSheet::Colour::Palette);
     }
 
-    // Count the number of pure white pixels in the sprite. This should normally be none. 
+    // Count the number of pure white pixels in the sprite. This should normally be none.
     uint32_t pure_white_pixels = 0;
     uint16_t xpos = 0;
     uint16_t ypos = 0;
@@ -651,7 +651,7 @@ void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
         {
             using Pixel = SpriteSheet::Pixel;
 
-            // TODO get the mask value for RGBAP pixels.   
+            // TODO get the mask value for RGBAP pixels.
             Pixel pixel = image_sheet->pixel(x + m_xoff, y + m_yoff);
             if (mask_sheet)
             {
@@ -667,7 +667,7 @@ void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
                     xpos = x + m_xoff;
                     ypos = y + m_yoff;
                 }
-                ++pure_white_pixels;    
+                ++pure_white_pixels;
 
             }
 
@@ -677,16 +677,16 @@ void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 
     if (pure_white_pixels > 0)
     {
-        std::cout << "WARNING: Sprite #" << to_hex(m_sprite_id, false); 
+        std::cout << "WARNING: Sprite #" << to_hex(m_sprite_id, false);
         std::cout << " contains " << pure_white_pixels << " pure white pixels. Its YAGL rectangle may be misaligned or too large.\n";
-        std::cout << "    The first is at [" << xpos << ", " << ypos << "] in sprite sheet " << m_filename << std::endl;  
+        std::cout << "    The first is at [" << xpos << ", " << ypos << "] in sprite sheet " << m_filename << std::endl;
     }
 
     check_white_border(image_sheet);
 }
 
 
-void RealSpriteRecord::check_white_border(const SpriteSheet* sheet, uint16_t xpix, uint16_t ypix, 
+void RealSpriteRecord::check_white_border(const SpriteSheet* sheet, uint16_t xpix, uint16_t ypix,
    uint16_t& xpos, uint16_t& ypos, uint32_t& non_white_pixels)
 {
     SpriteSheet::Pixel pixel;
@@ -703,9 +703,9 @@ void RealSpriteRecord::check_white_border(const SpriteSheet* sheet, uint16_t xpi
 }
 
 
-void RealSpriteRecord::check_white_border(const SpriteSheet* sheet) 
+void RealSpriteRecord::check_white_border(const SpriteSheet* sheet)
 {
-    // Count the number of non white pixels in the sprite's border. This should normally be none. 
+    // Count the number of non white pixels in the sprite's border. This should normally be none.
     uint32_t non_white_pixels = 0;
     uint16_t xpos = 0;
     uint16_t ypos = 0;
@@ -723,8 +723,8 @@ void RealSpriteRecord::check_white_border(const SpriteSheet* sheet)
 
     if (non_white_pixels > 0)
     {
-        std::cout << "WARNING: Sprite #" << to_hex(m_sprite_id, false); 
+        std::cout << "WARNING: Sprite #" << to_hex(m_sprite_id, false);
         std::cout << " has " << non_white_pixels << " non-white pixels in its border. Its YAGL rectangle may be misaligned or too small.\n";
-        std::cout << "    The first is at [" << xpos << ", " << ypos << "] in sprite sheet " << m_filename << std::endl;  
+        std::cout << "    The first is at [" << xpos << ", " << ypos << "] in sprite sheet " << m_filename << std::endl;
     }
 }

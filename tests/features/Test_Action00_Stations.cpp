@@ -23,7 +23,7 @@
 
 namespace {
 
-// Add all properties, even with silly values, so that we can confirm the 
+// Add all properties, even with silly values, so that we can confirm the
 // formatting of each one if they are individually changed.
 static constexpr const char* str_YAGL =
     "properties<Stations, 0x0023> // Action00\n"
@@ -91,7 +91,7 @@ static constexpr const char* str_NFO =
        "68 57 24 13 "
           "01 02 03 04 05 06 78 56 34 12 "
           "01 02 80 00 00 00 78 56 34 12 "
-          "80 " 
+          "80 "
        "69 57 24 13 "
           "01 02 03 04 05 06 78 56 34 12 "
           "01 02 80 00 00 00 78 56 34 12 "

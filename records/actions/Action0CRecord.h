@@ -37,7 +37,7 @@ public:
     void parse(TokenStream& is, SpriteZoomMap& sprites) override;
 
 private:
-    // Could theoretically re-purpose the ignored data as a string 
+    // Could theoretically re-purpose the ignored data as a string
     // containing a comment.
     GRFString m_comment;
 };

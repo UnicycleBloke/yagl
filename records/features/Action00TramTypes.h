@@ -23,7 +23,7 @@
 #include "GRFLabel.h"
 
 
-// Note that this is currently identical in content to the RoadTypes, which is 
+// Note that this is currently identical in content to the RoadTypes, which is
 // similar but not quite the same as RailTypes.
 class Action00TramTypes : public Action00Feature
 {

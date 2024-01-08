@@ -40,13 +40,13 @@ static constexpr const char* str_YAGL =
     "    /*0xC50F*/ \"empty\";\n"
     "    /*0xC510*/ \"void\";\n"
     "}\n";
-    
-static constexpr const char* str_NFO = 
+
+static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "13 "                         // Action13
     "47 52 46 58 "                // GRF ID
     "00 "                         // Language ID
-    "0D "                         // Number of strings 
+    "0D "                         // Number of strings
     "04 C5 "                      // First string ID
     "52 6F 6F 66 73 00 "          // Roofs
     "50 6C 61 74 66 6F 72 6D 00 " // Platform

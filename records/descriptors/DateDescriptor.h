@@ -40,12 +40,12 @@ public:
     : m_year{year}
     , m_month{month}
     , m_day{day}
-    {        
+    {
     }
 
     // Required or default ctor would be deleted.
     Date()
-    {        
+    {
     }
 
     void print(std::ostream& os) const
@@ -80,7 +80,7 @@ public:
         else
         {
             days = read_uint32(is);
-        }        
+        }
         from_days(days);
     }
 
@@ -103,7 +103,7 @@ public:
     uint32_t year() const  { return m_year; }
     uint8_t  month() const { return m_month; }
     uint8_t  day() const   { return m_day; }
-    uint32_t days() const  
+    uint32_t days() const
     {
         uint32_t days = to_days();
         if constexpr (std::is_same_v<uint16_t, T>)
@@ -130,7 +130,7 @@ void Date<T>::from_days(uint32_t days)
     // I seem to have an off-by-one error somewhere.
     ++days;
 
-    // Use a simple iterative approach to help guarantee that 
+    // Use a simple iterative approach to help guarantee that
     // the date to days conversion matches the days to date conversion.
     m_year = days / 365;
     while (days_from_years(m_year) < days)
@@ -173,8 +173,8 @@ uint32_t Date<T>::to_days() const
     case  4: days += 31; // Mar
     case  3: days += (is_leap_year(m_year) ? 29 : 28); // Feb
     case  2: days += 31; // Jan
-    //case  1: days +=  0; 
-    //default: 
+    //case  1: days +=  0;
+    //default:
     }
 
     days += m_day;

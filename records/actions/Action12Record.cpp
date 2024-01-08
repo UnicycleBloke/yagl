@@ -48,7 +48,7 @@ void Action12Record::write(std::ostream& os, const GRFInfo& info) const
         write_uint8(os, range.num_chars);
         write_uint16(os, range.base_char);
     }
-}  
+}
 
 
 uint16_t Action12Record::num_sprites_to_read() const
@@ -71,15 +71,15 @@ uint16_t Action12Record::num_sprites_to_read() const
     };
 
 
-const EnumDescriptorT<Action12Record::Font> font_desc = 
-{ 
-    0x00, "",                   
+const EnumDescriptorT<Action12Record::Font> font_desc =
+{
+    0x00, "",
     {
-        { 0x00, "NormalProp"  }, 
-        { 0x01, "SmallProp"   }, 
-        { 0x02, "LargeProp"   }, 
+        { 0x00, "NormalProp"  },
+        { 0x01, "SmallProp"   },
+        { 0x02, "LargeProp"   },
         { 0x03, "NormalFixed" },
-    }        
+    }
 };
 
 
@@ -91,14 +91,14 @@ void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     os << pad(indent) << RecordName(record_type()) << " // Action12" << '\n';
     os << pad(indent) << "{" << '\n';
 
-    uint16_t index = 0;    
+    uint16_t index = 0;
     for (const auto& range: m_ranges)
     {
         os << pad(indent + 4) << str_range << "<";
         os << font_desc.value(range.font);
         os << ", " << to_hex(range.base_char) << "> // <font, base_char>\n";
         os << pad(indent + 4) << "{" << '\n';
-        
+
         for (uint16_t i = 0; i < range.num_chars; ++i)
         {
             os << pad(indent + 8) << "// Replace character " << to_hex(range.base_char + i) << "\n";
@@ -124,7 +124,7 @@ void Action12Record::parse(TokenStream& is, SpriteZoomMap& sprites)
     {
         Range range{};
 
-        is.match_ident(str_range); 
+        is.match_ident(str_range);
         is.match(TokenType::OpenAngle);
         font_desc.parse(range.font, is);
         is.match(TokenType::Comma);
@@ -137,7 +137,7 @@ void Action12Record::parse(TokenStream& is, SpriteZoomMap& sprites)
             parse_sprite(is, sprites);
             ++range.num_chars;
         }
-    
+
         is.match(TokenType::CloseBrace);
         m_ranges.push_back(range);
     }
