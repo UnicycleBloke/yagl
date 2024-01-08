@@ -58,4 +58,7 @@ private:
     CargoList m_1D_always_refittable_cargos{};
     CargoList m_1E_never_refittable_cargos{};
     UInt16    m_1F_aircraft_range{};
+    UInt16    m_20_variant_group{};
+    UInt32    m_21_extra_flags{};
+    UInt8     m_22_extra_callback_flags_mask{};
 };

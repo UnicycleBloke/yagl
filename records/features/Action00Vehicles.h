@@ -63,6 +63,9 @@ private:
     UInt8         m_23_shorten_vehicle{};
     CargoList     m_24_always_refittable_cargos{};
     CargoList     m_25_never_refittable_cargos{};
+    UInt16        m_26_variant_group{};
+    UInt32        m_27_extra_flags{};
+    UInt8         m_28_extra_callback_flags_mask{};
 };
 
 

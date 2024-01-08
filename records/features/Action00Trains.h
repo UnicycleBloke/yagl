@@ -71,6 +71,10 @@ private:
     UInt16       m_2B_custom_cargo_aging_period{};
     CargoList    m_2C_always_refittable_cargos{};
     CargoList    m_2D_never_refittable_cargos{};
+    UInt16       m_2E_maximum_curve_speed_modifier{};
+    UInt16       m_2F_variant_group{};
+    UInt32       m_30_extra_flags{};
+    UInt8        m_31_extra_callback_flags_mask{};
 };
 
 
