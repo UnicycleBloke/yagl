@@ -42,6 +42,9 @@ The properties allowed inside the instance block are as follows (see [Ships](htt
 | `custom_cargo_aging_period`    | 0x1D | W     |  |
 | `always_refittable_cargos`     | 0x1E | B n*B | A list of indices into the cargo translation table. |
 | `never_refittable_cargos`      | 0x1F | B n*B | A list of indices into the cargo translation table. |
+| `variant_group`                | 0x20 | W     |  |
+| `extra_flags`                  | 0x21 | D     |  |
+| `extra_callback_flags_mask`    | 0x22 | B     |  |
 
 ## Links
 
