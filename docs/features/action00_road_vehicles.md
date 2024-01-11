@@ -41,6 +41,9 @@ The properties allowed inside the instance block are as follows (see [Road vehic
 | `shorten_vehicle`              | 0x23 | B     |  | 
 | `always_refittable_cargos`     | 0x24 | B n*B | A list of indices into the cargo translation table. | 
 | `never_refittable_cargos`      | 0x25 | B n*B | A list of indices into the cargo translation table. | 
+| `variant_group`                | 0x26 | W     |  | 
+| `extra_flags`                  | 0x27 | D     |  | 
+| `extra_callback_flags_mask`    | 0x28 | B     |  | 
 
 ## Links
 

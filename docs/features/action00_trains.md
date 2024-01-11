@@ -83,6 +83,10 @@ The properties allowed inside the instance block are as follows (see [Trains](ht
 | `custom_cargo_aging_period`    | 0x2B | W     |  |
 | `always_refittable_cargos`     | 0x2C | B n*B | A list of indices into the cargo translation table. |
 | `never_refittable_cargos`      | 0x2D | B n*B | A list of indices into the cargo translation table. |
+| `maximum_curve_speed_modifier` | 0x2E | W     |  |
+| `variant_group`                | 0x2F | W     |  |
+| `extra_flags`                  | 0x30 | D     |  |
+| `extra_callback_flags_mask`    | 0x31 | B     |  |
 
 ## Links
 
