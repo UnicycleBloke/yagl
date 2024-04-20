@@ -60,33 +60,6 @@ uint16_t Action0ARecord::num_sprites_to_read() const
 }
 
 
-// replacement_sprite_sets // Action0A
-// {
-//     replacement_sprite_set // One or more sets
-//     {
-//         0x00000AB5: // Sprite ID being replaced
-//         sprite_id: 0x00001061 // Sprite ID in this file of replacement
-//         {
-//             [8, 21, -3, -11], normal, 8bpp, "sprites/zbase_extra-8bpp-normal-0.png", [641, 7372];
-//             [32, 34, -16, -23], normal, 32bpp|mask|chunked, "sprites/zbase_extra-32bpp-normal-0.png", [149, 6763], "sprites/zbase_extra-mask-normal-0.png", [372, 293];
-//             [128, 135, -64, -91], zin4, 32bpp|mask|chunked, "sprites/zbase_extra-32bpp-zin4-5.png", [338, 9124], "sprites/zbase_extra-mask-zin4-0.png", [338, 3769];
-//             [64, 68, -32, -46], zin2, 32bpp|mask|chunked, "sprites/zbase_extra-32bpp-zin2-1.png", [406, 5781], "sprites/zbase_extra-mask-zin2-0.png", [184, 982];
-//         }
-//         0x00000AB6:
-//         sprite_id: 0x00001062
-//         {
-//             [20, 16, -14, -9], normal, 8bpp, "sprites/zbase_extra-8bpp-normal-0.png", [659, 7372];
-//             [32, 24, -18, -13], normal, 32bpp|mask, "sprites/zbase_extra-32bpp-normal-0.png", [191, 6763], "sprites/zbase_extra-mask-normal-0.png", [414, 293];
-//             [128, 96, -72, -52], zin4, 32bpp|mask|chunked, "sprites/zbase_extra-32bpp-zin4-5.png", [476, 9124], "sprites/zbase_extra-mask-zin4-0.png", [476, 3769];
-//             [64, 48, -36, -26], zin2, 32bpp|mask|chunked, "sprites/zbase_extra-32bpp-zin2-1.png", [480, 5781], "sprites/zbase_extra-mask-zin2-0.png", [258, 982];
-//         }
-//         ...
-//     }
-//     replacement_sprite_set
-//     {
-//     ...
-
-
 static constexpr const char* str_replacement_sprite_set = "replacement_sprite_set";
 
 
