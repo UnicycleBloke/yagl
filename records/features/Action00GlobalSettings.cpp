@@ -37,6 +37,8 @@ constexpr const char* str_railtype_translation_table = "railtype_translation_tab
 constexpr const char* str_gender_translation_table   = "gender_translation_table";
 constexpr const char* str_case_translation_table     = "case_translation_table";
 constexpr const char* str_plural_form                = "plural_form";
+constexpr const char* str_roadtype_translation_table = "roadtype_translation_table";
+constexpr const char* str_tramtype_translation_table = "tramtype_translation_table";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
@@ -58,6 +60,8 @@ const std::map<std::string, uint8_t> g_indices =
     { str_gender_translation_table,   0x13 },
     { str_case_translation_table,     0x14 },
     { str_plural_form,                0x15 },
+    { str_roadtype_translation_table, 0x16 },
+    { str_tramtype_translation_table, 0x17 },
 };
 
 
@@ -79,6 +83,8 @@ constexpr GRFLabelDescriptor     desc_12  = { 0x12, str_railtype_translation_tab
 constexpr GenderCaseDescriptor   desc_13  = { 0x13, str_gender_translation_table };
 constexpr GenderCaseDescriptor   desc_14  = { 0x14, str_case_translation_table };
 constexpr UInt8Descriptor        desc_15  = { 0x15, str_plural_form,              UIntFormat::Hex };
+constexpr GRFLabelDescriptor     desc_16  = { 0x16, str_roadtype_translation_table };
+constexpr GRFLabelDescriptor     desc_17  = { 0x17, str_tramtype_translation_table };
 
 
 } // namespace {
@@ -209,6 +215,8 @@ bool Action00GlobalSettings::read_property(std::istream& is, uint8_t property)
         case 0x13: m_13_gender_translation_table.read(is);   break;
         case 0x14: m_14_case_translation_table.read(is);     break;
         case 0x15: m_15_plural_form.read(is);                break;
+        case 0x16: m_16_roadtype_translation_table.read(is); break;
+        case 0x17: m_17_tramtype_translation_table.read(is); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -234,6 +242,8 @@ bool Action00GlobalSettings::write_property(std::ostream& os, uint8_t property) 
         case 0x13: m_13_gender_translation_table.write(os);   break;
         case 0x14: m_14_case_translation_table.write(os);     break;
         case 0x15: m_15_plural_form.write(os);                break;
+        case 0x16: m_16_roadtype_translation_table.write(os); break;
+        case 0x17: m_17_tramtype_translation_table.write(os); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -259,6 +269,8 @@ bool Action00GlobalSettings::print_property(std::ostream& os, uint8_t property, 
         case 0x13: desc_13.print(m_13_gender_translation_table, os, indent);   break;
         case 0x14: desc_14.print(m_14_case_translation_table, os, indent);     break;
         case 0x15: desc_15.print(m_15_plural_form, os, indent);                break;
+        case 0x16: desc_16.print(m_16_roadtype_translation_table, os, indent); break;
+        case 0x17: desc_17.print(m_17_tramtype_translation_table, os, indent); break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -288,6 +300,8 @@ bool Action00GlobalSettings::parse_property(TokenStream& is, const std::string& 
             case 0x13: desc_13.parse(m_13_gender_translation_table, is);   break;
             case 0x14: desc_14.parse(m_14_case_translation_table, is);     break;
             case 0x15: desc_15.parse(m_15_plural_form, is);                break;
+            case 0x16: desc_16.parse(m_16_roadtype_translation_table, is); break;
+            case 0x17: desc_17.parse(m_17_tramtype_translation_table, is); break;
             default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 

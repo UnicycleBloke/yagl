@@ -141,6 +141,11 @@ private:
     // language-id, i.e. this only works with GRF version 7 or higher. Language-id 7F (any) is
     // not allowed.
     UInt8 m_15_plural_form{};
+
+    // These work in much the same way as the cargo translation table and the railtype translation 
+    // table. Added in OTTD v1.10.
+    GRFLabel m_16_roadtype_translation_table{};
+    GRFLabel m_17_tramtype_translation_table{};
 };
 
 
