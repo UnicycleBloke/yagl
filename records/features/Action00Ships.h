@@ -63,6 +63,8 @@ private:
     UInt16       m_20_variant_group{};
     UInt32       m_21_extra_flags{};
     UInt8        m_22_extra_callback_flags_mask{};
+    UInt16       m_23_speed_3_2_mph{};
+    UInt8        m_24_acceleration_3_2_mph{};
 };
 
 

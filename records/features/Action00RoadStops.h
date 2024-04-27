@@ -19,14 +19,15 @@
 #pragma once
 #include "Action00Feature.h"
 #include "IntegerDescriptor.h"
-#include "BooleanDescriptor.h"
-#include "GRFStrings.h"
+#include "DateDescriptor.h"
+#include "GRFLabel.h"
 
 
-class Action00Cargos : public Action00Feature
+// TODO Add unit tests for this type.
+class Action00RoadStops : public Action00Feature
 {
 public:
-    Action00Cargos() : Action00Feature() {}
+    Action00RoadStops() : Action00Feature() {}
 
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;
@@ -36,30 +37,18 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
 private:
-    UInt8    m_08_bit_number{};
-    UInt16   m_09_cargo_type_name_id{};
-    UInt16   m_0A_single_unit_name_id{};
-    UInt16   m_0B_single_unit_id{};
-    UInt16   m_0C_multiple_units_id{};
-    UInt16   m_0D_cargo_type_abbrev_id{};
-    UInt16   m_0E_cargo_sprite_id{};
-    UInt8    m_0F_single_unit_weight{};
-    UInt8    m_10_penalty_time_1{};
-    UInt8    m_11_penalty_time_2{};
-    UInt32   m_12_base_price{};
-    UInt8    m_13_station_list_colour{};
-    UInt8    m_14_payment_list_colour{};
-    Bool     m_15_is_freight{};
-    UInt16   m_16_cargo_classes{};
-    GRFLabel m_17_cargo_label{};
-    UInt8    m_18_town_growth_effect{};
-    UInt16   m_19_town_growth_multiplier{};
-    UInt8    m_1A_callback_flags{};
-    UInt16   m_1B_cargo_units_id{};
-    UInt16   m_1C_cargo_amount_id{};
-    UInt16   m_1D_capacity_multiplier{};
-    UInt8    m_1E_town_production_effect{};
-    UInt16   m_1F_town_production_multiplier{};
+    GRFLabel m_08_class_label{};
+    UInt8    m_09_road_stop_type{};
+    UInt16   m_0A_road_stop_name_text_id{};
+    UInt16   m_0B_class_name_text_id{};
+    UInt8    m_0C_draw_mode{};
+    UInt32   m_0D_random_trigger_cargoes{}; 
+    UInt16   m_0E_animation_information{};
+    UInt8    m_0F_animation_speed{};
+    UInt16   m_10_animation_triggers{}; 
+    UInt8    m_11_callback_flags{};
+    UInt32   m_12_general_flags{};
+    UInt16   m_15_cost_multipliers{};
 };
 
 

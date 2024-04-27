@@ -34,6 +34,7 @@
 #include "Action00Airports.h"
 #include "Action00Objects.h"
 #include "Action00RailTypes.h"
+#include "Action00RoadStops.h"
 #include "Action00AirportTiles.h"
 #include "Action00RoadTypes.h"
 #include "Action00TramTypes.h"
@@ -169,6 +170,7 @@ std::unique_ptr<Action00Feature> Action00Record::make_feature(FeatureType featur
         case FeatureType::AirportTiles:    return std::make_unique<Action00AirportTiles>();
         case FeatureType::RoadTypes:       return std::make_unique<Action00RoadTypes>();
         case FeatureType::TramTypes:       return std::make_unique<Action00TramTypes>();
+        case FeatureType::RoadStops:       return std::make_unique<Action00RoadStops>();
         //case FeatureType::OriginalStrings: return std::make_unique<Action00OriginalStrings>();
     }
 

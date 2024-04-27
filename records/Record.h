@@ -95,6 +95,7 @@ enum class FeatureType : uint8_t
     AirportTiles    = 0x11,
     RoadTypes       = 0x12,
     TramTypes       = 0x13,
+    RoadStops       = 0x14,
     OriginalStrings = 0x48,
 };
 std::string FeatureName(FeatureType type);

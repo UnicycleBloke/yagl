@@ -49,6 +49,8 @@ constexpr const char* str_never_refittable_cargos      = "never_refittable_cargo
 constexpr const char* str_variant_group                = "variant_group";
 constexpr const char* str_extra_flags                  = "extra_flags";
 constexpr const char* str_extra_callback_flags_mask    = "extra_callback_flags_mask";
+constexpr const char* str_speed_3_2_mph                = "speed_3_2_mph";       
+constexpr const char* str_acceleration_3_2_mph         = "acceleration_3_2_mph";       
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
@@ -82,6 +84,8 @@ const std::map<std::string, uint8_t> g_indices =
     { str_variant_group,                0x20 },
     { str_extra_flags,                  0x21 },
     { str_extra_callback_flags_mask,    0x22 },
+    { str_speed_3_2_mph,                0x23 },
+    { str_acceleration_3_2_mph,         0x24 },  
 };
 
 
@@ -111,7 +115,8 @@ constexpr CargoListDescriptor    desc_1F  = { 0x1F, str_never_refittable_cargos 
 constexpr UInt16Descriptor       desc_20  = { 0x20, str_variant_group,                UIntFormat::Hex };
 constexpr UInt32Descriptor       desc_21  = { 0x21, str_extra_flags,                  UIntFormat::Hex };
 constexpr UInt8Descriptor        desc_22  = { 0x22, str_extra_callback_flags_mask,    UIntFormat::Hex };
-
+constexpr UInt16Descriptor       desc_23  = { 0x23, str_speed_3_2_mph,                UIntFormat::Hex };
+constexpr UInt8Descriptor        desc_24  = { 0x24, str_acceleration_3_2_mph,         UIntFormat::Hex };
 
 } // namespace {
 
@@ -151,6 +156,8 @@ bool Action00Ships::read_property(std::istream& is, uint8_t property)
         case 0x20: m_20_variant_group.read(is);                break;
         case 0x21: m_21_extra_flags.read(is);                  break;
         case 0x22: m_22_extra_callback_flags_mask.read(is);    break;
+        case 0x23: m_23_speed_3_2_mph.read(is);                break;
+        case 0x24: m_24_acceleration_3_2_mph.read(is);         break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -193,6 +200,8 @@ bool Action00Ships::write_property(std::ostream& os, uint8_t property) const
         case 0x20: m_20_variant_group.write(os);                break;
         case 0x21: m_21_extra_flags.write(os);                  break;
         case 0x22: m_22_extra_callback_flags_mask.write(os);    break;
+        case 0x23: m_23_speed_3_2_mph.write(os);                break;
+        case 0x24: m_24_acceleration_3_2_mph.write(os);         break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -235,6 +244,8 @@ bool Action00Ships::print_property(std::ostream& os, uint8_t property, uint16_t 
         case 0x20: desc_20.print(m_20_variant_group, os, indent);                break;
         case 0x21: desc_21.print(m_21_extra_flags, os, indent);                  break;
         case 0x22: desc_22.print(m_22_extra_callback_flags_mask, os, indent);    break;
+        case 0x23: desc_23.print(m_23_speed_3_2_mph, os, indent);                break;
+        case 0x24: desc_24.print(m_24_acceleration_3_2_mph, os, indent);         break;
         default:   throw PROPERTY_ERROR("Unknown property", property);
     }
 
@@ -281,6 +292,8 @@ bool Action00Ships::parse_property(TokenStream& is, const std::string& name, uin
             case 0x20: desc_20.parse(m_20_variant_group, is);                break;
             case 0x21: desc_21.parse(m_21_extra_flags, is);                  break;
             case 0x22: desc_22.parse(m_22_extra_callback_flags_mask, is);    break;
+            case 0x23: desc_23.parse(m_23_speed_3_2_mph, is);                break;
+            case 0x24: desc_24.parse(m_24_acceleration_3_2_mph, is);         break;
             default:   throw PROPERTY_ERROR("Unknown property", property);
         }
 

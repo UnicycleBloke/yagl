@@ -100,6 +100,7 @@ add_library(yagl_lib STATIC
     records/features/Action00AirportTiles.cpp
     records/features/Action00RoadTypes.cpp
     records/features/Action00TramTypes.cpp
+    records/features/Action00RoadStops.cpp
 
     # Graphics related records and helper classes.
     records/graphics/RecolourRecord.cpp
