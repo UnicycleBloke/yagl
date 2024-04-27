@@ -217,7 +217,7 @@ bool Action00GlobalSettings::read_property(std::istream& is, uint8_t property)
         case 0x15: m_15_plural_form.read(is);                break;
         case 0x16: m_16_roadtype_translation_table.read(is); break;
         case 0x17: m_17_tramtype_translation_table.read(is); break;
-        default:   throw PROPERTY_ERROR("Unknown property", property);
+        default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
     }
 
     return true;
@@ -244,7 +244,7 @@ bool Action00GlobalSettings::write_property(std::ostream& os, uint8_t property) 
         case 0x15: m_15_plural_form.write(os);                break;
         case 0x16: m_16_roadtype_translation_table.write(os); break;
         case 0x17: m_17_tramtype_translation_table.write(os); break;
-        default:   throw PROPERTY_ERROR("Unknown property", property);
+        default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
     }
 
     return true;
@@ -271,7 +271,7 @@ bool Action00GlobalSettings::print_property(std::ostream& os, uint8_t property, 
         case 0x15: desc_15.print(m_15_plural_form, os, indent);                break;
         case 0x16: desc_16.print(m_16_roadtype_translation_table, os, indent); break;
         case 0x17: desc_17.print(m_17_tramtype_translation_table, os, indent); break;
-        default:   throw PROPERTY_ERROR("Unknown property", property);
+        default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
     }
 
     return true;
@@ -302,12 +302,12 @@ bool Action00GlobalSettings::parse_property(TokenStream& is, const std::string& 
             case 0x15: desc_15.parse(m_15_plural_form, is);                break;
             case 0x16: desc_16.parse(m_16_roadtype_translation_table, is); break;
             case 0x17: desc_17.parse(m_17_tramtype_translation_table, is); break;
-            default:   throw PROPERTY_ERROR("Unknown property", property);
+            default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
         }
 
         return true;
     }
 
-    throw PROPERTY_ERROR("Unknown property", property);
+    throw PROPERTY_ERROR("Unknown property", feature(), property);
 }
 

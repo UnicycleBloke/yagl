@@ -25,7 +25,7 @@
 class Action00IndustryTiles : public Action00Feature
 {
 public:
-    Action00IndustryTiles() : Action00Feature() {}
+    Action00IndustryTiles() : Action00Feature(FeatureType::IndustryTiles) {}
 
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;

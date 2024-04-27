@@ -98,15 +98,6 @@ void NewGRFData::read(std::istream& is)
             std::cout << "Reading record: " << record_index << "...\n";
         }
 
-        // Just a handle to pause a read just before it fails. If a GRF read fails,
-        // Run it again with the -g option to dump records to the console as we go. This
-        // will tell us where we fell over.
-        if (record_index >= 111)
-        {
-           //std::raise(SIGINT);
-           int x = 111; // Breakpoint here.
-        }
-
         // This section is terminated with a zero length record. The size of the length of the record
         // depends on the file format version.
         uint32_t size = (m_info.format == GRFFormat::Container1) ? read_uint16(is) : read_uint32(is);
@@ -143,16 +134,45 @@ void NewGRFData::read(std::istream& is)
                     // This has fallen over while reading from zbase. The reason seems to be that the sprites
                     // appear as top level items, so a recolour sprite is treated as Action00. This does not
                     // go well.
+                    std::string data;
                     try
                     {
+                        // Copy the data for the current record in case something goes wrong.
+                        auto pos = is.tellg();
+                        data.resize(size);
+                        is.read(&data[0], size);
+                        is.seekg(pos, is.beg);
+
                         record = read_record(is, size, num_sprites == 0, m_info);
                     }
                     catch(const std::exception& e)
                     {
-                        std::cerr << e.what() << '\n';
+                        auto dump_raw_record = [](const std::string& bytes)                        
+                        {
+                            // Avoids changing settings in std::cerr.
+                            std::ostringstream os;
+
+                            // Pseudo sprite always starts with FF.
+                            uint32_t count = 1;
+                            os << "  FF ";
+                            for (uint8_t b : bytes)
+                            {
+                                if ((count % 16) == 0) os << "\n  ";
+                                os << std::uppercase << std::hex << std::setfill('0');
+                                os << std::setw(2) << static_cast<uint64_t>(b) << ' ';
+                                ++count;
+                            }
+
+                            std::cerr << os.str();
+                        };
+
+                        std::cerr << "Error while reading record #" << record_index << "\n";
+                        std::cerr << e.what() << "\n";
+                        std::cerr << "This whole record will be omitted from the YAGL output:\n";
+                        dump_raw_record(data);
+                        std::cerr << "\n\n";
                         continue;
                     }
-
 
                     // This version works most of the time, including for zbase. Unfortunately, it will go
                     // wrong for some Action00 records: encountered when parsing FIRS. If an Action00 record

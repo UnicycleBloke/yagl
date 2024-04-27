@@ -41,7 +41,7 @@ private:
 class Action00Industries : public Action00Feature
 {
 public:
-    Action00Industries() : Action00Feature() {}
+    Action00Industries() : Action00Feature(FeatureType::Industries) {}
 
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;

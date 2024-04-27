@@ -115,7 +115,7 @@ bool Action00Objects::read_property(std::istream& is, uint8_t property)
         case 0x16: m_16_building_height.read(is);      break;
         case 0x17: m_17_number_of_views.read(is);      break;
         case 0x18: m_18_number_on_creation.read(is);   break;
-        default:   throw PROPERTY_ERROR("Unknown property", property);
+        default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
     }
 
     return true;
@@ -143,7 +143,7 @@ bool Action00Objects::write_property(std::ostream& os, uint8_t property) const
         case 0x16: m_16_building_height.write(os);      break;
         case 0x17: m_17_number_of_views.write(os);      break;
         case 0x18: m_18_number_on_creation.write(os);   break;
-        default:   throw PROPERTY_ERROR("Unknown property", property);
+        default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
     }
 
     return true;
@@ -171,7 +171,7 @@ bool Action00Objects::print_property(std::ostream& os, uint8_t property, uint16_
         case 0x16: desc_16.print(m_16_building_height, os, indent);      break;
         case 0x17: desc_17.print(m_17_number_of_views, os, indent);      break;
         case 0x18: desc_18.print(m_18_number_on_creation, os, indent);   break;
-        default:   throw PROPERTY_ERROR("Unknown property", property);
+        default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
     }
 
     return true;
@@ -203,11 +203,11 @@ bool Action00Objects::parse_property(TokenStream& is, const std::string& name, u
             case 0x16: desc_16.parse(m_16_building_height, is);      break;
             case 0x17: desc_17.parse(m_17_number_of_views, is);      break;
             case 0x18: desc_18.parse(m_18_number_on_creation, is);   break;
-            default:   throw PROPERTY_ERROR("Unknown property", property);
+            default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
         }
 
         return true;
     }
 
-    throw PROPERTY_ERROR("Unknown property", property);
+    throw PROPERTY_ERROR("Unknown property", feature(), property);
 }

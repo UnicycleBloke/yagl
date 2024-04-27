@@ -89,20 +89,20 @@ RuntimeError::RuntimeError(const char* what_arg, const char* file, uint32_t line
 }
 
 
-PropertyError::PropertyError(const std::string& what_arg, uint8_t property, const char* file, uint32_t line)
-: PropertyError(what_arg.c_str(), property, file, line)
+PropertyError::PropertyError(const std::string& what_arg, FeatureType feature, uint8_t property, const char* file, uint32_t line)
+: PropertyError(what_arg.c_str(), feature, property, file, line)
 {
 }
 
 
-PropertyError::PropertyError(const char* what_arg, uint8_t property, const char* file, uint32_t line)
+PropertyError::PropertyError(const char* what_arg, FeatureType feature, uint8_t property, const char* file, uint32_t line)
 : std::runtime_error(what_arg)
 {
     CommandLineOptions& options = CommandLineOptions::options();
 
     std::ostringstream os;
     os << "Property error: ";
-    os << what_arg << ": property=" << to_hex(property);
+    os << what_arg << ": feature=" << FeatureName(feature) << ", property=" << to_hex(property);
     //if (options.debug())
     //{
         os << "\n  [at line " << line << " in source file " << file << "]";

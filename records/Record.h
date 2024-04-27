@@ -20,6 +20,7 @@
 #include "TokenStream.h"
 #include "GRFStrings.h"
 #include "GRFLabel.h"
+#include "FeatureType.h"
 #include <cstdint>
 #include <iostream>
 #include <vector>
@@ -72,35 +73,6 @@ std::string RecordName(RecordType type);
 RecordType RecordFromName(const std::string& name);
 RecordType parse_record_type(TokenStream& is);
 
-
-enum class FeatureType : uint8_t
-{
-    Trains          = 0x00,
-    RoadVehicles    = 0x01,
-    Ships           = 0x02,
-    Aircraft        = 0x03,
-    Stations        = 0x04,
-    Canals          = 0x05,
-    Bridges         = 0x06,
-    Houses          = 0x07,
-    GlobalSettings  = 0x08,
-    IndustryTiles   = 0x09,
-    Industries      = 0x0A,
-    Cargos          = 0x0B,
-    SoundEffects    = 0x0C,
-    Airports        = 0x0D,
-    Signals         = 0x0E,
-    Objects         = 0x0F,
-    RailTypes       = 0x10,
-    AirportTiles    = 0x11,
-    RoadTypes       = 0x12,
-    TramTypes       = 0x13,
-    RoadStops       = 0x14,
-    OriginalStrings = 0x48,
-};
-std::string FeatureName(FeatureType type);
-FeatureType FeatureFromName(const std::string& name);
-bool feature_is_vehicle(FeatureType type);
 
 enum class NewFeatureType : uint8_t
 {

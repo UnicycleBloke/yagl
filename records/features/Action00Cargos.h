@@ -26,7 +26,7 @@
 class Action00Cargos : public Action00Feature
 {
 public:
-    Action00Cargos() : Action00Feature() {}
+    Action00Cargos() : Action00Feature(FeatureType::Cargos) {}
 
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;

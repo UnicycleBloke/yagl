@@ -24,7 +24,7 @@
 class Action00AirportTiles : public Action00Feature
 {
 public:
-    Action00AirportTiles() : Action00Feature() {}
+    Action00AirportTiles() : Action00Feature(FeatureType::AirportTiles) {}
 
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;

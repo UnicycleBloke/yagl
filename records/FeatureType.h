@@ -17,28 +17,37 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Action00Feature.h"
-#include "IntegerDescriptor.h"
+#include <cstdint>
+#include <string>
 
 
-class Action00SoundEffects : public Action00Feature
+enum class FeatureType : uint8_t
 {
-public:
-    Action00SoundEffects() : Action00Feature(FeatureType::SoundEffects) {}
-
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
-private:
-    // These are properties of the sound effect defined in Action11 with the matching instance ID.
-    // Seems a bit convoluted, but I think I get it.
-    UInt8 m_08_relative_volume{};
-    UInt8 m_09_priority{};
-    UInt8 m_0A_override_old_sound{};
+    Trains          = 0x00,
+    RoadVehicles    = 0x01,
+    Ships           = 0x02,
+    Aircraft        = 0x03,
+    Stations        = 0x04,
+    Canals          = 0x05,
+    Bridges         = 0x06,
+    Houses          = 0x07,
+    GlobalSettings  = 0x08,
+    IndustryTiles   = 0x09,
+    Industries      = 0x0A,
+    Cargos          = 0x0B,
+    SoundEffects    = 0x0C,
+    Airports        = 0x0D,
+    Signals         = 0x0E,
+    Objects         = 0x0F,
+    RailTypes       = 0x10,
+    AirportTiles    = 0x11,
+    RoadTypes       = 0x12,
+    TramTypes       = 0x13,
+    RoadStops       = 0x14,
+    OriginalStrings = 0x48,
 };
 
 
+std::string FeatureName(FeatureType type);
+FeatureType FeatureFromName(const std::string& name);
+bool feature_is_vehicle(FeatureType type);

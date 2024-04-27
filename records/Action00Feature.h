@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "TokenStream.h"
+#include "Record.h"
 #include <map>
 #include <iostream>
 
@@ -27,7 +28,7 @@
 class Action00Feature
 {
 public:
-    Action00Feature() {}
+    Action00Feature(FeatureType feature) : m_feature{feature} {}
     virtual ~Action00Feature() {}
 
     // These methods only return bool so we can know if the base class for vehicles, ships, etc.
@@ -39,4 +40,9 @@ public:
     // Text serialisation
     virtual bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const { return false; }
     virtual bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) = 0;
+
+    FeatureType feature() const {return m_feature; }
+    
+private:
+    FeatureType m_feature;
 };

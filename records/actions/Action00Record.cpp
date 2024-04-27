@@ -135,7 +135,7 @@ void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
             bool result = instance->print_property(os, property, indent + 8);
             if (!result)
             {
-                throw PROPERTY_ERROR("Unknown property", property);
+                throw PROPERTY_ERROR("Unknown property", m_feature, property);
             }
         }
 

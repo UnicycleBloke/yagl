@@ -28,7 +28,7 @@
 class Action00TramTypes : public Action00Feature
 {
 public:
-    Action00TramTypes() : Action00Feature() {}
+    Action00TramTypes() : Action00Feature(FeatureType::TramTypes) {}
 
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;

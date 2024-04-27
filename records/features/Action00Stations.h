@@ -120,7 +120,7 @@ private:
 class Action00Stations : public Action00Feature
 {
 public:
-    Action00Stations() : Action00Feature() {}
+    Action00Stations() : Action00Feature(FeatureType::Stations) {}
 
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;

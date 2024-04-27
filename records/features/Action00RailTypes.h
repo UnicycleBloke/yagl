@@ -26,7 +26,7 @@
 class Action00RailTypes : public Action00Feature
 {
 public:
-    Action00RailTypes() : Action00Feature() {}
+    Action00RailTypes() : Action00Feature(FeatureType::RailTypes) {}
 
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;

@@ -68,7 +68,7 @@ private:
 class Action00GlobalSettings : public Action00Feature
 {
 public:
-    Action00GlobalSettings() : Action00Feature() {}
+    Action00GlobalSettings() : Action00Feature(FeatureType::GlobalSettings) {}
 
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;
