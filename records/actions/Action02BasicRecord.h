@@ -53,7 +53,7 @@ private:
     // 'loaded' and 'loading'. The number of entries corresponds to the number of
     // loading states, e.g. 0%, 50%, 100%.
 
-    // Vehicles: loadtypes, loadingtypes
+    // RoadVehicles: loadtypes, loadingtypes
     // Stations: littlesets, lotssets - piles of goods waiting?
     std::vector<uint16_t> m_act01_set_ids_1;
     std::vector<uint16_t> m_act01_set_ids_2;

@@ -160,7 +160,7 @@ const EnumDescriptorT<Action0DRecord::GRMFeature> desc_feature
     0x00, "",
     {
         { 0x00, "Trains" },
-        { 0x01, "Vehicles" },
+        { 0x01, "RoadVehicles" },
         { 0x02, "Ships" },
         { 0x03, "Aircraft" },
         { 0x08, "GeneralSprites" },

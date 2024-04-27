@@ -118,7 +118,7 @@ constexpr UInt8Descriptor        desc_22  = { 0x22, str_extra_callback_flags_mas
 
 bool Action00Ships::read_property(std::istream& is, uint8_t property)
 {
-    if (Action00Common::read_property(is, property))
+    if (Action00Vehicles::read_property(is, property))
     {
         return true;
     }
@@ -160,7 +160,7 @@ bool Action00Ships::read_property(std::istream& is, uint8_t property)
 
 bool Action00Ships::write_property(std::ostream& os, uint8_t property) const
 {
-    if (Action00Common::write_property(os, property))
+    if (Action00Vehicles::write_property(os, property))
     {
         return true;
     }
@@ -202,7 +202,7 @@ bool Action00Ships::write_property(std::ostream& os, uint8_t property) const
 
 bool Action00Ships::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
-    if (Action00Common::print_property(os, property, indent))
+    if (Action00Vehicles::print_property(os, property, indent))
     {
         return true;
     }
@@ -244,7 +244,7 @@ bool Action00Ships::print_property(std::ostream& os, uint8_t property, uint16_t 
 
 bool Action00Ships::parse_property(TokenStream& is, const std::string& name, uint8_t& property)
 {
-    if (Action00Common::parse_property(is, name, property))
+    if (Action00Vehicles::parse_property(is, name, property))
     {
         return true;
     }

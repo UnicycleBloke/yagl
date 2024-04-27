@@ -80,9 +80,9 @@ add_library(yagl_lib STATIC
     records/descriptors/VisualEffect.cpp
 
     # Handle properties for each different kind of feature (Action00).
-    records/features/Action00Common.cpp
-    records/features/Action00Trains.cpp
     records/features/Action00Vehicles.cpp
+    records/features/Action00Trains.cpp
+    records/features/Action00RoadVehicles.cpp
     records/features/Action00Ships.cpp
     records/features/Action00Aircraft.cpp
     records/features/Action00Stations.cpp
@@ -158,7 +158,7 @@ add_executable(yagl_tests
     tests/features/Test_Action00_Stations.cpp
     tests/features/Test_Action00_Trains.cpp
     tests/features/Test_Action00_TramTypes.cpp
-    tests/features/Test_Action00_Vehicles.cpp
+    tests/features/Test_Action00_RoadVehicles.cpp
 
     # Other ActionXX records.
     tests/actions/Test_Action01Record.cpp             # Define sprites

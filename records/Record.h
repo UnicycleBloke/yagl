@@ -76,7 +76,7 @@ RecordType parse_record_type(TokenStream& is);
 enum class FeatureType : uint8_t
 {
     Trains          = 0x00,
-    Vehicles        = 0x01,
+    RoadVehicles    = 0x01,
     Ships           = 0x02,
     Aircraft        = 0x03,
     Stations        = 0x04,

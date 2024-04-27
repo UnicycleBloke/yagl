@@ -19,7 +19,7 @@
 #include "Action00Record.h"
 #include "StreamHelpers.h"
 #include "Action00Trains.h"
-#include "Action00Vehicles.h"
+#include "Action00RoadVehicles.h"
 #include "Action00Ships.h"
 #include "Action00Aircraft.h"
 #include "Action00Stations.h"
@@ -150,7 +150,7 @@ std::unique_ptr<Action00Feature> Action00Record::make_feature(FeatureType featur
     switch (feature)
     {
         case FeatureType::Trains:          return std::make_unique<Action00Trains>();
-        case FeatureType::Vehicles:        return std::make_unique<Action00Vehicles>();
+        case FeatureType::RoadVehicles:    return std::make_unique<Action00RoadVehicles>();
         case FeatureType::Ships:           return std::make_unique<Action00Ships>();
         case FeatureType::Aircraft:        return std::make_unique<Action00Aircraft>();
         case FeatureType::Stations:        return std::make_unique<Action00Stations>();

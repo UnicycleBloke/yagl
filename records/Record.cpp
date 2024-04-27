@@ -228,7 +228,7 @@ RecordType parse_record_type(TokenStream& is)
 const std::map<FeatureType, std::string> g_feature_names =
 {
     { FeatureType::Trains,          "Trains" },
-    { FeatureType::Vehicles,        "Vehicles" },
+    { FeatureType::RoadVehicles,    "RoadVehicles" },
     { FeatureType::Ships,           "Ships" },
     { FeatureType::Aircraft,        "Aircraft" },
     { FeatureType::Stations,        "Stations" },
@@ -283,7 +283,7 @@ bool feature_is_vehicle(FeatureType type)
     {
         case FeatureType::Aircraft:
         case FeatureType::Trains:
-        case FeatureType::Vehicles:
+        case FeatureType::RoadVehicles:
         case FeatureType::Ships:
             return true;
     }

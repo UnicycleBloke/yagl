@@ -76,7 +76,7 @@ public:
     enum class GRMFeature : uint8_t
     {
         Trains          = static_cast<uint8_t>(FeatureType::Trains),
-        Vehicles        = static_cast<uint8_t>(FeatureType::Vehicles),
+        RoadVehicles    = static_cast<uint8_t>(FeatureType::RoadVehicles),
         Ships           = static_cast<uint8_t>(FeatureType::Ships),
         Aircraft        = static_cast<uint8_t>(FeatureType::Aircraft),
         GeneralSprites  = static_cast<uint8_t>(FeatureType::GlobalSettings),

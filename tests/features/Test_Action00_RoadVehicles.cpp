@@ -26,7 +26,7 @@ namespace {
 // Add all properties, even with silly values, so that we can confirm the
 // formatting of each one if they are individually changed.
 static constexpr const char* str_YAGL =
-    "properties<Vehicles, 0x0023> // Action00\n"
+    "properties<RoadVehicles, 0x0023> // Action00\n"
     "{\n"
     "    // instance_id: 0x0023\n"
     "    {\n"
@@ -64,7 +64,7 @@ static constexpr const char* str_YAGL =
 static constexpr const char* str_NFO =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "00 "                // Action00
-    "01 "                // Vehicles
+    "01 "                // RoadVehicles
     "1B "                // 27 properties...
     "01 "                // ... for 1 item
     "FF 23 00 "          // First ID 0x23 (extended byte)
@@ -99,7 +99,7 @@ static constexpr const char* str_NFO =
 } // namespace {
 
 
-TEST_CASE("Action00Vehicles", "[features]")
+TEST_CASE("Action00RoadVehicles", "[features]")
 {
     test_yagl<Action00Record, 0x00>(str_YAGL, str_NFO);
 }

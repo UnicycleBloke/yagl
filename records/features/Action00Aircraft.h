@@ -17,15 +17,15 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Action00Common.h"
+#include "Action00Vehicles.h"
 #include "BooleanDescriptor.h"
 #include "IntegerDescriptor.h"
 
 
-class Action00Aircraft : public Action00Common
+class Action00Aircraft : public Action00Vehicles
 {
 public:
-    Action00Aircraft() : Action00Common() {}
+    Action00Aircraft() : Action00Vehicles() {}
 
     // Binary serialisation
     bool read_property(std::istream& is, uint8_t property) override;
