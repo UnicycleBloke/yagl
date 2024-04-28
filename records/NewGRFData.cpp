@@ -33,7 +33,7 @@
 #include "Action0ARecord.h"
 #include "Action0BRecord.h"
 #include "Action0CRecord.h"
-#include "Action0DRecord.h"
+#include "Action0DRecordSimple.h"
 #include "Action0ERecord.h"
 #include "Action0FRecord.h"
 #include "Action10Record.h"
@@ -481,7 +481,7 @@ std::unique_ptr<Record> NewGRFData::make_record(RecordType record_type)
         case RecordType::ACTION_0A:               return std::make_unique<Action0ARecord>();
         case RecordType::ACTION_0B:               return std::make_unique<Action0BRecord>();
         case RecordType::ACTION_0C:               return std::make_unique<Action0CRecord>();
-        case RecordType::ACTION_0D:               return std::make_unique<Action0DRecord>();
+        case RecordType::ACTION_0D:               return std::make_unique<Action0DRecordSimple>();
         case RecordType::ACTION_0E:               return std::make_unique<Action0ERecord>();
         case RecordType::ACTION_0F:               return std::make_unique<Action0FRecord>();
         case RecordType::ACTION_10:               return std::make_unique<Action10Record>();

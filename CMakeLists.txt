@@ -56,7 +56,8 @@ add_library(yagl_lib STATIC
     records/actions/Action0ARecord.cpp
     records/actions/Action0BRecord.cpp
     records/actions/Action0CRecord.cpp
-    records/actions/Action0DRecord.cpp
+    records/actions/Action0DRecord.cpp       # This doesn't properly account for some subtleties of the spec.
+    records/actions/Action0DRecordSimple.cpp # This is a much more straightforward implementation.
     records/actions/Action0ERecord.cpp
     records/actions/Action0FRecord.cpp
     records/actions/Action10Record.cpp
