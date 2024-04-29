@@ -23,6 +23,9 @@
 #include <iostream>
 
 
+class Action00Property;
+
+
 // Base class for all the different types of features.
 // Each one has its own distinct set of properties.
 class Action00Feature
@@ -35,14 +38,19 @@ public:
     // handled the property or not. We don't care about the result - an exception will be thrown
     // in cases where this was not so.
     // Binary serialisation
-    virtual bool read_property(std::istream& is, uint8_t property) = 0;
-    virtual bool write_property(std::ostream& os, uint8_t property) const = 0;
+    virtual bool read_property(std::istream& is, uint8_t property);
+    virtual bool write_property(std::ostream& os, uint8_t property) const;
     // Text serialisation
-    virtual bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const { return false; }
-    virtual bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) = 0;
+    virtual bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const;
+    virtual bool parse_property(TokenStream& is, const std::string& name, uint8_t& index);
+
+    void register_property(Action00Property* property);
 
     FeatureType feature() const {return m_feature; }
     
 private:
-    FeatureType m_feature;
+    FeatureType                              m_feature;
+    std::map<uint8_t, Action00Property*>     m_properties_by_index; 
+    std::map<std::string, Action00Property*> m_properties_by_label; 
 };
+

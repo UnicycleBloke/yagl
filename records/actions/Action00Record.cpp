@@ -166,7 +166,8 @@ std::unique_ptr<Action00Feature> Action00Record::make_feature(FeatureType featur
         case FeatureType::Airports:        return std::make_unique<Action00Airports>();
         //case FeatureType::Signals:         return std::make_unique<Action00Signals>();
         case FeatureType::Objects:         return std::make_unique<Action00Objects>();
-        case FeatureType::RailTypes:       return std::make_unique<Action00RailTypes>();
+        //case FeatureType::RailTypes:       return std::make_unique<Action00RailTypes>();
+        case FeatureType::RailTypes:       return std::make_unique<Action00RailTypes2>();
         case FeatureType::AirportTiles:    return std::make_unique<Action00AirportTiles>();
         case FeatureType::RoadTypes:       return std::make_unique<Action00RoadTypes>();
         case FeatureType::TramTypes:       return std::make_unique<Action00TramTypes>();

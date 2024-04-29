@@ -41,11 +41,13 @@ constexpr const char* str_can_train_enter_tile      = "can_train_enter_tile";
 constexpr const char* str_animation_info            = "animation_info";
 constexpr const char* str_animation_speed           = "animation_speed";
 constexpr const char* str_animation_triggers        = "animation_triggers";
+constexpr const char* str_advanced_sprite_layout    = "advanced_sprite_layout";
+constexpr const char* str_minimum_bridge_height     = "minimum_bridge_height";
+constexpr const char* str_station_name_id           = "station_name_id";
+constexpr const char* str_station_class_name_id     = "station_class_name_id";
 constexpr const char* str_sprite                    = "sprite";
 constexpr const char* str_tile                      = "tile";
 constexpr const char* str_layout                    = "layout";
-//constexpr const char* str_ground_sprite             = "ground_sprite";
-//constexpr const char* str_sprite_data               = "sprite_data";
 
 
 // Properties are only 8 bits. Pad to 16 bits to allow sub-properties to be
@@ -70,6 +72,10 @@ const std::map<std::string, uint8_t> g_indices =
     { str_animation_info,            0x16 },
     { str_animation_speed,           0x17 },
     { str_animation_triggers,        0x18 },
+    { str_advanced_sprite_layout,    0x1A }, 
+    { str_minimum_bridge_height,     0x1B }, 
+    { str_station_name_id,           0x1C }, 
+    { str_station_class_name_id,     0x1D }, 
 };
 
 
@@ -94,6 +100,10 @@ constexpr UInt8Descriptor           desc_15  = { 0x15, str_can_train_enter_tile,
 constexpr UInt16Descriptor          desc_16  = { 0x16, str_animation_info,            UIntFormat::Hex };
 constexpr UInt8Descriptor           desc_17  = { 0x17, str_animation_speed,           UIntFormat::Hex };
 constexpr UInt16Descriptor          desc_18  = { 0x18, str_animation_triggers,        UIntFormat::Hex };
+//constexpr UInt16Descriptor          desc_1A  = { 0x1A, str_advanced_sprite_layout,    UIntFormat::Hex }; 
+//constexpr UInt16Descriptor          desc_1B  = { 0x1B, str_minimum_bridge_height,     UIntFormat::Hex }; 
+constexpr UInt16Descriptor          desc_1C  = { 0x1C, str_station_name_id,           UIntFormat::Hex }; 
+constexpr UInt16Descriptor          desc_1D  = { 0x1D, str_station_class_name_id,     UIntFormat::Hex }; 
 
 
 const EnumDescriptorT<CustomLayout::Platform> platform_desc =
@@ -499,6 +509,10 @@ bool Action00Stations::read_property(std::istream& is, uint8_t property)
         case 0x16: m_16_animation_info.read(is);            break;
         case 0x17: m_17_animation_speed.read(is);           break;
         case 0x18: m_18_animation_triggers.read(is);        break;
+        //case 0x1A: m_1A_advanced_sprite_layout.read(is);    break;
+        case 0x1B: m_1B_minimum_bridge_height.read(is);     break;
+        case 0x1C: m_1C_station_name_id.read(is);           break;
+        case 0x1D: m_1D_station_class_name_id.read(is);     break;
         default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
     }
 
@@ -527,6 +541,10 @@ bool Action00Stations::write_property(std::ostream& os, uint8_t property) const
         case 0x16: m_16_animation_info.write(os);            break;
         case 0x17: m_17_animation_speed.write(os);           break;
         case 0x18: m_18_animation_triggers.write(os);        break;
+        //case 0x1A: m_1A_advanced_sprite_layout.write(os);    break;
+        case 0x1B: m_1B_minimum_bridge_height.write(os);     break;
+        case 0x1C: m_1C_station_name_id.write(os);           break;
+        case 0x1D: m_1D_station_class_name_id.write(os);     break;
         default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
     }
 
@@ -555,6 +573,10 @@ bool Action00Stations::print_property(std::ostream& os, uint8_t property, uint16
         case 0x16: desc_16.print(m_16_animation_info, os, indent);            break;
         case 0x17: desc_17.print(m_17_animation_speed, os, indent);           break;
         case 0x18: desc_18.print(m_18_animation_triggers, os, indent);        break;
+        //case 0x1A: desc_1A.print(m_1A_advanced_sprite_layout, os, indent);    break;
+        //case 0x1B: desc_1B.print(m_1B_minimum_bridge_height, os, indent);     break;
+        case 0x1C: desc_1C.print(m_1C_station_name_id, os, indent);           break;
+        case 0x1D: desc_1D.print(m_1D_station_class_name_id, os, indent);     break;
         default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
     }
 
@@ -587,6 +609,10 @@ bool Action00Stations::parse_property(TokenStream& is, const std::string& name, 
             case 0x16: desc_16.parse(m_16_animation_info, is);            break;
             case 0x17: desc_17.parse(m_17_animation_speed, is);           break;
             case 0x18: desc_18.parse(m_18_animation_triggers, is);        break;
+            //case 0x1A: desc_1A.parse(m_1A_advanced_sprite_layout, is);    break;
+            //case 0x1B: desc_1B.parse(m_1B_minimum_bridge_height, is);     break;
+            case 0x1C: desc_1C.parse(m_1C_station_name_id, is);           break;
+            case 0x1D: desc_1D.parse(m_1D_station_class_name_id, is);     break;
             default:   throw PROPERTY_ERROR("Unknown property", feature(), property);
         }
 

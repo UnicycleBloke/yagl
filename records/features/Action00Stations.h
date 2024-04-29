@@ -129,29 +129,31 @@ public:
     bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
 
+    // Make common with Houses.
+    struct SpriteLayout{};
+
 private:
-    GRFLabel       m_08_class_id{};
-    StationLayout  m_09_sprite_layout{};
-    UInt8          m_0A_copy_sprite_layout_id{};
-    UInt8          m_0B_callback_flags{};
-    UInt8          m_0C_disabled_platform_numbers{};
-    UInt8          m_0D_disabled_platform_lengths{};
-    CustomStation  m_0E_custom_layout{};
-    UInt8          m_0F_copy_custom_layout_id{};
-    UInt16         m_10_little_lots_threshold{};
-    UInt8          m_11_pylon_placement{};
-    UInt32         m_12_cargo_type_triggers{};
-    UInt8          m_13_general_flags{};
-    UInt8          m_14_overhead_wire_placement{};
-    UInt8          m_15_can_train_enter_tile{};
-    UInt16         m_16_animation_info{};
-    UInt8          m_17_animation_speed{};
-    UInt16         m_18_animation_triggers{};
-
-    // TODO
-    //Action00StationRouting  m_19_station_routing;
-    //Action00StationAdvanced m_1A_station_advanced; - like Action02SpriteLayout?
-
+    GRFLabel        m_08_class_id{};
+    StationLayout   m_09_sprite_layout{};
+    UInt8           m_0A_copy_sprite_layout_id{};
+    UInt8           m_0B_callback_flags{};
+    UInt8           m_0C_disabled_platform_numbers{};
+    UInt8           m_0D_disabled_platform_lengths{};
+    CustomStation   m_0E_custom_layout{};
+    UInt8           m_0F_copy_custom_layout_id{};
+    UInt16          m_10_little_lots_threshold{};
+    UInt8           m_11_pylon_placement{};
+    UInt32          m_12_cargo_type_triggers{};
+    UInt8           m_13_general_flags{};
+    UInt8           m_14_overhead_wire_placement{};
+    UInt8           m_15_can_train_enter_tile{};
+    UInt16          m_16_animation_info{};
+    UInt8           m_17_animation_speed{};
+    UInt16          m_18_animation_triggers{};
+    SpriteLayout    m_1A_advanced_sprite_layout{};
+    Array<UInt8, 8> m_1B_minimum_bridge_height{};
+    UInt16          m_1C_station_name_id{};
+    UInt16          m_1D_station_class_name_id{};
 };
 
 

@@ -39,6 +39,8 @@ add_library(yagl_lib STATIC
     # Second stage of parsing a YAGL script - deserialise the data from a stream of tokens.
     records/TokenStream.cpp
 
+    records/Action00Feature.cpp
+
     # Pseudo-sprites
     records/actions/Action00Record.cpp
     records/actions/Action01Record.cpp
@@ -205,6 +207,7 @@ target_include_directories(yagl_lib PUBLIC
     .
     records
     records/actions
+    records/properties
     records/descriptors
     records/graphics
     records/features

@@ -401,16 +401,18 @@ std::unique_ptr<Record> NewGRFData::read_record(std::istream& is, uint32_t size,
 
                 default:
                     // Switch on the feature
-                    switch (data[0])
+                    switch (static_cast<FeatureType>(data[0]))
                     {
-                        case 0x07: // Feature 0x07 = town buildings
-                        case 0x09: // Feature 0x09 = industry tiles
-                        case 0x0F: // Feature 0x0F = objects
-                        case 0x11: // Feature 0x11 = airport tiles
+                        case FeatureType::Houses:        
+                        case FeatureType::IndustryTiles: 
+                        case FeatureType::Objects:       
+                        case FeatureType::AirportTiles:  
+                        case FeatureType::RoadStops:     
                             record_type = RecordType::ACTION_02_SPRITE_LAYOUT;
                             break;
 
-                        case 0x0A: // Feature 0x0A = industry production
+                        // The OpenTTD code uses the same function as for Houses, etc to read this. 
+                        case FeatureType::Industries:    
                             record_type = RecordType::ACTION_02_INDUSTRY;
                             break;
 
