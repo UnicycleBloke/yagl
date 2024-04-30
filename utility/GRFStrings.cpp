@@ -121,6 +121,13 @@ static const std::map<uint8_t, ControlCode> g_extension_codes =
     { 0x18, { 0x18, u"uw-hp",              0, "Print unsigned word in horse power" } },
     { 0x19, { 0x19, u"uw-volume",          0, "Print unsigned word as short volume" } },
     { 0x1A, { 0x1A, u"uw-weight",          0, "Print unsigned word as short weight" } },
+ 	{ 0x1B, { 0x1B, u"dw-cargo-long",      0, "Use two words to print an amount of cargo (long form: '10 bags of mail')." } },
+	{ 0x1C, { 0x1C, u"dw-cargo-short",     0, "Use two words to print an amount of cargo (short form: '10 bags')." } },
+    { 0x1D, { 0x1D, u"dw-cargo-tiny",      0, "Use two words to print an amount of cargo (tiny form: '10')." } }, 
+    { 0x1E, { 0x1E, u"uw-cargo-type",      0, "Print unsigned word as name of a cargo type." } },
+	{ 0x1F, { 0x1F, u"push-colour",        0, "Push current colour onto colour stack. Use this if you need to switch colour and restore later." } },
+	{ 0x20, { 0x20, u"pop-colour",         0, "Pop last colour from colour stack. Use this to restore previous colour." } },
+	{ 0x21, { 0x21, u"uw-force-value",     0, "Print unsigned dword from stack as force." } },     
 };
 
 

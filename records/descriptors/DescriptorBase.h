@@ -166,3 +166,61 @@ private:
 
 
 
+// TODO Replacement for Vector with a more consistent interface for print()
+template <typename T>
+class Vector2
+{
+public:
+    void read(std::istream& is)
+    {
+        uint16_t num_items = read_uint8_ext(is);
+        for (uint8_t i = 0; i < num_items; ++i)
+        {
+            T value;
+            value.read(is);
+            m_values.push_back(value);
+        }
+    }
+
+    void write(std::ostream& os) const
+    {
+        write_uint8_ext(os, uint16_t(m_values.size()));
+        for (const auto& value: m_values)
+        {
+            value.write(os);
+        }
+    }
+
+    void print(std::ostream& os, uint16_t indent) const
+    {
+        os << pad(indent) << "[";
+        for (const auto& value: m_values)
+        {
+            os << " ";
+            value.print(os, indent + 4);
+        }
+        os  << pad(indent) << " ]";
+    }
+
+    void parse(TokenStream& is)
+    {
+        is.match(TokenType::OpenBracket);
+        while (is.peek().type != TokenType::CloseBracket)
+        {
+            T value;
+            value.parse(is);
+            m_values.push_back(value);
+        }
+        is.match(TokenType::CloseBracket);
+    }
+
+private:
+    std::vector<T> m_values;
+};
+
+
+
+
+
+
+

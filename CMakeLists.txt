@@ -41,6 +41,8 @@ add_library(yagl_lib STATIC
 
     records/Action00Feature.cpp
 
+    records/properties/SpriteLayout.cpp
+
     # Pseudo-sprites
     records/actions/Action00Record.cpp
     records/actions/Action01Record.cpp

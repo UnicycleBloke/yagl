@@ -18,6 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
+#include "SpriteLayout.h"
 #include "IntegerDescriptor.h"
 #include "GRFLabel.h"
 #include <vector>
@@ -117,6 +118,9 @@ private:
 };
 
 
+using SpriteLayouts = Vector2<SpriteLayout>;
+
+
 class Action00Stations : public Action00Feature
 {
 public:
@@ -128,9 +132,6 @@ public:
     // Text serialisation
     bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
-    // Make common with Houses.
-    struct SpriteLayout{};
 
 private:
     GRFLabel        m_08_class_id{};
@@ -150,7 +151,7 @@ private:
     UInt16          m_16_animation_info{};
     UInt8           m_17_animation_speed{};
     UInt16          m_18_animation_triggers{};
-    SpriteLayout    m_1A_advanced_sprite_layout{};
+    SpriteLayouts   m_1A_advanced_sprite_layout{};
     Array<UInt8, 8> m_1B_minimum_bridge_height{};
     UInt16          m_1C_station_name_id{};
     UInt16          m_1D_station_class_name_id{};
