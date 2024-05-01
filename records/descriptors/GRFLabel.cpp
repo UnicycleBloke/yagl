@@ -32,7 +32,7 @@ void GRFLabel::write(std::ostream& os) const
 }
 
 
-void GRFLabel::print(std::ostream& os) const
+void GRFLabel::print(std::ostream& os, uint16_t /*indent*/) const
 {
     os << "\"" << to_string() << "\"";
 }

@@ -42,6 +42,7 @@ add_library(yagl_lib STATIC
     records/Action00Feature.cpp
 
     records/properties/SpriteLayout.cpp
+    records/valuetypes/PropertyMap.cpp
 
     # Pseudo-sprites
     records/actions/Action00Record.cpp
@@ -210,6 +211,7 @@ target_include_directories(yagl_lib PUBLIC
     records
     records/actions
     records/properties
+    records/valuetypes
     records/descriptors
     records/graphics
     records/features

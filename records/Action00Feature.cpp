@@ -16,26 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#include "Action00Property.h"
-
-
-void Action00Feature::register_property(Action00Property* property)
-{
-    auto index = property->index();
-    m_properties_by_index[index] = property;
-
-    const auto& label = property->label();
-    m_properties_by_label[label] = property;
-}
+#include "Action00Feature.h"
 
 
 bool Action00Feature::read_property(std::istream& is, uint8_t property)
 {
-    auto it = m_properties_by_index.find(property);
-    if (it != m_properties_by_index.end())
+    if (m_properties.read_property(is, property))
     {
-        Action00Property* prop = it->second;
-        prop->read(is);
         return true;
     }
     else
@@ -48,11 +35,8 @@ bool Action00Feature::read_property(std::istream& is, uint8_t property)
 
 bool Action00Feature::write_property(std::ostream& os, uint8_t property) const
 {
-    auto it = m_properties_by_index.find(property);
-    if (it != m_properties_by_index.end())
+    if (m_properties.write_property(os, property))
     {
-        Action00Property* prop = it->second;
-        prop->write(os);
         return true;
     }
     else
@@ -65,11 +49,8 @@ bool Action00Feature::write_property(std::ostream& os, uint8_t property) const
 
 bool Action00Feature::print_property(std::ostream& os, uint8_t property, uint16_t indent) const
 {
-    auto it = m_properties_by_index.find(property);
-    if (it != m_properties_by_index.end())
+    if (m_properties.print_property(os, property, indent))
     {
-        Action00Property* prop = it->second;
-        prop->print(os, indent);
         return true;
     }
     else
@@ -82,12 +63,8 @@ bool Action00Feature::print_property(std::ostream& os, uint8_t property, uint16_
 
 bool Action00Feature::parse_property(TokenStream& is, const std::string& label, uint8_t& property)
 {
-    auto it = m_properties_by_label.find(label);
-    if (it != m_properties_by_label.end())
+    if (m_properties.parse_property(is, label, property))
     {
-        Action00Property* prop = it->second;
-        property = prop->index();
-        prop->parse(is);
         return true;
     }
     else

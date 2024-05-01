@@ -34,7 +34,7 @@ public:
     void read(std::istream& is);
     void write(std::ostream& os) const;
     // Text serialisation
-    void print(std::ostream& os) const; // Quoted version of to_string().
+    void print(std::ostream& os, uint16_t indent = 0) const; // Quoted version of to_string(). Added indent for consistent interface with properties.
     void parse(TokenStream& is);
 
     // Not used in many places - phase out.

@@ -17,68 +17,67 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Action00Property.h"
-#include "IntegerDescriptor.h"
+#include "ValueType.h"
+#include "TokenStream.h"
+#include <type_traits>
+#include <iostream>
+#include <cstdint>
 #include <vector>
 
 
-template <typename T, bool EXT = false>
-class UIntListProperty : public Action00Property
+// Represents a variable-length collection of values of type T. 
+// The size of the collection precedes the items in the the binary formet.
+template <typename T>
+//requires ValueType<T>
+struct ValueTypeVector
 {
-public:
-    UIntListProperty(Action00Feature& container, uint8_t index, const std::string& label)
-    : Action00Property(container, index, label) 
-    {
-    }
-
-    void read(std::istream& is) override
+    void read(std::istream& is) 
     {   
+        // Should this be uint8_ext?
         uint8_t num_items = read_uint8(is);
         for (uint8_t i = 0; i < num_items; ++i)
         {
-            auto value = read_uint<T, EXT>(is);
-            m_values.push_back(value);
+            T item{};
+            item.read(is);
+            m_items.push_back(item);
         }
     }
 
-    void write(std::ostream& os) const override
+    void write(std::ostream& os) const 
     {
-        write_uint8(os, uint8_t(m_values.size()));
-        for (const auto& value: m_values)
+        write_uint8(os, uint8_t(m_items.size()));
+        for (const auto& item: m_items)
         {
-            write_uint<T, EXT>(os, value);
+            item.write(os);
         }
     }
 
-    void print(std::ostream& os, uint16_t indent) const override
+    void print(std::ostream& os, uint16_t indent) const 
     { 
-        os << pad(indent) << label() << ": ";  
+        // TODO options here to control the layout with or without line breaks,
+        // with or without commas, etc.
         os << "[";
-        for (const auto& value: m_values)
+        for (const auto& item: m_items)
         {
-            os << " " << to_string(value);
+            os << " ";
+            item.print(os, indent);
         }
         os << " ]";
     }
 
-    void parse(TokenStream& is) override
+    void parse(TokenStream& is) 
     {   
         is.match(TokenType::OpenBracket);
         while (is.peek().type != TokenType::CloseBracket)
         {
-            auto value = is.match_uint<T>();     
-            m_values.push_back(value);
+            T item;
+            item.parse(is);
+            m_items.push_back(item);
         }
 
         is.match(TokenType::CloseBracket);
     }
 
 private:
-    std::vector<T> m_values{};
+    std::vector<T> m_items{};
 };
-
-
-using UInt8ListProperty    = UIntListProperty<uint8_t>;
-using UInt16ListProperty   = UIntListProperty<uint16_t>;
-using UInt32ListProperty   = UIntListProperty<uint32_t>;
-using GRFLabelListProperty = UIntListProperty<uint32_t>;

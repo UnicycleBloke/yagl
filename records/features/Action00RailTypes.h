@@ -61,13 +61,17 @@ private:
 };
 
 
-#include "UIntProperty.h"
-#include "UIntListProperty.h"
+#include "IntegerValue.h"
+#include "PropertyMap.h"
+#include "ValueTypeVector.h"
 
 
 // For now.
-using LongDateProperty = UInt32Property;
-
+using LongDateProperty     = Property<UInt2<uint32_t>>;
+using UInt16Property       = Property<UInt2<uint16_t>>;
+using UInt8Property        = Property<UInt2<uint8_t>>;
+using GRFLabelProperty     = Property<GRFLabel>;
+using GRFLabelListProperty = Property<ValueTypeVector<GRFLabel>>;
 
 class Action00RailTypes2 : public Action00Feature
 {
@@ -75,26 +79,26 @@ public:
     Action00RailTypes2() : Action00Feature(FeatureType::RailTypes) {}
 
 private:
-    GRFLabelProperty      m_prop_08{*this, 0x08, "railtype_label"};
-    UInt16Property        m_prop_09{*this, 0x09, "toolbar_caption_id"};
-    UInt16Property        m_prop_0A{*this, 0x0A, "dropdown_text_id"};
-    UInt16Property        m_prop_0B{*this, 0x0B, "window_caption_id"};
-    UInt16Property        m_prop_0C{*this, 0x0C, "autoreplace_text_id"};
-    UInt16Property        m_prop_0D{*this, 0x0D, "new_engine_text_id"};
-    GRFLabelListProperty  m_prop_0E{*this, 0x0E, "compatible_railtypes"};
-    GRFLabelListProperty  m_prop_0F{*this, 0x0F, "powered_railtypes"};
-    UInt8Property         m_prop_10{*this, 0x10, "railtype_flags"};
-    UInt8Property         m_prop_11{*this, 0x11, "curve_speed_multiplier"};
-    UInt8Property         m_prop_12{*this, 0x12, "station_graphics"};
-    UInt16Property        m_prop_13{*this, 0x13, "construction_costs"};
-    UInt16Property        m_prop_14{*this, 0x14, "speed_limit"};
-    UInt8Property         m_prop_15{*this, 0x15, "acceleration_model"};
-    UInt8Property         m_prop_16{*this, 0x16, "minimap_colour"};
-    LongDateProperty      m_prop_17{*this, 0x17, "introduction_date"};
-    GRFLabelListProperty  m_prop_18{*this, 0x18, "required_railtypes"};
-    GRFLabelListProperty  m_prop_19{*this, 0x19, "introduced_railtypes"};
-    UInt8Property         m_prop_1A{*this, 0x1A, "sort_order"};
-    UInt16Property        m_prop_1B{*this, 0x1B, "rail_type_name_id"};
-    UInt16Property        m_prop_1C{*this, 0x1C, "maintenance_cost_factor"};
-    GRFLabelListProperty  m_prop_1D{*this, 0x1D, "alternate_railtypes"};
+    GRFLabelProperty      m_prop_08{m_properties, 0x08, "railtype_label"};
+    UInt16Property        m_prop_09{m_properties, 0x09, "toolbar_caption_id"};
+    UInt16Property        m_prop_0A{m_properties, 0x0A, "dropdown_text_id"};
+    UInt16Property        m_prop_0B{m_properties, 0x0B, "window_caption_id"};
+    UInt16Property        m_prop_0C{m_properties, 0x0C, "autoreplace_text_id"};
+    UInt16Property        m_prop_0D{m_properties, 0x0D, "new_engine_text_id"};
+    GRFLabelListProperty  m_prop_0E{m_properties, 0x0E, "compatible_railtypes"};
+    GRFLabelListProperty  m_prop_0F{m_properties, 0x0F, "powered_railtypes"};
+    UInt8Property         m_prop_10{m_properties, 0x10, "railtype_flags"};
+    UInt8Property         m_prop_11{m_properties, 0x11, "curve_speed_multiplier"};
+    UInt8Property         m_prop_12{m_properties, 0x12, "station_graphics"};
+    UInt16Property        m_prop_13{m_properties, 0x13, "construction_costs"};
+    UInt16Property        m_prop_14{m_properties, 0x14, "speed_limit"};
+    UInt8Property         m_prop_15{m_properties, 0x15, "acceleration_model"};
+    UInt8Property         m_prop_16{m_properties, 0x16, "minimap_colour"};
+    LongDateProperty      m_prop_17{m_properties, 0x17, "introduction_date"};
+    GRFLabelListProperty  m_prop_18{m_properties, 0x18, "required_railtypes"};
+    GRFLabelListProperty  m_prop_19{m_properties, 0x19, "introduced_railtypes"};
+    UInt8Property         m_prop_1A{m_properties, 0x1A, "sort_order"};
+    UInt16Property        m_prop_1B{m_properties, 0x1B, "rail_type_name_id"};
+    UInt16Property        m_prop_1C{m_properties, 0x1C, "maintenance_cost_factor"};
+    GRFLabelListProperty  m_prop_1D{m_properties, 0x1D, "alternate_railtypes"};
 };
