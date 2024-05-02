@@ -18,9 +18,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "IntegerDescriptor.h"
-#include "DateDescriptor.h"
 #include "GRFLabel.h"
+#include "DateDescriptor.h"
+#include "IntegerValue.h"
+#include "PropertyMap.h"
+#include "ValueTypeVector.h"
+
+
+using LongDateProperty     = Property<LongDate>;
+using UInt16Property       = Property<UInt2<uint16_t>>;
+using UInt8Property        = Property<UInt2<uint8_t>>;
+using GRFLabelProperty     = Property<GRFLabel>;
+using GRFLabelListProperty = Property<ValueTypeVector<GRFLabel>>;
 
 
 class Action00RoadTypes : public Action00Feature
@@ -28,32 +37,25 @@ class Action00RoadTypes : public Action00Feature
 public:
     Action00RoadTypes() : Action00Feature(FeatureType::RoadTypes) {}
 
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
 private:
-    GRFLabel     m_08_roadtype_label{};
-    UInt16       m_09_toolbar_caption_id{};
-    UInt16       m_0A_dropdown_text_id{};
-    UInt16       m_0B_window_caption_id{};
-    UInt16       m_0C_autoreplace_text_id{};
-    UInt16       m_0D_new_engine_text_id{};
-    GRFLabelList m_0F_powered_roadtypes{};
-    UInt8        m_10_roadtype_flags{};
-    UInt16       m_13_construction_costs{};
-    UInt16       m_14_speed_limit{};
-    UInt8        m_16_minimap_colour{};
-    LongDate     m_17_introduction_date{};
-    GRFLabelList m_18_required_roadtypes{};
-    GRFLabelList m_19_introduced_roadtypes{};
-    UInt8        m_1A_sort_order{};
-    UInt16       m_1B_road_type_name_id{};
-    UInt16       m_1C_maintenance_cost_factor{};
-    GRFLabelList m_1D_alternate_roadtypes{};
+    GRFLabelProperty     m_prop_08{m_properties, 0x08, "roadtype_label"};
+    UInt16Property       m_prop_09{m_properties, 0x09, "toolbar_caption_id"};
+    UInt16Property       m_prop_0A{m_properties, 0x0A, "dropdown_text_id"};
+    UInt16Property       m_prop_0B{m_properties, 0x0B, "window_caption_id"};
+    UInt16Property       m_prop_0C{m_properties, 0x0C, "autoreplace_text_id"};
+    UInt16Property       m_prop_0D{m_properties, 0x0D, "new_engine_text_id"};
+    GRFLabelListProperty m_prop_0F{m_properties, 0x0F, "powered_roadtypes"};
+    UInt8Property        m_prop_10{m_properties, 0x10, "roadtype_flags"};
+    UInt16Property       m_prop_13{m_properties, 0x13, "construction_costs"};
+    UInt16Property       m_prop_14{m_properties, 0x14, "speed_limit"};
+    UInt8Property        m_prop_16{m_properties, 0x16, "minimap_colour"};
+    LongDateProperty     m_prop_17{m_properties, 0x17, "introduction_date"};
+    GRFLabelListProperty m_prop_18{m_properties, 0x18, "required_roadtypes"};
+    GRFLabelListProperty m_prop_19{m_properties, 0x19, "introduced_roadtypes"};
+    UInt8Property        m_prop_1A{m_properties, 0x1A, "sort_order"};
+    UInt16Property       m_prop_1B{m_properties, 0x1B, "road_type_name_id"};
+    UInt16Property       m_prop_1C{m_properties, 0x1C, "maintenance_cost_factor"};
+    GRFLabelListProperty m_prop_1D{m_properties, 0x1D, "alternate_roadtypes"};
 };
 
 

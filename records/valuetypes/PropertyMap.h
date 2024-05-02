@@ -93,8 +93,10 @@ template <typename T>
 class Property : public PropertyBase
 {
 public:
-    Property(PropertyMap& container, uint8_t index, const std::string& label)
+    template <typename... Args>
+    Property(PropertyMap& container, uint8_t index, const std::string& label, const Args&... args)
     : PropertyBase(container, index, label) 
+    , m_value{args...}
     {
     }
 

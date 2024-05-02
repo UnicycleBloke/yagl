@@ -19,64 +19,23 @@
 #pragma once
 #include "Action00Feature.h"
 #include "GRFLabel.h"
-#include "IntegerDescriptor.h"
 #include "DateDescriptor.h"
-
-
-class Action00RailTypes : public Action00Feature
-{
-public:
-    Action00RailTypes() : Action00Feature(FeatureType::RailTypes) {}
-
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
-private:
-    GRFLabel     m_08_railtype_label{};
-    UInt16       m_09_toolbar_caption_id{};
-    UInt16       m_0A_dropdown_text_id{};
-    UInt16       m_0B_window_caption_id{};
-    UInt16       m_0C_autoreplace_text_id{};
-    UInt16       m_0D_new_engine_text_id{};
-    GRFLabelList m_0E_compatible_railtypes{};
-    GRFLabelList m_0F_powered_railtypes{};
-    UInt8        m_10_railtype_flags{};
-    UInt8        m_11_curve_speed_multiplier{};
-    UInt8        m_12_station_graphics{};
-    UInt16       m_13_construction_costs{};
-    UInt16       m_14_speed_limit{};
-    UInt8        m_15_acceleration_model{};
-    UInt8        m_16_minimap_colour{};
-    LongDate     m_17_introduction_date{};
-    GRFLabelList m_18_required_railtypes{};
-    GRFLabelList m_19_introduced_railtypes{};
-    UInt8        m_1A_sort_order{};
-    UInt16       m_1B_rail_type_name_id{};
-    UInt16       m_1C_maintenance_cost_factor{};
-    GRFLabelList m_1D_alternate_railtypes{};
-};
-
-
 #include "IntegerValue.h"
 #include "PropertyMap.h"
 #include "ValueTypeVector.h"
 
 
-// For now.
 using LongDateProperty     = Property<LongDate>;
 using UInt16Property       = Property<UInt2<uint16_t>>;
 using UInt8Property        = Property<UInt2<uint8_t>>;
 using GRFLabelProperty     = Property<GRFLabel>;
 using GRFLabelListProperty = Property<ValueTypeVector<GRFLabel>>;
 
-class Action00RailTypes2 : public Action00Feature
+
+class Action00RailTypes : public Action00Feature
 {
 public:
-    Action00RailTypes2() : Action00Feature(FeatureType::RailTypes) {}
+    Action00RailTypes() : Action00Feature(FeatureType::RailTypes) {}
 
 private:
     GRFLabelProperty      m_prop_08{m_properties, 0x08, "railtype_label"};
