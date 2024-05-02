@@ -67,7 +67,7 @@ private:
 
 
 // For now.
-using LongDateProperty     = Property<UInt2<uint32_t>>;
+using LongDateProperty     = Property<LongDate>;
 using UInt16Property       = Property<UInt2<uint16_t>>;
 using UInt8Property        = Property<UInt2<uint8_t>>;
 using GRFLabelProperty     = Property<GRFLabel>;

@@ -48,7 +48,7 @@ public:
     {
     }
 
-    void print(std::ostream& os) const
+    void print(std::ostream& os, uint16_t indent = 0) const
     {
         os << str_date << "(";
         os << to_string(m_year, UIntFormat::Dec)  << "/";

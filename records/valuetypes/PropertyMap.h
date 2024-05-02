@@ -112,6 +112,7 @@ public:
     { 
         os << pad(indent) << label() << ": ";  
         m_value.print(os, indent);
+        os << ";\n";  
     }
 
     void parse(TokenStream& is) override

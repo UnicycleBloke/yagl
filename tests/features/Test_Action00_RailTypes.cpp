@@ -104,3 +104,4 @@ TEST_CASE("Action00RailTypes", "[features]")
 {
     test_yagl<Action00Record, 0x00>(str_YAGL, str_NFO);
 }
+ 
