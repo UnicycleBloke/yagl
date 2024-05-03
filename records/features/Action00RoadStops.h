@@ -22,7 +22,7 @@
 #include "DateDescriptor.h"
 #include "IntegerValue.h"
 #include "PropertyMap.h"
-#include "ValueTypeVector.h"
+#include "Vector.h"
 
 
 using LongDateProperty     = Property<LongDate>;
@@ -30,7 +30,7 @@ using UInt32Property       = Property<UInt2<uint32_t>>;
 using UInt16Property       = Property<UInt2<uint16_t>>;
 using UInt8Property        = Property<UInt2<uint8_t>>;
 using GRFLabelProperty     = Property<GRFLabel>;
-using GRFLabelListProperty = Property<ValueTypeVector<GRFLabel>>;
+using GRFLabelListProperty = Property<Vector<GRFLabel>>;
 
 
 // TODO Add unit tests for this type.

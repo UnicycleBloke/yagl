@@ -29,7 +29,7 @@
 // The size of the collection precedes the items in the the binary formet.
 template <typename T, uint16_t Size>
 //requires ValueType<T>
-struct ValueTypeArray
+struct Array
 {
     void read(std::istream& is) 
     {   

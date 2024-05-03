@@ -118,7 +118,7 @@ private:
 };
 
 
-using SpriteLayouts = Vector2<SpriteLayout>;
+using SpriteLayouts = Vector2Old<SpriteLayout>;
 
 
 class Action00Stations : public Action00Feature
@@ -152,7 +152,7 @@ private:
     UInt8           m_17_animation_speed{};
     UInt16          m_18_animation_triggers{};
     SpriteLayouts   m_1A_advanced_sprite_layout{};
-    Array<UInt8, 8> m_1B_minimum_bridge_height{};
+    ArrayOld<UInt8, 8> m_1B_minimum_bridge_height{};
     UInt16          m_1C_station_name_id{};
     UInt16          m_1D_station_class_name_id{};
 };

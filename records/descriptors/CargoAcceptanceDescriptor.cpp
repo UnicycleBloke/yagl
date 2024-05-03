@@ -34,7 +34,7 @@ void CargoAcceptance::write(std::ostream& os) const
 }
 
 
-void CargoAcceptance::print(std::ostream& os) const
+void CargoAcceptance::print(std::ostream& os, uint16_t indent) const
 {
     os << "{" << to_hex(m_cargo_type) << ": " << to_hex(m_acceptance) << "}";
 }

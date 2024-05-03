@@ -62,7 +62,7 @@ struct GenericDescriptor : PropertyDescriptor
 // format parameter passed to print(), so there is a different Array
 // for these.
 template <typename T, uint16_t SIZE>
-class Array
+class ArrayOld
 {
 public:
     void print(std::ostream& os) const
@@ -113,7 +113,7 @@ private:
 // for these. We assume that the binary format includes a uint8_t
 // length before the items.
 template <typename T>
-class Vector
+class VectorOld
 {
 public:
     void print(std::ostream& os) const
@@ -167,8 +167,9 @@ private:
 
 
 // TODO Replacement for Vector with a more consistent interface for print()
+// This only used for SpriteLayout
 template <typename T>
-class Vector2
+class Vector2Old
 {
 public:
     void read(std::istream& is)

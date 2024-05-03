@@ -18,7 +18,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "IntegerDescriptor.h"
+#include "IntegerValue.h"
+#include "PropertyMap.h"
+
+
+using UInt8Property = Property<UInt2<uint8_t>>;
 
 
 class Action00Canals : public Action00Feature
@@ -26,16 +30,9 @@ class Action00Canals : public Action00Feature
 public:
     Action00Canals() : Action00Feature(FeatureType::Canals) {}
 
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
 private:
-    UInt8 m_08_callback_flags{};
-    UInt8 m_09_graphics_flags{};
+    UInt8Property m_prop_08{m_properties, 0x08, "callback_flags"};
+    UInt8Property m_prop_09{m_properties, 0x09, "graphics_flags"};
 };
 
 

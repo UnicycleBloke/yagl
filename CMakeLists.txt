@@ -17,7 +17,7 @@
 #// along with yagl. If not, see <https://www.gnu.org/licenses/>.
 #///////////////////////////////////////////////////////////////////////////////
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 
 
 set (CMAKE_CXX_STANDARD 17)
@@ -92,9 +92,9 @@ add_library(yagl_lib STATIC
     records/features/Action00Ships.cpp
     records/features/Action00Aircraft.cpp
     records/features/Action00Stations.cpp
-    records/features/Action00Canals.cpp
+    #records/features/Action00Canals.cpp
     records/features/Action00Bridges.cpp
-    records/features/Action00Houses.cpp
+    #records/features/Action00Houses.cpp
     records/features/Action00GlobalSettings.cpp
     records/features/Action00IndustryTiles.cpp
     records/features/Action00Industries.cpp

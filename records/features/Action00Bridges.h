@@ -18,11 +18,20 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
+#include "IntegerValue.h"
 #include "YearDescriptor.h"
-#include "IntegerDescriptor.h"
-#include "StreamHelpers.h"
+#include "PropertyMap.h"
+// #include "IntegerDescriptor.h"
+// #include "StreamHelpers.h"
 #include <vector>
 #include <array>
+
+
+using UInt16Property = Property<UInt2<uint16_t>>;
+using UInt8Property  = Property<UInt2<uint8_t>>;
+using Year8Property  = Property<Year8>;
+using Year16Property = Property<Year16>;
+using Year32Property = Property<Year32>;
 
 
 class BridgeTable
@@ -52,32 +61,28 @@ private:
 };
 
 
+using BridgeLayoutProperty = Property<BridgeLayout>;
+
+
 class Action00Bridges : public Action00Feature
 {
 public:
     Action00Bridges() : Action00Feature(FeatureType::Bridges) {}
 
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
 private:
-    UInt8          m_00_fallback_type_id{};
-    Year8          m_08_year_available{};
-    UInt8          m_09_minimum_length{};
-    UInt8          m_0A_maximum_length{};
-    UInt8          m_0B_cost_factor{};
-    UInt16         m_0C_maximum_speed{};
-    BridgeLayout   m_0D_bridge_layout{};
-    UInt8          m_0E_various_flags{};
-    Year32         m_0F_long_year_available{};
-    UInt16         m_10_purchase_text{};
-    UInt16         m_11_description_rail{};
-    UInt16         m_12_description_road{};
-    UInt16         m_13_cost_factor_word{};
+    UInt8Property        m_prop_00{m_properties, 0x00, "fallback_type_id"};
+    Year8Property        m_prop_08{m_properties, 0x08, "year_available"};
+    UInt8Property        m_prop_09{m_properties, 0x09, "minimum_length"};
+    UInt8Property        m_prop_0A{m_properties, 0x0A, "maximum_length"};
+    UInt8Property        m_prop_0B{m_properties, 0x0B, "cost_factor"};
+    UInt16Property       m_prop_0C{m_properties, 0x0C, "maximum_speed"};
+    BridgeLayoutProperty m_prop_0D{m_properties, 0x0D, "bridge_layout"};
+    UInt8Property        m_prop_0E{m_properties, 0x0E, "various_flags"};
+    Year32Property       m_prop_0F{m_properties, 0x0F, "long_year_available"};
+    UInt16Property       m_prop_10{m_properties, 0x10, "purchase_text"};
+    UInt16Property       m_prop_11{m_properties, 0x11, "description_rail"};
+    UInt16Property       m_prop_12{m_properties, 0x12, "description_road"};
+    UInt16Property       m_prop_13{m_properties, 0x13, "cost_factor_word"};
 };
 
 

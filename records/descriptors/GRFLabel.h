@@ -49,8 +49,8 @@ private:
 };
 
 
-using GRFLabelPair           = Array<GRFLabel, 2>;
-using GRFLabelList           = Vector<GRFLabel>;
+using GRFLabelPair           = ArrayOld<GRFLabel, 2>;
+using GRFLabelList           = VectorOld<GRFLabel>;
 
 using GRFLabelDescriptor     = GenericDescriptor<GRFLabel>;
 using GRFLabelPairDescriptor = GenericDescriptor<GRFLabelPair>;

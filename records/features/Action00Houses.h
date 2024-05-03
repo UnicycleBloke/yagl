@@ -18,9 +18,25 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "IntegerDescriptor.h"
+#include "GRFLabel.h"
+#include "DateDescriptor.h"
+#include "IntegerValue.h"
+#include "PropertyMap.h"
+#include "Vector.h"
+#include "Array.h"
 #include "CargoAcceptanceDescriptor.h"
-#include "YearDescriptor.h"
+
+
+using LongDateProperty     = Property<LongDate>;
+using UInt16Property       = Property<UInt2<uint16_t>>;
+using UInt8Property        = Property<UInt2<uint8_t>>;
+using GRFLabelProperty     = Property<GRFLabel>;
+using GRFLabelListProperty = Property<Vector<GRFLabel>>;
+using Year8PairProperty    = Property<Array<Year8, 2>>;
+using Year16Property       = Property<Year16>;
+using UInt8x4Property      = Property<Array<UInt2<uint8_t>, 4>>;
+using UInt8ListProperty    = Property<Vector<UInt2<uint8_t>>>;
+using CargoListProperty    = Property<Vector<CargoAcceptance>>;
 
 
 class Action00Houses : public Action00Feature
@@ -28,42 +44,35 @@ class Action00Houses : public Action00Feature
 public:
     Action00Houses() : Action00Feature(FeatureType::Houses) {}
 
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
 private:
-    UInt8                 m_08_substitute_building_id{};
-    UInt8                 m_09_building_flags{};
-    Year8Pair             m_0A_years_available{};
-    UInt8                 m_0B_population{};
-    UInt8                 m_0C_mail_multiplier{};
-    UInt8                 m_0D_passenger_acceptance{};
-    UInt8                 m_0E_mail_acceptance{};
-    UInt8                 m_0F_goods_etc_acceptance{};
-    UInt16                m_10_la_rating_decrease{};
-    UInt8                 m_11_removal_cost_multiplier{};
-    UInt16                m_12_building_name_id{};
-    UInt16                m_13_availability_mask{};
-    UInt8                 m_14_callback_flags{};
-    UInt8                 m_15_override_byte{};
-    UInt8                 m_16_refresh_multiplier{};
-    UIntArray<UInt8, 4>   m_17_four_random_colours{};
-    UInt8                 m_18_appearance_probability{};
-    UInt8                 m_19_extra_flags{};
-    UInt8                 m_1A_animation_frames{};
-    UInt8                 m_1B_animation_speed{};
-    UInt8                 m_1C_building_class{};
-    UInt8                 m_1D_callback_flags_2{};
-    UIntArray<UInt8, 4>   m_1E_accepted_cargo_types{};
-    UInt16                m_1F_minimum_life_years{};
-    CargoList             m_20_accepted_cargo_list{};
-    Year16                m_21_long_minimum_year{};
-    Year16                m_22_long_maximum_year{};
-    CargoAcceptanceList   m_23_tile_acceptance_list{};
+    UInt8Property         m_prop_08{m_properties, 0x08, "substitute_building_id"};
+    UInt8Property         m_prop_09{m_properties, 0x09, "building_flags"};
+    Year8PairProperty     m_prop_0A{m_properties, 0x0A, "years_available"};
+    UInt8Property         m_prop_0B{m_properties, 0x0B, "population"};
+    UInt8Property         m_prop_0C{m_properties, 0x0C, "mail_multiplier"};
+    UInt8Property         m_prop_0D{m_properties, 0x0D, "passenger_acceptance"};
+    UInt8Property         m_prop_0E{m_properties, 0x0E, "mail_acceptance"};
+    UInt8Property         m_prop_0F{m_properties, 0x0F, "goods_etc_acceptance"};
+    UInt16Property        m_prop_10{m_properties, 0x10, "la_rating_decrease"};
+    UInt8Property         m_prop_11{m_properties, 0x11, "removal_cost_multiplier"};
+    UInt16Property        m_prop_12{m_properties, 0x12, "building_name_id"};
+    UInt16Property        m_prop_13{m_properties, 0x13, "availability_mask"};
+    UInt8Property         m_prop_14{m_properties, 0x14, "callback_flags"};
+    UInt8Property         m_prop_15{m_properties, 0x15, "override_byte"};
+    UInt8Property         m_prop_16{m_properties, 0x16, "refresh_multiplier"};
+    UInt8x4Property       m_prop_17{m_properties, 0x17, "four_random_colours"};
+    UInt8Property         m_prop_18{m_properties, 0x18, "appearance_probability"};
+    UInt8Property         m_prop_19{m_properties, 0x19, "extra_flags"};
+    UInt8Property         m_prop_1A{m_properties, 0x1A, "animation_frames"};
+    UInt8Property         m_prop_1B{m_properties, 0x1B, "animation_speed"};
+    UInt8Property         m_prop_1C{m_properties, 0x1C, "building_class"};
+    UInt8Property         m_prop_1D{m_properties, 0x1D, "callback_flags_2"};
+    UInt8x4Property       m_prop_1E{m_properties, 0x1E, "accepted_cargo_types"};
+    UInt16Property        m_prop_1F{m_properties, 0x1F, "minimum_life_years"};
+    UInt8ListProperty     m_prop_20{m_properties, 0x20, "accepted_cargo_list"};
+    Year16Property        m_prop_21{m_properties, 0x21, "long_minimum_year"};
+    Year16Property        m_prop_22{m_properties, 0x22, "long_maximum_year"};
+    CargoListProperty     m_prop_23{m_properties, 0x23, "tile_acceptance_list"};
 };
 
 

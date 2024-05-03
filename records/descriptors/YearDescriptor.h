@@ -37,7 +37,7 @@ public:
     {
     }
 
-    void print(std::ostream& os) const
+    void print(std::ostream& os, uint16_t indent = 0) const
     {
         os << to_string(m_year, UIntFormat::Dec);
     }
@@ -96,9 +96,9 @@ using Year8Descriptor  = GenericDescriptor<Year8>;
 using Year16Descriptor = GenericDescriptor<Year16>;
 using Year32Descriptor = GenericDescriptor<Year32>;
 
-using Year8Pair  = Array<Year8,  2>;
-using Year16Pair = Array<Year16, 2>;
-using Year32Pair = Array<Year32, 2>;
+using Year8Pair  = ArrayOld<Year8,  2>;
+using Year16Pair = ArrayOld<Year16, 2>;
+using Year32Pair = ArrayOld<Year32, 2>;
 
 using Year8PairDescriptor  = GenericDescriptor<Year8Pair>;
 using Year16PairDescriptor = GenericDescriptor<Year16Pair>;

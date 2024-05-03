@@ -28,7 +28,7 @@ public:
     void read(std::istream& is);
     void write(std::ostream& os) const;
     // Text serialisation
-    void print(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent = 0) const;
     void parse(TokenStream& is);
 
 private:
@@ -37,5 +37,5 @@ private:
 };
 
 
-using CargoAcceptanceList       = Vector<CargoAcceptance>;
+using CargoAcceptanceList       = VectorOld<CargoAcceptance>;
 using CargoAcceptanceDescriptor = GenericDescriptor<CargoAcceptanceList>;
