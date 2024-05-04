@@ -25,7 +25,7 @@ namespace {
 
 // Add all properties, even with silly values, so that we can confirm the
 // formatting of each one if they are individually changed.
-static constexpr const char* str_YAGL =
+static constexpr const char* str_YAGL_ship =
     "properties<Ships, 0x0023> // Action00\n"
     "{\n"
     "    // instance_id: 0x0023\n"
@@ -41,7 +41,7 @@ static constexpr const char* str_YAGL =
     "}\n";
 
 // NFO matching the YAGL.
-static constexpr const char* str_NFO =
+static constexpr const char* str_NFO_ship =
 //    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
     "00 "             // Action00
     "02 "             // Ships
@@ -55,10 +55,110 @@ static constexpr const char* str_NFO =
     "06 0F "          // climate_availability
     "07 27 ";         // loading_speed
 
+// Add all properties, even with silly values, so that we can confirm the
+// formatting of each one if they are individually changed.
+static constexpr const char* str_YAGL_train =
+    "properties<Trains, 0x0023> // Action00\n"
+    "{\n"
+    "    // instance_id: 0x0023\n"
+    "    {\n"
+    // These properties are common to all four vehicle types.
+    "        introduction_date: date(1925/3/5);\n"
+    "        reliability_decay_speed: 18;\n"
+    "        vehicle_life_years: 36;\n"
+    "        model_life_years: 53;\n"
+    "        climate_availability: Temperate | Arctic | Tropical | Toyland;\n"
+    "        loading_speed: 0x27;\n"
+    "    }\n"
+    "}\n";
+
+// NFO matching the YAGL.
+static constexpr const char* str_NFO_train =
+//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+    "00 "             // Action00
+    "00 "             // Trains
+    "06 "             // 1x06 properties...
+    "01 "             // ... for 0x01 item
+    "FF 23 00 "       // First ID 0x23 (extended byte)
+    "00 62 07 "       // introduction_date
+    "02 12 "          // reliability_decay_speed
+    "03 24 "          // vehicle_life_years
+    "04 35 "          // model_life_years
+    "06 0F "          // climate_availability
+    "07 27 ";         // loading_speed
+
+// Add all properties, even with silly values, so that we can confirm the
+// formatting of each one if they are individually changed.
+static constexpr const char* str_YAGL_road =
+    "properties<RoadVehicles, 0x0023> // Action00\n"
+    "{\n"
+    "    // instance_id: 0x0023\n"
+    "    {\n"
+    // These properties are common to all four vehicle types.
+    "        introduction_date: date(1925/3/5);\n"
+    "        reliability_decay_speed: 18;\n"
+    "        vehicle_life_years: 36;\n"
+    "        model_life_years: 53;\n"
+    "        climate_availability: Temperate | Arctic | Tropical | Toyland;\n"
+    "        loading_speed: 0x27;\n"
+    "    }\n"
+    "}\n";
+
+// NFO matching the YAGL.
+static constexpr const char* str_NFO_road =
+//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+    "00 "             // Action00
+    "01 "             // RoadVehicles
+    "06 "             // 1x06 properties...
+    "01 "             // ... for 0x01 item
+    "FF 23 00 "       // First ID 0x23 (extended byte)
+    "00 62 07 "       // introduction_date
+    "02 12 "          // reliability_decay_speed
+    "03 24 "          // vehicle_life_years
+    "04 35 "          // model_life_years
+    "06 0F "          // climate_availability
+    "07 27 ";         // loading_speed
+
+// Add all properties, even with silly values, so that we can confirm the
+// formatting of each one if they are individually changed.
+static constexpr const char* str_YAGL_plane =
+    "properties<Aircraft, 0x0023> // Action00\n"
+    "{\n"
+    "    // instance_id: 0x0023\n"
+    "    {\n"
+    // These properties are common to all four vehicle types.
+    "        introduction_date: date(1925/3/5);\n"
+    "        reliability_decay_speed: 18;\n"
+    "        vehicle_life_years: 36;\n"
+    "        model_life_years: 53;\n"
+    "        climate_availability: Temperate | Arctic | Tropical | Toyland;\n"
+    "        loading_speed: 0x27;\n"
+    "    }\n"
+    "}\n";
+
+// NFO matching the YAGL.
+static constexpr const char* str_NFO_plane =
+//    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+    "00 "             // Action00
+    "03 "             // Aircraft
+    "06 "             // 1x06 properties...
+    "01 "             // ... for 0x01 item
+    "FF 23 00 "       // First ID 0x23 (extended byte)
+    "00 62 07 "       // introduction_date
+    "02 12 "          // reliability_decay_speed
+    "03 24 "          // vehicle_life_years
+    "04 35 "          // model_life_years
+    "06 0F "          // climate_availability
+    "07 27 ";         // loading_speed
+
+
 } // namespace {
 
 
 TEST_CASE("Action00Vehicles", "[features]")
 {
-    test_yagl<Action00Record, 0x00>(str_YAGL, str_NFO);
+    test_yagl<Action00Record, 0x00>(str_YAGL_ship,  str_NFO_ship);
+    test_yagl<Action00Record, 0x00>(str_YAGL_train, str_NFO_train);
+    test_yagl<Action00Record, 0x00>(str_YAGL_road,  str_NFO_road);
+    test_yagl<Action00Record, 0x00>(str_YAGL_plane, str_NFO_plane);
 }

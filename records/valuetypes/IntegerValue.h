@@ -18,15 +18,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "TokenStream.h"
+#include "IntegerDescriptor.h"
 #include <type_traits>
 #include <iostream>
 #include <cstdint>
 
 
-enum class UIntFormat2 { Hex, Decimal, Bool };
-
-
-template <typename T, bool EXT = false>
+template <typename T, bool EXT = false, UIntFormat FORMAT = UIntFormat::Hex>
 class UInt2
 {
 static_assert(std::is_integral_v<T> & std::is_unsigned_v<T>);    
@@ -43,7 +41,7 @@ public:
 
     void print(std::ostream& os, uint16_t indent) const
     {
-        os << to_string(m_value, UIntFormat::Hex);
+        os << to_string(m_value, FORMAT);
     }
 
     void parse(TokenStream& is)

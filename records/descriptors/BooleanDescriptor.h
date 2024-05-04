@@ -24,7 +24,7 @@ template <uint8_t TRUE, uint8_t FALSE>
 class BoolT
 {
 public:
-    void print(std::ostream& os) const
+    void print(std::ostream& os, uint16_t indent = 0) const
     {
         os << std::boolalpha << m_value;
     }

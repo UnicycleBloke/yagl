@@ -18,55 +18,75 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Vehicles.h"
-#include "IntegerDescriptor.h"
+#include "GRFLabel.h"
 #include "DateDescriptor.h"
+#include "YearDescriptor.h"
+#include "BooleanDescriptor.h"
+#include "IntegerValue.h"
+#include "PropertyMap.h"
+#include "Vector.h"
+#include "Array.h"
+#include "CargoAcceptanceDescriptor.h"
 #include "VisualEffect.h"
 
 
+using LongDateProperty     = Property<LongDate>;
+using ShortDateProperty    = Property<ShortDate>;
+using UInt32Property       = Property<UInt2<uint32_t>>;
+using UInt16Property       = Property<UInt2<uint16_t>>;
+using UInt8Property        = Property<UInt2<uint8_t>>;
+using UInt8ExtProperty     = Property<UInt2<uint16_t, true>>;
+using GRFLabelProperty     = Property<GRFLabel>;
+using GRFLabelListProperty = Property<Vector<GRFLabel>>;
+using Year8PairProperty    = Property<Array<Year8, 2>>;
+using Year16Property       = Property<Year16>;
+using UInt8x4Property      = Property<Array<UInt2<uint8_t>, 4>>;
+using UInt8ListProperty    = Property<Vector<UInt2<uint8_t>>>;
+using CargosProperty       = Property<Vector<UInt2<uint8_t>>>;
+using BoolProperty         = Property<Bool>;
+using BoolHeliProperty     = Property<BoolHeli>;
+using VisualEffectProperty = Property<VisualEffect>;
+using CargoListProperty    = Property<Vector<CargoAcceptance>>;
+
+
 class Action00RoadVehicles : public Action00Vehicles
+
 {
 public:
-    Action00RoadVehicles() : Action00Vehicles(FeatureType::RoadVehicles) {}
-
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
+    Action00RoadVehicles() : Action00Vehicles{FeatureType::RoadVehicles} {}
 
 private:
-    UInt8         m_05_roadtype_tramtype;
-    UInt8         m_08_speed_2_kmh{};
-    UInt8         m_09_running_cost_factor{};
-    UInt32        m_0A_running_cost_base{};
-    UInt8         m_0E_sprite_id{};
-    UInt8         m_0F_cargo_capacity{};
-    UInt8         m_10_cargo_type{};
-    UInt8         m_11_cost_factor{};
-    UInt8         m_12_sound_effect_type{};
-    UInt8         m_13_power_10_hp{};
-    UInt8         m_14_weight_quarter_tons{};
-    UInt8         m_15_speed_half_kmh{};
-    UInt32        m_16_refit_cargo_types{};
-    UInt8         m_17_callback_flags_mask{};
-    UInt8         m_18_coeff_of_tractive_effort{};
-    UInt8         m_19_coeff_of_air_drag{};
-    UInt8         m_1A_refit_cost{};
-    UInt8         m_1B_retire_vehicle_early{};
-    UInt8         m_1C_miscellaneous_flags{};
-    UInt16        m_1D_refittable_cargo_classes{};
-    UInt16        m_1E_non_refittable_cargo_classes{};
-    LongDate      m_1F_long_introduction_date{};
-    UInt8Ext      m_20_sort_purchase_list{};
-    VisualEffect  m_21_visual_effect{};
-    UInt16        m_22_custom_cargo_aging_period{};
-    UInt8         m_23_shorten_vehicle{};
-    CargoList     m_24_always_refittable_cargos{};
-    CargoList     m_25_never_refittable_cargos{};
-    UInt16        m_26_variant_group{};
-    UInt32        m_27_extra_flags{};
-    UInt8         m_28_extra_callback_flags_mask{};
+    UInt8Property         m_prop_05{m_properties, 0x05, "roadtype_tramtype"};
+    UInt8Property         m_prop_08{m_properties, 0x08, "speed_2_kmh"};
+    UInt8Property         m_prop_09{m_properties, 0x09, "running_cost_factor"};
+    UInt32Property        m_prop_0A{m_properties, 0x0A, "running_cost_base"};
+    UInt8Property         m_prop_0E{m_properties, 0x0E, "sprite_id"};
+    UInt8Property         m_prop_0F{m_properties, 0x0F, "cargo_capacity"};
+    UInt8Property         m_prop_10{m_properties, 0x10, "cargo_type"};
+    UInt8Property         m_prop_11{m_properties, 0x11, "cost_factor"};
+    UInt8Property         m_prop_12{m_properties, 0x12, "sound_effect_type"};
+    UInt8Property         m_prop_13{m_properties, 0x13, "power_10_hp"};
+    UInt8Property         m_prop_14{m_properties, 0x14, "weight_quarter_tons"};
+    UInt8Property         m_prop_15{m_properties, 0x15, "speed_half_kmh"};
+    UInt32Property        m_prop_16{m_properties, 0x16, "refit_cargo_types"};
+    UInt8Property         m_prop_17{m_properties, 0x17, "callback_flags_mask"};
+    UInt8Property         m_prop_18{m_properties, 0x18, "coeff_of_tractive_effort"};
+    UInt8Property         m_prop_19{m_properties, 0x19, "coeff_of_air_drag"};
+    UInt8Property         m_prop_1A{m_properties, 0x1A, "refit_cost"};
+    UInt8Property         m_prop_1B{m_properties, 0x1B, "retire_vehicle_early"};
+    UInt8Property         m_prop_1C{m_properties, 0x1C, "miscellaneous_flags"};
+    UInt16Property        m_prop_1D{m_properties, 0x1D, "refittable_cargo_classes"};
+    UInt16Property        m_prop_1E{m_properties, 0x1E, "non_refittable_cargo_classes"};
+    LongDateProperty      m_prop_1F{m_properties, 0x1F, "long_introduction_date"};
+    UInt8ExtProperty      m_prop_20{m_properties, 0x20, "sort_purchase_list"};
+    VisualEffectProperty  m_prop_21{m_properties, 0x21, "visual_effect"};
+    UInt16Property        m_prop_22{m_properties, 0x22, "custom_cargo_aging_period"};
+    UInt8Property         m_prop_23{m_properties, 0x23, "shorten_vehicle"};
+    UInt8ListProperty     m_prop_24{m_properties, 0x24, "always_refittable_cargos"};
+    UInt8ListProperty     m_prop_25{m_properties, 0x25, "never_refittable_cargos"};
+    UInt16Property        m_prop_26{m_properties, 0x26, "variant_group"};
+    UInt32Property        m_prop_27{m_properties, 0x27, "extra_flags"};
+    UInt8Property         m_prop_28{m_properties, 0x28, "extra_callback_flags_mask"};
 };
 
 

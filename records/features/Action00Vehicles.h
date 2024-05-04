@@ -18,8 +18,22 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "StreamHelpers.h"
+#include "GRFLabel.h"
 #include "DateDescriptor.h"
+#include "YearDescriptor.h"
+#include "BooleanDescriptor.h"
+#include "IntegerValue.h"
+#include "BitfieldValue.h"
+#include "PropertyMap.h"
+#include "Vector.h"
+#include "Array.h"
+#include "CargoAcceptanceDescriptor.h"
+
+
+using ShortDateProperty    = Property<ShortDate>;
+using UInt8Property        = Property<UInt2<uint8_t>>;
+using UInt8PropertyDec     = Property<UInt2<uint8_t, false, UIntFormat::Dec>>;
+using Bit8Property         = Property<BitfieldValue<uint8_t>>;
 
 
 class Action00Vehicles : public Action00Feature
@@ -27,18 +41,13 @@ class Action00Vehicles : public Action00Feature
 public:
     Action00Vehicles(FeatureType feature) : Action00Feature(feature) {}
 
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
 private:
-    ShortDate m_00_introduction_date{};
-    UInt8     m_02_reliability_decay_speed{};
-    UInt8     m_03_vehicle_life_years{};
-    UInt8     m_04_model_life_years{};
-    UInt8     m_06_climate_availability{};
-    UInt8     m_07_loading_speed{};
+    std::vector<BitfieldItem> m_climates{ {0, "Temperate"}, {1, "Arctic"}, {2, "Tropical"}, {3, "Toyland"} };
+
+    ShortDateProperty m_prop_00{m_properties, 0x00, "introduction_date"};
+    UInt8PropertyDec  m_prop_02{m_properties, 0x02, "reliability_decay_speed"};
+    UInt8PropertyDec  m_prop_03{m_properties, 0x03, "vehicle_life_years"};
+    UInt8PropertyDec  m_prop_04{m_properties, 0x04, "model_life_years"};
+    Bit8Property      m_prop_06{m_properties, 0x06, "climate_availability", m_climates};
+    UInt8Property     m_prop_07{m_properties, 0x07, "loading_speed"};
 };

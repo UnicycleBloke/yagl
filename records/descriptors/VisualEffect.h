@@ -44,7 +44,7 @@ public:
 public:
     void read(std::istream& is);
     void write(std::ostream& os) const;
-    void print(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent = 0) const;
     void parse(TokenStream& is);
 
 private:

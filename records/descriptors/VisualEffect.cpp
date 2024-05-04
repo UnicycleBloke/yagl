@@ -80,7 +80,7 @@ void VisualEffect::write(std::ostream& os) const
 }
 
 
-void VisualEffect::print(std::ostream& os) const
+void VisualEffect::print(std::ostream& os, uint16_t indent) const
 {
     os << str_effect << "(";
     os << desc_effect.value(m_effect) << ", ";

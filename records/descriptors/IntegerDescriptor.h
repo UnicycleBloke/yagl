@@ -25,7 +25,7 @@ enum class UIntFormat { Dec, Hex, Bool };
 
 
 template <typename T>
-std::string to_string(T value, UIntFormat format = UIntFormat::Hex)
+std::string to_string(T value, UIntFormat format = UIntFormat::H)
 {
     char buffer[24];
     switch (format)

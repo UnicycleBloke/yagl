@@ -86,11 +86,11 @@ add_library(yagl_lib STATIC
     records/descriptors/VisualEffect.cpp
 
     # Handle properties for each different kind of feature (Action00).
-    records/features/Action00Vehicles.cpp
-    records/features/Action00Trains.cpp
-    records/features/Action00RoadVehicles.cpp
-    records/features/Action00Ships.cpp
-    records/features/Action00Aircraft.cpp
+    #records/features/Action00Vehicles.cpp
+    #records/features/Action00Trains.cpp
+    #records/features/Action00RoadVehicles.cpp
+    #records/features/Action00Ships.cpp
+    #records/features/Action00Aircraft.cpp
     records/features/Action00Stations.cpp
     #records/features/Action00Canals.cpp
     records/features/Action00Bridges.cpp

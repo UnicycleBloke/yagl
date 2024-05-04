@@ -18,47 +18,64 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Vehicles.h"
+#include "GRFLabel.h"
+#include "DateDescriptor.h"
+#include "YearDescriptor.h"
 #include "BooleanDescriptor.h"
-#include "IntegerDescriptor.h"
+#include "IntegerValue.h"
+#include "PropertyMap.h"
+#include "Vector.h"
+#include "Array.h"
+#include "CargoAcceptanceDescriptor.h"
+
+
+using LongDateProperty     = Property<LongDate>;
+using ShortDateProperty    = Property<ShortDate>;
+using UInt32Property       = Property<UInt2<uint32_t>>;
+using UInt16Property       = Property<UInt2<uint16_t>>;
+using UInt8Property        = Property<UInt2<uint8_t>>;
+using UInt8ExtProperty     = Property<UInt2<uint16_t, true>>;
+using GRFLabelProperty     = Property<GRFLabel>;
+using GRFLabelListProperty = Property<Vector<GRFLabel>>;
+using Year8PairProperty    = Property<Array<Year8, 2>>;
+using Year16Property       = Property<Year16>;
+using UInt8x4Property      = Property<Array<UInt2<uint8_t>, 4>>;
+using UInt8ListProperty    = Property<Vector<UInt2<uint8_t>>>;
+using CargosProperty       = Property<Vector<UInt2<uint8_t>>>;
+using BoolProperty         = Property<Bool>;
+using BoolHeliProperty     = Property<BoolHeli>;
 
 
 class Action00Aircraft : public Action00Vehicles
 {
 public:
-    Action00Aircraft() : Action00Vehicles(FeatureType::Aircraft) {}
-
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
+    Action00Aircraft() : Action00Vehicles{FeatureType::Aircraft} {}
 
 private:
-    UInt8     m_08_sprite_id{};
-    BoolHeli  m_09_is_helicopter{};
-    Bool      m_0A_is_large{};
-    UInt8     m_0B_cost_factor{};
-    UInt8     m_0C_speed_8_mph{};
-    UInt8     m_0D_acceleration{};
-    UInt8     m_0E_running_cost_factor{};
-    UInt16    m_0F_passenger_capacity{};
-    UInt8     m_11_mail_capacity{};
-    UInt8     m_12_sound_effect_type{};
-    UInt32    m_13_refit_cargo_types{};   // GRFv >= 6
-    UInt8     m_14_callback_flags_mask{}; // GRFv >= 6
-    UInt8     m_15_refit_cost{};
-    UInt8     m_16_retire_vehicle_early{};
-    UInt8     m_17_miscellaneous_flags{};
-    UInt16    m_18_refittable_cargo_classes{};
-    UInt16    m_19_non_refittable_cargo_classes{};
-    LongDate  m_1A_long_introduction_date{};
-    UInt8Ext  m_1B_sort_purchase_list{};
-    UInt16    m_1C_custom_cargo_aging_period{};
-    CargoList m_1D_always_refittable_cargos{};
-    CargoList m_1E_never_refittable_cargos{};
-    UInt16    m_1F_aircraft_range{};
-    UInt16    m_20_variant_group{};
-    UInt32    m_21_extra_flags{};
-    UInt8     m_22_extra_callback_flags_mask{};
+    UInt8Property     m_prop_08{m_properties, 0x08, "sprite_id"};
+    BoolHeliProperty  m_prop_09{m_properties, 0x09, "is_helicopter"};
+    BoolProperty      m_prop_0A{m_properties, 0x0A, "is_large"};
+    UInt8Property     m_prop_0B{m_properties, 0x0B, "cost_factor"};
+    UInt8Property     m_prop_0C{m_properties, 0x0C, "speed_8_mph"};
+    UInt8Property     m_prop_0D{m_properties, 0x0D, "acceleration"};
+    UInt8Property     m_prop_0E{m_properties, 0x0E, "running_cost_factor"};
+    UInt16Property    m_prop_0F{m_properties, 0x0F, "passenger_capacity"};
+    UInt8Property     m_prop_11{m_properties, 0x11, "mail_capacity"};
+    UInt8Property     m_prop_12{m_properties, 0x12, "sound_effect_type"};
+    UInt32Property    m_prop_13{m_properties, 0x13, "refit_cargo_types"};   // GRFv >= 6
+    UInt8Property     m_prop_14{m_properties, 0x14, "callback_flags_mask"}; // GRFv >= 6
+    UInt8Property     m_prop_15{m_properties, 0x15, "refit_cost"};
+    UInt8Property     m_prop_16{m_properties, 0x16, "retire_vehicle_early"};
+    UInt8Property     m_prop_17{m_properties, 0x17, "miscellaneous_flags"};
+    UInt16Property    m_prop_18{m_properties, 0x18, "refittable_cargo_classes"};
+    UInt16Property    m_prop_19{m_properties, 0x19, "non_refittable_cargo_classes"};
+    LongDateProperty  m_prop_1A{m_properties, 0x1A, "long_introduction_date"};
+    UInt8ExtProperty  m_prop_1B{m_properties, 0x1B, "sort_purchase_list"};
+    UInt16Property    m_prop_1C{m_properties, 0x1C, "custom_cargo_aging_period"};
+    CargosProperty    m_prop_1D{m_properties, 0x1D, "always_refittable_cargos"};
+    CargosProperty    m_prop_1E{m_properties, 0x1E, "never_refittable_cargos"};
+    UInt16Property    m_prop_1F{m_properties, 0x1F, "aircraft_range"};
+    UInt16Property    m_prop_20{m_properties, 0x20, "variant_group"};
+    UInt32Property    m_prop_21{m_properties, 0x21, "extra_flags"};
+    UInt8Property     m_prop_22{m_properties, 0x22, "extra_callback_flags_mask"};
 };

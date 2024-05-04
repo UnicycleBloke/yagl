@@ -51,7 +51,7 @@ public:
         write_uint<T>(os, m_value);
     }
 
-    void print(std::ostream& os, uint16_t indent) const
+    void print(std::ostream& os, uint16_t indent = 0) const
     {
         if (m_value == 0)
         {

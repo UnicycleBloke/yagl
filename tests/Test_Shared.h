@@ -154,3 +154,4 @@ void test_container(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT =
     //action2.print(os, sprites, 0);
     //CHECK(os.str() == YAGL_OUT);
 }
+
