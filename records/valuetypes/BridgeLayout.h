@@ -17,30 +17,13 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DescriptorBase.h"
+#include "TokenStream.h"
 #include <vector>
+#include <array>
+#include <iostream>
 
 
-class IndustryTile
-{
-public:
-    enum class Type { OldTile, NewTile, Clearance };
-
-public:
-    bool read(std::istream& is);
-    void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent) const;
-    void parse(TokenStream& is);
-
-private:
-    int8_t   m_x_off;  // 0x00 is terminator part 1
-    int8_t   m_y_off;  // 0x80 is terminator part 2
-    Type     m_type;
-    uint16_t m_tile;
-};
-
-
-struct IndustryLayout
+class BridgeTable
 {
 public:
     void read(std::istream& is);
@@ -49,20 +32,11 @@ public:
     void parse(TokenStream& is);
 
 private:
-    // The layout is a reference is the first byte is 0xFE.
-    bool m_is_reference;
-
-    // These are used if this layout is a reference to another
-    // industry layout, in which case there are zero tiles.
-    uint8_t m_industry_num;
-    uint8_t m_layout_num;
-
-    // List of tiles when this is not a reference to another layout.
-    std::vector<IndustryTile> m_tiles;
+    std::array<uint32_t, 32> m_sprites;
 };
 
 
-struct IndustryLayouts
+class BridgeLayout
 {
 public:
     void read(std::istream& is);
@@ -71,9 +45,6 @@ public:
     void parse(TokenStream& is);
 
 private:
-    std::vector<IndustryLayout> m_layouts;
+    uint8_t                  m_first_table_id{};
+    std::vector<BridgeTable> m_tables;
 };
-
-
-using IndustryLayoutsDescriptor = GenericDescriptor<IndustryLayouts, true>;
-

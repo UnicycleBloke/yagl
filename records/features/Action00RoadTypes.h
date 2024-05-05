@@ -26,8 +26,6 @@
 
 
 using LongDateProperty     = Property<LongDate>;
-using UInt16Property       = Property<UInt2<uint16_t>>;
-using UInt8Property        = Property<UInt2<uint8_t>>;
 using GRFLabelProperty     = Property<GRFLabel>;
 using GRFLabelListProperty = Property<Vector<GRFLabel>>;
 

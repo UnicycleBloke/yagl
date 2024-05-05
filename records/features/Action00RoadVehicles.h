@@ -32,17 +32,11 @@
 
 using LongDateProperty     = Property<LongDate>;
 using ShortDateProperty    = Property<ShortDate>;
-using UInt32Property       = Property<UInt2<uint32_t>>;
-using UInt16Property       = Property<UInt2<uint16_t>>;
-using UInt8Property        = Property<UInt2<uint8_t>>;
-using UInt8ExtProperty     = Property<UInt2<uint16_t, true>>;
 using GRFLabelProperty     = Property<GRFLabel>;
 using GRFLabelListProperty = Property<Vector<GRFLabel>>;
 using Year8PairProperty    = Property<Array<Year8, 2>>;
 using Year16Property       = Property<Year16>;
-using UInt8x4Property      = Property<Array<UInt2<uint8_t>, 4>>;
-using UInt8ListProperty    = Property<Vector<UInt2<uint8_t>>>;
-using CargosProperty       = Property<Vector<UInt2<uint8_t>>>;
+using CargosProperty       = UInt8ListProperty;
 using BoolProperty         = Property<Bool>;
 using BoolHeliProperty     = Property<BoolHeli>;
 using VisualEffectProperty = Property<VisualEffect>;
@@ -78,7 +72,7 @@ private:
     UInt16Property        m_prop_1D{m_properties, 0x1D, "refittable_cargo_classes"};
     UInt16Property        m_prop_1E{m_properties, 0x1E, "non_refittable_cargo_classes"};
     LongDateProperty      m_prop_1F{m_properties, 0x1F, "long_introduction_date"};
-    UInt8ExtProperty      m_prop_20{m_properties, 0x20, "sort_purchase_list"};
+    UInt8XProperty        m_prop_20{m_properties, 0x20, "sort_purchase_list"};
     VisualEffectProperty  m_prop_21{m_properties, 0x21, "visual_effect"};
     UInt16Property        m_prop_22{m_properties, 0x22, "custom_cargo_aging_period"};
     UInt8Property         m_prop_23{m_properties, 0x23, "shorten_vehicle"};

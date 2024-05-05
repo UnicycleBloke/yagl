@@ -32,24 +32,17 @@
 
 using LongDateProperty     = Property<LongDate>;
 using ShortDateProperty    = Property<ShortDate>;
-using UInt32Property       = Property<UInt2<uint32_t>>;
-using UInt16Property       = Property<UInt2<uint16_t>>;
-using UInt8Property        = Property<UInt2<uint8_t>>;
-using UInt8ExtProperty     = Property<UInt2<uint16_t, true>>;
 using GRFLabelProperty     = Property<GRFLabel>;
 using GRFLabelListProperty = Property<Vector<GRFLabel>>;
 using Year8PairProperty    = Property<Array<Year8, 2>>;
 using Year16Property       = Property<Year16>;
-using UInt8x4Property      = Property<Array<UInt2<uint8_t>, 4>>;
-using UInt8ListProperty    = Property<Vector<UInt2<uint8_t>>>;
-using CargosProperty       = Property<Vector<UInt2<uint8_t>>>;
 using BoolProperty         = Property<Bool>;
 using BoolHeliProperty     = Property<BoolHeli>;
 using VisualEffectProperty = Property<VisualEffect>;
 using CargoListProperty    = Property<Vector<CargoAcceptance>>;
 
-using UInt8PropertyDec     = Property<UInt2<uint8_t, false, UIntFormat::Dec>>;
-using UInt16PropertyDec    = Property<UInt2<uint16_t, false, UIntFormat::Dec>>;
+using UInt8PropertyDec     = Property<UIntNew<uint8_t, false, UIntFormat::Dec>>;
+using UInt16PropertyDec    = Property<UIntNew<uint16_t, false, UIntFormat::Dec>>;
 
 
 class Action00Trains : public Action00Vehicles
@@ -72,7 +65,7 @@ private:
     UInt8Property        m_prop_17{m_properties, 0x17, "cost_factor"};
     UInt8Property        m_prop_18{m_properties, 0x18, "ai_engine_rank"};
     UInt8Property        m_prop_19{m_properties, 0x19, "engine_traction_type"};
-    UInt8ExtProperty     m_prop_1A{m_properties, 0x1A, "sort_purchase_list"};
+    UInt8XProperty       m_prop_1A{m_properties, 0x1A, "sort_purchase_list"};
     UInt16Property       m_prop_1B{m_properties, 0x1B, "power_from_each_wagon"};
     UInt8Property        m_prop_1C{m_properties, 0x1C, "refit_cost"};
     UInt32Property       m_prop_1D{m_properties, 0x1D, "refit_cargo_types"};

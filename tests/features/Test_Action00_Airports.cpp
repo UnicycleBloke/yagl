@@ -32,7 +32,7 @@ static constexpr const char* str_YAGL =
     "    {\n"
     "        airport_override_id: 0x12;\n"
     "        airport_layouts: \n"
-    "        {\n"
+    "        [\n"
     "            layout<North>\n"
     "            {\n"
     "                old_tile(-1, -3, 0x0035);\n" // Only 8 bits
@@ -45,7 +45,7 @@ static constexpr const char* str_YAGL =
     "                new_tile(5, -3, 0x2341);\n"
     "                clearance(2, 3);\n"
     "            }\n"
-    "        };\n"
+    "        ];\n"
     "        years_available: [ 1900 1950 ];\n"
     "        compatible_ttd_airport: 0x12;\n"
     "        catchment_area: 0x09;\n"

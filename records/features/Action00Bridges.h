@@ -21,46 +21,14 @@
 #include "IntegerValue.h"
 #include "YearDescriptor.h"
 #include "PropertyMap.h"
-// #include "IntegerDescriptor.h"
-// #include "StreamHelpers.h"
+#include "BridgeLayout.h"
 #include <vector>
 #include <array>
 
 
-using UInt16Property = Property<UInt2<uint16_t>>;
-using UInt8Property  = Property<UInt2<uint8_t>>;
 using Year8Property  = Property<Year8>;
 using Year16Property = Property<Year16>;
 using Year32Property = Property<Year32>;
-
-
-class BridgeTable
-{
-public:
-    void read(std::istream& is);
-    void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent) const;
-    void parse(TokenStream& is);
-
-private:
-    std::array<uint32_t, 32> m_sprites;
-};
-
-
-class BridgeLayout
-{
-public:
-    void read(std::istream& is);
-    void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent) const;
-    void parse(TokenStream& is);
-
-private:
-    uint8_t                  m_first_table_id{};
-    std::vector<BridgeTable> m_tables;
-};
-
-
 using BridgeLayoutProperty = Property<BridgeLayout>;
 
 

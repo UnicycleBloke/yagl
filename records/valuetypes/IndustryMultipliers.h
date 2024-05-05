@@ -17,22 +17,22 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Action00Feature.h"
-#include "IntegerValue.h"
-#include "PropertyMap.h"
+#include "TokenStream.h"
+#include <iostream>
+#include <vector>
+#include <cstdint>
 
 
-class Action00SoundEffects : public Action00Feature
+class IndustryMultipliers
 {
 public:
-    Action00SoundEffects() : Action00Feature{FeatureType::SoundEffects} {}
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent = 0) const;
+    void parse(TokenStream& is);
 
 private:
-    // These are properties of the sound effect defined in Action11 with the matching instance ID.
-    // Seems a bit convoluted, but I think I get it.
-    UInt8Property m_prop_08{m_properties, 0x08, "relative_volume"};
-    UInt8Property m_prop_09{m_properties, 0x09, "priority"};
-    UInt8Property m_prop_0A{m_properties, 0x0A, "override_old_sound"};
+    uint8_t               m_num_inputs{};
+    uint8_t               m_num_outputs{};
+    std::vector<uint16_t> m_items;
 };
-
-

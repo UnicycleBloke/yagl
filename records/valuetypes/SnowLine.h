@@ -17,22 +17,23 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Action00Feature.h"
-#include "IntegerValue.h"
-#include "PropertyMap.h"
+#include "TokenStream.h"
+#include <array>
+#include <iostream>
+#include <cstdint>
 
 
-class Action00SoundEffects : public Action00Feature
+class SnowLine
 {
 public:
-    Action00SoundEffects() : Action00Feature{FeatureType::SoundEffects} {}
+    // Binary serialisation
+    void read(std::istream& is);
+    void write(std::ostream& os) const;
+    // Text serialisation
+    void print(std::ostream& os, uint16_t indent) const;
+    void parse(TokenStream& is);
 
 private:
-    // These are properties of the sound effect defined in Action11 with the matching instance ID.
-    // Seems a bit convoluted, but I think I get it.
-    UInt8Property m_prop_08{m_properties, 0x08, "relative_volume"};
-    UInt8Property m_prop_09{m_properties, 0x09, "priority"};
-    UInt8Property m_prop_0A{m_properties, 0x0A, "override_old_sound"};
+    static constexpr uint32_t SNOW_LINE_SIZE = 32U * 12U;
+    std::array<uint8_t, SNOW_LINE_SIZE> m_snow_heights;
 };
-
-

@@ -20,8 +20,12 @@
 #include "Action00Feature.h"
 #include "IntegerDescriptor.h"
 #include "YearDescriptor.h"
-#include "AirportLayoutDescriptor.h"
+#include "AirportLayout.h"
 #include <vector>
+
+
+using AirportLayoutsProperty = Property<AirportLayouts>;
+using Year16PairProperty     = Property<Array<Year16, 2>>;
 
 
 class Action00Airports : public Action00Feature
@@ -29,22 +33,15 @@ class Action00Airports : public Action00Feature
 public:
     Action00Airports() : Action00Feature(FeatureType::Airports) {}
 
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
 private:
-    UInt8               m_08_airport_override_id{};
-    AirportLayouts      m_0A_airport_layouts{};
-    Year16Pair          m_0C_years_available{};
-    UInt8               m_0D_compatible_ttd_airport{};
-    UInt8               m_0E_catchment_area{};
-    UInt8               m_0F_noise_level{};
-    UInt16              m_10_airport_name_id{};
-    UInt16              m_11_maintenance_cost_factor{};
+    UInt8Property          m_prop_08{m_properties, 0x08, "airport_override_id"};
+    AirportLayoutsProperty m_prop_0A{m_properties, 0x0A, "airport_layouts"};
+    Year16PairProperty     m_prop_0C{m_properties, 0x0C, "years_available"};
+    UInt8Property          m_prop_0D{m_properties, 0x0D, "compatible_ttd_airport"};
+    UInt8Property          m_prop_0E{m_properties, 0x0E, "catchment_area"};
+    UInt8Property          m_prop_0F{m_properties, 0x0F, "noise_level"};
+    UInt16Property         m_prop_10{m_properties, 0x10, "airport_name_id"};
+    UInt16Property         m_prop_11{m_properties, 0x11, "maintenance_cost_factor"};
 };
 
 

@@ -22,31 +22,27 @@
 #include "CargoAcceptanceDescriptor.h"
 
 
+using CargoListProperty = Property<Vector<CargoAcceptance>>;
+
+
 class Action00IndustryTiles : public Action00Feature
 {
 public:
     Action00IndustryTiles() : Action00Feature(FeatureType::IndustryTiles) {}
 
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
-
 private:
-    UInt8               m_08_substitute_building_id{};
-    UInt8               m_09_industry_tile_override{};
-    UInt16              m_0A_tile_acceptance1{};
-    UInt16              m_0B_tile_acceptance2{};
-    UInt16              m_0C_tile_acceptance3{};
-    UInt8               m_0D_land_shape_flags{};
-    UInt8               m_0E_callback_flags{};
-    UInt16              m_0F_animation_info{};
-    UInt8               m_10_animation_speed{};
-    UInt8               m_11_callback_25_triggers{};
-    UInt8               m_12_special_flags{};
-    CargoAcceptanceList m_13_cargo_acceptance_list{};
+    UInt8Property     m_prop_08{m_properties, 0x08, "substitute_building_id"};
+    UInt8Property     m_prop_09{m_properties, 0x09, "industry_tile_override"};
+    UInt16Property    m_prop_0A{m_properties, 0x0A, "tile_acceptance1"};
+    UInt16Property    m_prop_0B{m_properties, 0x0B, "tile_acceptance2"};
+    UInt16Property    m_prop_0C{m_properties, 0x0C, "tile_acceptance3"};
+    UInt8Property     m_prop_0D{m_properties, 0x0D, "land_shape_flags"};
+    UInt8Property     m_prop_0E{m_properties, 0x0E, "callback_flags"};
+    UInt16Property    m_prop_0F{m_properties, 0x0F, "animation_info"};
+    UInt8Property     m_prop_10{m_properties, 0x10, "animation_speed"};
+    UInt8Property     m_prop_11{m_properties, 0x11, "callback_25_triggers"};
+    UInt8Property     m_prop_12{m_properties, 0x12, "special_flags"};
+    CargoListProperty m_prop_13{m_properties, 0x13, "cargo_acceptance_list"};
 };
 
 

@@ -18,72 +18,57 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "IntegerDescriptor.h"
-#include "IndustryLayoutDescriptor.h"
-#include <vector>
+#include "IndustryMultipliers.h"
+#include "IndustryLayout.h"
+#include "IntegerValue.h"
+#include "PropertyMap.h"
+#include "Vector.h"
+#include "Array.h"
 
 
-class Multipliers
-{
-public:
-    void read(std::istream& is);
-    void write(std::ostream& os) const;
-    void print(std::ostream& os) const;
-    void parse(TokenStream& is);
-
-private:
-    uint8_t               m_num_inputs{};
-    uint8_t               m_num_outputs{};
-    std::vector<uint16_t> m_items;
-};
+using IndustryLayoutsProperty = Property<IndustryLayouts>;
+using MultipliersProperty     = Property<IndustryMultipliers>;
 
 
 class Action00Industries : public Action00Feature
 {
 public:
-    Action00Industries() : Action00Feature(FeatureType::Industries) {}
-
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
+    Action00Industries() : Action00Feature{FeatureType::Industries} {}
 
 private:
-    UInt8                  m_08_substitute_industry_id{};
-    UInt8                  m_09_industry_type_override{};
-    IndustryLayouts        m_0A_industry_layout{};
-    UInt8                  m_0B_production_flags{};
-    UInt16                 m_0C_closure_msg_id{};
-    UInt16                 m_0D_production_up_id{};
-    UInt16                 m_0E_production_down_id{};
-    UInt8                  m_0F_fund_cost_multiplier{};
-    UIntArray<UInt8, 2>    m_10_production_cargo_types{};
-    UIntArray<UInt8, 4>    m_11_acceptance_cargo_types{};
-    UInt8                  m_12_production_multipliers_1{};
-    UInt8                  m_13_production_multipliers_2{};
-    UInt8                  m_14_minimum_distributed{};
-    UIntVector<UInt8>      m_15_sound_effects{};
-    UIntArray<UInt8, 3>    m_16_conflicting_industries{};
-    UInt8                  m_17_random_probability{};
-    UInt8                  m_18_gameplay_probability{};
-    UInt8                  m_19_map_colour{};
-    UInt32                 m_1A_special_flags{};
-    UInt16                 m_1B_new_industry_text_id{};
-    UInt32                 m_1C_input_multipliers1{};
-    UInt32                 m_1D_input_multipliers2{};
-    UInt32                 m_1E_input_multipliers3{};
-    UInt16                 m_1F_industry_name_id{};
-    UInt32                 m_20_prospecting_probability{};
-    UInt8                  m_21_callback_flags_1{};
-    UInt8                  m_22_callback_flags_2{};
-    UInt32                 m_23_destruction_cost_multiplier{};
-    UInt16                 m_24_nearby_station_text_id{};
-    UIntVector<UInt8>      m_25_production_cargo_list{};
-    UIntVector<UInt8>      m_26_acceptance_cargo_list{};
-    UIntVector<UInt8>      m_27_production_multipliers{};
-    Multipliers            m_28_input_cargo_multipliers{};
+    UInt8Property           m_prop_08{m_properties, 0x08, "substitute_industry_id"};
+    UInt8Property           m_prop_09{m_properties, 0x09, "industry_type_override"};
+    IndustryLayoutsProperty m_prop_0A{m_properties, 0x0A, "industry_layout"};
+    UInt8Property           m_prop_0B{m_properties, 0x0B, "production_flags"};
+    UInt16Property          m_prop_0C{m_properties, 0x0C, "closure_msg_id"};
+    UInt16Property          m_prop_0D{m_properties, 0x0D, "production_up_id"};
+    UInt16Property          m_prop_0E{m_properties, 0x0E, "production_down_id"};
+    UInt8Property           m_prop_0F{m_properties, 0x0F, "fund_cost_multiplier"};
+    UInt8ArrayProperty<2>   m_prop_10{m_properties, 0x10, "production_cargo_types"};
+    UInt8ArrayProperty<4>   m_prop_11{m_properties, 0x11, "acceptance_cargo_types"};
+    UInt8Property           m_prop_12{m_properties, 0x12, "production_multipliers_1"};
+    UInt8Property           m_prop_13{m_properties, 0x13, "production_multipliers_2"};
+    UInt8Property           m_prop_14{m_properties, 0x14, "minimum_distributed"};
+    UInt8ListProperty       m_prop_15{m_properties, 0x15, "sound_effects"};
+    UInt8ArrayProperty<3>   m_prop_16{m_properties, 0x16, "conflicting_industries"};
+    UInt8Property           m_prop_17{m_properties, 0x17, "random_probability"};
+    UInt8Property           m_prop_18{m_properties, 0x18, "gameplay_probability"};
+    UInt8Property           m_prop_19{m_properties, 0x19, "map_colour"};
+    UInt32Property          m_prop_1A{m_properties, 0x1A, "special_flags"};
+    UInt16Property          m_prop_1B{m_properties, 0x1B, "new_industry_text_id"};
+    UInt32Property          m_prop_1C{m_properties, 0x1C, "input_multipliers1"};
+    UInt32Property          m_prop_1D{m_properties, 0x1D, "input_multipliers2"};
+    UInt32Property          m_prop_1E{m_properties, 0x1E, "input_multipliers3"};
+    UInt16Property          m_prop_1F{m_properties, 0x1F, "industry_name_id"};
+    UInt32Property          m_prop_20{m_properties, 0x20, "prospecting_probability"};
+    UInt8Property           m_prop_21{m_properties, 0x21, "callback_flags_1"};
+    UInt8Property           m_prop_22{m_properties, 0x22, "callback_flags_2"};
+    UInt32Property          m_prop_23{m_properties, 0x23, "destruction_cost_multiplier"};
+    UInt16Property          m_prop_24{m_properties, 0x24, "nearby_station_text_id"};
+    UInt8ListProperty       m_prop_25{m_properties, 0x25, "production_cargo_list"};
+    UInt8ListProperty       m_prop_26{m_properties, 0x26, "acceptance_cargo_list"};
+    UInt8ListProperty       m_prop_27{m_properties, 0x27, "production_multipliers"};
+    MultipliersProperty     m_prop_28{m_properties, 0x28, "input_cargo_multipliers"};
 };
 
 

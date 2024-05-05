@@ -24,22 +24,21 @@
 class Action00AirportTiles : public Action00Feature
 {
 public:
-    Action00AirportTiles() : Action00Feature(FeatureType::AirportTiles) {}
-
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
+    Action00AirportTiles() : Action00Feature{FeatureType::AirportTiles} {}
 
 private:
-    UInt8   m_08_substitute_tile_id{};
-    UInt8   m_09_aiport_tile_override{};
-    UInt8   m_0E_callback_flags{};
-    UInt16  m_0F_animation_info{};
-    UInt8   m_10_animation_speed{};
-    UInt8   m_11_animation_triggers{};
+    UInt8Property   m_prop_08{m_properties, 0x08, "substitute_tile_id"};
+    UInt8Property   m_prop_09{m_properties, 0x09, "aiport_tile_override"};
+    UInt8Property   m_prop_0E{m_properties, 0x0E, "callback_flags"};
+    // The low byte specifies the number of animation frames minus one, so 00 means 1 frame,
+    // 01 means 2 frames etc. The maximum number of frames is 256, although you can have some
+    // problems if your animation exceeds FD (253) frames. The high byte must be 0 for
+    // on-looping animations and 01 for looping animations. Every other value is reserved for
+    // future use. In addition, if the whole word contains FFFF, animation is turned off for
+    // this tile (this is the default value).
+    UInt16Property  m_prop_0F{m_properties, 0x0F, "animation_info"};
+    UInt8Property   m_prop_10{m_properties, 0x10, "animation_speed"};
+    UInt8Property   m_prop_11{m_properties, 0x11, "animation_triggers"};
 };
 
 

@@ -26,40 +26,33 @@
 class Action00Cargos : public Action00Feature
 {
 public:
-    Action00Cargos() : Action00Feature(FeatureType::Cargos) {}
-
-    // Binary serialisation
-    bool read_property(std::istream& is, uint8_t property) override;
-    bool write_property(std::ostream& os, uint8_t property) const override;
-    // Text serialisation
-    bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const override;
-    bool parse_property(TokenStream& is, const std::string& name, uint8_t& index) override;
+    Action00Cargos() : Action00Feature{FeatureType::Cargos} {}
 
 private:
-    UInt8    m_08_bit_number{};
-    UInt16   m_09_cargo_type_name_id{};
-    UInt16   m_0A_single_unit_name_id{};
-    UInt16   m_0B_single_unit_id{};
-    UInt16   m_0C_multiple_units_id{};
-    UInt16   m_0D_cargo_type_abbrev_id{};
-    UInt16   m_0E_cargo_sprite_id{};
-    UInt8    m_0F_single_unit_weight{};
-    UInt8    m_10_penalty_time_1{};
-    UInt8    m_11_penalty_time_2{};
-    UInt32   m_12_base_price{};
-    UInt8    m_13_station_list_colour{};
-    UInt8    m_14_payment_list_colour{};
-    Bool     m_15_is_freight{};
-    UInt16   m_16_cargo_classes{};
-    GRFLabel m_17_cargo_label{};
-    UInt8    m_18_town_growth_effect{};
-    UInt16   m_19_town_growth_multiplier{};
-    UInt8    m_1A_callback_flags{};
-    UInt16   m_1B_cargo_units_id{};
-    UInt16   m_1C_cargo_amount_id{};
-    UInt16   m_1D_capacity_multiplier{};
-    UInt8    m_1E_town_production_effect{};
-    UInt16   m_1F_town_production_multiplier{};
+    UInt8Property    m_prop_08{m_properties, 0x08, "bit_number"};
+    UInt16Property   m_prop_09{m_properties, 0x09, "cargo_type_name_id"};
+    UInt16Property   m_prop_0A{m_properties, 0x0A, "single_unit_name_id"};
+    UInt16Property   m_prop_0B{m_properties, 0x0B, "single_unit_id"};
+    UInt16Property   m_prop_0C{m_properties, 0x0C, "multiple_units_id"};
+    UInt16Property   m_prop_0D{m_properties, 0x0D, "cargo_type_abbrev_id"};
+    UInt16Property   m_prop_0E{m_properties, 0x0E, "cargo_sprite_id"};
+    UInt8Property    m_prop_0F{m_properties, 0x0F, "single_unit_weight"};
+    UInt8Property    m_prop_10{m_properties, 0x10, "penalty_time_1"};
+    UInt8Property    m_prop_11{m_properties, 0x11, "penalty_time_2"};
+    UInt32Property   m_prop_12{m_properties, 0x12, "base_price"};
+    UInt8Property    m_prop_13{m_properties, 0x13, "station_list_colour"};
+    UInt8Property    m_prop_14{m_properties, 0x14, "payment_list_colour"};
+    BoolProperty     m_prop_15{m_properties, 0x15, "is_freight"};
+    UInt16Property   m_prop_16{m_properties, 0x16, "cargo_classes"};
+    GRFLabelProperty m_prop_17{m_properties, 0x17, "cargo_label"};
+    UInt8Property    m_prop_18{m_properties, 0x18, "town_growth_effect"};
+    UInt16Property   m_prop_19{m_properties, 0x19, "town_growth_multiplier"};
+    UInt8Property    m_prop_1A{m_properties, 0x1A, "callback_flags"};
+    UInt16Property   m_prop_1B{m_properties, 0x1B, "cargo_units_id"};
+    UInt16Property   m_prop_1C{m_properties, 0x1C, "cargo_amount_id"};
+    UInt16Property   m_prop_1D{m_properties, 0x1D, "capacity_multiplier"};
+    UInt8Property    m_prop_1E{m_properties, 0x1E, "town_production_effect"};
+    UInt16Property   m_prop_1F{m_properties, 0x1F, "town_production_multiplier"};
 };
 
 

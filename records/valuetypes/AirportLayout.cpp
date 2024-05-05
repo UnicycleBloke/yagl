@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#include "AirportLayoutDescriptor.h"
+#include "AirportLayout.h"
 #include "StreamHelpers.h"
 #include "EnumDescriptor.h"
 
@@ -260,27 +260,27 @@ void AirportLayouts::write(std::ostream& os) const
 
 void AirportLayouts::print(std::ostream& os, uint16_t indent) const
 {
-    os << "\n" << pad(indent) << "{\n";
+    os << "\n" << pad(indent) << "[\n";
     for (const auto& layout: layouts)
     {
         layout.print(os, indent + 4);
     }
 
-    os << pad(indent) << "}";
+    os << pad(indent) << "]";
 }
 
 
 void AirportLayouts::parse(TokenStream& is)
 {
-    is.match(TokenType::OpenBrace);
-    while (is.peek().type != TokenType::CloseBrace)
+    is.match(TokenType::OpenBracket);
+    while (is.peek().type != TokenType::CloseBracket)
     {
         AirportLayout layout;
         layout.parse(is);
         layouts.push_back(layout);
     }
 
-    is.match(TokenType::CloseBrace);
+    is.match(TokenType::CloseBracket);
 }
 
 

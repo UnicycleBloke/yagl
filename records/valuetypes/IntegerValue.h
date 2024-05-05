@@ -19,13 +19,16 @@
 #pragma once
 #include "TokenStream.h"
 #include "IntegerDescriptor.h"
+#include "Vector.h"
+#include "Array.h"
+#include "PropertyMap.h"
 #include <type_traits>
 #include <iostream>
 #include <cstdint>
 
 
 template <typename T, bool EXT = false, UIntFormat FORMAT = UIntFormat::Hex>
-class UInt2
+class UIntNew
 {
 static_assert(std::is_integral_v<T> & std::is_unsigned_v<T>);    
 public:
@@ -50,14 +53,14 @@ public:
     }
 
     // Work around for BitFieldDescriptor. For now.
-    UInt2(T value = 0) : m_value{value} {}
+    UIntNew(T value = 0) : m_value{value} {}
     operator T() const { return m_value; }
 
     T get() const     { return m_value; }
     void set(T value) { m_value = value; }
 
     // Only added for testing.
-    bool operator==(const UInt2& other) const
+    bool operator==(const UIntNew& other) const
     {
         return m_value == other.m_value;
     }
@@ -67,44 +70,22 @@ private:
 };
 
 
-// template <typename T, bool EXT = false>
-// class IntValue
-// {
-// static_assert(std::is_integral_v<T> & std::is_signed_v<T>);    
-// public:
-//     void read(std::istream& is)
-//     {
-//         m_value = read_int<T, EXT>(is);
-//     }
+using UInt8New  = UIntNew<uint8_t>;
+using UInt8XNew = UIntNew<uint16_t, true>;
+using UInt16New = UIntNew<uint16_t>;
+using UInt32New = UIntNew<uint32_t>;
 
-//     void write(std::ostream& os) const
-//     {
-//         write_int<T, EXT>(os, m_value);
-//     }
+using UInt8Property  = Property<UInt8New>;
+using UInt8XProperty = Property<UInt8XNew>;
+using UInt16Property = Property<UInt16New>;
+using UInt32Property = Property<UInt32New>;
 
-//     void print(std::ostream& os, UIntFormat format) const
-//     {
-//         os << to_string(m_value, format);
-//     }
+using UInt8ListProperty  = Property<Vector<UInt8New>>;
+using UInt8XListProperty = Property<Vector<UInt8XNew>>;
+using UInt16ListProperty = Property<Vector<UInt16New>>;
+using UInt32ListProperty = Property<Vector<UInt32New>>;
 
-//     void parse(TokenStream& is)
-//     {
-//         m_value = is.match_int<T>();
-//     }
-
-//     // Work around for BitFieldDescriptor. For now.
-//     UInt(T value = 0) : m_value{value} {}
-//     operator T() const { return m_value; }
-
-//     T get() const     { return m_value; }
-//     void set(T value) { m_value = value; }
-
-//     // Only added for testing.
-//     bool operator==(const UInt& other) const
-//     {
-//         return m_value == other.m_value;
-//     }
-
-// private:
-//     T m_value{};
-// };
+template <uint16_t Size> using UInt8ArrayProperty  = Property<Array<UInt8New,  Size>>;
+template <uint16_t Size> using UInt8XArrayProperty = Property<Array<UInt8XNew, Size>>;
+template <uint16_t Size> using UInt16ArrayProperty = Property<Array<UInt16New, Size>>;
+template <uint16_t Size> using UInt32ArrayProperty = Property<Array<UInt32New, Size>>;

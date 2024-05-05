@@ -31,8 +31,7 @@
 
 
 using ShortDateProperty    = Property<ShortDate>;
-using UInt8Property        = Property<UInt2<uint8_t>>;
-using UInt8PropertyDec     = Property<UInt2<uint8_t, false, UIntFormat::Dec>>;
+using UInt8PropertyDec     = Property<UIntNew<uint8_t, false, UIntFormat::Dec>>;
 using Bit8Property         = Property<BitfieldValue<uint8_t>>;
 
 

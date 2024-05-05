@@ -28,14 +28,10 @@
 
 
 using LongDateProperty     = Property<LongDate>;
-using UInt16Property       = Property<UInt2<uint16_t>>;
-using UInt8Property        = Property<UInt2<uint8_t>>;
 using GRFLabelProperty     = Property<GRFLabel>;
 using GRFLabelListProperty = Property<Vector<GRFLabel>>;
 using Year8PairProperty    = Property<Array<Year8, 2>>;
 using Year16Property       = Property<Year16>;
-using UInt8x4Property      = Property<Array<UInt2<uint8_t>, 4>>;
-using UInt8ListProperty    = Property<Vector<UInt2<uint8_t>>>;
 using CargoListProperty    = Property<Vector<CargoAcceptance>>;
 
 
@@ -60,14 +56,14 @@ private:
     UInt8Property         m_prop_14{m_properties, 0x14, "callback_flags"};
     UInt8Property         m_prop_15{m_properties, 0x15, "override_byte"};
     UInt8Property         m_prop_16{m_properties, 0x16, "refresh_multiplier"};
-    UInt8x4Property       m_prop_17{m_properties, 0x17, "four_random_colours"};
+    UInt8ArrayProperty<4> m_prop_17{m_properties, 0x17, "four_random_colours"};
     UInt8Property         m_prop_18{m_properties, 0x18, "appearance_probability"};
     UInt8Property         m_prop_19{m_properties, 0x19, "extra_flags"};
     UInt8Property         m_prop_1A{m_properties, 0x1A, "animation_frames"};
     UInt8Property         m_prop_1B{m_properties, 0x1B, "animation_speed"};
     UInt8Property         m_prop_1C{m_properties, 0x1C, "building_class"};
     UInt8Property         m_prop_1D{m_properties, 0x1D, "callback_flags_2"};
-    UInt8x4Property       m_prop_1E{m_properties, 0x1E, "accepted_cargo_types"};
+    UInt8ArrayProperty<4> m_prop_1E{m_properties, 0x1E, "accepted_cargo_types"};
     UInt16Property        m_prop_1F{m_properties, 0x1F, "minimum_life_years"};
     UInt8ListProperty     m_prop_20{m_properties, 0x20, "accepted_cargo_list"};
     Year16Property        m_prop_21{m_properties, 0x21, "long_minimum_year"};

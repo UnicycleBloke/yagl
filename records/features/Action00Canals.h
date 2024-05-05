@@ -22,9 +22,6 @@
 #include "PropertyMap.h"
 
 
-using UInt8Property = Property<UInt2<uint8_t>>;
-
-
 class Action00Canals : public Action00Feature
 {
 public:

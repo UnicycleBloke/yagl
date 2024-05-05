@@ -17,50 +17,32 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DescriptorBase.h"
+#include "TokenStream.h"
 #include <vector>
+#include <iostream>
+#include <cstdint>
 
 
-struct AirportTile
+class GenderCase
 {
-    enum class Type { OldTile, NewTile, Clearance };
-
-    int8_t   x_off;  // 0x00 is terminator part 1
-    int8_t   y_off;  // 0x80 is terminator part 2
-    uint16_t tile;
-    Type     type;
-
+public:
+    // Binary serialisation
     void read(std::istream& is);
     void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent) const;
+    // Text serialisation
+    void print(std::ostream& os, uint16_t indent = 0) const;
     void parse(TokenStream& is);
+
+private:
+    // The ID used for these translation tables is the Action 4 (GRF version 7 or higher)
+    // language-id, i.e. this mapping only works with GRF version 7 or higher. Language-id 7F
+    // (any) is not allowed. You can can define an ID multiple times in which case the new
+    // mappings are simply appended to the already known mappings.
+    struct Item
+    {
+        uint8_t     id;
+        std::string name;
+    };
+
+    std::vector<Item> m_items;
 };
-
-
-struct AirportLayout
-{
-    enum class Rotation { North = 0, East = 2, South = 4, West = 6 };
-
-    Rotation rotation;
-    std::vector<AirportTile> tiles;
-
-    void read(std::istream& is);
-    void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent) const;
-    void parse(TokenStream& is);
-};
-
-
-struct AirportLayouts
-{
-    std::vector<AirportLayout> layouts;
-
-    void read(std::istream& is);
-    void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent) const;
-    void parse(TokenStream& is);
-};
-
-
-using AirportLayoutsDescriptor = GenericDescriptor<AirportLayouts, true>;
-

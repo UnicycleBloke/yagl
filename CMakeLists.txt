@@ -43,6 +43,14 @@ add_library(yagl_lib STATIC
 
     records/properties/SpriteLayout.cpp
     records/valuetypes/PropertyMap.cpp
+    records/valuetypes/BridgeLayout.cpp
+    records/valuetypes/AirportLayout.cpp
+    records/valuetypes/StationLayout.cpp
+    records/valuetypes/CustomStation.cpp
+    records/valuetypes/IndustryLayout.cpp
+    records/valuetypes/IndustryMultipliers.cpp
+    records/valuetypes/GenderCase.cpp
+    records/valuetypes/SnowLine.cpp
 
     # Pseudo-sprites
     records/actions/Action00Record.cpp
@@ -78,8 +86,6 @@ add_library(yagl_lib STATIC
     records/descriptors/DescriptorBase.cpp
     records/descriptors/BitfieldDescriptor.cpp
     records/descriptors/EnumDescriptor.cpp
-    records/descriptors/AirportLayoutDescriptor.cpp
-    records/descriptors/IndustryLayoutDescriptor.cpp
     records/descriptors/CargoAcceptanceDescriptor.cpp
     records/descriptors/DateDescriptor.cpp
     records/descriptors/GRFLabel.cpp
@@ -91,19 +97,19 @@ add_library(yagl_lib STATIC
     #records/features/Action00RoadVehicles.cpp
     #records/features/Action00Ships.cpp
     #records/features/Action00Aircraft.cpp
-    records/features/Action00Stations.cpp
+    #records/features/Action00Stations.cpp
     #records/features/Action00Canals.cpp
-    records/features/Action00Bridges.cpp
+    #records/features/Action00Bridges.cpp
     #records/features/Action00Houses.cpp
-    records/features/Action00GlobalSettings.cpp
-    records/features/Action00IndustryTiles.cpp
-    records/features/Action00Industries.cpp
-    records/features/Action00Cargos.cpp
-    records/features/Action00SoundEffects.cpp
-    records/features/Action00Airports.cpp
+    #records/features/Action00GlobalSettings.cpp
+    #records/features/Action00IndustryTiles.cpp
+    #records/features/Action00Industries.cpp
+    #records/features/Action00Cargos.cpp
+    #records/features/Action00SoundEffects.cpp
+    #records/features/Action00Airports.cpp
     #records/features/Action00Objects.cpp
     #records/features/Action00RailTypes.cpp
-    records/features/Action00AirportTiles.cpp
+    #records/features/Action00AirportTiles.cpp
     #records/features/Action00RoadTypes.cpp
     #records/features/Action00TramTypes.cpp
     #records/features/Action00RoadStops.cpp
