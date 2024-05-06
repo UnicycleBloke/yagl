@@ -41,7 +41,7 @@ add_library(yagl_lib STATIC
 
     records/Action00Feature.cpp
 
-    records/properties/SpriteLayout.cpp
+    records/properties2/SpriteLayout.cpp
     records/properties2/PropertyMap.cpp
     records/properties2/BridgeLayout.cpp
     records/properties2/AirportLayout.cpp
@@ -90,29 +90,6 @@ add_library(yagl_lib STATIC
     records/descriptors/BitfieldDescriptor.cpp
     records/descriptors/EnumDescriptor.cpp
     records/descriptors/CargoAcceptanceDescriptor.cpp
-
-    # Handle properties for each different kind of feature (Action00).
-    #records/features/Action00Vehicles.cpp
-    #records/features/Action00Trains.cpp
-    #records/features/Action00RoadVehicles.cpp
-    #records/features/Action00Ships.cpp
-    #records/features/Action00Aircraft.cpp
-    #records/features/Action00Stations.cpp
-    #records/features/Action00Canals.cpp
-    #records/features/Action00Bridges.cpp
-    #records/features/Action00Houses.cpp
-    #records/features/Action00GlobalSettings.cpp
-    #records/features/Action00IndustryTiles.cpp
-    #records/features/Action00Industries.cpp
-    #records/features/Action00Cargos.cpp
-    #records/features/Action00SoundEffects.cpp
-    #records/features/Action00Airports.cpp
-    #records/features/Action00Objects.cpp
-    #records/features/Action00RailTypes.cpp
-    #records/features/Action00AirportTiles.cpp
-    #records/features/Action00RoadTypes.cpp
-    #records/features/Action00TramTypes.cpp
-    #records/features/Action00RoadStops.cpp
 
     # Graphics related records and helper classes.
     records/graphics/RecolourRecord.cpp

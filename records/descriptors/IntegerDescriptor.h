@@ -319,5 +319,5 @@ using UInt16Descriptor   = UIntDescriptor<UInt16>;
 using UInt32Descriptor   = UIntDescriptor<UInt32>;
 
 // A specific use case
-using CargoList           = UIntVector<UInt8>;
-using CargoListDescriptor = UIntDescriptor<CargoList>;
+//using CargoList           = UIntVector<UInt8>;
+//using CargoListDescriptor = UIntDescriptor<CargoList>;

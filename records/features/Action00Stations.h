@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "SpriteLayout.h"
+#include "properties2/SpriteLayout.h"
 #include "properties2/StationLayout.h"
 #include "properties2/CustomStation.h"
 #include "properties2/IntegerValue.h"

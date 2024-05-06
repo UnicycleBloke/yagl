@@ -46,7 +46,10 @@ struct Vector
 
     void write(std::ostream& os) const 
     {
-        write_uint8_ext(os, uint16_t(m_items.size()));
+        // Note that this can lead to a discrepancy when re-encoding because it may 
+        // have been previously encoded in the Long form (3 bytes). The two encodings 
+        // are semantically identical.
+        write_uint8_ext(os, uint16_t(m_items.size()), ExtByteFormat::Short);
         for (const auto& item: m_items)
         {
             item.write(os);
