@@ -27,14 +27,15 @@
 
 // Represents a variable-length collection of values of type T. 
 // The size of the collection precedes the items in the the binary formet.
+// The size encoding is assumed to be extended byte, but could be make into
+// a template argument for more flexibility.
 template <typename T>
 //requires ValueType<T>
 struct Vector
 {
     void read(std::istream& is) 
     {   
-        // Should this be uint8_ext?
-        uint8_t num_items = read_uint8(is);
+        uint16_t num_items = read_uint8_ext(is);
         for (uint8_t i = 0; i < num_items; ++i)
         {
             T item{};
@@ -45,7 +46,7 @@ struct Vector
 
     void write(std::ostream& os) const 
     {
-        write_uint8(os, uint8_t(m_items.size()));
+        write_uint8_ext(os, uint16_t(m_items.size()));
         for (const auto& item: m_items)
         {
             item.write(os);
@@ -79,5 +80,6 @@ struct Vector
     }
 
 private:
+    
     std::vector<T> m_items{};
 };
