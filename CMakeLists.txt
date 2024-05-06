@@ -54,6 +54,7 @@ add_library(yagl_lib STATIC
     records/properties/DateValue.cpp
     records/properties/GRFLabel.cpp
     records/properties/VisualEffect.cpp
+    records/properties/CargoAcceptance.cpp
 
     # Pseudo-sprites
     records/actions/Action00Record.cpp
@@ -89,7 +90,6 @@ add_library(yagl_lib STATIC
     records/descriptors/DescriptorBase.cpp
     records/descriptors/BitfieldDescriptor.cpp
     records/descriptors/EnumDescriptor.cpp
-    records/descriptors/CargoAcceptanceDescriptor.cpp
 
     # Graphics related records and helper classes.
     records/graphics/RecolourRecord.cpp

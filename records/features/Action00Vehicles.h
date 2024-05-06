@@ -24,11 +24,10 @@
 #include "properties/PropertyMap.h"
 #include "properties/Vector.h"
 #include "properties/Array.h"
-#include "CargoAcceptanceDescriptor.h"
 
 
-using UInt8PropertyDec     = Property<UIntNew<uint8_t, false, UIntFormat::Dec>>;
-using Bit8Property         = Property<BitfieldValue<uint8_t>>;
+using UInt8PropertyDec = Property<UIntNew<uint8_t, false, UIntFormat::Dec>>;
+using Bit8Property     = Property<BitfieldValue<uint8_t>>;
 
 
 class Action00Vehicles : public Action00Feature

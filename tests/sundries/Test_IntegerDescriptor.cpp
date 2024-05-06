@@ -252,74 +252,6 @@ TEST_CASE("UInt types", "[integers]")
 }
 
 
-TEST_CASE("UIntArray", "[integers]")
-{
-    // Inlude decimal, hex and binary numbers here for parsing.
-    std::istringstream is("[1 0x02 0b0011 0xf4 5 0xF6]");
-    TokenStream ts{is};
-    UIntArray<UInt8, 6> values;
-    values.parse(ts);
-
-    std::ostringstream os;
-    values.write(os);
-    auto str = os.str();
-    CHECK(str.size() == 6);
-    CHECK(uint8_t(str[0]) == 0x01);
-    CHECK(uint8_t(str[1]) == 0x02);
-    CHECK(uint8_t(str[2]) == 0x03);
-    CHECK(uint8_t(str[3]) == 0xF4);
-    CHECK(uint8_t(str[4]) == 0x05);
-    CHECK(uint8_t(str[5]) == 0xF6);
-
-    std::istringstream is2(str);
-    UIntArray<UInt8, 6> values2;
-    values2.read(is2);
-    CHECK(values == values2);
-
-    os.str("");
-    values2.print(os, UIntFormat::Hex);
-    CHECK(os.str() == "[ 0x01 0x02 0x03 0xF4 0x05 0xF6 ]");
-    os.str("");
-    values2.print(os, UIntFormat::Dec);
-    CHECK(os.str() == "[ 1 2 3 244 5 246 ]");
-}
-
-
-TEST_CASE("UIntVector", "[integers]")
-{
-    // Inlude decimal, hex and binary numbers here for parsing.
-    std::istringstream is("[1 0x02 0b0011 0xf4 5 0xF6]");
-    TokenStream ts{ is };
-    UIntVector<UInt8> values;
-    values.parse(ts);
-    CHECK(values.size() == 6);
-
-    std::ostringstream os;
-    values.write(os);
-    auto str = os.str();
-    CHECK(str.size() == 7);
-    CHECK(uint8_t(str[0]) == 0x06); // Length
-    CHECK(uint8_t(str[1]) == 0x01);
-    CHECK(uint8_t(str[2]) == 0x02);
-    CHECK(uint8_t(str[3]) == 0x03);
-    CHECK(uint8_t(str[4]) == 0xF4);
-    CHECK(uint8_t(str[5]) == 0x05);
-    CHECK(uint8_t(str[6]) == 0xF6);
-
-    std::istringstream is2(str);
-    UIntVector<UInt8> values2;
-    values2.read(is2);
-    CHECK(values == values2);
-
-    os.str("");
-    values2.print(os, UIntFormat::Hex);
-    CHECK(os.str() == "[ 0x01 0x02 0x03 0xF4 0x05 0xF6 ]");
-    os.str("");
-    values2.print(os, UIntFormat::Dec);
-    CHECK(os.str() == "[ 1 2 3 244 5 246 ]");
-}
-
-
 TEST_CASE("UIntDescriptor", "[integers]")
 {
     SECTION("UInt8")
@@ -330,25 +262,5 @@ TEST_CASE("UIntDescriptor", "[integers]")
         std::ostringstream os;
         desc.print(value, os, 4); // Indent
         CHECK(os.str() == "    name: 0x23;\n");
-    }
-
-    SECTION("UIntArray<UInt8>")
-    {
-        UIntDescriptor<UIntArray<UInt8, 4>> desc{ 0, "name", UIntFormat::Dec };
-        UIntArray<UInt8, 4> value{ {12, 13, 14, 15} };
-
-        std::ostringstream os;
-        desc.print(value, os, 4); // Indent
-        CHECK(os.str() == "    name: [ 12 13 14 15 ];\n");
-    }
-
-    SECTION("UIntVector<UInt8>")
-    {
-        UIntDescriptor<UIntVector<UInt8>> desc{ 0, "name", UIntFormat::Hex };
-        UIntVector<UInt8> value{ {12, 13, 14, 15} };
-
-        std::ostringstream os;
-        desc.print(value, os, 4); // Indent
-        CHECK(os.str() == "    name: [ 0x0C 0x0D 0x0E 0x0F ];\n");
     }
 }

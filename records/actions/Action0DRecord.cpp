@@ -167,7 +167,7 @@ const EnumDescriptorT<Action0DRecord::GRMFeature> desc_feature
         { 0x0B, "Cargos" },
     }
 };
-constexpr BooleanDescriptor desc_defined = { 0x00, str_not_if_defined };
+constexpr RawBoolDescriptor desc_defined = { 0x00, str_not_if_defined };
 
 
 const char* short_op(Action0DRecord::Operation op)

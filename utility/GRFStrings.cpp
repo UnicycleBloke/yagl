@@ -845,7 +845,7 @@ void GRFString::write(std::ostream& os, StringTerm term) const
 }
 
 
-void GRFString::print(std::ostream& os) const
+void GRFString::print(std::ostream& os, uint16_t indent) const
 {
     os << "\"" << readable() << "\"";
 }

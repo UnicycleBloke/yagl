@@ -19,10 +19,7 @@
 #pragma once
 #include "Action00Feature.h"
 #include "IntegerDescriptor.h"
-#include "CargoAcceptanceDescriptor.h"
-
-
-using CargoListProperty = Property<Vector<CargoAcceptance>>;
+#include "properties/CargoAcceptance.h"
 
 
 class Action00IndustryTiles : public Action00Feature

@@ -26,12 +26,6 @@
 #include "properties/Vector.h"
 #include "properties/Array.h"
 #include "properties/VisualEffect.h"
-#include "CargoAcceptanceDescriptor.h"
-
-
-using CargosProperty       = UInt8ListProperty;
-using VisualEffectProperty = Property<VisualEffect>;
-using CargoListProperty    = Property<Vector<CargoAcceptance>>;
 
 
 class Action00RoadVehicles : public Action00Vehicles

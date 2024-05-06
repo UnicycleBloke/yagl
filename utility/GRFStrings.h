@@ -40,7 +40,7 @@ public:
 
     // Text serialisation
     // Convert the internal representation to a human readable version.
-    void print(std::ostream& os) const;
+    void print(std::ostream& os, uint16_t indent = 0) const;
     std::string readable() const;
     // Convert the value that is read into the internal representation.
     // Determine whether or not the internal version needs to be UTF8.

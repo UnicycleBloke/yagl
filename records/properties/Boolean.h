@@ -60,6 +60,7 @@ private:
 
 
 // Regular boolean values where false is zero and true is 1.
+using Bool = BoolNewT<1, 0>;
 using BoolProperty = Property<BoolNewT<1, 0>>;
 // Special case for helicopters, for reasons.
 using BoolHeliProperty = Property<BoolNewT<0, 2>>;

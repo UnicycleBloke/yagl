@@ -47,7 +47,7 @@ struct Array
         }
     }
 
-    void print(std::ostream& os, uint16_t indent) const 
+    void print(std::ostream& os, uint16_t indent = 0) const 
     { 
         os << "[";
         for (const auto& item: m_items)

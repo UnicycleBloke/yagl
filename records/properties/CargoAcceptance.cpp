@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#include "CargoAcceptanceDescriptor.h"
+#include "properties/CargoAcceptance.h"
 #include "StreamHelpers.h"
 
 

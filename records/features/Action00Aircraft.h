@@ -25,10 +25,9 @@
 #include "properties/PropertyMap.h"
 #include "properties/Vector.h"
 #include "properties/Array.h"
-#include "CargoAcceptanceDescriptor.h"
 
 
-using CargosProperty       = UInt8ListProperty;
+using CargosProperty = UInt8ListProperty;
 
 
 class Action00Aircraft : public Action00Vehicles

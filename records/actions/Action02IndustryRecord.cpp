@@ -19,6 +19,7 @@
 #include "Action02IndustryRecord.h"
 #include "StreamHelpers.h"
 #include "EnumDescriptor.h"
+#include "BooleanDescriptor.h"
 
 
 void Action02IndustryRecord::read(std::istream& is, const GRFInfo& info)
@@ -213,13 +214,13 @@ const std::map<std::string, uint8_t> g_indices2 =
 };
 
 
-UIntDescriptor<UIntArray<UInt16, 3>> desc_sub_in_amounts { 0x01, str_sub_in_amounts,  UIntFormat::Hex };
-UIntDescriptor<UIntArray<UInt16, 2>> desc_add_out_amounts{ 0x02, str_add_out_amounts, UIntFormat::Hex };
-BoolDescriptor                       desc_repeat_flag    { 0x03, str_repeat_flag };
+GenericDescriptor<Array<UInt16New, 3>> desc_sub_in_amounts { 0x01, str_sub_in_amounts };
+GenericDescriptor<Array<UInt16New, 2>> desc_add_out_amounts{ 0x02, str_add_out_amounts };
+BoolDescriptor                         desc_repeat_flag    { 0x03, str_repeat_flag };
 
-UIntDescriptor<UIntArray<UInt8, 3>> desc_sub_in_regs { 0x01, str_sub_in_regs,  UIntFormat::Hex };
-UIntDescriptor<UIntArray<UInt8, 2>> desc_add_out_regs{ 0x02, str_add_out_regs, UIntFormat::Hex };
-UInt8Descriptor                     desc_repeat_reg  { 0x03, str_repeat_reg };
+GenericDescriptor<Array<UInt8New, 3>> desc_sub_in_regs { 0x01, str_sub_in_regs };
+GenericDescriptor<Array<UInt8New, 2>> desc_add_out_regs{ 0x02, str_add_out_regs };
+UInt8Descriptor                       desc_repeat_reg  { 0x03, str_repeat_reg };
 
 
 } // namespace {

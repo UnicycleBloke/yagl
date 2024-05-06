@@ -20,7 +20,6 @@
 #include "StreamHelpers.h"
 #include "GRFStrings.h"
 #include "EnumDescriptor.h"
-#include "BooleanDescriptor.h"
 #include <sstream>
 #include <set>
 

@@ -18,56 +18,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DescriptorBase.h"
+#include "properties/Boolean.h"
 
 
-template <uint8_t TRUE, uint8_t FALSE>
-class BoolT
-{
-public:
-    void print(std::ostream& os, uint16_t indent = 0) const
-    {
-        os << std::boolalpha << m_value;
-    }
-
-    void parse(TokenStream& is)
-    {
-        m_value = is.match_bool();
-    }
-
-    void read(std::istream& is)
-    {
-        uint8_t value = read_uint8(is);
-        if ((value != TRUE) && (value != FALSE))
-        {
-            throw RUNTIME_ERROR("Unexpected value when reading boolean");
-        }
-
-        m_value = (value == TRUE);
-    }
-
-    void write(std::ostream& os) const
-    {
-        uint8_t value = (m_value ? TRUE : FALSE);
-        write_uint8(os, value);
-    }
-
-private:
-    bool m_value{};
-};
-
-
-// Regular boolean values where false is zero and true is 1.
-using Bool     = BoolT<1, 0>;
-// Special case for helicopters, for reasons.
-using BoolHeli = BoolT<0, 2>;
-
-using BoolDescriptor     = GenericDescriptor<Bool>;
-using BoolHeliDescriptor = GenericDescriptor<BoolHeli>;
-
-
-
-
-struct BooleanDescriptor : PropertyDescriptor
+struct RawBoolDescriptor : PropertyDescriptor
 {
     void print(bool value, std::ostream& os, uint16_t indent) const
     {
@@ -81,4 +35,6 @@ struct BooleanDescriptor : PropertyDescriptor
     }
 };
 
+
+using BoolDescriptor = GenericDescriptor<Bool>;
 

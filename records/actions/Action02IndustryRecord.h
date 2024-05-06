@@ -19,7 +19,8 @@
 #pragma once
 #include "Record.h"
 #include "IntegerDescriptor.h"
-#include "BooleanDescriptor.h"
+#include "properties/IntegerValue.h"
+#include "properties/Boolean.h"
 #include <array>
 
 
@@ -68,11 +69,11 @@ private:
     {
         // Amounts to be subtracted from the incoming cargoes waiting to
         // be processed. (Signed)
-        UIntArray<UInt16, 3> sub_in_amounts{};
+        Array<UInt16New, 3> sub_in_amounts{};
         // Amounts to be added to the produced cargoes. (Unsigned)
-        UIntArray<UInt16, 2> add_out_amounts{};
+        Array<UInt16New, 2> add_out_amounts{};
         //Repeat callback if nonzero, do not repeat if 00.
-        Bool                 repeat_flag{};
+        Bool                repeat_flag{};
     };
 
 private:
@@ -87,12 +88,12 @@ private:
     {
         // Numbers of registers that contain the amounts to be subtracted
         // from the incoming cargoes waiting to be processed.
-        UIntArray<UInt8, 3> sub_in_regs{};
+        Array<UInt8New, 3> sub_in_regs{};
         // Numbers of registers that hold the amounts to be added to the produced cargoes.
-        UIntArray<UInt8, 2> add_out_regs{};
+        Array<UInt8New, 2> add_out_regs{};
         // Number of <again> register. Repeat callback if the value of the register
         // isn't zero, do not repeat otherwise
-        UInt8               repeat_reg{};
+        UInt8              repeat_reg{};
     };
 
 private:

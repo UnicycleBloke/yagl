@@ -25,16 +25,10 @@
 #include "properties/Vector.h"
 #include "properties/Array.h"
 #include "properties/VisualEffect.h"
-#include "CargoAcceptanceDescriptor.h"
 
 
-using GRFLabelProperty     = Property<GRFLabel>;
-using GRFLabelListProperty = Property<Vector<GRFLabel>>;
-using VisualEffectProperty = Property<VisualEffect>;
-using CargoListProperty    = Property<Vector<CargoAcceptance>>;
-
-using UInt8PropertyDec     = Property<UIntNew<uint8_t, false, UIntFormat::Dec>>;
-using UInt16PropertyDec    = Property<UIntNew<uint16_t, false, UIntFormat::Dec>>;
+using UInt8PropertyDec  = Property<UIntNew<uint8_t, false, UIntFormat::Dec>>;
+using UInt16PropertyDec = Property<UIntNew<uint16_t, false, UIntFormat::Dec>>;
 
 
 class Action00Trains : public Action00Vehicles

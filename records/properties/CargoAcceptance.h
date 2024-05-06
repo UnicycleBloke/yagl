@@ -17,8 +17,11 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DescriptorBase.h"
-#include <vector>
+#include "TokenStream.h"
+#include "PropertyMap.h"
+#include "Vector.h"
+#include <iostream>
+#include <cstdint>
 
 
 class CargoAcceptance
@@ -37,5 +40,5 @@ private:
 };
 
 
-using CargoAcceptanceList       = VectorOld<CargoAcceptance>;
-using CargoAcceptanceDescriptor = GenericDescriptor<CargoAcceptanceList>;
+using CargoAcceptanceList = Vector<CargoAcceptance>;
+using CargoListProperty   = Property<CargoAcceptanceList>;

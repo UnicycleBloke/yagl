@@ -27,13 +27,10 @@
 #include "properties/Array.h"
 #include "properties/BitfieldValue.h"
 #include "properties/VisualEffect.h"
-#include "CargoAcceptanceDescriptor.h"
+#include "properties/CargoAcceptance.h"
 
 
-using CargosProperty       = UInt8ListProperty;
-using VisualEffectProperty = Property<VisualEffect>;
-using CargoListProperty    = Property<Vector<CargoAcceptance>>;
-using Bit8Property         = Property<BitfieldValue<uint8_t>>;
+using Bit8Property = Property<BitfieldValue<uint8_t>>;
 
 
 class Action00Ships : public Action00Vehicles

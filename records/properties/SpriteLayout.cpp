@@ -189,7 +189,7 @@ constexpr const char* str_palette_var10   = "palette_var10";
 const IntegerDescriptorT<uint8_t> desc_hide_sprite    { 0x00, str_hide_sprite,    UIntFormat::Hex };
 const IntegerDescriptorT<uint8_t> desc_sprite_offset  { 0x01, str_sprite_offset,  UIntFormat::Hex };
 const IntegerDescriptorT<uint8_t> desc_palette_offset { 0x02, str_palette_offset, UIntFormat::Hex };
-const BooleanDescriptor           desc_palette_act01  { 0x03, str_palette_act01 };
+const RawBoolDescriptor           desc_palette_act01  { 0x03, str_palette_act01 };
 const IntegerDescriptorT<uint8_t> desc_offset_x       { 0x04, str_offset_x,       UIntFormat::Hex };
 const IntegerDescriptorT<uint8_t> desc_offset_y       { 0x05, str_offset_y,       UIntFormat::Hex };
 const IntegerDescriptorT<uint8_t> desc_offset_z       { 0x06, str_offset_z,       UIntFormat::Hex };

@@ -112,7 +112,7 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-const BooleanDescriptor                desc_livery_override { 0x01, str_livery_override };
+const RawBoolDescriptor                desc_livery_override { 0x01, str_livery_override };
 const IntegerDescriptorT<uint16_t>     desc_default_set_id  { 0x02, str_default_set_id, UIntFormat::Hex };
 const IntegerListDescriptorT<uint16_t> desc_feature_ids     { 0x03, str_feature_ids, UIntFormat::Hex };
 

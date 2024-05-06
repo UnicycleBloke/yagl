@@ -52,3 +52,6 @@ private:
     uint8_t    m_position{};
     WagonPower m_wagon_power{WagonPower::Enable};
 };
+
+
+using VisualEffectProperty = Property<VisualEffect>;

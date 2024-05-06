@@ -24,10 +24,7 @@
 #include "properties/PropertyMap.h"
 #include "properties/Vector.h"
 #include "properties/Array.h"
-#include "CargoAcceptanceDescriptor.h"
-
-
-using CargoListProperty = Property<Vector<CargoAcceptance>>;
+#include "properties/CargoAcceptance.h"
 
 
 class Action00Houses : public Action00Feature
