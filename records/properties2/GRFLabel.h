@@ -17,11 +17,13 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "properties2/PropertyMap.h"
+#include "properties2/Array.h"
+#include "properties2/Vector.h"
+#include "TokenStream.h"
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include "TokenStream.h"
-#include "DescriptorBase.h"
 
 
 class GRFLabel
@@ -49,10 +51,10 @@ private:
 };
 
 
-using GRFLabelPair           = ArrayOld<GRFLabel, 2>;
-using GRFLabelList           = VectorOld<GRFLabel>;
+using GRFLabelPair         = Array<GRFLabel, 2>;
+using GRFLabelList         = Vector<GRFLabel>;
 
-using GRFLabelDescriptor     = GenericDescriptor<GRFLabel>;
-using GRFLabelPairDescriptor = GenericDescriptor<GRFLabelPair>;
-using GRFLabelListDescriptor = GenericDescriptor<GRFLabelList>;
+using GRFLabelProperty     = Property<GRFLabel>;
+using GRFLabelPairProperty = Property<GRFLabelPair>;
+using GRFLabelListProperty = Property<GRFLabelList>;
 

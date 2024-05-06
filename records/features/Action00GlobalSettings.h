@@ -18,10 +18,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "IntegerValue.h"
+#include "properties2/IntegerValue.h"
 #include "GRFStrings.h"
-#include "GenderCase.h"
-#include "SnowLine.h"
+#include "properties2/GenderCase.h"
+#include "properties2/SnowLine.h"
 
 
 using GRFLabelProperty     = Property<GRFLabel>;

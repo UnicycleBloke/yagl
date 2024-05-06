@@ -18,28 +18,19 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Vehicles.h"
-#include "GRFLabel.h"
-#include "DateDescriptor.h"
-#include "YearDescriptor.h"
-#include "BooleanDescriptor.h"
-#include "IntegerValue.h"
-#include "PropertyMap.h"
-#include "Vector.h"
-#include "Array.h"
+#include "properties2/GRFLabel.h"
+#include "properties2/DateValue.h"
+#include "properties2/Boolean.h"
+#include "properties2/IntegerValue.h"
+#include "properties2/PropertyMap.h"
+#include "properties2/Vector.h"
+#include "properties2/Array.h"
+#include "properties2/BitfieldValue.h"
+#include "properties2/VisualEffect.h"
 #include "CargoAcceptanceDescriptor.h"
-#include "VisualEffect.h"
-#include "BitfieldValue.h"
 
 
-using LongDateProperty     = Property<LongDate>;
-using ShortDateProperty    = Property<ShortDate>;
-using GRFLabelProperty     = Property<GRFLabel>;
-using GRFLabelListProperty = Property<Vector<GRFLabel>>;
-using Year8PairProperty    = Property<Array<Year8, 2>>;
-using Year16Property       = Property<Year16>;
 using CargosProperty       = UInt8ListProperty;
-using BoolProperty         = Property<Bool>;
-using BoolHeliProperty     = Property<BoolHeli>;
 using VisualEffectProperty = Property<VisualEffect>;
 using CargoListProperty    = Property<Vector<CargoAcceptance>>;
 using Bit8Property         = Property<BitfieldValue<uint8_t>>;

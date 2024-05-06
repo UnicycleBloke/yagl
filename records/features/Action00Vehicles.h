@@ -18,19 +18,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "GRFLabel.h"
-#include "DateDescriptor.h"
-#include "YearDescriptor.h"
-#include "BooleanDescriptor.h"
-#include "IntegerValue.h"
-#include "BitfieldValue.h"
-#include "PropertyMap.h"
-#include "Vector.h"
-#include "Array.h"
+#include "properties2/DateValue.h"
+#include "properties2/IntegerValue.h"
+#include "properties2/BitfieldValue.h"
+#include "properties2/PropertyMap.h"
+#include "properties2/Vector.h"
+#include "properties2/Array.h"
 #include "CargoAcceptanceDescriptor.h"
 
 
-using ShortDateProperty    = Property<ShortDate>;
 using UInt8PropertyDec     = Property<UIntNew<uint8_t, false, UIntFormat::Dec>>;
 using Bit8Property         = Property<BitfieldValue<uint8_t>>;
 

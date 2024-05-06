@@ -53,7 +53,7 @@ struct Vector
         }
     }
 
-    void print(std::ostream& os, uint16_t indent) const 
+    void print(std::ostream& os, uint16_t indent = 0) const 
     { 
         // TODO options here to control the layout with or without line breaks,
         // with or without commas, etc.

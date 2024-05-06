@@ -45,7 +45,7 @@ namespace {
 constexpr const char* str_grf_ids = "grf_ids";
 
 
-constexpr GRFLabelListDescriptor grf_desc = { 0x00, str_grf_ids };
+constexpr GenericDescriptor<Vector<GRFLabel>> grf_desc = { 0x00, str_grf_ids };
 
 
 } // namespace {

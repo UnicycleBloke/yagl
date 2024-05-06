@@ -18,14 +18,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "IntegerDescriptor.h"
-#include "YearDescriptor.h"
-#include "AirportLayout.h"
-#include <vector>
+#include "properties2/YearValue.h"
+#include "properties2/AirportLayout.h"
 
 
 using AirportLayoutsProperty = Property<AirportLayouts>;
-using Year16PairProperty     = Property<Array<Year16, 2>>;
 
 
 class Action00Airports : public Action00Feature

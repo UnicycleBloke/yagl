@@ -17,7 +17,7 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "catch.hpp"
-#include "DateDescriptor.h"
+#include "properties2/DateValue.h"
 #include "TokenStream.h"
 #include <sstream>
 

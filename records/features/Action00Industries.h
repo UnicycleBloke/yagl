@@ -18,12 +18,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "IndustryMultipliers.h"
-#include "IndustryLayout.h"
-#include "IntegerValue.h"
-#include "PropertyMap.h"
-#include "Vector.h"
-#include "Array.h"
+#include "properties2/IndustryMultipliers.h"
+#include "properties2/IndustryLayout.h"
+#include "properties2/IntegerValue.h"
+#include "properties2/PropertyMap.h"
+#include "properties2/Vector.h"
+#include "properties2/Array.h"
 
 
 using IndustryLayoutsProperty = Property<IndustryLayouts>;

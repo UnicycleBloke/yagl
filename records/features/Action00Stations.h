@@ -19,13 +19,11 @@
 #pragma once
 #include "Action00Feature.h"
 #include "SpriteLayout.h"
-#include "StationLayout.h"
-#include "CustomStation.h"
-#include "IntegerDescriptor.h"
-#include "IntegerValue.h"
-#include "PropertyMap.h"
-#include "GRFLabel.h"
-#include <vector>
+#include "properties2/StationLayout.h"
+#include "properties2/CustomStation.h"
+#include "properties2/IntegerValue.h"
+#include "properties2/PropertyMap.h"
+#include "properties2/GRFLabel.h"
 
 
 using StationLayoutProperty = Property<StationLayout>;

@@ -19,7 +19,7 @@
 #pragma once
 #include "TokenStream.h"
 #include "GRFStrings.h"
-#include "GRFLabel.h"
+#include "properties2/GRFLabel.h"
 #include "FeatureType.h"
 #include <cstdint>
 #include <iostream>

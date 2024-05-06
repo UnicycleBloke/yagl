@@ -65,6 +65,9 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
+using GRFLabelDescriptor = GenericDescriptor<GRFLabel>;
+
+
 constexpr GRFLabelDescriptor          desc_grf_id      = { 0x00, str_grf_id };
 const     EnumDescriptorT<GRFVersion> desc_version     = { 0x01, str_version,
     { { 2, "GRF2" }, { 3, "GRF3" }, { 4, "GRF4" }, { 5, "GRF5" }, { 6, "GRF6" }, { 7, "GRF7" }, { 8, "GRF8" } } };

@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#include "GRFLabel.h"
+#include "properties2/GRFLabel.h"
 #include "StreamHelpers.h"
 
 

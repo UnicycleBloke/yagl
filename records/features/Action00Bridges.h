@@ -18,17 +18,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "IntegerValue.h"
-#include "YearDescriptor.h"
-#include "PropertyMap.h"
-#include "BridgeLayout.h"
-#include <vector>
-#include <array>
+#include "properties2/YearValue.h"
+#include "properties2/IntegerValue.h"
+#include "properties2/PropertyMap.h"
+#include "properties2/BridgeLayout.h"
 
 
-using Year8Property  = Property<Year8>;
-using Year16Property = Property<Year16>;
-using Year32Property = Property<Year32>;
 using BridgeLayoutProperty = Property<BridgeLayout>;
 
 

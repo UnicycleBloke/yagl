@@ -17,9 +17,12 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DescriptorBase.h"
+#include "properties2/PropertyMap.h"
 #include "IntegerDescriptor.h"
 #include "StreamHelpers.h"
+#include "TokenStream.h"
+#include <iostream>
+#include <cstdint>
 
 
 bool     is_leap_year(uint32_t year);
@@ -185,9 +188,8 @@ uint32_t Date<T>::to_days() const
     return days;
 }
 
-
 using LongDate  = Date<uint32_t>;
 using ShortDate = Date<uint16_t>;
 
-using LongDateDescriptor  = GenericDescriptor<LongDate>;
-using ShortDateDescriptor = GenericDescriptor<ShortDate>;
+using LongDateProperty  = Property<LongDate>;
+using ShortDateProperty = Property<ShortDate>;

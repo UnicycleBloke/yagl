@@ -18,8 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "IntegerValue.h"
-#include "PropertyMap.h"
+#include "properties2/IntegerValue.h"
+#include "properties2/PropertyMap.h"
 
 
 class Action00SoundEffects : public Action00Feature

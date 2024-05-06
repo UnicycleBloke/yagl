@@ -17,9 +17,12 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DescriptorBase.h"
+#include "properties2/PropertyMap.h"
+#include "properties2/Array.h"
 #include "IntegerDescriptor.h"
 #include "StreamHelpers.h"
+#include <cstdint>
+#include <iostream>
 
 
 // Years are stored as uint8_t, uint16_t or uint32_t. This structure helps to
@@ -88,18 +91,14 @@ private:
 };
 
 
-using Year8  = Year<uint8_t>;
-using Year16 = Year<uint16_t>;
-using Year32 = Year<uint32_t>;
+using Year8      = Year<uint8_t>;
+using Year16     = Year<uint16_t>;
+using Year32     = Year<uint32_t>;
+using Year8Pair  = Array<Year8, 2>;
+using Year16Pair = Array<Year16, 2>;
 
-using Year8Descriptor  = GenericDescriptor<Year8>;
-using Year16Descriptor = GenericDescriptor<Year16>;
-using Year32Descriptor = GenericDescriptor<Year32>;
-
-using Year8Pair  = ArrayOld<Year8,  2>;
-using Year16Pair = ArrayOld<Year16, 2>;
-using Year32Pair = ArrayOld<Year32, 2>;
-
-using Year8PairDescriptor  = GenericDescriptor<Year8Pair>;
-using Year16PairDescriptor = GenericDescriptor<Year16Pair>;
-using Year32PairDescriptor = GenericDescriptor<Year32Pair>;
+using Year8Property      = Property<Year8>;
+using Year16Property     = Property<Year16>;
+using Year32Property     = Property<Year32>;
+using Year8PairProperty  = Property<Year8Pair>;
+using Year16PairProperty = Property<Year16Pair>;

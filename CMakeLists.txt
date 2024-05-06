@@ -42,15 +42,18 @@ add_library(yagl_lib STATIC
     records/Action00Feature.cpp
 
     records/properties/SpriteLayout.cpp
-    records/valuetypes/PropertyMap.cpp
-    records/valuetypes/BridgeLayout.cpp
-    records/valuetypes/AirportLayout.cpp
-    records/valuetypes/StationLayout.cpp
-    records/valuetypes/CustomStation.cpp
-    records/valuetypes/IndustryLayout.cpp
-    records/valuetypes/IndustryMultipliers.cpp
-    records/valuetypes/GenderCase.cpp
-    records/valuetypes/SnowLine.cpp
+    records/properties2/PropertyMap.cpp
+    records/properties2/BridgeLayout.cpp
+    records/properties2/AirportLayout.cpp
+    records/properties2/StationLayout.cpp
+    records/properties2/CustomStation.cpp
+    records/properties2/IndustryLayout.cpp
+    records/properties2/IndustryMultipliers.cpp
+    records/properties2/GenderCase.cpp
+    records/properties2/SnowLine.cpp
+    records/properties2/DateValue.cpp
+    records/properties2/GRFLabel.cpp
+    records/properties2/VisualEffect.cpp
 
     # Pseudo-sprites
     records/actions/Action00Record.cpp
@@ -87,9 +90,6 @@ add_library(yagl_lib STATIC
     records/descriptors/BitfieldDescriptor.cpp
     records/descriptors/EnumDescriptor.cpp
     records/descriptors/CargoAcceptanceDescriptor.cpp
-    records/descriptors/DateDescriptor.cpp
-    records/descriptors/GRFLabel.cpp
-    records/descriptors/VisualEffect.cpp
 
     # Handle properties for each different kind of feature (Action00).
     #records/features/Action00Vehicles.cpp
@@ -217,7 +217,6 @@ target_include_directories(yagl_lib PUBLIC
     records
     records/actions
     records/properties
-    records/valuetypes
     records/descriptors
     records/graphics
     records/features

@@ -17,7 +17,7 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DescriptorBase.h"
+#include "properties2/PropertyMap.h"
 
 
 class VisualEffect
@@ -52,6 +52,3 @@ private:
     uint8_t    m_position{};
     WagonPower m_wagon_power{WagonPower::Enable};
 };
-
-
-using VisualEffectDescriptor = GenericDescriptor<VisualEffect>;

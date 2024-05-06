@@ -17,19 +17,49 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Action00Feature.h"
-#include "properties2/IntegerValue.h"
+#include "TokenStream.h"
 #include "properties2/PropertyMap.h"
+#include <cstdint>
+#include <iostream>
 
 
-class Action00Canals : public Action00Feature
+template <uint8_t TRUE, uint8_t FALSE>
+class BoolNewT
 {
 public:
-    Action00Canals() : Action00Feature(FeatureType::Canals) {}
+    void read(std::istream& is)
+    {
+        uint8_t value = read_uint8(is);
+        if ((value != TRUE) && (value != FALSE))
+        {
+            throw RUNTIME_ERROR("Unexpected value when reading boolean");
+        }
+
+        m_value = (value == TRUE);
+    }
+
+    void write(std::ostream& os) const
+    {
+        uint8_t value = (m_value ? TRUE : FALSE);
+        write_uint8(os, value);
+    }
+
+    void print(std::ostream& os, uint16_t indent = 0) const
+    {
+        os << std::boolalpha << m_value;
+    }
+
+    void parse(TokenStream& is)
+    {
+        m_value = is.match_bool();
+    }
 
 private:
-    UInt8Property m_prop_08{m_properties, 0x08, "callback_flags"};
-    UInt8Property m_prop_09{m_properties, 0x09, "graphics_flags"};
+    bool m_value{};
 };
 
 
+// Regular boolean values where false is zero and true is 1.
+using BoolProperty = Property<BoolNewT<1, 0>>;
+// Special case for helicopters, for reasons.
+using BoolHeliProperty = Property<BoolNewT<0, 2>>;

@@ -18,14 +18,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "GRFLabel.h"
-#include "DateDescriptor.h"
-#include "IntegerValue.h"
-#include "PropertyMap.h"
-#include "Vector.h"
+#include "properties2/GRFLabel.h"
+#include "properties2/DateValue.h"
+#include "properties2/IntegerValue.h"
+#include "properties2/PropertyMap.h"
+#include "properties2/Vector.h"
 
 
-using LongDateProperty     = Property<LongDate>;
 using GRFLabelProperty     = Property<GRFLabel>;
 using GRFLabelListProperty = Property<Vector<GRFLabel>>;
 

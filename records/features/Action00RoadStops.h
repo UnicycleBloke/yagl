@@ -18,16 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "GRFLabel.h"
-#include "DateDescriptor.h"
-#include "IntegerValue.h"
-#include "PropertyMap.h"
-#include "Vector.h"
-
-
-using LongDateProperty     = Property<LongDate>;
-using GRFLabelProperty     = Property<GRFLabel>;
-using GRFLabelListProperty = Property<Vector<GRFLabel>>;
+#include "properties2/GRFLabel.h"
+#include "properties2/IntegerValue.h"
 
 
 // TODO Add unit tests for this type.
