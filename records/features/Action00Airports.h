@@ -18,8 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "properties2/YearValue.h"
-#include "properties2/AirportLayout.h"
+#include "properties/YearValue.h"
+#include "properties/AirportLayout.h"
 
 
 using AirportLayoutsProperty = Property<AirportLayouts>;

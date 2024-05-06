@@ -18,8 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "properties2/GRFLabel.h"
-#include "properties2/IntegerValue.h"
+#include "properties/GRFLabel.h"
+#include "properties/IntegerValue.h"
 
 
 // TODO Add unit tests for this type.

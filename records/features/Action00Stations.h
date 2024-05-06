@@ -18,12 +18,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "properties2/SpriteLayout.h"
-#include "properties2/StationLayout.h"
-#include "properties2/CustomStation.h"
-#include "properties2/IntegerValue.h"
-#include "properties2/PropertyMap.h"
-#include "properties2/GRFLabel.h"
+#include "properties/SpriteLayout.h"
+#include "properties/StationLayout.h"
+#include "properties/CustomStation.h"
+#include "properties/IntegerValue.h"
+#include "properties/PropertyMap.h"
+#include "properties/GRFLabel.h"
 
 
 using StationLayoutProperty = Property<StationLayout>;

@@ -18,8 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "properties2/IntegerValue.h"
-#include "properties2/PropertyMap.h"
+#include "properties/IntegerValue.h"
+#include "properties/PropertyMap.h"
 
 
 class Action00Canals : public Action00Feature

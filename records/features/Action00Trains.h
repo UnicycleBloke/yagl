@@ -18,13 +18,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Vehicles.h"
-#include "properties2/DateValue.h"
-#include "properties2/Boolean.h"
-#include "properties2/IntegerValue.h"
-#include "properties2/PropertyMap.h"
-#include "properties2/Vector.h"
-#include "properties2/Array.h"
-#include "properties2/VisualEffect.h"
+#include "properties/DateValue.h"
+#include "properties/Boolean.h"
+#include "properties/IntegerValue.h"
+#include "properties/PropertyMap.h"
+#include "properties/Vector.h"
+#include "properties/Array.h"
+#include "properties/VisualEffect.h"
 #include "CargoAcceptanceDescriptor.h"
 
 

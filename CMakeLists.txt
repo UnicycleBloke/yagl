@@ -41,19 +41,19 @@ add_library(yagl_lib STATIC
 
     records/Action00Feature.cpp
 
-    records/properties2/SpriteLayout.cpp
-    records/properties2/PropertyMap.cpp
-    records/properties2/BridgeLayout.cpp
-    records/properties2/AirportLayout.cpp
-    records/properties2/StationLayout.cpp
-    records/properties2/CustomStation.cpp
-    records/properties2/IndustryLayout.cpp
-    records/properties2/IndustryMultipliers.cpp
-    records/properties2/GenderCase.cpp
-    records/properties2/SnowLine.cpp
-    records/properties2/DateValue.cpp
-    records/properties2/GRFLabel.cpp
-    records/properties2/VisualEffect.cpp
+    records/properties/SpriteLayout.cpp
+    records/properties/PropertyMap.cpp
+    records/properties/BridgeLayout.cpp
+    records/properties/AirportLayout.cpp
+    records/properties/StationLayout.cpp
+    records/properties/CustomStation.cpp
+    records/properties/IndustryLayout.cpp
+    records/properties/IndustryMultipliers.cpp
+    records/properties/GenderCase.cpp
+    records/properties/SnowLine.cpp
+    records/properties/DateValue.cpp
+    records/properties/GRFLabel.cpp
+    records/properties/VisualEffect.cpp
 
     # Pseudo-sprites
     records/actions/Action00Record.cpp
@@ -193,7 +193,6 @@ target_include_directories(yagl_lib PUBLIC
     .
     records
     records/actions
-    records/properties
     records/descriptors
     records/graphics
     records/features

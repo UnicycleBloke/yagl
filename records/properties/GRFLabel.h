@@ -17,9 +17,9 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "properties2/PropertyMap.h"
-#include "properties2/Array.h"
-#include "properties2/Vector.h"
+#include "properties/PropertyMap.h"
+#include "properties/Array.h"
+#include "properties/Vector.h"
 #include "TokenStream.h"
 #include <cstdint>
 #include <iostream>

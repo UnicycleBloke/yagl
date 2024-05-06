@@ -19,9 +19,9 @@
 #pragma once
 #include "TokenStream.h"
 #include "IntegerDescriptor.h"
-#include "properties2/Vector.h"
-#include "properties2/Array.h"
-#include "properties2/PropertyMap.h"
+#include "properties/Vector.h"
+#include "properties/Array.h"
+#include "properties/PropertyMap.h"
 #include <type_traits>
 #include <iostream>
 #include <cstdint>

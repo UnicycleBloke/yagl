@@ -18,12 +18,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "properties2/GRFLabel.h"
-#include "properties2/DateValue.h"
-#include "properties2/IntegerValue.h"
-#include "properties2/BitfieldValue.h"
-#include "properties2/PropertyMap.h"
-#include "properties2/Vector.h"
+#include "properties/GRFLabel.h"
+#include "properties/DateValue.h"
+#include "properties/IntegerValue.h"
+#include "properties/BitfieldValue.h"
+#include "properties/PropertyMap.h"
+#include "properties/Vector.h"
 
 
 using Bit8Property = Property<BitfieldValue<uint8_t>>;

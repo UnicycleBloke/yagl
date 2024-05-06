@@ -18,9 +18,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "properties2/GRFLabel.h"
-#include "properties2/DateValue.h"
-#include "properties2/IntegerValue.h"
+#include "properties/GRFLabel.h"
+#include "properties/DateValue.h"
+#include "properties/IntegerValue.h"
 
 
 class Action00TramTypes : public Action00Feature

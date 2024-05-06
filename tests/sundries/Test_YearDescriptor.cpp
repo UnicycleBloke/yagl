@@ -17,7 +17,7 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "catch.hpp"
-#include "properties2/YearValue.h"
+#include "properties/YearValue.h"
 #include "TokenStream.h"
 #include <sstream>
 

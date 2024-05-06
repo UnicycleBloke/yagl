@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#include "properties2/DateValue.h"
+#include "properties/DateValue.h"
 
 
 // Based on the rules for the Gregorian calendar.

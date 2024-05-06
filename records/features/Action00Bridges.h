@@ -18,10 +18,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "properties2/YearValue.h"
-#include "properties2/IntegerValue.h"
-#include "properties2/PropertyMap.h"
-#include "properties2/BridgeLayout.h"
+#include "properties/YearValue.h"
+#include "properties/IntegerValue.h"
+#include "properties/PropertyMap.h"
+#include "properties/BridgeLayout.h"
 
 
 using BridgeLayoutProperty = Property<BridgeLayout>;

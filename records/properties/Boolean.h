@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "TokenStream.h"
-#include "properties2/PropertyMap.h"
+#include "properties/PropertyMap.h"
 #include <cstdint>
 #include <iostream>
 

@@ -18,8 +18,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "properties2/IntegerValue.h"
-#include "properties2/Boolean.h"
+#include "properties/IntegerValue.h"
+#include "properties/Boolean.h"
 #include "GRFStrings.h"
 
 

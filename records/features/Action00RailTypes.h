@@ -18,11 +18,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Action00Feature.h"
-#include "properties2/GRFLabel.h"
-#include "properties2/DateValue.h"
-#include "properties2/IntegerValue.h"
-#include "properties2/PropertyMap.h"
-#include "properties2/Vector.h"
+#include "properties/GRFLabel.h"
+#include "properties/DateValue.h"
+#include "properties/IntegerValue.h"
+#include "properties/PropertyMap.h"
+#include "properties/Vector.h"
 
 
 using GRFLabelProperty     = Property<GRFLabel>;
