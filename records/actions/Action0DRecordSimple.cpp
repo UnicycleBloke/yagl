@@ -39,11 +39,11 @@ constexpr const char* str_source2    = "source2";
 constexpr const char* str_operation  = "operation";
 constexpr const char* str_data_value = "data_value";
 
-constexpr UInt8Descriptor  desc_target     = { idTarget,    str_target,     UIntFormat::Hex };
-constexpr UInt8Descriptor  desc_operation  = { idOperation, str_operation,  UIntFormat::Hex };
-constexpr UInt8Descriptor  desc_source1    = { idSource1,   str_source1,    UIntFormat::Hex };
-constexpr UInt8Descriptor  desc_source2    = { idSource2,   str_source2,    UIntFormat::Hex };
-constexpr UInt32Descriptor desc_data_value = { idDataValue, str_data_value, UIntFormat::Hex };
+constexpr UInt8Descriptor  desc_target     = { idTarget,    str_target };
+constexpr UInt8Descriptor  desc_operation  = { idOperation, str_operation };
+constexpr UInt8Descriptor  desc_source1    = { idSource1,   str_source1 };
+constexpr UInt8Descriptor  desc_source2    = { idSource2,   str_source2 };
+constexpr UInt32Descriptor desc_data_value = { idDataValue, str_data_value };
 
 const std::map<std::string, uint8_t> g_indices =
 {

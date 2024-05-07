@@ -27,8 +27,8 @@
 #include "properties/VisualEffect.h"
 
 
-using UInt8PropertyDec  = Property<UIntNew<uint8_t, false, UIntFormat::Dec>>;
-using UInt16PropertyDec = Property<UIntNew<uint16_t, false, UIntFormat::Dec>>;
+using UInt8PropertyDec  = Property<UInt<uint8_t, false, UIntFormat::Dec>>;
+using UInt16PropertyDec = Property<UInt<uint16_t, false, UIntFormat::Dec>>;
 
 
 class Action00Trains : public Action00Vehicles

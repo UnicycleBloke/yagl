@@ -271,7 +271,7 @@ const std::map<std::string, uint8_t> g_indices =
 };
 
 
-const UIntDescriptor<UInt16> desc_default { 0x03, str_default, UIntFormat::Hex };
+const UIntDescriptor<UInt16> desc_default { 0x03, str_default };
 
 
 } // namespace {
@@ -326,7 +326,7 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
     os << ", ";
-    m_set_id.print(os, UIntFormat::Hex);
+    m_set_id.print(os, 0);
     os << ", " << desc_var_type.value(m_var_type);
     os << "> // Action02 variable" << '\n';
     os << pad(indent) << "{" << '\n';

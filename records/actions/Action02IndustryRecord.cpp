@@ -214,12 +214,12 @@ const std::map<std::string, uint8_t> g_indices2 =
 };
 
 
-GenericDescriptor<Array<UInt16New, 3>> desc_sub_in_amounts { 0x01, str_sub_in_amounts };
-GenericDescriptor<Array<UInt16New, 2>> desc_add_out_amounts{ 0x02, str_add_out_amounts };
+GenericDescriptor<Array<UInt16, 3>> desc_sub_in_amounts { 0x01, str_sub_in_amounts };
+GenericDescriptor<Array<UInt16, 2>> desc_add_out_amounts{ 0x02, str_add_out_amounts };
 BoolDescriptor                         desc_repeat_flag    { 0x03, str_repeat_flag };
 
-GenericDescriptor<Array<UInt8New, 3>> desc_sub_in_regs { 0x01, str_sub_in_regs };
-GenericDescriptor<Array<UInt8New, 2>> desc_add_out_regs{ 0x02, str_add_out_regs };
+GenericDescriptor<Array<UInt8, 3>> desc_sub_in_regs { 0x01, str_sub_in_regs };
+GenericDescriptor<Array<UInt8, 2>> desc_add_out_regs{ 0x02, str_add_out_regs };
 UInt8Descriptor                       desc_repeat_reg  { 0x03, str_repeat_reg };
 
 

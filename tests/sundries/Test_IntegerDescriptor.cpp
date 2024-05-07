@@ -86,11 +86,11 @@ TEST_CASE("UInt types", "[integers]")
             value.set(static_cast<uint8_t>(i));
 
             std::ostringstream os;
-            value.print(os, UIntFormat::Dec);
-            CHECK(os.str() == to_string(static_cast<uint8_t>(i), UIntFormat::Dec));
+            value.print(os);
+            // TODO CHECK(os.str() == to_string(static_cast<uint8_t>(i), UIntFormat::Dec));
 
             os.str("");
-            value.print(os, UIntFormat::Hex);
+            value.print(os);
             auto str = os.str();
             CHECK(str == to_string(static_cast<uint8_t>(i), UIntFormat::Hex));
 
@@ -119,32 +119,32 @@ TEST_CASE("UInt types", "[integers]")
         }
     }
 
-    SECTION("UInt8Ext")
+    SECTION("UInt8X")
     {
         for (uint32_t i = 0; i <= 0xFFFF; i += 101)
         {
-            UInt8Ext value;
+            UInt8X value;
             value.set(static_cast<uint16_t>(i));
 
             std::ostringstream os;
-            value.print(os, UIntFormat::Dec);
-            CHECK(os.str() == to_string(static_cast<uint16_t>(i), UIntFormat::Dec));
+            value.print(os);
+            // TODO CHECK(os.str() == to_string(static_cast<uint16_t>(i), UIntFormat::Dec));
 
             os.str("");
-            value.print(os, UIntFormat::Hex);
+            value.print(os);
             auto str = os.str();
             CHECK(str == to_string(static_cast<uint16_t>(i), UIntFormat::Hex));
 
             std::istringstream is(str);
             TokenStream ts{is};
-            UInt8Ext value2;
+            UInt8X value2;
             value2.parse(ts);
             CHECK(value2.get() == i);
         }
 
         for (uint32_t i = 0; i <= 0xFFFF; i += 101)
         {
-            UInt8Ext value;
+            UInt8X value;
             value.set(static_cast<uint16_t>(i));
             std::ostringstream os;
             value.write(os);
@@ -158,7 +158,7 @@ TEST_CASE("UInt types", "[integers]")
             CHECK(uint8_t(str[2]) == (i >> 8));
 
             std::istringstream is(str);
-            UInt8Ext value2;
+            UInt8X value2;
             value2.read(is);
             CHECK(value2.get() == i);
         }
@@ -172,11 +172,11 @@ TEST_CASE("UInt types", "[integers]")
             value.set(static_cast<uint16_t>(i));
 
             std::ostringstream os;
-            value.print(os, UIntFormat::Dec);
-            CHECK(os.str() == to_string(static_cast<uint16_t>(i), UIntFormat::Dec));
+            value.print(os);
+            // TODO CHECK(os.str() == to_string(static_cast<uint16_t>(i), UIntFormat::Dec));
 
             os.str("");
-            value.print(os, UIntFormat::Hex);
+            value.print(os);
             auto str = os.str();
             CHECK(str == to_string(static_cast<uint16_t>(i), UIntFormat::Hex));
 
@@ -214,11 +214,11 @@ TEST_CASE("UInt types", "[integers]")
             value.set(static_cast<uint32_t>(i));
 
             std::ostringstream os;
-            value.print(os, UIntFormat::Dec);
-            CHECK(os.str() == to_string(static_cast<uint32_t>(i), UIntFormat::Dec));
+            value.print(os);
+            // TODO CHECK(os.str() == to_string(static_cast<uint32_t>(i), UIntFormat::Dec));
 
             os.str("");
-            value.print(os, UIntFormat::Hex);
+            value.print(os);
             auto str = os.str();
             CHECK(str == to_string(static_cast<uint32_t>(i), UIntFormat::Hex));
 
@@ -256,7 +256,7 @@ TEST_CASE("UIntDescriptor", "[integers]")
 {
     SECTION("UInt8")
     {
-        UIntDescriptor<UInt8> desc{ 0, "name", UIntFormat::Hex };
+        UIntDescriptor<UInt8> desc{ 0, "name" };
         UInt8 value{0x23};
 
         std::ostringstream os;

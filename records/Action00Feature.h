@@ -48,7 +48,7 @@ public:
 private:
     FeatureType m_feature;
 protected:
-    // TODO Fix this
+    // TODO Fix this - protected data is not ideal.
     PropertyMap m_properties;                  
 };
 

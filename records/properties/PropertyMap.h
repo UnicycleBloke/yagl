@@ -45,6 +45,8 @@ public:
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index);
 
 private:
+    // TODO just have a vector and reduce complexity/memory.
+    // TODO can a feature have a static Property map?
     std::map<uint8_t, PropertyBase*>     m_properties_by_index; 
     std::map<std::string, PropertyBase*> m_properties_by_label; 
 };
@@ -56,14 +58,14 @@ private:
 class PropertyBase
 {
 public:
-    PropertyBase(PropertyMap& container, uint8_t index, const std::string& label)
+    PropertyBase(PropertyMap& container, uint8_t index, const char* label)
     : m_index{index}, m_label{label} 
     {
         container.register_property(this);
     }
 
-    uint8_t index() const            { return m_index; } 
-    const std::string& label() const { return m_label; }
+    uint8_t index() const     { return m_index; } 
+    const char* label() const { return m_label; }
 
     // Each type of property has the same API, from a simple integer 
     // to a complex sprite layout.
@@ -74,7 +76,7 @@ public:
 
 private:   
     uint8_t     m_index;
-    std::string m_label;
+    const char* m_label;
 };
 
 
@@ -94,7 +96,7 @@ class Property : public PropertyBase
 {
 public:
     template <typename... Args>
-    Property(PropertyMap& container, uint8_t index, const std::string& label, const Args&... args)
+    Property(PropertyMap& container, uint8_t index, const char* label, const Args&... args)
     : PropertyBase(container, index, label) 
     , m_value{args...}
     {

@@ -19,9 +19,7 @@
 #pragma once
 #include "DescriptorBase.h"
 #include "StreamHelpers.h"
-
-
-enum class UIntFormat { Dec, Hex, Bool };
+#include "properties/IntegerValue.h"
 
 
 template <typename T>
@@ -109,57 +107,6 @@ struct IntegerListDescriptorT : PropertyDescriptor
 };
 
 
-// Use this in place of naked uint8_t, uint16_t and uint32_t.
-// Should help to avoid errors by internalising the size of reads and
-// writes. UIntFormat is a print parameter, which is not true of all
-// types with the read(), write(), parse(), print() interface.
-// TODO what about signed types?
-template <typename T, bool EXT = false>
-class UInt
-{
-public:
-    using Type = T;
-    static constexpr bool Ext = EXT;
-
-public:
-    void print(std::ostream& os, UIntFormat format) const
-    {
-        os << to_string(m_value, format);
-    }
-
-    void parse(TokenStream& is)
-    {
-        m_value = is.match_uint<T>();
-    }
-
-    void read(std::istream& is)
-    {
-        m_value = read_uint<T, EXT>(is);
-    }
-
-    void write(std::ostream& os) const
-    {
-        write_uint<T, EXT>(os, m_value);
-    }
-
-    // Work around for BitFieldDescriptor. For now.
-    UInt(T value = 0) : m_value{value} {}
-    operator T() const { return m_value; }
-
-    T get() const     { return m_value; }
-    void set(T value) { m_value = value; }
-
-    // Only added for testing.
-    bool operator==(const UInt& other) const
-    {
-        return m_value == other.m_value;
-    }
-
-private:
-    T m_value{};
-};
-
-
 // TODO adding a print_property() member to the value would eliminate the need for this
 template <typename T>
 struct UIntDescriptor : PropertyDescriptor
@@ -168,7 +115,7 @@ struct UIntDescriptor : PropertyDescriptor
     {
         // This is the name of the property.
         prefix(os, indent);
-        value.print(os, format);
+        value.print(os, indent);
         os << ";\n";
     }
 
@@ -177,20 +124,12 @@ struct UIntDescriptor : PropertyDescriptor
         value.parse(is);
     }
 
-    UIntFormat format = UIntFormat::Hex;
+    //UIntFormat format = UIntFormat::Hex;
 };
 
 
-using UInt8    = UInt<uint8_t>;
-using UInt8Ext = UInt<uint16_t, true>;
-using UInt16   = UInt<uint16_t>;
-using UInt32   = UInt<uint32_t>;
+using UInt8Descriptor  = UIntDescriptor<UInt8>;
+using UInt8XDescriptor = UIntDescriptor<UInt8X>;
+using UInt16Descriptor = UIntDescriptor<UInt16>;
+using UInt32Descriptor = UIntDescriptor<UInt32>;
 
-using UInt8Descriptor    = UIntDescriptor<UInt8>;
-using UInt8ExtDescriptor = UIntDescriptor<UInt8Ext>;
-using UInt16Descriptor   = UIntDescriptor<UInt16>;
-using UInt32Descriptor   = UIntDescriptor<UInt32>;
-
-// A specific use case
-//using CargoList           = UIntVector<UInt8>;
-//using CargoListDescriptor = UIntDescriptor<CargoList>;

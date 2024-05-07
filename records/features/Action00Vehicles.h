@@ -26,7 +26,7 @@
 #include "properties/Array.h"
 
 
-using UInt8PropertyDec = Property<UIntNew<uint8_t, false, UIntFormat::Dec>>;
+using UInt8PropertyDec = Property<UInt<uint8_t, false, UIntFormat::Dec>>;
 using Bit8Property     = Property<BitfieldValue<uint8_t>>;
 
 
