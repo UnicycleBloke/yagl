@@ -465,10 +465,6 @@ void write_string(std::ostream& os, const std::string& value)
 }
 
 
-// TODO this is such bloaty code... the goal was to make sure to get something working.
-// Can always refactor later once some tests added.
-
-
 static const ControlCode& find_extension_code(const std::u16string& name)
 {
     for (const auto& item: g_extension_codes)

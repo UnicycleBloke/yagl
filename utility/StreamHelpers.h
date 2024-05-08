@@ -40,7 +40,6 @@ void write_uint16(std::ostream& os, uint16_t value);
 void write_uint32(std::ostream& os, uint32_t value);
 
 
-// TODO Change to a concept.
 template <typename T>
 constexpr bool is_uint_v = 
     std::is_same_v<T, uint8_t> || 

@@ -36,7 +36,6 @@ void IndustryMultipliers::write(std::ostream& os) const
 {
     write_uint8(os, m_num_inputs);
     write_uint8(os, m_num_outputs);
-    // TODO assert size of vector matches.
     for (uint16_t item: m_items)
     {
         write_uint16(os, item);
