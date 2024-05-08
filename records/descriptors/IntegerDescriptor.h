@@ -22,39 +22,6 @@
 #include "properties/IntegerValue.h"
 
 
-template <typename T>
-std::string to_string(T value, UIntFormat format = UIntFormat::Hex)
-{
-    char buffer[24];
-    switch (format)
-    {
-        case UIntFormat::Hex:
-            if constexpr (sizeof(T) == 1)
-                std::snprintf(buffer, 16, "0x%02X", value & 0xFF);
-            else if constexpr (sizeof(T) == 2)
-                std::snprintf(buffer, 16, "0x%04X", value & 0xFFFF);
-            else if constexpr (sizeof(T) == 4)
-                std::snprintf(buffer, 16, "0x%08X", value & 0xFFFF'FFFF);
-            else if constexpr (sizeof(T) == 8)
-                std::snprintf(buffer, 16, "0x%016X", value);
-            break;
-
-        case UIntFormat::Dec:
-            std::snprintf(buffer, 16, "%u", value);
-            break;
-
-        case UIntFormat::Bool:
-            std::snprintf(buffer, 16, "%s", value != 0x00 ? "true" : "false");
-            break;
-
-        default:
-            std::snprintf(buffer, 16, "<error>");
-    }
-
-    return std::string{buffer};
-}
-
-
 // TODO Can we retire this.
 // Used in Actions 0B, 02Random, 02SpriteLayout, 02Variable, 03.
 template <typename T>

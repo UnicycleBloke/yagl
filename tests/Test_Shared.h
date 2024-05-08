@@ -155,3 +155,46 @@ void test_container(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT =
     //CHECK(os.str() == YAGL_OUT);
 }
 
+
+template <typename ValueType>
+void test_yagl_fragment(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = nullptr)
+{
+    if (YAGL_OUT == nullptr)
+    {
+        YAGL_OUT = YAGL_IN;
+    }
+
+    // Confirm that we print what we parse.
+    // The sample is in the expected format.
+    std::istringstream is(YAGL_IN);
+    TokenStream ts{is};
+    ValueType value{};
+    value.parse(ts);
+
+    std::ostringstream os;
+    value.print(os);
+    CHECK(os.str() == YAGL_OUT);
+    if (os.str() != YAGL_OUT)
+    {
+        std::cout << hex_dump(os.str(), true) << "\n";
+        std::cout << hex_dump(YAGL_OUT, true) << "\n";
+    }
+
+    // Confirm that the written binary matches the sample.
+    os.str("");
+    value.write(os);
+    auto str = os.str();
+    CHECK(str.size() == (std::strlen(NFO) / 3));
+    CHECK(hex_dump(str) == NFO);
+
+    // Confirm that reading the binary and printing the
+    // result gets us back to the example.
+    std::istringstream is2(str);
+    ValueType value2;
+    value2.read(is2);
+    os.str("");
+    value2.print(os);
+    CHECK(os.str() == YAGL_OUT);
+}
+
+

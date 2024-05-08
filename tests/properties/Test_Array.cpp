@@ -16,24 +16,29 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once
-#include "TokenStream.h"
-#include <array>
-#include <iostream>
-#include <cstdint>
+#include "catch.hpp"
+#include "Test_Shared.h"
+#include "properties/Array.h"
+#include "properties/IntegerValue.h"
 
 
-class SnowLine
+static constexpr const char* str_YAGL16 = "[ 0x1020 0x2030 0x3243 ]";
+static constexpr const char* str_YAGL32 = "[ 0x00001020 0x00002030 0x00003243 0x12235435 ]";
+
+// NFO matching the YAGL.
+static constexpr const char* str_NFO16 = "20 10 30 20 43 32 ";
+static constexpr const char* str_NFO32 = "20 10 00 00 30 20 00 00 43 32 00 00 35 54 23 12 ";
+
+
+TEST_CASE("Array<UInt16,3>", "[properties]")
 {
-public:
-    // Binary serialisation
-    void read(std::istream& is);
-    void write(std::ostream& os) const;
-    // Text serialisation
-    void print(std::ostream& os, uint16_t indent = 0) const;
-    void parse(TokenStream& is);
+    test_yagl_fragment<Array<UInt16, 3>>(str_YAGL16, str_NFO16);
+}
 
-private:
-    static constexpr uint32_t SNOW_LINE_SIZE = 32U * 12U;
-    std::array<uint8_t, SNOW_LINE_SIZE> m_snow_heights;
-};
+
+TEST_CASE("Array<UInt32,4>", "[properties]")
+{
+    test_yagl_fragment<Array<UInt32, 4>>(str_YAGL32, str_NFO32);
+}
+
+
