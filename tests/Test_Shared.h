@@ -156,6 +156,40 @@ void test_container(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT =
 }
 
 
+inline bool confirm_strings_equal(const char* p1, const char* p2)
+{
+    int row = 0;
+    int col = 0;
+
+    while (*p1 && *p2)
+    {
+        if (*p1 != *p2)
+        {
+            std::cout << "Strings differ at row=" << row << ", col=" << col << "\n";
+            return false;
+        }
+
+        ++col;
+        if (*p1 == '\n')
+        {
+            ++row;
+            col = 0;
+        }  
+
+        ++p1;
+        ++p2;  
+    }
+
+    if (*p1 || *p2)
+    {
+        std::cout << "Strings are of different lengths\n";
+        return false;
+    }
+
+    return true;
+}
+
+
 template <typename ValueType>
 void test_yagl_fragment(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = nullptr)
 {
@@ -173,12 +207,22 @@ void test_yagl_fragment(const char* YAGL_IN, const char* NFO, const char* YAGL_O
 
     std::ostringstream os;
     value.print(os);
-    CHECK(os.str() == YAGL_OUT);
-    if (os.str() != YAGL_OUT)
+    std::string yagl_new = os.str();
+    std::string yagl_out = YAGL_OUT;
+    auto confirm = confirm_strings_equal(yagl_new.c_str(), YAGL_OUT);
+    if (yagl_new != yagl_out)
     {
-        std::cout << hex_dump(os.str(), true) << "\n";
-        std::cout << hex_dump(YAGL_OUT, true) << "\n";
+        auto str1 = yagl_new;
+        auto str2 = yagl_out;
+        str1.erase(std::remove_if(str1.begin(), str1.end(), std::isspace), str1.end());
+        str2.erase(std::remove_if(str2.begin(), str2.end(), std::isspace), str2.end());
+        if (str1 == str2)
+        {
+            std::cout << "Strings differ only in whitespace\n";
+        }
     }
+    CHECK(confirm);
+    CHECK(yagl_new == yagl_out);
 
     // Confirm that the written binary matches the sample.
     os.str("");
@@ -196,5 +240,3 @@ void test_yagl_fragment(const char* YAGL_IN, const char* NFO, const char* YAGL_O
     value2.print(os);
     CHECK(os.str() == YAGL_OUT);
 }
-
-

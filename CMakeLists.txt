@@ -129,10 +129,12 @@ add_executable(yagl_tests
     tests/sundries/Test_DateDescriptor.cpp
 
     # Value types used for properties.
-    tests/properties/Test_AirportLayout.cpp
     tests/properties/Test_Array.cpp
     tests/properties/Test_Vector.cpp
+    tests/properties/Test_AirportLayout.cpp
+    tests/properties/Test_BridgeLayout.cpp
     tests/properties/Test_SnowLine.cpp
+    tests/properties/Test_CargoAcceptance.cpp
 
     # Properties for various features.
     tests/features/Test_Action00_Aircraft.cpp

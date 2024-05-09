@@ -16,35 +16,22 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once
-#include "TokenStream.h"
-#include <vector>
-#include <array>
-#include <iostream>
+#include "catch.hpp"
+#include "Test_Shared.h"
+#include "properties/CargoAcceptance.h"
 
 
-class BridgeTable
+static constexpr const char* str_YAGL  = "{0x02: 0x12}";
+static constexpr const char* str_YAGL2 = "[ {0x02: 0x12} {0x03: 0x23} {0x05: 0x55} {0x06: 0x67} ]";
+
+
+// NFO matching the YAGL. Same as Array except preceded by the length.
+static constexpr const char* str_NFO  = "02 12 ";
+static constexpr const char* str_NFO2 = "04 02 12 03 23 05 55 06 67 ";
+
+
+TEST_CASE("CargoAcceptance", "[properties]")
 {
-public:
-    void read(std::istream& is);
-    void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent = 0) const;
-    void parse(TokenStream& is);
-
-private:
-    std::array<uint32_t, 32> m_sprites;
-};
-
-
-class BridgeLayout
-{
-public:
-    void read(std::istream& is);
-    void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent = 0) const;
-    void parse(TokenStream& is);
-
-private:
-    uint8_t                  m_first_table_id{};
-    std::vector<BridgeTable> m_tables;
-};
+    test_yagl_fragment<CargoAcceptance>(str_YAGL, str_NFO);
+    test_yagl_fragment<CargoAcceptanceList>(str_YAGL2, str_NFO2);
+}

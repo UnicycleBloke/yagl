@@ -82,7 +82,6 @@ struct Vector
         is.match(TokenType::CloseBracket);
     }
 
-private:
-    
+private:    
     std::vector<T> m_items{};
 };
