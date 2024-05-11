@@ -57,7 +57,7 @@ class SpriteLayout
 public:
     void read(std::istream& is);
     void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent) const;
+    void print(std::ostream& os, uint16_t indent = 0) const;
     void parse(TokenStream& is);
 
 private:
@@ -101,7 +101,7 @@ private:
 
         void read(std::istream& is,  bool is_parent);
         void write(std::ostream& os, bool is_parent) const;
-        void print(std::ostream& os, bool is_parent, uint16_t indent) const;
+        void print(std::ostream& os, bool is_parent, uint16_t indent = 0) const;
         void parse(TokenStream& is,  bool is_parent);
     };
 

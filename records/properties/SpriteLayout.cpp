@@ -361,6 +361,9 @@ void SpriteLayout::Registers::print(std::ostream& os, bool is_parent, uint16_t i
         if (flags & BIT2_RECOLOUR_OFFSET) desc_palette_offset.print(recolour_offset, os, indent + 4);
         if (flags & BIT3_RECOLOUR_ACT01)
         {
+            // It seems a bit silly to print the value of the flag when it cannot 
+            // be false if present. It is false by its absence (there is no register 
+            // associated with this flag).
             bool flag = true;
             desc_palette_act01.print(flag, os, indent + 4);
         }

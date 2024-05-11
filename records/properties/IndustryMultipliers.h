@@ -23,6 +23,13 @@
 #include <cstdint>
 
 
+// From the NewGRF specs:
+// This property defines a matrix which described how input cargos from property 26 are processed 
+// into output cargos from property 25.
+//    03 04    // 3 input cargos, 4 output cargos
+//    \wx0100 \wx0000 \wx0000 \wx0100    // input cargo 0 is converted to output cargos 0 and 3
+//    \wx0000 \wx0100 \wx0000 \wx0100    // input cargo 1 is converted to output cargos 1 and 3
+//    \wx0000 \wx0000 \wx0100 \wx0100    // input cargo 2 is converted to output cargos 2 and 3
 class IndustryMultipliers
 {
 public:
