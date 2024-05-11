@@ -113,7 +113,7 @@ static void encode()
         TokenStream token_stream{is};
 
         // Parse the YAGL script ...
-        std::cout << "Parsing YAGL..." << std::endl;
+        std::cout << "Parsing YAGL (" << token_stream.num_tokens() << " tokens) ..." << std::endl;
         NewGRFData grf_data;
         grf_data.parse(token_stream, options.yagl_dir(), options.image_base());
 

@@ -64,30 +64,35 @@ void IndustryMultipliers::print(std::ostream& os, uint16_t indent) const
 
 void IndustryMultipliers::parse(TokenStream& is)
 {
-    uint16_t inputs  = 0;
-    uint16_t outputs = 0;
+    using Outputs = std::vector<uint16_t>;
+    using Inputs  = std::vector<Outputs>;
+    Inputs inputs;
 
     is.match(TokenType::OpenBracket);
     while (is.peek().type != TokenType::CloseBracket)
     {
-        ++inputs;
+        Outputs outputs;
+
         is.match(TokenType::OpenBracket);
         while (is.peek().type != TokenType::CloseBracket)
         {
-            ++outputs;
             uint16_t value = is.match_uint16();
             m_items.push_back(value);
+            outputs.push_back(value);
         }
         is.match(TokenType::CloseBracket);
+
+        inputs.push_back(outputs);
     }
     is.match(TokenType::CloseBracket);
 
-    m_num_inputs  = static_cast<uint8_t>(inputs);
-    m_num_outputs = static_cast<uint8_t>(outputs / inputs);
+    m_num_inputs  = static_cast<uint8_t>(inputs.size());
+    m_num_outputs = static_cast<uint8_t>((m_num_inputs > 0) ? (inputs[0].size()) : 0);
 
-    // TODO should refactor to check that all subgroups are the same size.
-    // TODO dimensions of this matrix should match properties 0x25 and 0x26
-    RUNTIME_TEST(inputs <= 0xFF, "Industry multipliers: too many inputs");
-    RUNTIME_TEST((outputs % inputs) == 0, "Industry multipliers: invalid counts");
-    RUNTIME_TEST((outputs / inputs) <= 0xFF, "Industry multipliers: too many outputs");
+    RUNTIME_TEST(m_num_inputs  <= 0xFF, "Industry multipliers: too many inputs");
+    RUNTIME_TEST(m_num_outputs <= 0xFF, "Industry multipliers: too many outputs");
+    for (auto& i: inputs)
+    {
+        RUNTIME_TEST(i.size() == inputs[0].size(), "Industry multipliers: inconsistent output counts");
+    }
 }

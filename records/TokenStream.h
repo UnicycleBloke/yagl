@@ -80,6 +80,8 @@ public:
     // parsed again by that object. This gives a nicer exception...
     void unmatch() { if (m_index > 0) --m_index; }
 
+    auto num_tokens() const { return m_tokens.size(); }
+
 private:
     uint64_t match_uint64(TokenValue& token, DataType type);
 

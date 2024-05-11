@@ -42,6 +42,14 @@ void Action03Record::read(std::istream& is, const GRFInfo& info)
     m_feature_ids.resize(num_ids);
     for (uint8_t i = 0; i < num_ids; ++i)
     {
+        // In OpenTTD since r13482, each ID is an extended byte for vehicles, otherwise 
+        // the ID is a regular byte. 
+        //if (feature_is_vehicle(m_feature))
+        //    m_feature_ids[i] = read_uint8_ext(is);
+        //else
+        //    m_feature_ids[i] = read_uint8(is);
+        
+        // Since OpenTTD 14.0, each ID is an extended byte for all features. 
         m_feature_ids[i] = read_uint8_ext(is);
     }
 
@@ -73,12 +81,15 @@ void Action03Record::write(std::ostream& os, const GRFInfo& info) const
 
     for (auto id: m_feature_ids)
     {
-        // In OpenTTD since r13482, each ID is an extended byte for vehicles,
-        // otherwise the ID is a regular byte. Use short format where possible.
-        if (feature_is_vehicle(m_feature))
-            write_uint8_ext(os, id, ExtByteFormat::Short);
-        else
-            write_uint8(os, static_cast<uint8_t>(id));
+        // In OpenTTD since r13482, each ID is an extended byte for vehicles, otherwise 
+        // the ID is a regular byte. 
+        //if (feature_is_vehicle(m_feature))
+        //    write_uint8_ext(os, id, ExtByteFormat::Short);
+        //else
+        //    write_uint8(os, static_cast<uint8_t>(id));
+
+        // Since OpenTTD 14.0, each ID is an extended byte for all features. 
+        write_uint8_ext(os, id, ExtByteFormat::Short);
     }
 
     uint8_t num_cargo_types = uint8_t(m_cargo_types.size());
