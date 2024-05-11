@@ -33,6 +33,7 @@ struct BitfieldItem
 template <typename T>
 class BitfieldValue
 {
+    static_assert(std::is_same_v<T, uint8_t> || std::is_same_v<T, uint16_t> || std::is_same_v<T, uint32_t>);
 
 public:
     BitfieldValue(const std::vector<BitfieldItem>& items)
@@ -99,6 +100,6 @@ public:
 
 private:
     T m_value{};
-    const std::vector<BitfieldItem>& m_items;
+    const std::vector<BitfieldItem> m_items;
 };
 
