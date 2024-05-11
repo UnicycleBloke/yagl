@@ -44,7 +44,7 @@ void IndustryMultipliers::write(std::ostream& os) const
 
 
 // TODO This layout seems a bit unhelpful. Could add some line breaks. 
-// This is basically a Vector of Vector. Is the size fixed - could used Array?
+// This is basically a Vector of Vector.
 void IndustryMultipliers::print(std::ostream& os, uint16_t indent) const
 {
     uint16_t index = 0;

@@ -134,12 +134,14 @@ add_executable(yagl_tests
     tests/properties/Test_AirportLayout.cpp
     tests/properties/Test_BridgeLayout.cpp
     tests/properties/Test_SpriteLayout.cpp
+    tests/properties/Test_StationLayout.cpp
     tests/properties/Test_SnowLine.cpp
     tests/properties/Test_CargoAcceptance.cpp
     tests/properties/Test_GenderCase.cpp
     tests/properties/Test_DateValue.cpp
     tests/properties/Test_VisualEffect.cpp
     tests/properties/Test_IndustryMultipliers.cpp
+    tests/properties/Test_CustomStation.cpp
 
     # Properties for various features.
     tests/features/Test_Action00_Aircraft.cpp

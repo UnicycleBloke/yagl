@@ -27,7 +27,7 @@ class CustomLayout
 public:
     void read(std::istream& is);
     void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent) const;
+    void print(std::ostream& os, uint16_t indent = 0) const;
     void parse(TokenStream& is);
 
     bool terminator() const { return (m_platform_count == 0) && (m_platform_length == 0); }
@@ -51,7 +51,7 @@ private:
     uint8_t   m_platform_length;
     uint8_t   m_platform_count;
     Direction m_direction = Direction::NE_SW;
-    // length * count, All bytes 00, 02, 04 or 06
+    // length * count, All bytes 00, 02, 04 or 06 - see Platform enum
     std::vector<Platform> m_platform_tiles;
 };
 
@@ -61,7 +61,7 @@ class CustomStation
 public:
     void read(std::istream& is);
     void write(std::ostream& os) const;
-    void print(std::ostream& os, uint16_t indent) const;
+    void print(std::ostream& os, uint16_t indent = 0) const;
     void parse(TokenStream& is);
 
 private:
