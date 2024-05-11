@@ -240,3 +240,19 @@ void test_yagl_fragment(const char* YAGL_IN, const char* NFO, const char* YAGL_O
     value2.print(os);
     CHECK(os.str() == YAGL_OUT);
 }
+
+
+template <typename ValueType>
+void test_yagl_fragment(const std::string& YAGL_IN, const std::string& NFO, const std::string& YAGL_OUT)
+{
+    test_yagl_fragment<ValueType>(YAGL_IN.c_str(), NFO.c_str(), YAGL_OUT.c_str());
+}
+
+
+template <typename ValueType>
+void test_yagl_fragment(const std::string& YAGL_IN, const std::string& NFO)
+{
+    test_yagl_fragment<ValueType>(YAGL_IN.c_str(), NFO.c_str(), nullptr);
+}
+
+

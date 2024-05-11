@@ -131,6 +131,7 @@ add_executable(yagl_tests
     # Value types used for properties.
     tests/properties/Test_Array.cpp
     tests/properties/Test_Vector.cpp
+    tests/properties/Test_IntegerValue.cpp
     tests/properties/Test_AirportLayout.cpp
     tests/properties/Test_BridgeLayout.cpp
     tests/properties/Test_SpriteLayout.cpp
