@@ -140,6 +140,7 @@ add_executable(yagl_tests
     tests/properties/Test_CargoAcceptance.cpp
     tests/properties/Test_GenderCase.cpp
     tests/properties/Test_DateValue.cpp
+    tests/properties/Test_GRFLabel.cpp
     tests/properties/Test_YearValue.cpp
     tests/properties/Test_VisualEffect.cpp
     tests/properties/Test_IndustryMultipliers.cpp
