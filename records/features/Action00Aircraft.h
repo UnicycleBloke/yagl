@@ -20,7 +20,7 @@
 #include "Action00Vehicles.h"
 #include "properties/GRFLabel.h"
 #include "properties/DateValue.h"
-#include "properties/Boolean.h"
+#include "properties/BoolValue.h"
 #include "properties/IntegerValue.h"
 #include "properties/PropertyMap.h"
 #include "properties/Vector.h"

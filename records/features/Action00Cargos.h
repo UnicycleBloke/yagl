@@ -19,7 +19,7 @@
 #pragma once
 #include "Action00Feature.h"
 #include "properties/IntegerValue.h"
-#include "properties/Boolean.h"
+#include "properties/BoolValue.h"
 #include "GRFStrings.h"
 
 

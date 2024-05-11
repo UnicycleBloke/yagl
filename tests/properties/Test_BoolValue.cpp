@@ -16,25 +16,17 @@
 // You should have received a copy of the GNU General Public License
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once
-#include "DescriptorBase.h"
+#include "catch.hpp"
+#include "Test_Shared.h"
 #include "properties/BoolValue.h"
 
 
-struct RawBoolDescriptor : PropertyDescriptor
+TEST_CASE("BoolValue", "[properties]")
 {
-    void print(bool value, std::ostream& os, uint16_t indent) const
-    {
-        prefix(os, indent);
-        os << std::boolalpha << value << ";\n";
-    }
+    test_yagl_fragment<Bool>("true", "01 ");
+    test_yagl_fragment<Bool>("false", "00 ");
 
-    void parse(bool& value, TokenStream& is) const
-    {
-        value = is.match_bool();
-    }
-};
-
-
-using BoolDescriptor = GenericDescriptor<Bool>;
-
+    // According to the NewGRF specs: Is helicopter? 2=no, 0=yes 
+    test_yagl_fragment<BoolHeli>("true", "00 ");
+    test_yagl_fragment<BoolHeli>("false", "02 ");
+}

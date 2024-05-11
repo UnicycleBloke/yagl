@@ -20,7 +20,7 @@
 #include "Record.h"
 #include "IntegerDescriptor.h"
 #include "properties/IntegerValue.h"
-#include "properties/Boolean.h"
+#include "properties/BoolValue.h"
 #include <array>
 
 
