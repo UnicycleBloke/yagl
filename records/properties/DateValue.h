@@ -73,6 +73,12 @@ public:
 
     void read(std::istream& is)
     {
+        // Short date: Days since 1920 where TTD counts 365.25 days in a year. 
+        // TODO: The code here uses the same calculation as for long dates, but offsets the result by 701,265. Bug?
+
+        // Long date: Days since the year 0. This takes account of leap years; dividable by 4, but not 100 unless 400. 
+        // A start date of 1920-01-01 is obtained with a value of 701,265 (51 B3 0A 00). 
+
         uint32_t days;
         if constexpr (std::is_same_v<uint16_t, T>)
         {

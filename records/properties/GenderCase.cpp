@@ -45,6 +45,7 @@ void GenderCase::write(std::ostream& os) const
 }
 
 
+// TODO The format is not consistent with CargoAcceptance, and could use Vector template.
 void GenderCase::print(std::ostream& os, uint16_t indent) const
 {
     os << "[ ";

@@ -135,6 +135,9 @@ add_executable(yagl_tests
     tests/properties/Test_BridgeLayout.cpp
     tests/properties/Test_SnowLine.cpp
     tests/properties/Test_CargoAcceptance.cpp
+    tests/properties/Test_GenderCase.cpp
+    tests/properties/Test_DateValue.cpp
+    tests/properties/Test_VisualEffect.cpp
 
     # Properties for various features.
     tests/features/Test_Action00_Aircraft.cpp

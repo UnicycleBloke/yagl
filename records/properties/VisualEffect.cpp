@@ -56,7 +56,9 @@ static constexpr const char* str_effect = "effect";
 
 void VisualEffect::read(std::istream& is)
 {
+    // See https://newgrf-specs.tt-wiki.net/wiki/Action0/Vehicles/Trains for how this byte is encoded.
     uint8_t value = read_uint8(is);
+    
     if (value & 0x40)
     {
         m_effect   = static_cast<Type>(value & 0x43);
@@ -101,6 +103,7 @@ void VisualEffect::parse(TokenStream& is)
     {
         is.match(TokenType::Comma);
         m_position = is.match_uint8();
+        m_position = m_position & 0x0F;
     }
 
     // Optional feature.
@@ -109,6 +112,16 @@ void VisualEffect::parse(TokenStream& is)
     {
         is.match(TokenType::Comma);
         desc_power.parse(m_wagon_power, is);
+    }
+
+    // The position bits are not used with callbacks, but repurposed.
+    switch (m_effect)
+    {
+        case Type::DisableEffect:
+        case Type::SteamCallback:
+        case Type::DieselCallback:
+        case Type::ElectricCallback:
+            m_position = 0;            
     }
 
     is.match(TokenType::CloseParen);
