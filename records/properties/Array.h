@@ -69,5 +69,5 @@ struct Array
     }
 
 private:
-    std::array<T, Size> m_items{};
+    std::array<T, Size> m_items;
 };

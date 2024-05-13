@@ -20,6 +20,8 @@
 #include "catch.hpp"
 #include "Record.h"
 #include "StreamHelpers.h"
+// This just doesn't work. See remove_if usage below.
+//#include <execution>
 
 
 template <typename ActionRecord, uint8_t ACTION>
@@ -210,17 +212,19 @@ void test_yagl_fragment(const char* YAGL_IN, const char* NFO, const char* YAGL_O
     std::string yagl_new = os.str();
     std::string yagl_out = YAGL_OUT;
     auto confirm = confirm_strings_equal(yagl_new.c_str(), YAGL_OUT);
-    if (yagl_new != yagl_out)
-    {
-        auto str1 = yagl_new;
-        auto str2 = yagl_out;
-        str1.erase(std::remove_if(str1.begin(), str1.end(), std::isspace), str1.end());
-        str2.erase(std::remove_if(str2.begin(), str2.end(), std::isspace), str2.end());
-        if (str1 == str2)
-        {
-            std::cout << "Strings differ only in whitespace\n";
-        }
-    }
+    // if (yagl_new != yagl_out)
+    // {
+    //     auto str1 = yagl_new;
+    //     auto str2 = yagl_out;
+    //     // For some reason this call causes error with g++9.4.0-Ubuntu-20.04 without the execution policy.
+    //     // Nope. Stills fails. The code was fine with Visual Studio.
+    //     str1.erase(std::remove_if(std::execution::seq, str1.begin(), str1.end(), std::isspace), str1.end());
+    //     str2.erase(std::remove_if(std::execution::seq, str2.begin(), str2.end(), std::isspace), str2.end());
+    //     if (str1 == str2)
+    //     {
+    //         std::cout << "Strings differ only in whitespace\n";
+    //     }
+    // }
     CHECK(confirm);
     CHECK(yagl_new == yagl_out);
 

@@ -98,40 +98,33 @@ SpriteSheetPool& SpriteSheetPool::pool()
 
 SpriteSheet& SpriteSheetPool::get_sprite_sheet(const std::string file_name, SpriteSheet::Colour colour)
 {
-    try
+    auto it = m_sheets.find(file_name);
+    if (it == m_sheets.end())
     {
-        auto it = m_sheets.find(file_name);
-        if (it == m_sheets.end())
+        using Colour = SpriteSheet::Colour;
+
+        std::cout << "Opening sprite sheet: " << file_name << "..." << std::endl;
+        std::unique_ptr<SpriteSheet> sheet;
+
+        // PNG++ will throw if the file does not exist.
+        switch (colour)
         {
-            using Colour = SpriteSheet::Colour;
-
-            std::cout << "Opening sprite sheet: " << file_name << "..." << std::endl;
-
-            std::unique_ptr<SpriteSheet> sheet;
-            switch (colour)
-            {
-                case Colour::Palette:
-                    sheet = std::make_unique<PaletteSpriteSheet>(file_name);
-                    break;
-                // case Colour::RGB:
-                //     sheet = std::make_unique<RGBSpriteSheet>(file_name);
-                //     break;
-                case Colour::RGBA:
-                    sheet = std::make_unique<RGBASpriteSheet>(file_name);
-                    break;
-                default:
-                    std::cout << "Failed to load sprite sheet because reasons.";
-            }
-
-            m_sheets[file_name] = std::move(sheet);
+            case Colour::Palette:
+                sheet = std::make_unique<PaletteSpriteSheet>(file_name);
+                break;
+            // case Colour::RGB:
+            //     sheet = std::make_unique<RGBSpriteSheet>(file_name);
+            //     break;
+            case Colour::RGBA:
+                sheet = std::make_unique<RGBASpriteSheet>(file_name);
+                break;
+            default:
+                std::cout << "Failed to load sprite sheet because reasons.";
         }
 
-        return *m_sheets[file_name];
+        m_sheets[file_name] = std::move(sheet);
     }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    
 
+    // We throw an exception before we get here, if the file does not exist.
+    return *m_sheets[file_name];
 }
