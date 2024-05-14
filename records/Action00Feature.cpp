@@ -73,3 +73,10 @@ bool Action00Feature::parse_property(TokenStream& is, const std::string& label, 
     }
     return false;
 }
+
+
+void Action00Feature::print_info()
+{
+    m_properties.print_info();
+}
+

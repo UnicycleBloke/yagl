@@ -44,6 +44,8 @@ public:
     bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const;
     bool parse_property(TokenStream& is, const std::string& name, uint8_t& index);
 
+    void print_info() const;
+
 private:
     // TODO just have a vector and reduce complexity/memory.
     // TODO can a feature have a static Property map?
@@ -73,6 +75,7 @@ public:
     virtual void write(std::ostream& os) const = 0;
     virtual void print(std::ostream& os, uint16_t indent) const = 0;
     virtual void parse(TokenStream& is) = 0;
+    virtual void print_info(std::ostream& os) const = 0;
 
 private:   
     uint8_t     m_index;
@@ -122,6 +125,15 @@ public:
     void parse(TokenStream& is) override
     {   
         m_value.parse(is);     
+    }
+
+    void print_info(std::ostream& os) const override
+    {
+        //os << "Property " << to_hex(index()) << ": " << label() << ": " << typeid(T).name() << ": ";
+        os << "Property " << to_hex(index()) << ": " << label() << ": ";
+        //m_value.print_info(os);
+        m_value.print(os);
+        os << ";\n";  
     }
 
 private:

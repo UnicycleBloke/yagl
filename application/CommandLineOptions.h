@@ -28,7 +28,7 @@
 class CommandLineOptions
 {
     public:
-        enum class Operation { Decode, Encode, HexDump };
+        enum class Operation { Decode, Encode, HexDump, Info };
 
     public:
         void parse(int argc, char* argv[]);
@@ -41,6 +41,7 @@ class CommandLineOptions
         const std::string& yagl_file()  const { return m_yagl_file; }
         const std::string& hex_file()   const { return m_hex_file; }
         const std::string& image_base() const { return m_image_base; }
+        const std::string& info_item()  const { return m_info_item; }
 
         uint32_t           width()      const { return m_width; }
         uint32_t           height()     const { return m_height; }
@@ -64,6 +65,7 @@ class CommandLineOptions
         uint16_t    m_height    = 16'000;                 // Max height of spritesheets
         PaletteType m_palette   = PaletteType::Default;
         uint8_t     m_chunk_gap = 3;                      // Join chunks in tiles gaps smaller than is.
+        std::string m_info_item;
 
         // Calculated from m_grf_file and m_yagl_dir.
         std::string m_yagl_dir  = "sprites";

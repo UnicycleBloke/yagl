@@ -53,6 +53,7 @@ void CommandLineOptions::parse(int argc, char* argv[])
             ("d,decode",    "Decodes a GRF file to YAGL script and sprite sheets", cxxopts::value<bool>(decode))
             ("e,encode",    "Encodes a GRF file from YAGL script and sprite sheets", cxxopts::value<bool>(encode))
             ("x,hexdump",   "Reads a GRF file and dumps it to hex somewhat like NFO", cxxopts::value<bool>(hexdump))
+            ("i,info",      "Display information about <item> or 'list' to list supported items.", cxxopts::value<std::string>(m_info_item), "<item>")
 
             // Other options
             ("p,palette",   "Choose the initial palette for the GRF", cxxopts::value<uint16_t>(palette), "<idx>")
@@ -87,20 +88,29 @@ void CommandLineOptions::parse(int argc, char* argv[])
         }
 
         // Make sure that one and only one operation is selected.
-        uint16_t operation = decode + encode + hexdump;
+        bool info = (result.count("info") > 0);
+        uint16_t operation = decode + encode + hexdump + info;
         if (operation > 1)
         {
-            std::cout << "ERROR: The --encode.-e, --decode,-d, and --hexdump,-x options are mutually exclusive\n";
+            std::cout << "ERROR: The --encode.-e, --decode,-d, --info,-i, and --hexdump,-x options are mutually exclusive\n";
             exit(1);
         }
         if (operation == 0)
         {
-            std::cout << "ERROR: One of the --encode.-e, --decode,-d ,or --hexdump,-x options is required\n";
+            std::cout << "ERROR: One of the --encode.-e, --decode,-d, --info,-i, or --hexdump,-x options is required\n";
             exit(1);
         }
+        
         if (encode)  m_operation = Operation::Encode;
         if (decode)  m_operation = Operation::Decode;
         if (hexdump) m_operation = Operation::HexDump;
+        if (info)    m_operation = Operation::Info;
+
+        // We don't care about the other options if this is an information dump.
+        if (m_operation == Operation::Info)
+        {
+            return;
+        }
 
         // Make sure that we have GRF file.
         if (!result.count("grf_file"))
@@ -117,7 +127,7 @@ void CommandLineOptions::parse(int argc, char* argv[])
         m_hex_file   = fs::path(m_yagl_file).replace_extension("hex").make_preferred().string();
         m_image_base = fs::path(m_yagl_file).replace_extension().make_preferred().string();
 
-        if (m_operation == Operation::Decode)
+        if ((m_operation == Operation::Decode) || (m_operation == Operation::HexDump))
         {
             if (!fs::is_regular_file(m_grf_file))
             {

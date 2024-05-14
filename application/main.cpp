@@ -172,6 +172,57 @@ static void hex_dump()
 }
 
 
+#include "Action00Aircraft.h"
+#include "Action00Trains.h"
+
+
+template <typename ItemType>
+void print_info()
+{
+    ItemType item;
+    // TODO need a caption/title. Arrange index, label, type and example in a table?
+    item.print_info();
+}
+
+
+static void info_dump()
+{
+    CommandLineOptions& options = CommandLineOptions::options();
+
+
+    std::map<std::string, void(*)()> items;
+    items["aircraft"] = print_info<Action00Aircraft>;
+    items["trains"]   = print_info<Action00Trains>;
+
+    try
+    {    
+        if (options.info_item() == "list")
+        {
+            for (const auto& [key, value]: items)
+            {
+                std::cout << key << "\n";
+            }            
+        }
+        else
+        {
+            auto it = items.find(options.info_item());
+            if (it != items.end())
+            {
+                it->second();
+            }
+            else
+            {
+                std::cout << "Unknown item: '" << options.info_item() << "'\n";
+            }
+        }
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+    }
+}
+
+
 std::vector<std::string> split(const std::string& str)
 {
     std::vector<std::string> result;
@@ -207,6 +258,10 @@ int main (int argc, char* argv[])
 
         case CommandLineOptions::Operation::HexDump:
             hex_dump();
+            break;
+
+        case CommandLineOptions::Operation::Info:
+            info_dump();
             break;
     }
 

@@ -44,9 +44,12 @@ public:
     // Text serialisation
     virtual bool print_property(std::ostream& os, uint8_t property, uint16_t indent) const;
     virtual bool parse_property(TokenStream& is, const std::string& name, uint8_t& index);
+
+    void print_info();
     
 private:
     FeatureType m_feature;
+        
 protected:
     // TODO Fix this - protected data is not ideal.
     PropertyMap m_properties;                  

@@ -81,3 +81,12 @@ bool PropertyMap::parse_property(TokenStream& is, const std::string& label, uint
     }
     return false;
 }
+
+
+void PropertyMap::print_info() const
+{
+    for (auto [property, prop]: m_properties_by_index)
+    {
+        prop->print_info(std::cout);
+    }
+}
