@@ -2,6 +2,8 @@
 
 # Building on Windows
 
+**These instructions didn't work when I tried to reproduce the environment. Needs a little attention...**
+
 Starting in some folder on your machine, execute the following commands in a terminal window. This assumes that you have installed Microsoft Visual Studio 2019 (Community edition is fine), and placed MSBuild on the path, and have installed the build dependencies (see below):
 
 ```bash
