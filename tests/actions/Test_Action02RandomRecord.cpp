@@ -63,11 +63,29 @@ static constexpr const char* str_NFO =
     "FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 "
     "FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 FD 00 ";
 
+static constexpr const char* str_YAGL2 =
+R"(random_switch<Trains, 0x52, Consist, BackwardFromSameID[0x00]> // Action02 random
+{
+    triggers: 0x00;
+    rand_bit: 0x00;
+    set_ids: // set_id: probability;
+    {
+        0x0001: 1;
+        0x0002: 1;
+        0x0003: 1;
+        0x0004: 5;
+    };
+}
+)";
+
+static constexpr const char* str_NFO2 = "02 00 52 84 C0 00 00 08 01 00 02 00 03 00 04 00 04 00 04 00 04 00 04 00 ";
+
 } // namespace {
 
 
 TEST_CASE("Action02RandomRecord", "[actions]")
 {
     test_yagl<Action02RandomRecord, 0x02>(str_YAGL, str_NFO);
+    test_yagl<Action02RandomRecord, 0x02>(str_YAGL2, str_NFO2);
 }
 

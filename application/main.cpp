@@ -23,7 +23,7 @@
 #include "CommandLineOptions.h"
 #include "Version.h"
 #include "FileSystem.h"
-
+#include "InfoDump.h"
 // Unit testing framework
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"

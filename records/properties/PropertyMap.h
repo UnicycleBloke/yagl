@@ -124,6 +124,19 @@ public:
         m_value.parse(is);     
     }
 
+<<<<<<< Updated upstream
+=======
+    void print_info(std::ostream& os) const override
+    {
+        os << "Property " << to_hex(index()) << ": " << label() << ": ";
+        //m_value.print_info(os);
+        // Temporary output. We want the data type Byte, Word, DWord, Variable and other info. 
+        // Traits for properties? Could hold sample values and whatnot.
+        m_value.print(os);
+        os << ";\n";  
+    }
+
+>>>>>>> Stashed changes
 private:
     T m_value{};
 };
