@@ -39,6 +39,8 @@ add_library(yagl_lib STATIC
     # Second stage of parsing a YAGL script - deserialise the data from a stream of tokens.
     records/TokenStream.cpp
 
+    application/InfoDump.cpp
+
     records/Action00Feature.cpp
 
     records/properties/SpriteLayout.cpp

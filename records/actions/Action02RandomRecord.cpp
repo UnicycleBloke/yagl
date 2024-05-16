@@ -186,6 +186,7 @@ void Action02RandomRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 
     if (m_type == RandomType::Consist)
     {
+        is.match(TokenType::Comma);
         consist_desc.parse(m_method, is);
         is.match(TokenType::OpenBracket);
         m_count = is.match_uint8();

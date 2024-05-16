@@ -57,6 +57,19 @@ const std::string& TokenStream::match(TokenType type)
 
 void TokenStream::next_record()
 {
+    // We are at the top level already. Skip tokens until we enter a block. 
+    while (m_blocks == 0)
+    {
+        const TokenValue& token = peek();
+        if (token.type == TokenType::Terminator)
+        {
+            throw PARSER_ERROR("Unexpected end of token stream", token);
+        }
+
+        match(token.type);
+    }
+
+    // Skip tokens until we leave the current record, by checking block indent.
     while (m_blocks > 0)
     {
         const TokenValue& token = peek();
