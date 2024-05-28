@@ -19,6 +19,7 @@
 #include "InfoDump.h"
 #include "CommandLineOptions.h"
 // Features
+#include "FeatureType.h"
 #include "Action00Trains.h"
 #include "Action00RoadVehicles.h"
 #include "Action00Ships.h"
@@ -50,64 +51,98 @@ void print_type_info()
 }
 
 
-class TypeRegistry
+class FeatureRegistry
 {
 public:
-    TypeRegistry();
+    FeatureRegistry();
     void print_info(const std::string& item);
 
 private:
-    std::map<std::string, void(*)()> m_types;
+    std::map<FeatureType, void(*)()> m_features;
 };
 
 
-TypeRegistry::TypeRegistry()
+FeatureRegistry::FeatureRegistry()
 {
     // Features
-    m_types["Trains"]         = print_type_info<Action00Trains>;
-    m_types["RoadVehicles"]   = print_type_info<Action00RoadVehicles>;
-    m_types["Ships"]          = print_type_info<Action00Ships>;
-    m_types["Aircraft"]       = print_type_info<Action00Aircraft>;
-    m_types["Stations"]       = print_type_info<Action00Stations>;
-    m_types["Canals"]         = print_type_info<Action00Canals>;
-    m_types["Bridges"]        = print_type_info<Action00Bridges>;
-    m_types["Houses"]         = print_type_info<Action00Houses>;
-    m_types["GlobalSettings"] = print_type_info<Action00GlobalSettings>;
-    m_types["IndustryTiles"]  = print_type_info<Action00IndustryTiles>;
-    m_types["Industries"]     = print_type_info<Action00Industries>;
-    m_types["Cargos"]         = print_type_info<Action00Cargos>;
-    m_types["SoundEffects"]   = print_type_info<Action00SoundEffects>;
-    m_types["Airports"]       = print_type_info<Action00Airports>;
-    m_types["Objects"]        = print_type_info<Action00Objects>;
-    m_types["RailTypes"]      = print_type_info<Action00RailTypes>;
-    m_types["AirportTiles"]   = print_type_info<Action00AirportTiles>;
-    m_types["RoadTypes"]      = print_type_info<Action00RoadTypes>;
-    m_types["TramTypes"]      = print_type_info<Action00TramTypes>;
-    m_types["RoadStops"]      = print_type_info<Action00RoadStops>;
+    m_features[FeatureType::Trains]         = print_type_info<Action00Trains>;
+    m_features[FeatureType::RoadVehicles]   = print_type_info<Action00RoadVehicles>;
+    m_features[FeatureType::Ships]          = print_type_info<Action00Ships>;
+    m_features[FeatureType::Aircraft]       = print_type_info<Action00Aircraft>;
+    m_features[FeatureType::Stations]       = print_type_info<Action00Stations>;
+    m_features[FeatureType::Canals]         = print_type_info<Action00Canals>;
+    m_features[FeatureType::Bridges]        = print_type_info<Action00Bridges>;
+    m_features[FeatureType::Houses]         = print_type_info<Action00Houses>;
+    m_features[FeatureType::GlobalSettings] = print_type_info<Action00GlobalSettings>;
+    m_features[FeatureType::IndustryTiles]  = print_type_info<Action00IndustryTiles>;
+    m_features[FeatureType::Industries]     = print_type_info<Action00Industries>;
+    m_features[FeatureType::Cargos]         = print_type_info<Action00Cargos>;
+    m_features[FeatureType::SoundEffects]   = print_type_info<Action00SoundEffects>;
+    m_features[FeatureType::Airports]       = print_type_info<Action00Airports>;
+    m_features[FeatureType::Objects]        = print_type_info<Action00Objects>;
+    m_features[FeatureType::RailTypes]      = print_type_info<Action00RailTypes>;
+    m_features[FeatureType::AirportTiles]   = print_type_info<Action00AirportTiles>;
+    m_features[FeatureType::RoadTypes]      = print_type_info<Action00RoadTypes>;
+    m_features[FeatureType::TramTypes]      = print_type_info<Action00TramTypes>;
+    m_features[FeatureType::RoadStops]      = print_type_info<Action00RoadStops>;
 }
 
 
-void TypeRegistry::print_info(const std::string& item)
+void FeatureRegistry::print_info(const std::string& item)
 {
-    if (item == "list")
+    if (item == "...")
     {
-        for (const auto& [key, value]: m_types)
+        std::cout << "Features for which properties can be listed:\n";
+        for (const auto& [feature, value]: m_features)
         {
-            std::cout << key << "\n";
+            std::cout << "    " << to_hex(feature) << "  " << FeatureName(feature) << "\n";
         }            
+        std::cout << "For example, try 'yagl -i Feature:Trains'\n";
     }
     else
     {
-        auto it = m_types.find(item);
-        if (it != m_types.end())
+        try 
         {
-            it->second();
+            auto feature = FeatureFromName(item);
+            std::cout << "Properties for feature '" << item << "':\n";
+            auto it = m_features.find(feature);
+            if (it != m_features.end())
+            {
+                it->second();
+            }
+            else
+            {
+                std::cout << "No properties for feature: '" << item << "'\n";
+            }
         }
-        else
+        catch (...)
         {
-            std::cout << "Unknown item: '" << item << "'\n";
+            std::cout << "Unknown feature: '" << item << "'\n";
         }
     }
+    std::cout << "\n";
+}
+
+
+std::vector<std::string> split(std::string source, std::string delim)
+{
+    std::vector<std::string> result;
+
+    size_t start = 0;
+    size_t end = source.find(delim);
+    while (end != std::string::npos)
+    {
+        auto sub = source.substr(start, end - start);
+        if (sub.size() > 0) result.push_back(sub);
+
+        start = end + delim.length();
+        end   = source.find(delim, start);
+    }
+
+    auto sub = source.substr(start, end - start);
+    if (sub.size() > 0) result.push_back(sub);
+
+    return result;
 }
 
 
@@ -117,11 +152,29 @@ void info_dump()
 
     try
     {  
-        auto item = options.info_item();
-        //std::transform(item.begin(), item.end(), item.begin(), [](unsigned char c){ return std::tolower(c); });
+        auto items = split(options.info_item(), ":");
+        items.push_back("...");
 
-        TypeRegistry registry;
-        registry.print_info(item);
+        if (items[0] == "Feature")
+        {
+            FeatureRegistry registry;
+            registry.print_info(items[1]);
+        }
+        // else if (items[0] == "Action")
+        // {
+        //     TypeRegistry registry;
+        //     registry.print_info(items[1]);
+        // }
+        // else if (items[0] == "Enum")
+        // {
+        //     TypeRegistry registry;
+        //     registry.print_info(items[1]);
+        // }
+        else
+        {
+            //std::cout << "Top-level items are: Feature, Action, Enum.\n";
+            std::cout << "Top-level items are: Feature (for now). Try 'yagl -i Feature'\n";
+        } 
     }
     catch (const std::exception& e)
     {

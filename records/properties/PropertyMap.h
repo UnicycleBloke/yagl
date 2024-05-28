@@ -83,6 +83,17 @@ private:
 };
 
 
+// template <typename T> struct PropertySize { static constexpr const char* value = "V "; };
+// template <> struct PropertySize<UInt8>    { static constexpr const char* value = "B "; };
+// template <> struct PropertySize<UInt8X>   { static constexpr const char* value = "B*"; };
+// template <> struct PropertySize<UInt16>   { static constexpr const char* value = "W "; };
+// template <> struct PropertySize<UInt32>   { static constexpr const char* value = "D "; };
+// Add others ...
+
+// Implement this with explicit instantiation?
+//template <typename T> const char* type_name();
+
+
 // Properties are the main feature of Action00 records. In the NewGRF file, each 
 // property has an index (a uint8_t) and an associated data type to hold a value of 
 // that property. In the YAGL, each property has a corresponding label and an 
@@ -129,7 +140,11 @@ public:
 
     void print_info(std::ostream& os) const override
     {
-        os << "Property " << to_hex(index()) << ": " << label() << ": ";
+        // typeid() is not very helpful as it gives the compiler's name for the type. 
+        // Need to add type_name() method to each property, or some kind of trait.
+        //os << "    " << to_hex(index()) << "  " << typeid(T).name() << "  " << label() << ": ";
+        //os << "    " << to_hex(index()) << "  " << type_name<T>() << "  " << label() << ": ";
+        os << "    " << to_hex(index()) << "  " << label() << ": ";
         //m_value.print_info(os);
         // Temporary output. We want the data type Byte, Word, DWord, Variable and other info. 
         // Traits for properties? Could hold sample values and whatnot.

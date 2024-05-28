@@ -247,6 +247,7 @@ const std::map<FeatureType, std::string> g_feature_names =
     { FeatureType::AirportTiles,    "AirportTiles" },
     { FeatureType::RoadTypes,       "RoadTypes" },
     { FeatureType::TramTypes,       "TramTypes" },
+    { FeatureType::RoadStops,       "RoadStops" },
     { FeatureType::OriginalStrings, "OriginalStrings" },
 };
 

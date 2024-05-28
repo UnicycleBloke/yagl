@@ -37,6 +37,7 @@ void CommandLineOptions::parse(int argc, char* argv[])
     bool     decode  = false;
     bool     encode  = false;
     bool     hexdump = false;
+    bool     info    = false;
 
     uint16_t palette = 1;
     uint16_t format  = 2;
@@ -53,7 +54,7 @@ void CommandLineOptions::parse(int argc, char* argv[])
             ("d,decode",    "Decodes a GRF file to YAGL script and sprite sheets", cxxopts::value<bool>(decode))
             ("e,encode",    "Encodes a GRF file from YAGL script and sprite sheets", cxxopts::value<bool>(encode))
             ("x,hexdump",   "Reads a GRF file and dumps it to hex somewhat like NFO", cxxopts::value<bool>(hexdump))
-            ("i,info",      "Display information about <item> or 'list' to list supported items.", cxxopts::value<std::string>(m_info_item), "<item>")
+            ("i,info",      "Display information about YAGL items, such as 'Feature:Trains'", cxxopts::value<bool>(info))
 
             // Other options
             ("p,palette",   "Choose the initial palette for the GRF", cxxopts::value<uint16_t>(palette), "<idx>")
@@ -88,7 +89,6 @@ void CommandLineOptions::parse(int argc, char* argv[])
         }
 
         // Make sure that one and only one operation is selected.
-        bool info = (result.count("info") > 0);
         uint16_t operation = decode + encode + hexdump + info;
         if (operation > 1)
         {
@@ -109,6 +109,13 @@ void CommandLineOptions::parse(int argc, char* argv[])
         // We don't care about the other options if this is an information dump.
         if (m_operation == Operation::Info)
         {
+            // We repurpose the first positional parameter from GRF file name to info type.
+            // The default XXX should lead to a menu.            
+            m_info_item = "XXX";
+            if (result.count("grf_file"))
+            {
+                m_info_item = m_grf_file;
+            }
             return;
         }
 
