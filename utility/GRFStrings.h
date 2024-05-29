@@ -61,6 +61,8 @@ void write_string(std::ostream& os, const std::string& value, StringTerm term);
 void write_string(std::ostream& os, const std::string& value);
 std::string grf_string_to_readable_utf8(const std::string& value);
 
+// Added to support info mode by dumping all the supported string control codes.
+void print_control_code_info();
 
 using GRFStringDescriptor = GenericDescriptor<GRFString>;
 

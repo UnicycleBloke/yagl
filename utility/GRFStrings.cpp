@@ -23,6 +23,7 @@
 #include <sstream>
 #include <locale>
 #include <codecvt>
+#include <algorithm>
 
 
 struct ControlCode
@@ -74,8 +75,8 @@ static const std::map<uint8_t, ControlCode> g_control_codes =
     { 0x98, { 0x98, u"black",       0, "Black" } },
     { 0x99, { 0x99, u"switch-cc",   1, "Switch to company colour that follows in next byte (enabled by enhancegui)" } },
     { 0x9A, { 0x9A, u"ext",         0, "Extended format code in next byte:" } },
-    { 0x9E, { 0x9E, u"euro",        0, "Euro character '�'" } },
-    { 0x9F, { 0x9F, u"Y-umlaut",    0, "Capital Y umlaut '�'" } },
+    { 0x9E, { 0x9E, u"euro",        0, "Euro character" } },
+    { 0x9F, { 0x9F, u"Y-umlaut",    0, "Capital Y umlaut" } },
     { 0xA0, { 0xA0, u"scroll-up",   0, "Scroll button up" } },
     { 0xAA, { 0xAA, u"scroll-down", 0, "Scroll button down" } },
     { 0xAC, { 0xAC, u"tick",        0, "Tick mark" } },
@@ -140,6 +141,52 @@ static void process_utf16_control_codes(uint16_t u16, std::basic_ostringstream<c
     const std::string& str, uint16_t& pos);
 static std::u16string grf_string_to_utf16(const std::string& str);
 static std::u16string grf_string_utf16_to_readable_utf16(const std::u16string& str);
+static std::string binary_utf16_to_latin1(const std::u16string& str);
+
+
+static void print_control_code_info(const std::map<uint8_t, ControlCode>& controls)
+{
+    size_t max_length{4}; // Min length to ensure the captions line up.
+    std::vector<uint8_t> keys;
+    for (auto& [key, value]: controls)
+    {
+        keys.push_back(key);
+        max_length = std::max(max_length, std::u16string(value.name).size());
+    }
+    std::sort(keys.begin(), keys.end());
+    max_length += 2;
+
+    std::cout << "    Code  NArgs  Name";  
+    for (size_t i = 4; i < max_length; ++i) std::cout << ' '; 
+    std::cout << "Description\n";
+
+    std::cout << "    ----  -----  ----";  
+    for (size_t i = 6; i < max_length; ++i) std::cout << '-'; 
+    std::cout << "  -----------\n";
+
+    for (auto key: keys)
+    {
+        const ControlCode& control = controls.at(key); 
+        std::u16string name{control.name};
+        std::cout << "    " << to_hex(control.code) << "    " << to_hex(control.data_size, false) << "   ";
+        std::cout << binary_utf16_to_latin1(name);
+        for (size_t i = name.size(); i < max_length; ++i) std::cout << ' '; 
+        std::cout << control.description << "\n";
+    }
+}
+
+
+void print_control_code_info()
+{
+    std::cout << "Basic string control codes:\n\n";
+    print_control_code_info(g_control_codes);
+
+    std::cout << "\nExtended string control codes:\n\n";
+    print_control_code_info(g_extension_codes);
+
+    std::cout << "\nExample YAGL string with control codes:\n\n";
+    std::cout << "    name: \"Ridiculous Town Names {ext push-colour}{blue}1.2.3{ext pop-colour}\";\n\n";
+}
 
 
 std::string grf_string_to_readable_utf8(const std::string& str)

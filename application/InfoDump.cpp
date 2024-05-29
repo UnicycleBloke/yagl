@@ -160,6 +160,10 @@ void info_dump()
             FeatureRegistry registry;
             registry.print_info(items[1]);
         }
+        if (items[0] == "StringCodes")
+        {
+            print_control_code_info();
+        }
         // else if (items[0] == "Action")
         // {
         //     TypeRegistry registry;
@@ -173,7 +177,7 @@ void info_dump()
         else
         {
             //std::cout << "Top-level items are: Feature, Action, Enum.\n";
-            std::cout << "Top-level items are: Feature (for now). Try 'yagl -i Feature'\n";
+            std::cout << "Unknown item. Valid top-level items are: Feature, StringCodes (for now). Try 'yagl -i Feature'\n";
         } 
     }
     catch (const std::exception& e)
