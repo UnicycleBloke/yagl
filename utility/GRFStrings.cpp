@@ -74,7 +74,7 @@ static const std::map<uint8_t, ControlCode> g_control_codes =
     { 0x97, { 0x97, u"mauve",       0, "Mauve (grayish purple)" } },
     { 0x98, { 0x98, u"black",       0, "Black" } },
     { 0x99, { 0x99, u"switch-cc",   1, "Switch to company colour that follows in next byte (enabled by enhancegui)" } },
-    { 0x9A, { 0x9A, u"ext",         0, "Extended format code in next byte:" } },
+    { 0x9A, { 0x9A, u"ext",         0, "Prefix for extended format code, eg. {ext uw-tonnes}" } },
     { 0x9E, { 0x9E, u"euro",        0, "Euro character" } },
     { 0x9F, { 0x9F, u"Y-umlaut",    0, "Capital Y umlaut" } },
     { 0xA0, { 0xA0, u"scroll-up",   0, "Scroll button up" } },
