@@ -104,6 +104,11 @@ private:
     bool handle_comment_slash(uint8_t c);
     bool handle_comment_star(uint8_t c);
 
+    // Lines beginning with '#' are essentially comments, but we attempt to parse them
+    // to find one of a set of preprocessor/pragma-like directives.
+    bool handle_bash(uint8_t c);
+    void parse_bash_message();
+
     // Append a new token to the output list.
     void emit(TokenType type, std::string value = "");
     void emit(TokenType type, NumberType num_type, std::string value = "");
@@ -127,7 +132,10 @@ private:
         // '/' starts a comment: C-style if followed by '*'; C++-style if followed by '/'; or an error.
         // '*' heralds the end of C-style, if followed by '/', or is just a continuation.
         // '\n' marks the end of C++-style
-        Slash, Star, CPP, C
+        Slash, Star, CPP, C,
+        // State for bash-style "comments" which begin with '#' and run to the end of the line. These may be 
+        // interpreted as commands or pragmas in some case. 
+        Bash
     };
 
     // Cached name of the script file that we are lexing.

@@ -20,6 +20,7 @@
 #include <sstream>
 #include <fstream>
 #include <stdexcept>
+#include <regex>
 
 
 std::vector<TokenValue> Lexer::lex(std::istream& is)
@@ -107,6 +108,14 @@ bool Lexer::handle_byte(uint8_t c, uint8_t p)
                 }
             }
 
+            // Possibly the first character of a bash-style comment.
+            else if (c == '#')
+            {
+                m_state = LexerState::Bash;
+                m_value = c;
+                return true;
+            }
+
             // All the other tokens are single character symbols.
             return handle_symbol(c, p);
 
@@ -128,6 +137,8 @@ bool Lexer::handle_byte(uint8_t c, uint8_t p)
         case LexerState::CPP:   return handle_comment_cpp(c);
         case LexerState::Slash: return handle_comment_slash(c);
         case LexerState::Star:  return handle_comment_star(c);
+
+        case LexerState::Bash:  return handle_bash(c);
     }
 
     throw LEXER_ERROR("Unhandled character", m_line, m_column);
@@ -179,6 +190,76 @@ bool Lexer::handle_comment_star(uint8_t c)
         case '*': m_state = LexerState::Star; break;
         // Revert to C-style.
         default:  m_state = LexerState::C;
+    }
+    return true;
+}
+
+
+void Lexer::parse_bash_message()
+{
+    // This whole function is experimental...
+
+    // we attempt to parse m_value to see it is meaningful as a command.
+    // This could have three outcomes:
+    // - we find a valid command and execute it,
+    // - we find an invalid command and throw an exception, or
+    // - we don't find anything and silently ignore this line as a comment.
+    std::cout << "Found bash-style comment '" << m_value << "'\n";
+
+    // We can use gcc to combine multiple YAGL files into one with the following command (or similar):
+    // 
+    //     gcc -C -E -nostdinc -x c-header whatever.pyagl > whatever.yagl
+    //
+    // Where 'whatever.pyagl' is a regular YAGL file which contains C-style '#include "something.pyagl"' statements.
+    // gcc will recursively expand the included files, resulting in a single combined YAGL file. gcc also adds 
+    // some bash-style comments which indicate the original PYAGL file from which each block of lines was included.
+    // We can parse these to provide a little context for errors while reading the YAGL. It appears that files in
+    // sub-directories work just fine, and result in comments with the relative paths preserved.
+    //
+    // While using gcc in this way is clever, it seems to me that it would be better for yagl to directly implement 
+    // '#include "whatever.yagl"' statements. This could be achieved by making Lexer recursive. The lex() method 
+    // returns a std::vector<TokenValue> whose items could be move-appended to m_tokens in the current instance.
+    // This would remove the dependency on gcc, and on the assumptions about the format of the bash-style comments. 
+    // But it's more work...
+
+    // These formats seem to be what gcc inserts when you use gcc -E to combine multiple files into one.
+    //     '# 1 "file-name.yagl"'
+    //     '# 1 "file-name.yagl" 1'
+    const std::regex file_regex(R"(\s*#\s+(\d+)\s+\"(.+)\"\s*)");
+    const std::regex file_regex2(R"(\s*#\s+(\d+)\s+\"(.+)\"\s+(\d+)\s*)");
+
+    std::smatch file_match;
+    if (std::regex_match(m_value, file_match, file_regex))
+    {
+        // This should be assigned to m_file or some such, and used when reporting Lexer errors. 
+        // Would like a cheap way to make this available to the parser... Perhaps emit a new type of 
+        // token which changes the parser's equivalient of m_file...
+        std::cout << "Original source file: " << file_match[2] << '\n';
+    }
+    else if (std::regex_match(m_value, file_match, file_regex2))
+    {
+        std::cout << "Original source file: " << file_match[2] << '\n';
+    }
+    else
+    {
+        std::cout << "No match found\n";
+    }    
+}
+
+
+bool Lexer::handle_bash(uint8_t c)
+{
+    // We are in a bash-style comment: '\n' terminates it.
+    if (c == '\n')
+    {
+        parse_bash_message();
+        m_state  = LexerState::None;
+        m_column = 0;
+        ++m_line;
+    }
+    else
+    {
+        m_value += c;
     }
     return true;
 }
