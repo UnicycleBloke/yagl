@@ -27,15 +27,16 @@
 class LexerError : public std::runtime_error
 {
 public:
-    explicit LexerError(const std::string& what_arg, uint32_t line, uint32_t column, const char* file, uint32_t line2);
-    explicit LexerError(const char* what_arg, uint32_t line, uint32_t column, const char* file, uint32_t line2);
-
+    explicit LexerError(const std::string& what_arg, const std::string& yagl_file, uint32_t yagl_line, uint32_t yagl_column, 
+        const char* code_file, uint32_t code_line);
+    explicit LexerError(const char* what_arg, const std::string& yagl_file, uint32_t yagl_line, uint32_t yagl_column, 
+        const char* code_file, uint32_t code_line);
     const char* what() const noexcept { return m_what.c_str(); }
 
 private:
     std::string m_what;
 };
-#define LEXER_ERROR(what, line, column) LexerError(what, line, column, __FILE__, __LINE__)
+#define LEXER_ERROR(what, line, column) LexerError(what, m_yagl_file, line, column, __FILE__, __LINE__)
 
 
 // Exception used during parsing to indicates where in the original input the error occured.

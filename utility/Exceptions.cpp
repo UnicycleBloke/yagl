@@ -23,23 +23,26 @@
 #include <sstream>
 
 
-LexerError::LexerError(const std::string& what_arg, uint32_t line, uint32_t column, const char* file, uint32_t line2)
-: LexerError{what_arg.c_str(), line, column, file, line2}
+LexerError::LexerError(const std::string& what_arg, const std::string& yagl_file, uint32_t yagl_line, uint32_t yagl_column, 
+    const char* code_file, uint32_t code_line)
+: LexerError{what_arg.c_str(), yagl_file, yagl_line, yagl_column, code_file, code_line}
 {
 }
 
 
-LexerError::LexerError(const char* what_arg, uint32_t line, uint32_t column, const char* file, uint32_t line2)
+LexerError::LexerError(const char* what_arg, const std::string& yagl_file, uint32_t yagl_line, uint32_t yagl_column, 
+    const char* code_file, uint32_t code_line)
 : std::runtime_error{what_arg}
 {
     CommandLineOptions& options = CommandLineOptions::options();
 
+
     std::ostringstream os;
     os << "YAGL lexer error: ";
-    os << what_arg << " at line " << line << " column " << column << " in " << options.yagl_file();
+    os << what_arg << " at " << yagl_file << ":" << yagl_line << ":" << yagl_column;
     //if (options.debug())
     //{
-        os << "\n  [at line " << line << " in source file " << file << "]";
+        os << "\n  [at " << code_file << ":" << code_line << "]";
     //}
     m_what = os.str();
 }
@@ -58,10 +61,10 @@ ParserError::ParserError(const char* what_arg, const TokenValue& token, const ch
 
     std::ostringstream os;
     os << "YAGL parser error: ";
-    os << what_arg << " at line " << token.line << " column " << token.column << " in " << options.yagl_file();
+    os << what_arg << " at " << options.yagl_file() << ":" << token.line << ":" << token.column;
     //if (options.debug())
     //{
-        os << "\n  [at line " << line << " in source file " << file << "]";
+        os << "\n  [at " << file << ":" << line << "]";   
     //}
     m_what = os.str();
 }
@@ -83,7 +86,7 @@ RuntimeError::RuntimeError(const char* what_arg, const char* file, uint32_t line
     os << what_arg;
     //if (options.debug())
     //{
-        os << "\n  [at line " << line << " in source file " << file << "]";
+        os << "\n [at " << file << ":" << line << "]";
     //}
     m_what = os.str();
 }
@@ -105,7 +108,7 @@ PropertyError::PropertyError(const char* what_arg, FeatureType feature, uint8_t 
     os << what_arg << ": feature=" << FeatureName(feature) << ", property=" << to_hex(property);
     //if (options.debug())
     //{
-        os << "\n  [at line " << line << " in source file " << file << "]";
+        os << "\n [at " << file << ":" << line << "]";
     //}
     m_what = os.str();
 }

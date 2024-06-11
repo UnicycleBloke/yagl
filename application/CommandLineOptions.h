@@ -38,7 +38,7 @@ class CommandLineOptions
 
         const std::string& grf_file()   const { return m_grf_file; }
         const std::string& yagl_dir()   const { return m_yagl_dir; }
-        const std::string& yagl_file()  const { return m_yagl_file; }
+        const std::string& yagl_file()  const { return (m_curr_file.size() > 0) ? m_curr_file : m_yagl_file; }
         const std::string& hex_file()   const { return m_hex_file; }
         const std::string& image_base() const { return m_image_base; }
         const std::string& info_item()  const { return m_info_item; }
@@ -50,6 +50,9 @@ class CommandLineOptions
 
         bool               debug()      const { return m_debug; }
         const std::string& test_args()  const { return m_test_args; }
+
+        // A bit of a bodge - see below.
+        void set_curr_file(const std::string file) { m_curr_file = file; }
 
     private:
         CommandLineOptions() {}
@@ -72,6 +75,11 @@ class CommandLineOptions
         std::string m_yagl_file;
         std::string m_hex_file;
         std::string m_image_base;
+
+        // Current source file as found while parsing the YAGL.
+        // Putting it into the options is a bit of a bodge but makes
+        // access simple for parser exceptions.
+        std::string m_curr_file;
 
         // Used for debugging
         bool        m_debug    = false;

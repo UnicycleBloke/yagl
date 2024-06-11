@@ -17,7 +17,28 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "TokenStream.h"
+#include "application/CommandLineOptions.h"
 #include <sstream>
+
+
+void TokenStream::match_filename()
+{
+    // Deal with multiple consecutive file name tokens.
+    while (true)
+    {
+        const TokenValue& token = peek();
+        if (token.type == TokenType::FileName)
+        {
+            std::cout << "Changing YAGL file name: " << token.value << '\n';
+            CommandLineOptions::options().set_curr_file(token.value);
+            match(TokenType::FileName);
+        }
+        else
+        {
+            return;
+        }
+    }
+}
 
 
 const TokenValue& TokenStream::peek(uint16_t lookahead)
@@ -50,6 +71,8 @@ const std::string& TokenStream::match(TokenType type)
         //std::cout << m_blocks << " -> " << (m_blocks - 1) << "\n";
         --m_blocks;
     }
+
+    match_filename();
 
     return token.value;
 }

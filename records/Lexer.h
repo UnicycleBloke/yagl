@@ -51,9 +51,11 @@ enum class TokenType
     OpDivide,   // / - single slash
 
     // Tokens with values attached
-    Number, // Any decimal, binary (0bXXX), octal (0XXX), hexadecimal (0xXXX), or (decimal) floating point number
-    Ident,  // Any name or keyword
-    String, // Any string literal - this is a unicode string endoded as UTF-8.
+    Number,     // Any decimal, binary (0bXXX), octal (0XXX), hexadecimal (0xXXX), or (decimal) floating point number
+    Ident,      // Any name or keyword
+    String,     // Any string literal - this is a unicode string endoded as UTF-8.
+    FileName,   // A pseudo-token which indicates the source file from which the subsequent tokens come.
+                // This is more efficient than duplicating the same string in a huge number of Token objects.
 
     // Indicates the end of input for parsing.
     Terminator
@@ -76,6 +78,7 @@ struct TokenValue
     std::string    value{};
     uint32_t       line{};
     uint32_t       column{};
+    //std::string    filename{}; // See TokenType::FileName instead.
 };
 
 
@@ -108,6 +111,7 @@ private:
     // to find one of a set of preprocessor/pragma-like directives.
     bool handle_bash(uint8_t c);
     void parse_bash_message();
+    bool parse_bash_filename();
 
     // Append a new token to the output list.
     void emit(TokenType type, std::string value = "");

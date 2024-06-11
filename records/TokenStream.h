@@ -31,6 +31,7 @@ public:
     {
         Lexer lexer;
         m_tokens = lexer.lex(is);
+        match_filename();
     }
 
     const TokenValue& peek(uint16_t lookahead = 0);
@@ -84,6 +85,8 @@ public:
 
 private:
     uint64_t match_uint64(TokenValue& token, DataType type);
+    // Pseudo-token passes in the YAGL file name from which the following tokens originated.
+    void match_filename();
 
 private:
     // List of all tokens found in the YAGL by the lexer, in order.

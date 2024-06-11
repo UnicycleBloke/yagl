@@ -195,17 +195,8 @@ bool Lexer::handle_comment_star(uint8_t c)
 }
 
 
-void Lexer::parse_bash_message()
+bool Lexer::parse_bash_filename()
 {
-    // This whole function is experimental...
-
-    // we attempt to parse m_value to see it is meaningful as a command.
-    // This could have three outcomes:
-    // - we find a valid command and execute it,
-    // - we find an invalid command and throw an exception, or
-    // - we don't find anything and silently ignore this line as a comment.
-    std::cout << "Found bash-style comment '" << m_value << "'\n";
-
     // We can use gcc to combine multiple YAGL files into one with the following command (or similar):
     // 
     //     gcc -C -E -nostdinc -x c-header whatever.pyagl > whatever.yagl
@@ -222,28 +213,35 @@ void Lexer::parse_bash_message()
     // This would remove the dependency on gcc, and on the assumptions about the format of the bash-style comments. 
     // But it's more work...
 
+    auto is_filename = [this](const char* pattern) 
+    {
+        std::smatch match;
+        const std::regex re(pattern);
+        if (std::regex_match(m_value, match, re))
+        {
+            // Reset the line and column because we are notionally starting on a new file.
+            m_yagl_file = match[2];
+            m_line      = 0;
+            m_column    = 0;
+            emit(TokenType::FileName, m_yagl_file);
+            return true;
+        }
+        return false;
+    };
+
     // These formats seem to be what gcc inserts when you use gcc -E to combine multiple files into one.
     //     '# 1 "file-name.yagl"'
     //     '# 1 "file-name.yagl" 1'
-    const std::regex file_regex(R"(\s*#\s+(\d+)\s+\"(.+)\"\s*)");
-    const std::regex file_regex2(R"(\s*#\s+(\d+)\s+\"(.+)\"\s+(\d+)\s*)");
+    if (is_filename(R"(\s*#\s+(\d+)\s+\"(.+)\"\s*)"))         return true;
+    if (is_filename(R"(\s*#\s+(\d+)\s+\"(.+)\"\s+(\d+)\s*)")) return true;
+    return false;
+}
 
-    std::smatch file_match;
-    if (std::regex_match(m_value, file_match, file_regex))
-    {
-        // This should be assigned to m_file or some such, and used when reporting Lexer errors. 
-        // Would like a cheap way to make this available to the parser... Perhaps emit a new type of 
-        // token which changes the parser's equivalient of m_file...
-        std::cout << "Original source file: " << file_match[2] << '\n';
-    }
-    else if (std::regex_match(m_value, file_match, file_regex2))
-    {
-        std::cout << "Original source file: " << file_match[2] << '\n';
-    }
-    else
-    {
-        std::cout << "No match found\n";
-    }    
+
+void Lexer::parse_bash_message()
+{
+    if (parse_bash_filename()) return;
+    // Maybe check for other thing in the bash-style comment...
 }
 
 
