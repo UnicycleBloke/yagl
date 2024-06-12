@@ -17,6 +17,7 @@
 // along with yagl. If not, see <https://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////////////////
 #include "Lexer.h"
+#include "application/CommandLineOptions.h"
 #include <sstream>
 #include <fstream>
 #include <stdexcept>
@@ -219,11 +220,11 @@ bool Lexer::parse_bash_filename()
         const std::regex re(pattern);
         if (std::regex_match(m_value, match, re))
         {
-            // Reset the line and column because we are notionally starting on a new file.
-            m_yagl_file = match[2];
-            m_line      = 0;
-            m_column    = 0;
-            emit(TokenType::FileName, m_yagl_file);
+            //std::cout << "Changing YAGL file name: " << token.value << '\n';
+            CommandLineOptions::options().set_curr_file(match[2]);
+            m_line   = std::stoul(match[1]) - 1;
+            m_column = 0;
+            emit(TokenType::FileName, match[2]);
             return true;
         }
         return false;
@@ -232,6 +233,8 @@ bool Lexer::parse_bash_filename()
     // These formats seem to be what gcc inserts when you use gcc -E to combine multiple files into one.
     //     '# 1 "file-name.yagl"'
     //     '# 1 "file-name.yagl" 1'
+    // See https://gcc.gnu.org/onlinedocs/cpp/Preprocessor-Output.html
+    //     '# <lineno> <filename> <flag>'
     if (is_filename(R"(\s*#\s+(\d+)\s+\"(.+)\"\s*)"))         return true;
     if (is_filename(R"(\s*#\s+(\d+)\s+\"(.+)\"\s+(\d+)\s*)")) return true;
     return false;

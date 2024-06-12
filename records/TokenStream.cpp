@@ -29,7 +29,7 @@ void TokenStream::match_filename()
         const TokenValue& token = peek();
         if (token.type == TokenType::FileName)
         {
-            std::cout << "Changing YAGL file name: " << token.value << '\n';
+            //std::cout << "Changing YAGL file name: " << token.value << '\n';
             CommandLineOptions::options().set_curr_file(token.value);
             match(TokenType::FileName);
         }

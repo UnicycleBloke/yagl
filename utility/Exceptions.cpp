@@ -23,14 +23,14 @@
 #include <sstream>
 
 
-LexerError::LexerError(const std::string& what_arg, const std::string& yagl_file, uint32_t yagl_line, uint32_t yagl_column, 
+LexerError::LexerError(const std::string& what_arg, uint32_t yagl_line, uint32_t yagl_column, 
     const char* code_file, uint32_t code_line)
-: LexerError{what_arg.c_str(), yagl_file, yagl_line, yagl_column, code_file, code_line}
+: LexerError{what_arg.c_str(), yagl_line, yagl_column, code_file, code_line}
 {
 }
 
 
-LexerError::LexerError(const char* what_arg, const std::string& yagl_file, uint32_t yagl_line, uint32_t yagl_column, 
+LexerError::LexerError(const char* what_arg, uint32_t yagl_line, uint32_t yagl_column, 
     const char* code_file, uint32_t code_line)
 : std::runtime_error{what_arg}
 {
@@ -39,7 +39,7 @@ LexerError::LexerError(const char* what_arg, const std::string& yagl_file, uint3
 
     std::ostringstream os;
     os << "YAGL lexer error: ";
-    os << what_arg << " at " << yagl_file << ":" << yagl_line << ":" << yagl_column;
+    os << what_arg << " at " << options.yagl_file() << ":" << yagl_line << ":" << yagl_column;
     //if (options.debug())
     //{
         os << "\n  [at " << code_file << ":" << code_line << "]";

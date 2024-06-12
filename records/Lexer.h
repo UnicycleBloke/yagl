@@ -20,6 +20,7 @@
 #include "Exceptions.h"
 #include <vector>
 #include <string>
+#include <map>
 #include <iostream>
 
 
@@ -141,9 +142,6 @@ private:
         // interpreted as commands or pragmas in some case. 
         Bash
     };
-
-    // Cached name of the script file that we are lexing.
-    std::string m_yagl_file;
 
     // The lexer is a simple state machine.
     LexerState m_state = LexerState::None;
