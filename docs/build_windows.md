@@ -2,22 +2,20 @@
 
 # Building on Windows
 
-**These instructions didn't work when I tried to reproduce the environment. Needs a little attention...**
-
-Starting in some folder on your machine, execute the following commands in a terminal window. This assumes that you have installed Microsoft Visual Studio 2019 (Community edition is fine), and placed MSBuild on the path, and have installed the build dependencies (see below):
+Starting in some folder on your machine, execute the following commands in a terminal window. This assumes that you have installed Microsoft Visual Studio 2019* (Community edition is fine), and placed MSBuild on the path, and have installed the build dependencies (see below):
 
 ```bash
 git clone https://github.com/UnicycleBloke/yagl.git
 cd yagl
 mkdir build
 cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>\scripts\buildsystems\vcpkg.cmake
-    -DVCPKG_DIR=<vcpkg-root> ..
+cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>\scripts\buildsystems\vcpkg.cmake -DVCPKG_DIR=<vcpkg-root> ..
 msbuild yagl.sln /property:Configuration=Release
 Release\yagl.exe -d <your_grf_file.grf>
 ```
-
 Rather than use MSBuild, you can open the solution file in Visual Studio and build it from there. This will certainly be more useful for debugging, should you need to do that.
+
+*In case it matters, I am currently using Microsoft Visual Studio Community 2022 (64-bit) Version 17.10.5.
 
 ## Build dependencies
 
