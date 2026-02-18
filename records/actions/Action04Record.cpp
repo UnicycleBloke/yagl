@@ -100,12 +100,18 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
 
 void Action04Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << ", ";
-    os << language_iso(m_language) << ", ";
+    // The interpretation of the language ID depends on the GRF version.
+    // Version <= 6 is a bit mask, version >= 7 is a value from a list.
+    bool grf7_id = static_cast<uint8_t>(info.version) >= static_cast<uint8_t>(GRFVersion::GRF7);
+    //std::string iso_name  = grf7_id ? language_iso(m_language)  : "GRFv6:" + to_hex(m_language);
+    std::string iso_name  = grf7_id ? language_iso(m_language)  : to_hex(m_language);
+    std::string lang_name = grf7_id ? language_name(m_language) : "GRFv6:" + to_hex(m_language);
+
+    os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << ", " << iso_name << ", ";
     // Come up with something better than this. The * is used to disambiguate whether the original
     // GRF used 16-bit IDs. Or we could ignore that and just go off the actual value of the ID.
     os << to_hex(m_first_string_id) << (m_uint16_ids ? "*" : "");
-    os << "> // <feature, language, first_id> Action04, " << language_name(m_language) << "\n";
+    os << "> // <feature, language, first_id> Action04, " << lang_name << "\n";
     os << pad(indent) << "{\n";
 
     uint16_t string_id = m_first_string_id;
@@ -121,14 +127,23 @@ void Action04Record::print(std::ostream& os, const GRFInfo& info, const SpriteZo
 
 void Action04Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
+    
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
     m_feature = FeatureFromName(is.match(TokenType::Ident));
     is.match(TokenType::Comma);
-    m_language = language_id(is.match(TokenType::Ident));
+
+    // The interpretation of the language ID depends on the GRF version.
+    // Version <= 6 is a bit mask, version >= 7 is a value from a list.
+    bool grf7_id = static_cast<uint8_t>(info.version) >= static_cast<uint8_t>(GRFVersion::GRF7);
+    if (grf7_id)
+        m_language = language_id(is.match(TokenType::Ident));
+    else
+        m_language = is.match_uint8();
+    
     is.match(TokenType::Comma);
     m_first_string_id = is.match_uint16();
-
+    
     m_uint16_ids = false;
     if (is.peek().type == TokenType::OpMultiply)
     {
