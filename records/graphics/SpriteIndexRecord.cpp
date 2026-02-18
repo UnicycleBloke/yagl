@@ -41,7 +41,7 @@ void SpriteIndexRecord::write(std::ostream& os, const GRFInfo& info) const
 static constexpr const char* str_sprite_id = "sprite_id";
 
 
-void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void SpriteIndexRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << str_sprite_id << "<" << to_hex(m_sprite_id) << ">\n";
     os << pad(indent) << "{" << '\n';
@@ -51,7 +51,7 @@ void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, ui
         const SpriteZoomVector& sprite_list = sprites.at(m_sprite_id);
         for (const auto& sprite: sprite_list)
         {
-            sprite->print(os, sprites, indent + 4);
+            sprite->print(os, info, sprites, indent + 4);
         }
     }
     else
@@ -66,7 +66,7 @@ void SpriteIndexRecord::print(std::ostream& os, const SpriteZoomMap& sprites, ui
 }
 
 
-void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void SpriteIndexRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(str_sprite_id);
     is.match(TokenType::OpenAngle);
@@ -86,7 +86,7 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
             // Need to create RealSpriteRecord
             // Size and compression are place holder values to be read from the token stream.
             record = std::make_unique<RealSpriteRecord>(m_sprite_id, 0, 0);
-            record->parse(is, sprites);
+            record->parse(is, info, sprites);
         }
         else
         {
@@ -95,7 +95,7 @@ void SpriteIndexRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
             // version 2 files. RealSprites this for themselves. ActionFF can also be used directly in the
             // data section, whether Container 2 or not.
             std::unique_ptr<Record> effect = std::make_unique<ActionFFRecord>();
-            effect->parse(is, sprites);
+            effect->parse(is, info, sprites);
             record = std::make_unique<SpriteWrapperRecord>(m_sprite_id, std::move(effect));
         }
 

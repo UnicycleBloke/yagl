@@ -57,7 +57,7 @@ void ActionFFRecord::write(std::ostream& os, const GRFInfo& info) const
 static constexpr const char* str_binary = "binary";
 
 
-void ActionFFRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void ActionFFRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     const CommandLineOptions& options = CommandLineOptions::options();
     fs::path file_path{options.yagl_dir()};
@@ -71,7 +71,7 @@ void ActionFFRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void ActionFFRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void ActionFFRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(str_binary);
     is.match(TokenType::OpenParen);

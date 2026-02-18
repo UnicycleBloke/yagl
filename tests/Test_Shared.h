@@ -29,17 +29,18 @@ void test_yagl_matches(const char* YAGL_IN, const char* YAGL_OUT)
     std::istringstream is(YAGL_IN);
     TokenStream ts{is};
     ActionRecord action;
-    action.parse(ts, sprites);
+    GRFInfo info; // Defaults to Container2 and GRF8.
+    action.parse(ts, info, sprites);
     std::ostringstream os;
-    action.print(os, sprites, 0);
+    action.print(os, info, sprites, 0);
 
     SpriteZoomMap sprites2;
     std::istringstream is2(YAGL_IN);
     TokenStream ts2{is2};
     ActionRecord action2;
-    action2.parse(ts2, sprites2);
+    action2.parse(ts2, info, sprites2);
     std::ostringstream os2;
-    action2.print(os2, sprites2, 0);
+    action2.print(os2, info, sprites2, 0);
 
     CHECK(os.str() == os2.str());
 }
@@ -69,11 +70,12 @@ void test_yagl(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = null
     std::istringstream is(YAGL_IN);
     TokenStream ts{is};
     ActionRecord action;
-    action.parse(ts, sprites);
+    GRFInfo info; // Defaults to Container2 and GRF8.
+    action.parse(ts, info, sprites);
 
     std::ostringstream os;
     //action.print(std::cout, sprites, 0);
-    action.print(os, sprites, 0);
+    action.print(os, info, sprites, 0);
     CHECK(os.str() == YAGL_OUT);
     if (os.str() != YAGL_OUT)
     {
@@ -83,7 +85,6 @@ void test_yagl(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = null
 
     // Confirm that the written binary matches the sample.
     os.str("");
-    GRFInfo info; // Defaults to Container2 and GRF8.
     action.write(os, info);
     auto str = os.str();
     CHECK(str.size() == (std::strlen(NFO) / 3));
@@ -96,7 +97,7 @@ void test_yagl(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT = null
     ActionRecord action2;
     action2.read(is2, info);
     os.str("");
-    action2.print(os, sprites, 0);
+    action2.print(os, info, sprites, 0);
     CHECK(os.str() == YAGL_OUT);
 }
 
@@ -119,12 +120,13 @@ void test_container(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT =
     // The sample is in the expected format.
     std::istringstream is(YAGL_IN);
     TokenStream ts{is};
+    GRFInfo info; // Defaults to Container2 and GRF8.
     ActionRecord action;
-    action.parse(ts, sprites);
+    action.parse(ts, info, sprites);
 
     std::ostringstream os;
     //action.print(std::cout, sprites, 0);
-    action.print(os, sprites, 0);
+    action.print(os, info, sprites, 0);
     CHECK(os.str() == YAGL_OUT);
     if (os.str() != YAGL_OUT)
     {
@@ -134,7 +136,6 @@ void test_container(const char* YAGL_IN, const char* NFO, const char* YAGL_OUT =
 
     // Confirm that the written binary matches the sample.
     os.str("");
-    GRFInfo info; // Defaults to Container2 and GRF8.
     action.write(os, info);
     auto str = os.str();
     CHECK(str.size() == (std::strlen(NFO) / 3));

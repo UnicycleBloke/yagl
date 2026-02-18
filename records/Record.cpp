@@ -78,13 +78,13 @@ void ContainerRecord::append_sprite(std::unique_ptr<Record> record)
 }
 
 
-void ContainerRecord::print_sprite(uint16_t index, std::ostream& os,
+void ContainerRecord::print_sprite(uint16_t index, std::ostream& os, const GRFInfo& info,
     const SpriteZoomMap& sprites, uint16_t indent) const
 {
     auto record = get_sprite(index);
     if (record != nullptr)
     {
-        record->print(os, sprites, indent);
+        record->print(os, info, sprites, indent);
     }
     else
     {
@@ -113,7 +113,7 @@ static const std::map<std::string, uint8_t> g_indices =
 // This function added to avoid duplication. Several containers can contain
 // either real sprites or recolour spites. This detects the type of each contained
 // record, and parses it from the stream.
-void ContainerRecord::parse_sprite(TokenStream& is, SpriteZoomMap& sprites)
+void ContainerRecord::parse_sprite(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     TokenValue token = is.peek();
     if (token.type == TokenType::Ident)
@@ -134,7 +134,7 @@ void ContainerRecord::parse_sprite(TokenStream& is, SpriteZoomMap& sprites)
             }
         }
 
-        record->parse(is, sprites);
+        record->parse(is, info, sprites);
         append_sprite(std::move(record));
     }
     else

@@ -132,7 +132,7 @@ void Action07Record::write(std::ostream& os, const GRFInfo& info) const
 }
 
 
-void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action07Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " (";
 
@@ -224,7 +224,7 @@ void Action07Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 // }
 
 
-void Action07Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action07Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenParen);

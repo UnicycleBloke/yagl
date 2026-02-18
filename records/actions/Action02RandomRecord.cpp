@@ -143,7 +143,7 @@ const IntegerDescriptorT<uint8_t> randbit_desc { 0x03, str_rand_bit, UIntFormat:
 } // namespace {
 
 
-void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action02RandomRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
     os << ", " << to_hex(m_set_id);
@@ -174,7 +174,7 @@ void Action02RandomRecord::print(std::ostream& os, const SpriteZoomMap& sprites,
 }
 
 
-void Action02RandomRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action02RandomRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

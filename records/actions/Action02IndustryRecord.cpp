@@ -124,7 +124,7 @@ const EnumDescriptorT<Action02IndustryRecord::Format> desc_format =
 } // namespace {
 
 
-void Action02IndustryRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action02IndustryRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
     os << ", " << to_hex(m_act02_set_id);
@@ -149,7 +149,7 @@ void Action02IndustryRecord::print(std::ostream& os, const SpriteZoomMap& sprite
 }
 
 
-void Action02IndustryRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action02IndustryRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

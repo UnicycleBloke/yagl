@@ -138,7 +138,7 @@ const IntegerDescriptorT<uint8_t> desc_param2      { 0x05, str_param2, UIntForma
 } // namespace {
 
 
-void Action0BRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action0BRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<";
     os << severity_desc.value(m_severity) << ", ";
@@ -186,7 +186,7 @@ void Action0BRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action0BRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action0BRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

@@ -98,7 +98,7 @@ void Action04Record::write(std::ostream& os, const GRFInfo& info) const
 }
 
 
-void Action04Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action04Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << ", ";
     os << language_iso(m_language) << ", ";
@@ -119,7 +119,7 @@ void Action04Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action04Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action04Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

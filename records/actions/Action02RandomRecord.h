@@ -32,8 +32,8 @@ public:
     void read(std::istream& is, const GRFInfo& info) override;
     void write(std::ostream& os, const GRFInfo& info) const override;
     // Text serialisation
-    void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override;
-    void parse(TokenStream& is, SpriteZoomMap& sprites) override;
+    void print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const override;
+    void parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites) override;
 
 public:
     // Use 80 to randomize the object (vehicle, station, building, industry, object)

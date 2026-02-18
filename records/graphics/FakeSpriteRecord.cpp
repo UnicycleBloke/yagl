@@ -29,13 +29,13 @@ void FakeSpriteRecord::write(std::ostream& os, const GRFInfo& info) const
 }
 
 
-void FakeSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void FakeSpriteRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << str_null_sprite << ";\n";
 }
 
 
-void FakeSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void FakeSpriteRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(str_null_sprite);
     is.match(TokenType::SemiColon);

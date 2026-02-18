@@ -495,7 +495,7 @@ const BitfieldDescriptorT<uint8_t> colour_desc =
 } // namespace {
 
 
-void RealSpriteRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void RealSpriteRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << "[" << m_xdim << ", " << m_ydim << ", " <<  m_xrel << ", " << m_yrel << "], ";
     os << zoom_desc.value(m_zoom) << ", ";
@@ -558,7 +558,7 @@ bool RealSpriteRecord::is_pure_white(const Pixel& pixel)
 }
 
 
-void RealSpriteRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void RealSpriteRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     // [8, 21, -3, -11], normal, 8bpp,
     //         "sprites/zbase_extra-8bpp-normal-0.png", [641, 7372];

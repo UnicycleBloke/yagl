@@ -41,7 +41,7 @@ void ActionFERecord::write(std::ostream& os, const GRFInfo& info) const
 static constexpr const char* str_import = "import";
 
 
-void ActionFERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void ActionFERecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     // This need only distinguish itself from an ActionFF record.
     os << pad(indent) << str_import << "(\"" << m_grf_id.to_string() << "\", ";
@@ -49,7 +49,7 @@ void ActionFERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void ActionFERecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void ActionFERecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(str_import);
     is.match(TokenType::OpenParen);

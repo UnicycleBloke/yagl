@@ -42,13 +42,13 @@ void SpriteWrapperRecord::write(std::ostream& os, const GRFInfo& info) const
 }
 
 
-void SpriteWrapperRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void SpriteWrapperRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
-    m_sprite->print(os, sprites, indent);
+    m_sprite->print(os, info, sprites, indent);
 }
 
 
-void SpriteWrapperRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void SpriteWrapperRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
-    m_sprite->parse(is, sprites);
+    m_sprite->parse(is, info, sprites);
 }

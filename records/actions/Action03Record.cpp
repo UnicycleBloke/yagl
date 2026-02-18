@@ -131,7 +131,7 @@ const IntegerListDescriptorT<uint16_t> desc_feature_ids     { 0x03, str_feature_
 } // namespace {
 
 
-void Action03Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action03Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature) << "> // Action03" << '\n';
     os << pad(indent) << "{" << '\n';
@@ -171,7 +171,7 @@ void Action03Record::parse_cargo_types(TokenStream& is)
 }
 
 
-void Action03Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action03Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

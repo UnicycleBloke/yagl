@@ -115,7 +115,7 @@ void Action00Record::write(std::ostream& os, const GRFInfo& info) const
 static constexpr const char* str_instance_id = "instance_id";
 
 
-void Action00Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action00Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<";
     os << FeatureName(m_feature) << ", ";
@@ -178,7 +178,7 @@ std::unique_ptr<Action00Feature> Action00Record::make_feature(FeatureType featur
 }
 
 
-void Action00Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action00Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

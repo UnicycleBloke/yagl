@@ -37,7 +37,7 @@ void Action10Record::write(std::ostream& os, const GRFInfo& info) const
 }
 
 
-void Action10Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action10Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << RecordName(record_type()) << "<" << to_hex(m_label) << "> // Action10 - target for Action07 or Action09\n";
     os << "{\n";
@@ -53,7 +53,7 @@ void Action10Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action10Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action10Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

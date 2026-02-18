@@ -60,28 +60,28 @@ void Action11Record::write(std::ostream& os, const GRFInfo& info) const
 // }
 
 
-void Action11Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action11Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action11" << '\n';
     os << pad(indent) << "{" << '\n';
 
     for (uint16_t index = 0; index < m_num_binaries; ++index)
     {
-        print_sprite(index, os, sprites, indent + 4);
+        print_sprite(index, os, info, sprites, indent + 4);
     }
 
     os << pad(indent) << "}" << '\n';
 }
 
 
-void Action11Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action11Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
 
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
-        parse_sprite(is, sprites);
+        parse_sprite(is, info, sprites);
     }
     is.match(TokenType::CloseBrace);
 

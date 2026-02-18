@@ -86,7 +86,7 @@ const EnumDescriptorT<Action12Record::Font> font_desc =
 static constexpr const char* str_range = "range";
 
 
-void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action12Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action12" << '\n';
     os << pad(indent) << "{" << '\n';
@@ -104,7 +104,7 @@ void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
             os << pad(indent + 8) << "// Replace character " << to_hex(range.base_char + i) << "\n";
 
             // This is a SpriteIndexRecord or a RecolourRecord
-            print_sprite(index, os, sprites, indent + 8);
+            print_sprite(index, os, info, sprites, indent + 8);
             ++index;
         }
 
@@ -115,7 +115,7 @@ void Action12Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action12Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action12Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
 
@@ -134,7 +134,7 @@ void Action12Record::parse(TokenStream& is, SpriteZoomMap& sprites)
         is.match(TokenType::OpenBrace);
         while (is.peek().type != TokenType::CloseBrace)
         {
-            parse_sprite(is, sprites);
+            parse_sprite(is, info, sprites);
             ++range.num_chars;
         }
 

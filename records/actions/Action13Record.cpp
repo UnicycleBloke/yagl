@@ -83,7 +83,7 @@ void Action13Record::write(std::ostream& os, const GRFInfo& info) const
 // }
 
 
-void Action13Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action13Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<\"" << m_grf_id.to_string() << "\", ";
     os << language_iso(m_language) << ", ";
@@ -102,7 +102,7 @@ void Action13Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action13Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action13Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

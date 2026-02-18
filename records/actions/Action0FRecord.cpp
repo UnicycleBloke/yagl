@@ -119,7 +119,7 @@ constexpr const char* str_town_names = "town_names";
 } // namespace {
 
 
-void Action0FRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action0FRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << RecordName(record_type()) << "<" << to_hex(m_id) << "> // Action0F\n";
     os << "{\n";
@@ -267,7 +267,7 @@ void Action0FRecord::parse_part(TokenStream& is)
 }
 
 
-void Action0FRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action0FRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

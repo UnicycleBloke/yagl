@@ -70,7 +70,7 @@ void Action01Record::write(std::ostream& os, const GRFInfo& info) const
 static constexpr const char* str_sprite_set = "sprite_set";
 
 
-void Action01Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action01Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<";
     os << FeatureName(m_feature) << ", ";
@@ -86,7 +86,7 @@ void Action01Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
         for (uint16_t i = 0; i < m_num_sprites; ++i)
         {
             // This is a SpriteIndexRecord or a RecolourRecord
-            print_sprite(index, os, sprites, indent + 8);
+            print_sprite(index, os, info, sprites, indent + 8);
             ++index;
         }
 
@@ -97,7 +97,7 @@ void Action01Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action01Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action01Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
@@ -116,7 +116,7 @@ void Action01Record::parse(TokenStream& is, SpriteZoomMap& sprites)
         is.match(TokenType::OpenBrace);
         while (is.peek().type != TokenType::CloseBrace)
         {
-            parse_sprite(is, sprites);
+            parse_sprite(is, info, sprites);
             ++num_sprites;
         }
 

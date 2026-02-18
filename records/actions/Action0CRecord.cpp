@@ -43,7 +43,7 @@ void Action0CRecord::write(std::ostream& os, const GRFInfo& info) const
 // }
 
 
-void Action0CRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action0CRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << RecordName(record_type()) << " // Action0C\n";
     os << "{\n";
@@ -56,7 +56,7 @@ void Action0CRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action0CRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action0CRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenBrace);

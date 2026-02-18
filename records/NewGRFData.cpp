@@ -206,7 +206,7 @@ void NewGRFData::read(std::istream& is)
 
         if (CommandLineOptions::options().debug())
         {
-            record->print(std::cout, m_sprites, 0); // Indent = 0
+            record->print(std::cout, m_info, m_sprites, 0); // Indent = 0
         }
 
         // This is our slightly too trusting method for grouping sprites into containers.
@@ -730,7 +730,7 @@ void NewGRFData::print(std::ostream& os, const std::string& output_dir, const st
     for (const auto& record: m_records)
     {
         os << "// Record #" << index << '\n';
-        record->print(os, m_sprites, 0);
+        record->print(os, m_info, m_sprites, 0);
 
         // This includes the number of real sprites and so on inside container record,
         // which is probably a mistake. The real sprites are printed inline.
@@ -790,11 +790,11 @@ void NewGRFData::parse(TokenStream& is, const std::string& output_dir, const std
     {
         try
         {
-            RecordType type  = parse_record_type(is);
+            RecordType type = parse_record_type(is);
             is.unmatch();
 
             std::unique_ptr<Record> record = make_record(type);
-            record->parse(is, m_sprites);
+            record->parse(is, m_info, m_sprites);
             update_version_info(*record);
             m_records.push_back(std::move(record));
         }

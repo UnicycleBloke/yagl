@@ -247,7 +247,7 @@ Action0DRecord::Operation parse_signed(Action0DRecord::Operation op, TokenStream
 } // namespace {
 
 
-void Action0DRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action0DRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     Type operation_type = type();
 
@@ -441,7 +441,7 @@ void Action0DRecord::parse_resources(TokenStream& is)
 }
 
 
-void Action0DRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action0DRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     Type operation_type;
     is.match_ident(RecordName(record_type()));

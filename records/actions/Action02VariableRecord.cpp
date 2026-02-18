@@ -322,7 +322,7 @@ std::string Action02VariableRecord::variable_expression(const VarAction& va) con
 }
 
 
-void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action02VariableRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
     os << ", ";
@@ -354,7 +354,7 @@ void Action02VariableRecord::print(std::ostream& os, const SpriteZoomMap& sprite
 }
 
 
-void Action02VariableRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action02VariableRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

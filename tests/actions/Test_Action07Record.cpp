@@ -69,22 +69,22 @@ template <RecordType TYPE, uint8_t ACTION>
 void test_yagl_action07(const char* YAGL, const char* NFO)
 {
     SpriteZoomMap sprites;
+    GRFInfo info; // Defaults to Container2 and GRF8.
 
     // Confirm that we print what we parse.
     // The sample is in the expected format.
     std::istringstream is(YAGL);
     TokenStream ts{is};
     Action07Record action{TYPE};
-    action.parse(ts, sprites);
+    action.parse(ts, info, sprites);
 
     std::ostringstream os;
     //action.print(std::cout, sprites, 0);
-    action.print(os, sprites, 0);
+    action.print(os, info, sprites, 0);
     CHECK(os.str() == YAGL);
 
     // Confirm that the written binary matches the sample.
     os.str("");
-    GRFInfo info; // Defaults to Container2 and GRF8.
     action.write(os, info);
     auto str = os.str();
     CHECK(str.size() == (std::strlen(NFO) / 3));
@@ -97,7 +97,7 @@ void test_yagl_action07(const char* YAGL, const char* NFO)
     Action07Record action2{TYPE};
     action2.read(is2, info);
     os.str("");
-    action2.print(os, sprites, 0);
+    action2.print(os, info, sprites, 0);
     CHECK(os.str() == YAGL);
 }
 

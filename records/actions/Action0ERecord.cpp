@@ -51,7 +51,7 @@ constexpr GenericDescriptor<Vector<GRFLabel>> grf_desc = { 0x00, str_grf_ids };
 } // namespace {
 
 
-void Action0ERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action0ERecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action0E\n";
     os << pad(indent) << "{\n";
@@ -62,7 +62,7 @@ void Action0ERecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action0ERecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action0ERecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenBrace);

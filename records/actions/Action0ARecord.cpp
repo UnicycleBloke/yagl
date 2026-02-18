@@ -63,7 +63,7 @@ uint16_t Action0ARecord::num_sprites_to_read() const
 static constexpr const char* str_replacement_sprite_set = "replacement_sprite_set";
 
 
-void Action0ARecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action0ARecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action0A\n";
     os << pad(indent) << "{\n";
@@ -78,7 +78,7 @@ void Action0ARecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
         for (uint16_t i = 0; i < set.num_sprites; ++i)
         {
             os << pad(indent + 8) << "// Replace sprite " << to_hex<uint16_t>(set.first_sprite + i) << ":\n";
-            print_sprite(index, os, sprites, indent + 8);
+            print_sprite(index, os, info, sprites, indent + 8);
             ++index;
         }
 
@@ -89,7 +89,7 @@ void Action0ARecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action0ARecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action0ARecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenBrace);
@@ -105,7 +105,7 @@ void Action0ARecord::parse(TokenStream& is, SpriteZoomMap& sprites)
 
         while (is.peek().type != TokenType::CloseBrace)
         {
-            parse_sprite(is, sprites);
+            parse_sprite(is, info, sprites);
             ++set.num_sprites;
         }
 

@@ -156,8 +156,8 @@ public:
     virtual void read(std::istream& is, const GRFInfo& info) {};
     virtual void write(std::ostream& os, const GRFInfo& info) const {};
     // Text serialisation - sprites structure needed to hold sprites found in containers.
-    virtual void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const {};
-    virtual void parse(TokenStream& is, SpriteZoomMap& sprites) {};
+    virtual void print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const {};
+    virtual void parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites) {};
 
     // These methods are for adding sprites to a container action.
     virtual void append_sprite(std::unique_ptr<Record> record) { throw RUNTIME_ERROR("append_sprite"); }
@@ -188,8 +188,8 @@ public:
     //void read(std::istream& is, const GRFInfo& info) override {};
     void write(std::ostream& os, const GRFInfo& info) const override;
     // Text serialisation
-    //void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override {};
-    //void parse(TokenStream& is, SpriteZoomMap& sprites) override {};
+    //void print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const override {};
+    //void parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites) override {};
 };
 
 
@@ -204,8 +204,8 @@ public:
     //void read(std::istream& is, const GRFInfo& info) override {};
     //void write(std::ostream& os, const GRFInfo& info) const override;
     // Text serialisation
-    //void print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const override {};
-    //void parse(TokenStream& is, SpriteZoomMap& sprites) override {};
+    //void print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const override {};
+    //void parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites) override {};
 
     void append_sprite(std::unique_ptr<Record> record) override;
     Record* get_sprite(uint16_t index) const override
@@ -213,9 +213,9 @@ public:
     uint16_t num_sprites_to_write() const override { return uint16_t(m_sprites.size()); }
 
 protected:
-    void print_sprite(uint16_t index, std::ostream& os,
+    void print_sprite(uint16_t index, std::ostream& os, const GRFInfo& info,
         const SpriteZoomMap& sprites, uint16_t indent) const;
-    void parse_sprite(TokenStream& is, SpriteZoomMap& sprites);
+    void parse_sprite(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites);
 
 private:
     std::vector<std::unique_ptr<Record>> m_sprites;

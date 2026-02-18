@@ -387,7 +387,7 @@ void Action02SpriteLayoutRecord::write(std::ostream& os, const GRFInfo& info) co
 }
 
 
-void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action02SpriteLayoutRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<" << FeatureName(m_feature);
     os << ", " << to_hex(m_set_id);
@@ -424,7 +424,7 @@ void Action02SpriteLayoutRecord::print(std::ostream& os, const SpriteZoomMap& sp
 }
 
 
-void Action02SpriteLayoutRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action02SpriteLayoutRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);

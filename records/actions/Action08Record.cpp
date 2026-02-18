@@ -87,7 +87,7 @@ constexpr GRFStringDescriptor         desc_description = { 0x03, str_description
 // }
 
 
-void Action08Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action08Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << " // Action08\n";
     os << pad(indent) << "{\n";
@@ -101,7 +101,7 @@ void Action08Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void Action08Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action08Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
 

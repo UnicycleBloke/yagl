@@ -91,7 +91,7 @@ void Action05Record::write(std::ostream& os, const GRFInfo& info) const
 //     ...
 
 
-void Action05Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void Action05Record::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << RecordName(record_type()) << "<";
     os << NewFeatureName(m_sprite_type) << ", ";
@@ -103,14 +103,14 @@ void Action05Record::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
     {
         os << pad(indent + 4) << "// Replace " << NewFeatureName(m_sprite_type);
         os << " sprite " << to_hex<uint16_t>(m_offset + index) << "\n";
-        print_sprite(index, os, sprites, indent + 4);
+        print_sprite(index, os, info, sprites, indent + 4);
     }
 
     os << pad(indent) << "}\n";
 }
 
 
-void Action05Record::parse(TokenStream& is, SpriteZoomMap& sprites)
+void Action05Record::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     is.match_ident(RecordName(record_type()));
     is.match(TokenType::OpenAngle);
@@ -122,7 +122,7 @@ void Action05Record::parse(TokenStream& is, SpriteZoomMap& sprites)
     is.match(TokenType::OpenBrace);
     while (is.peek().type != TokenType::CloseBrace)
     {
-        parse_sprite(is, sprites);
+        parse_sprite(is, info, sprites);
         ++m_num_sprites;
     }
 

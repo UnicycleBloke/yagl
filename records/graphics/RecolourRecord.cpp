@@ -46,7 +46,7 @@ void RecolourRecord::write(std::ostream& os, const GRFInfo& info) const
 static constexpr const char* str_recolour_sprite = "recolour_sprite";
 
 
-void RecolourRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint16_t indent) const
+void RecolourRecord::print(std::ostream& os, const GRFInfo& info, const SpriteZoomMap& sprites, uint16_t indent) const
 {
     os << pad(indent) << str_recolour_sprite << '\n';
     os << pad(indent) << "{" << '\n';
@@ -99,7 +99,7 @@ void RecolourRecord::print(std::ostream& os, const SpriteZoomMap& sprites, uint1
 }
 
 
-void RecolourRecord::parse(TokenStream& is, SpriteZoomMap& sprites)
+void RecolourRecord::parse(TokenStream& is, const GRFInfo& info, SpriteZoomMap& sprites)
 {
     // recolour_sprite
     // {
